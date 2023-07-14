@@ -19,7 +19,7 @@ _Notice: I tested Ruby version 3.2 only_
 $ composer require m3m0r7/rubyvm-on-php
 ```
 
-2. The below code save as `HelloWorld.rb`
+2. Save The below code as `HelloWorld.rb`
 
 ```ruby
 puts RubyVM::InstructionSequence.compile("puts 'HelloWorld!\n'", "HelloWorld.rb").to_binary
