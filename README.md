@@ -4,71 +4,66 @@
 The RubyVM on PHP is implementation RubyVM written in PHP 100%.
 
 _Notice: This project is very ultra super hyper maximum experimental implementation._
-_The project can execute only `puts` method in the Ruby_
 
+## DEMO
 
-## How to run
+TBD
 
-1. I will rewrite this project with PHP ecosystems. in until then, git clone this repository to be done preparation.
-2. Use `RubyVM::InstructionSequence.compile` and get created `HelloWorld.yarb` with below shell command.
+## Quick start
+
+1. Install via composer as following
+
+```
+$ composer require m3m0r7/rubyvm-on-php
+```
+
+2. The below code save as `HelloWorld.rb`
 
 ```ruby
 puts RubyVM::InstructionSequence.compile("puts 'HelloWorld!\n'", "HelloWorld.rb").to_binary
 ```
 
+3. Output `.yarv` file as following
+
 ```shell
-ruby test.rb > HelloWorld.yarb
+ruby HelloWorld.rb > HelloWorld.yarv
 ```
 
-3. Create PHP code
+3. Create PHP file with below code and save as `HelloWorld.php`
 
 ```php
 <?php
-require __DIR__ . '/stream.php';
-require __DIR__ . '/rubyvm.php';
+require __DIR__ . '/vendor/autoload.php';
 
-$rubyVM = new RubyVM(
-    new Stream(__DIR__ . '/HelloWorld.yarb'),
+// Instantiate RubyVM class
+$rubyVM = new \RubyVM\VM\Core\Runtime\RubyVM(
+    new \RubyVM\VM\Core\Runtime\Option(
+        reader: new \RubyVM\VM\Stream\BinaryStreamReader(
+            streamHandler: new \RubyVM\VM\Stream\FileStreamHandler(
+                // Specify to want you to load YARV file
+                __DIR__ . '/HelloWorld.yarv',
+            ),
+        ),
+
+        // Choose Logger
+        logger: new \Psr\Log\NullLogger(),
+    ),
 );
 
-$iseq = $rubyVM->disassemble();
+// Register kernel its each of Ruby Versions
+$rubyVM->register(
+    rubyVersion: \RubyVM\VM\Core\Runtime\RubyVersion::VERSION_3_2,
+    kernelClass: \RubyVM\VM\Core\Runtime\Version\Ruby3_2\Kernel::class,
+);
 
+// Disassemble instruction sequence binary formatted and get executor
+$executor = $rubyVM->disassemble(
+    useVersion: \RubyVM\VM\Core\Runtime\RubyVersion::VERSION_3_2,
+);
 
-echo "RESULT ------------------\n";
-$iseq->evaluate();
-
-echo "\n";
-
-echo "INFO --------------------\n";
-var_dump($rubyVM);
+// Execute disassembled instruction sequence
+$executor->execute();
 ```
 
-And save as `test.php` above code.
 
-4. Run `php test.php`
-5. You will get below result
-
-```
-RESULT ------------------
-HelloWorld!
-
-INFO --------------------
-object(RubyVM)#1 (8) {
-  ["Compiled Ruby Version"]=>
-  string(3) "3.2"
-  ["YARB file"]=>
-  string(3) "YES"
-  ["File size"]=>
-  int(232)
-  ["Extra size"]=>
-  int(0)
-  ["ISeqListSize"]=>
-  int(1)
-  ["GlobalObjectListSize"]=>
-  int(5)
-  ["ISeqListOffset"]=>
-  int(148)
-  ["GlobalObjectListOffset"]=>
-  int(212)
-}
-```
+4. Run `php HelloWorld.php` and you will get outputted `HelloWorld!` from RubyVM
