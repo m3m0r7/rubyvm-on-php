@@ -7,7 +7,7 @@ _Notice: This project is very ultra super hyper maximum experimental implementat
 
 ## DEMO
 
-TBD
+<img src="./docs/demo.gif" />
 
 ## Quick start
 
