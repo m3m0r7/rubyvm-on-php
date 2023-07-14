@@ -5,15 +5,19 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
+use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Exception\ExecutorExeption;
+use RubyVM\VM\Exception\ExecutorFailedException;
+use RubyVM\VM\Exception\ExecutorUnknownException;
 
 class Executor implements ExecutorInterface
 {
     protected array $operations = [];
 
     public function __construct(
+        private readonly MainInterface $main,
         private readonly OperationProcessorEntries $operationProcessorEntries,
-        public readonly InstructionSequence        $instructionSequence,
+        private readonly InstructionSequence       $instructionSequence,
         private readonly LoggerInterface           $logger,
     ) {
     }
@@ -41,16 +45,29 @@ class Executor implements ExecutorInterface
 
             $processor->prepare(
                 $operator->insn,
-                $pc,
-                $vmStack,
-                $this->logger,
+                new OperationProcessorContext(
+                    $this->main,
+                    $vmStack,
+                    $pc,
+                    $this->instructionSequence,
+                    $this->logger,
+                ),
             );
             $processor->before();
             $status = $processor->process();
             $processor->after();
 
+            // Finish this loop when returning ProcessedStatus::FINISH
+            if ($status === ProcessedStatus::FINISH) {
+                break;
+            }
+
             if ($status !== ProcessedStatus::SUCCESS) {
-                throw new ExecutorExeption(
+                $throwClass = $status === ProcessedStatus::FAILED
+                    ? ExecutorFailedException::class
+                    : ExecutorUnknownException::class;
+
+                throw new $throwClass(
                     sprintf(
                         'The `%s` (opcode: 0x%02x) processor returns %s (%d) status code',
                         $operator->insn->name,

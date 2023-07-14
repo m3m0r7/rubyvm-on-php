@@ -8,4 +8,9 @@ class CallInfoEntry implements CallInfoEntryInterface
         public readonly ?CallDataInterface $callData = null,
     ) {
     }
+
+    public function callData(): ?CallDataInterface
+    {
+        return $this->callData;
+    }
 }

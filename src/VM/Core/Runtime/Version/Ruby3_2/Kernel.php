@@ -25,6 +25,7 @@ use RubyVM\VM\Core\Runtime\Verification\Verifier;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StringLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\SymbolLoader;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Standard\Main;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Verification\VerificationHeader;
 use RubyVM\VM\Exception\ResolverException;
 use RubyVM\VM\Exception\RubyVMException;
@@ -97,6 +98,7 @@ class Kernel implements KernelInterface
         $operationProcessorEntries = new DefaultOperationProcessorEntries();
 
         return new Executor(
+            new Main(),
             $operationProcessorEntries,
             $instructionSequence,
             $this->vm->option()->logger,

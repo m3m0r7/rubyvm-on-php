@@ -10,4 +10,9 @@ class StringSymbol implements SymbolInterface
         public readonly string $string,
         public readonly Encoding $encoding,
     ) {}
+
+    public function __toString(): string
+    {
+        return $this->string;
+    }
 }

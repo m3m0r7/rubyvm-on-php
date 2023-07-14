@@ -5,4 +5,5 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 interface CallInfoEntryInterface
 {
+    public function callData(): ?CallDataInterface;
 }

@@ -29,11 +29,12 @@ class VMStack
         $this->push($object, $object);
     }
 
-    public function push(OperandEntry ...$entries): void
+    public function push(OperandEntry $entry, OperandEntry ...$otherEntries): void
     {
         array_push(
             $this->stacks,
-            ...$entries,
+            $entry,
+            ...$otherEntries,
         );
     }
 }

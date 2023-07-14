@@ -2,11 +2,10 @@
 declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
-use Psr\Log\LoggerInterface;
+use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
+use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\Executor\ProgramCounter;
-use RubyVM\VM\Core\Runtime\Executor\VMStack;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Exception\OperationProcessorException;
 
@@ -14,16 +13,12 @@ class BuiltinPutself implements OperationProcessorInterface
 {
     private Insn $insn;
 
-    private ProgramCounter $pc;
-    private VMStack $VMStack;
-    private LoggerInterface $logger;
+    private ContextInterface $context;
 
-    public function prepare(Insn $insn, ProgramCounter $pc, VMStack $VMStack, LoggerInterface $logger): void
+    public function prepare(Insn $insn, ContextInterface $context): void
     {
         $this->insn = $insn;
-        $this->pc = $pc;
-        $this->VMStack = $VMStack;
-        $this->logger = $logger;
+        $this->context = $context;
     }
 
     public function before(): void
@@ -36,12 +31,9 @@ class BuiltinPutself implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        throw new OperationProcessorException(
-            sprintf(
-                'The `%s` (opcode: 0x%02x) processor is not implemented yet',
-                strtolower($this->insn->name),
-                $this->insn->value,
-            )
-        );
+        $this->context
+            ->vmStack()
+            ->push(new OperandEntry($this->context->self()));
+        return ProcessedStatus::SUCCESS;
     }
 }

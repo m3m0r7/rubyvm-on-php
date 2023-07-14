@@ -6,7 +6,7 @@ class ID
 {
     protected readonly int $value;
 
-    public function __construct(Object_ $object)
+    public function __construct(public readonly Object_ $object)
     {
         $this->value = spl_object_id($object);
     }
