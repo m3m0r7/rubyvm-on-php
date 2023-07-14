@@ -7,7 +7,7 @@ _Notice: This project is very ultra super hyper maximum experimental implementat
 
 ## DEMO
 
-<img src="./docs/demo.gif" />
+<img src="./docs/demo.gif" width="100%" />
 
 ## Quick start
 
