@@ -3,7 +3,7 @@
 
 The RubyVM on PHP is implementation RubyVM written in PHP 100%.
 
-_Notice: This project is very ultra super hyper maximum experimental implementation._
+_Notice: This project is very ultra super hyper maximum experimental implementation_
 
 ## DEMO
 
@@ -65,5 +65,10 @@ $executor = $rubyVM->disassemble(
 $executor->execute();
 ```
 
+4. Run `php HelloWorld.php` and you will get outputted `HelloWorld!` from RubyVM.
 
-4. Run `php HelloWorld.php` and you will get outputted `HelloWorld!` from RubyVM
+## Other my toys
+
+- [PHPJava](https://github.com/php-java/php-java) - Implement a JVM written in PHP
+- [nfc-for-php](https://github.com/m3m0r7/nfc-for-php) - A NFC Reader (Control a hardware) written in PHP
+- [PHPPython](https://github.com/m3m0r7/PHPPython) - Implement a PYC executor written in PHP
