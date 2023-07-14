@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace RubyVM\VM\Core\Runtime\Insn;
 
 use RubyVM\VM\Core\Helper\EnumIntValueFindable;
@@ -7,6 +9,7 @@ use RubyVM\VM\Core\Helper\EnumIntValueFindable;
 enum Insn: int
 {
     use EnumIntValueFindable;
+
     case NOP = 0;
     case GETLOCAL = 1;
     case SETLOCAL = 2;

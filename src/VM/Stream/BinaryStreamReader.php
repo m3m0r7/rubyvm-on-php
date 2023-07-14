@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace RubyVM\VM\Stream;
 
 use RubyVM\VM\Exception\BinaryStreamReaderException;
@@ -180,12 +182,12 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
 
         // Emulates: rb_popcount32(uint32_t x)
         $ntzInt32 = function (int $x): int {
-            $x = ~$x & ($x-1);
+            $x = ~$x & ($x - 1);
             $x = ($x & 0x55555555) + ($x >> 1 & 0x55555555);
             $x = ($x & 0x33333333) + ($x >> 2 & 0x33333333);
             $x = ($x & 0x0f0f0f0f) + ($x >> 4 & 0x0f0f0f0f);
             $x = ($x & 0x001f001f) + ($x >> 8 & 0x001f001f);
-            $x = ($x & 0x0000003f) + ($x >>16 & 0x0000003f);
+            $x = ($x & 0x0000003f) + ($x >> 16 & 0x0000003f);
             return $x;
         };
 

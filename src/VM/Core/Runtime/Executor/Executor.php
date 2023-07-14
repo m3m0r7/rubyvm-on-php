@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace RubyVM\VM\Core\Runtime\Executor;
 
 use Psr\Log\LoggerInterface;
@@ -17,8 +19,8 @@ class Executor implements ExecutorInterface
     public function __construct(
         private readonly MainInterface $main,
         private readonly OperationProcessorEntries $operationProcessorEntries,
-        private readonly InstructionSequence       $instructionSequence,
-        private readonly LoggerInterface           $logger,
+        private readonly InstructionSequence $instructionSequence,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -81,5 +83,4 @@ class Executor implements ExecutorInterface
 
         return ExecutedStatus::SUCCESS;
     }
-
 }

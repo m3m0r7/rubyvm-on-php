@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace RubyVM\VM\Core\Runtime\Insn;
 
 use RubyVM\VM\Core\Helper\EnumStringValueFindable;

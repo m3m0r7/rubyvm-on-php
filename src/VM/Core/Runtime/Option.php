@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace RubyVM\VM\Core\Runtime;
 
 use Psr\Log\LoggerInterface;
@@ -14,5 +16,6 @@ class Option
         public readonly ?StreamHandlerInterface $stdOut = null,
         public readonly ?StreamHandlerInterface $stdIn = null,
         public readonly ?StreamHandlerInterface $stdErr = null,
-    ) {}
+    ) {
+    }
 }

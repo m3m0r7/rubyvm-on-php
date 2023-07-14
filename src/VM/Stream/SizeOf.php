@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace RubyVM\VM\Stream;
 
 use RubyVM\VM\Exception\BinaryStreamReaderException;

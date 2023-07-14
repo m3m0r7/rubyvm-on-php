@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace RubyVM\VM\Core\Runtime\Entry;
 
 use ArrayIterator;
@@ -8,7 +10,8 @@ use RubyVM\VM\Exception\EntryException;
 abstract class AbstractEntries implements EntriesInterface
 {
     public function __construct(public array $items = [])
-    {}
+    {
+    }
 
     public function verify(mixed $value): bool
     {

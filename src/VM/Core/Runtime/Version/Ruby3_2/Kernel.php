@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2;
 
 use RubyVM\VM\Core\Helper\DefaultOperationProcessorEntries;
@@ -53,8 +55,7 @@ class Kernel implements KernelInterface
     public function __construct(
         public readonly RubyVMInterface $vm,
         public readonly Verifier $verifier,
-    )
-    {
+    ) {
         $this->instructionSequenceList = new Offsets();
         $this->globalObjectList = new Offsets();
         $this->instructionSequences = new InstructionSequences();

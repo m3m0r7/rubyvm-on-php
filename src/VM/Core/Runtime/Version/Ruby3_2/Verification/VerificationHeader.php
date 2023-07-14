@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\Verification;
 
 use RubyVM\VM\Core\Runtime\Verification\VerificationHeaderInterface;
@@ -11,7 +13,8 @@ use RubyVM\VM\Stream\SizeOf;
 class VerificationHeader implements VerificationInterface
 {
     public function __construct(protected readonly Kernel $kernel)
-    {}
+    {
+    }
 
     private function verifyMagicByte(): void
     {
@@ -34,11 +37,13 @@ class VerificationHeader implements VerificationInterface
         $expectedVersions = [];
         foreach ($this->kernel->expectedVersions() as $expectedRubyVersion) {
             $expectedVersion = $expectedRubyVersion->value;
-            if (version_compare(
-                $expectedVersion,
-                $actualVersion,
-                '==',
-            )) {
+            if (
+                version_compare(
+                    $expectedVersion,
+                    $actualVersion,
+                    '==',
+                )
+            ) {
                 return;
             }
 

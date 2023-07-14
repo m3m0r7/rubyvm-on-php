@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence;
 
 use RubyVM\VM\Core\Runtime\Executor\CallInfoEntries;
@@ -257,7 +259,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             $callInfoEntryIndex = 0;
             $reader->pos($bytecodeOffset);
 
-            for ($codeIndex = 0; $codeIndex < $instructionSequenceSize; ) {
+            for ($codeIndex = 0; $codeIndex < $instructionSequenceSize;) {
                 $insn = Insn::of($insnValue = $reader->smallValue());
                 $entries->append(new OperationEntry(
                     insn: $insn,
