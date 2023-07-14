@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
+use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\ProgramCounter;
@@ -15,12 +16,14 @@ class BuiltinInvokeblock implements OperationProcessorInterface
 
     private ProgramCounter $pc;
     private VMStack $VMStack;
+    private LoggerInterface $logger;
 
-    public function prepare(Insn $insn, ProgramCounter $pc, VMStack $VMStack): void
+    public function prepare(Insn $insn, ProgramCounter $pc, VMStack $VMStack, LoggerInterface $logger): void
     {
         $this->insn = $insn;
         $this->pc = $pc;
         $this->VMStack = $VMStack;
+        $this->logger = $logger;
     }
 
     public function before(): void

@@ -99,6 +99,7 @@ class Kernel implements KernelInterface
         return new Executor(
             $operationProcessorEntries,
             $instructionSequence,
+            $this->vm->option()->logger,
         );
     }
 

@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Exception\ExecutorExeption;
@@ -12,7 +13,8 @@ class Executor implements ExecutorInterface
 
     public function __construct(
         private readonly OperationProcessorEntries $operationProcessorEntries,
-        public readonly InstructionSequence        $instructionSequence
+        public readonly InstructionSequence        $instructionSequence,
+        private readonly LoggerInterface           $logger,
     ) {
     }
 
@@ -41,6 +43,7 @@ class Executor implements ExecutorInterface
                 $operator->insn,
                 $pc,
                 $vmStack,
+                $this->logger,
             );
             $processor->before();
             $status = $processor->process();
