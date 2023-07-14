@@ -1,0 +1,116 @@
+<?php
+declare(strict_types=1);
+namespace RubyVM\VM\Core\Runtime\Entry;
+
+use ArrayIterator;
+use RubyVM\VM\Exception\EntryException;
+
+abstract class AbstractEntries implements EntriesInterface
+{
+    public function __construct(public array $items = [])
+    {}
+
+    public function verify(mixed $value): bool
+    {
+        return true;
+    }
+
+    public function verifyOffset(mixed $key): bool
+    {
+        if ($this->entryType() === EntryType::HASH) {
+            if ($key === null) {
+                return false;
+            }
+            return is_string($key) || is_int($key);
+        }
+        return $key === null || is_int($key);
+    }
+
+    public function offsetExists(mixed $offset): bool
+    {
+        return array_key_exists($this->filterKeyName($offset), $this->items);
+    }
+
+    public function offsetGet(mixed $offset): mixed
+    {
+        return $this->items[$this->filterKeyName($offset)] ?? null;
+    }
+
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        if (!$this->verify($value)) {
+            throw new EntryException(
+                sprintf(
+                    'The entry value is not verified on %s (%s)',
+                    static::class,
+                    is_object($value)
+                        ? get_class($value)
+                        : gettype($value),
+                ),
+            );
+        }
+        if (!$this->verifyOffset($offset)) {
+            throw new EntryException(
+                sprintf(
+                    'The entry key is not verified on %s (%s)',
+                    static::class,
+                    is_object($value)
+                        ? get_class($value)
+                        : gettype($value),
+                ),
+            );
+        }
+        $this->items[$offset ? $this->filterKeyName($offset) :  count($this->items)] = $value;
+    }
+
+    public function offsetUnset(mixed $offset): void
+    {
+        unset($this->items[$offset]);
+    }
+
+    public function count(): int
+    {
+        return count($this->items);
+    }
+
+    public function append(mixed $value): void
+    {
+        $this->offsetSet(null, $value);
+    }
+    public function set(mixed $index, mixed $value): void
+    {
+        $this->offsetSet($index, $value);
+    }
+
+    public function has(mixed $index): bool
+    {
+        return $this->offsetExists($index);
+    }
+
+    public function get(mixed $index): mixed
+    {
+        return $this->offsetGet($index) ?? null;
+    }
+    protected function entryType(): EntryType
+    {
+        return EntryType::LIST;
+    }
+
+    public function getIterator(): ArrayIterator
+    {
+        return new ArrayIterator($this->items);
+    }
+
+    protected function filterKeyName(mixed $index): string|int|null
+    {
+        return $this->enumToName($index);
+    }
+
+    private function enumToName(mixed $index): string|int
+    {
+        if (is_object($index) && enum_exists($index::class, false)) {
+            return $index->name;
+        }
+        return $index;
+    }
+}
