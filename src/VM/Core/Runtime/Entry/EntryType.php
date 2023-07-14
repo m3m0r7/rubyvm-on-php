@@ -1,0 +1,11 @@
+<?php
+
+declare(strict_types=1);
+
+namespace RubyVM\VM\Core\Runtime\Entry;
+
+enum EntryType
+{
+    case LIST;
+    case HASH;
+}
