@@ -96,8 +96,6 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
 
         $self->{$symbol->string}(...$this->translateForArguments(...$arguments));
 
-        exit();
-
         return ProcessedStatus::SUCCESS;
     }
 }
