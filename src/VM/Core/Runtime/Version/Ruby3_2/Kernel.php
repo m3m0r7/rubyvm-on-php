@@ -31,6 +31,7 @@ use RubyVM\VM\Exception\ResolverException;
 use RubyVM\VM\Exception\RubyVMException;
 use RubyVM\VM\Stream\BinaryStreamReader;
 use RubyVM\VM\Stream\BinaryStreamReaderInterface;
+use RubyVM\VM\Stream\StreamHandler;
 
 class Kernel implements KernelInterface
 {
@@ -98,7 +99,11 @@ class Kernel implements KernelInterface
         $operationProcessorEntries = new DefaultOperationProcessorEntries();
 
         return new Executor(
-            new Main(),
+            new Main(
+                $this->vm->option()->stdOut ?? new StreamHandler(STDOUT),
+                $this->vm->option()->stdIn ?? new StreamHandler(STDIN),
+                $this->vm->option()->stdErr ?? new StreamHandler(STDERR),
+            ),
             $operationProcessorEntries,
             $instructionSequence,
             $this->vm->option()->logger,

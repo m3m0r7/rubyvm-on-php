@@ -30,12 +30,6 @@ class BuiltinLeave implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        throw new OperationProcessorException(
-            sprintf(
-                'The `%s` (opcode: 0x%02x) processor is not implemented yet',
-                strtolower($this->insn->name),
-                $this->insn->value,
-            )
-        );
+        return ProcessedStatus::FINISH;
     }
 }

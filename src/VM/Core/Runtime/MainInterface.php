@@ -6,5 +6,5 @@ use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 
 interface MainInterface
 {
-    public function puts(StringSymbol $string): void;
+    public function puts(StringSymbol $stringSymbol): void;
 }
