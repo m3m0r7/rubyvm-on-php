@@ -25,6 +25,7 @@ class Object_
         return match ($name) {
             '^' => $this->calculateXOR(...$arguments),
             '**' => $this->calculatePower(...$arguments),
+            '>>' => $this->calculateRightShift(...$arguments),
             default => throw new NotFoundInstanceMethod(
                 sprintf(
                     'Not found instance method `%s`',
@@ -34,7 +35,7 @@ class Object_
         };
     }
 
-    public function calculateXOR(NumberSymbol $symbol): Object_
+    private function calculateXOR(NumberSymbol $symbol): Object_
     {
         /**
          * @var NumberSymbol $symbol
@@ -55,7 +56,7 @@ class Object_
         );
     }
 
-    public function calculatePower(NumberSymbol $symbol): Object_
+    private function calculatePower(NumberSymbol $symbol): Object_
     {
         /**
          * @var NumberSymbol $currentSymbol
@@ -70,6 +71,27 @@ class Object_
             ),
             new NumberSymbol(
                 $currentSymbol->number ** $symbol->number,
+            ),
+            null,
+            $this->id,
+        );
+    }
+
+    private function calculateRightShift(NumberSymbol $symbol): Object_
+    {
+        /**
+         * @var NumberSymbol $currentSymbol
+         */
+        $currentSymbol = $this->symbol;
+        return new self(
+            new ObjectInfo(
+                type: SymbolType::FIXNUM,
+                specialConst: 1,
+                frozen: 1,
+                internal: 0,
+            ),
+            new NumberSymbol(
+                $currentSymbol->number >> $symbol->number,
             ),
             null,
             $this->id,

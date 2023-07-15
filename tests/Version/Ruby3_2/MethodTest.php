@@ -72,4 +72,20 @@ class MethodTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
         $this->assertSame("32", $rubyVMManager->stdOut->readAll());
     }
+
+    public function testRightShift(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            puts 2>>1
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame("1", $rubyVMManager->stdOut->readAll());
+    }
 }
