@@ -93,8 +93,9 @@ $ ./vendor/bin/phpunit tests/
 
 ```
 $ git clone git@github.com:ruby/ruby.git
-$ ./configure cppflags="-DIBF_ISEQ_DEBUG=1"
-$ mkdir build && make -j16
+$ mkdir build && cd build
+$ ../configure cppflags="-DIBF_ISEQ_DEBUG=1"
+$ make -j16
 ```
 
 2) When you built ruby environment, you will got `vm.inc` file which is wrote how to execute each INSN commands
