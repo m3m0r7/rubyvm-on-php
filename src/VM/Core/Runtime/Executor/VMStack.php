@@ -6,11 +6,16 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Exception\VMStackException;
 
-class VMStack
+class VMStack implements \Countable
 {
     protected array $stacks = [];
 
     public function pos(): int
+    {
+        return count($this->stacks);
+    }
+
+    public function count(): int
     {
         return count($this->stacks);
     }

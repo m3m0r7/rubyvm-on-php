@@ -37,18 +37,27 @@ class RubyVM implements RubyVMInterface
             $verifier,
         );
 
+        $this->option->logger->info(
+            sprintf('Registered Ruby version %s kernel', $rubyVersion->value)
+        );
+
         return $this;
     }
 
     public function disassemble(RubyVersion $useVersion = null): ExecutorInterface
     {
+        $this->option->logger->info(
+            sprintf('Start to disassemble an instruction sequence'),
+        );
+
+        $selectedVersion = null;
         /**
          * @var Runtime|null $kernel
          */
         if ($useVersion === null) {
-            $runtime = $this->registeredRuntimes[$useVersion->value] ?? null;
+            $runtime = $this->registeredRuntimes[$selectedVersion = array_key_first($this->registeredRuntimes)] ?? null;
         } else {
-            $runtime = $this->registeredRuntimes[array_key_first($this->registeredRuntimes)] ?? null;
+            $runtime = $this->registeredRuntimes[$selectedVersion = $useVersion->value] ?? null;
         }
 
         if ($runtime === null) {
@@ -57,15 +66,31 @@ class RubyVM implements RubyVMInterface
             );
         }
 
+        $this->option->logger->info(
+            sprintf('Selected Ruby %s version kernel', $selectedVersion),
+        );
+
         $executor = $runtime
             ->kernel
             ->setup()
             ->process();
 
+        $this->option->logger->info(
+            sprintf('Complete to disassemble an instruction sequence'),
+        );
+
+        $this->option->logger->info(
+            sprintf('Check to verify process for an instruction sequence structure'),
+        );
+
         // Verify structures
         $runtime
             ->verifier
             ->done();
+
+        $this->option->logger->info(
+            sprintf('Complete to verify process'),
+        );
 
         return $executor;
     }

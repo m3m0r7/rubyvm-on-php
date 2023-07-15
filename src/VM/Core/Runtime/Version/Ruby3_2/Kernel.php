@@ -119,6 +119,11 @@ class Kernel implements KernelInterface
      */
     public function setup(): self
     {
+        $this->vm->option()->logger->info(
+            sprintf('Load an instruction sequence header'),
+        );
+        $pos = $this->stream()->pos();
+
         $this->magic = $this->stream()->read(4);
         $this->majorVersion = $this->stream()->unsignedLong();
         $this->minorVersion = $this->stream()->unsignedLong();
@@ -128,6 +133,10 @@ class Kernel implements KernelInterface
         $this->globalObjectListSize = $this->stream()->unsignedLong();
         $this->instructionSequenceListOffset = $this->stream()->unsignedLong();
         $this->globalObjectListOffset = $this->stream()->unsignedLong();
+
+        $this->vm->option()->logger->info(
+            sprintf('Loaded an instruction sequence header (%d bytes)', $this->stream()->pos() - $pos),
+        );
 
         $this->setupInstructionSequenceList();
         $this->setupGlobalObjectList();
@@ -148,6 +157,10 @@ class Kernel implements KernelInterface
     {
         $this->stream()->pos($this->instructionSequenceListOffset);
 
+        $this->vm->option()->logger->info(
+            sprintf('Setup an instruction sequence list (offset: %d)', $this->instructionSequenceListOffset),
+        );
+
         for ($i = 0; $i < $this->instructionSequenceListSize; $i++) {
             $this->instructionSequenceList->append(
                 new Offset(
@@ -155,6 +168,10 @@ class Kernel implements KernelInterface
                 )
             );
         }
+
+        $this->vm->option()->logger->info(
+            sprintf('Loaded an instruction sequence list (size: %d)', $this->stream()->pos() - $this->instructionSequenceListOffset),
+        );
 
         return $this;
     }
@@ -168,6 +185,10 @@ class Kernel implements KernelInterface
     {
         $this->stream()->pos($this->globalObjectListOffset);
 
+        $this->vm->option()->logger->info(
+            sprintf('Setup a global object list (offset: %d)', $this->globalObjectListOffset),
+        );
+
         for ($i = 0; $i < $this->globalObjectListSize; $i++) {
             $this->globalObjectList->append(
                 new Offset(
@@ -175,6 +196,11 @@ class Kernel implements KernelInterface
                 )
             );
         }
+
+        $this->vm->option()->logger->info(
+            sprintf('Loaded global object list (size: %d)', $this->stream()->pos() - $this->globalObjectListOffset),
+        );
+
         return $this;
     }
 
@@ -204,9 +230,37 @@ class Kernel implements KernelInterface
             );
         }
 
+        $this->vm->option()->logger->info(
+            sprintf('Start to find object (index: %d)', $index),
+        );
+
         if (isset($this->globalObjectTable[$index])) {
-            return $this->globalObjectTable[$index];
+            /**
+             * @var Object_ $object
+             */
+            $object = $this->globalObjectTable[$index];
+
+            $this->vm->option()->logger->debug(
+                sprintf('Use cached object (index: %d)', $index),
+            );
+
+            $this->vm->option()->logger->info(
+                sprintf(
+                    'Loaded an object (index: %d, type: %s, special_const: %d, frozen: %d, internal: %d)',
+                    $index,
+                    $object->info->type->name,
+                    $object->info->specialConst,
+                    $object->info->frozen,
+                    $object->info->internal,
+                ),
+            );
+
+            return $object;
         }
+
+        $this->vm->option()->logger->debug(
+            sprintf('Start to register new object (index: %d)', $index),
+        );
 
         /**
          * @var Offset $offset
@@ -224,12 +278,23 @@ class Kernel implements KernelInterface
                     $byte = $stream->unsignedByte();
                     return new ObjectInfo(
                         type:         SymbolType::of(($byte >> 0) & 0x1f),
-                        specialCount: (bool) ($byte >> 5) & 0x01,
+                        specialConst: (bool) ($byte >> 5) & 0x01,
                         frozen:       (bool) ($byte >> 6) & 0x01,
                         internal:     (bool) ($byte >> 7) & 0x01,
                     );
                 }
             );
+
+        $this->vm->option()->logger->info(
+            sprintf(
+                'Loaded an object (index: %d, type: %s, special_const: %d, frozen: %d, internal: %d)',
+                $index,
+                $info->type->name,
+                $info->specialConst,
+                $info->frozen,
+                $info->internal,
+            ),
+        );
 
         return $this->globalObjectTable[$index] = new Object_(
             info: $info,

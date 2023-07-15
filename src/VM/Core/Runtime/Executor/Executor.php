@@ -33,7 +33,11 @@ class Executor implements ExecutorInterface
 
         $isFinished = false;
 
-        for (; $pc->pos() < count($operations); $pc->increase()) {
+        $this->logger->info(
+            sprintf('Start an executor (total program counter: %d)', count($operations)),
+        );
+
+        for (; $pc->pos() < count($operations) && !$isFinished; $pc->increase()) {
             /**
              * @var OperationEntry|mixed $operator
              */
@@ -44,9 +48,27 @@ class Executor implements ExecutorInterface
                 );
             }
 
+            $this->logger->info(
+                sprintf(
+                    'Start to process an INSN `%s` (0x%02x) (ProgramCounter: %d)',
+                    strtolower($operator->insn->name),
+                    $operator->insn->value,
+                    $pc->pos(),
+                ),
+            );
+
             $processor = $this
                 ->operationProcessorEntries
                 ->get($operator->insn);
+
+            $this->logger->info(
+                sprintf(
+                    'Start to prepare an INSN `%s` (0x%02x) (ProgramCounter: %d)',
+                    strtolower($operator->insn->name),
+                    $operator->insn->value,
+                    $pc->pos(),
+                ),
+            );
 
             $processor->prepare(
                 $operator->insn,
@@ -58,14 +80,44 @@ class Executor implements ExecutorInterface
                     $this->logger,
                 ),
             );
+
+            $this->logger->info(
+                sprintf(
+                    'Start to process a before method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
+                    strtolower($operator->insn->name),
+                    $operator->insn->value,
+                    $pc->pos(),
+                ),
+            );
+
             $processor->before();
+
+            $this->logger->info(
+                sprintf(
+                    'Start to process a main routine method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
+                    strtolower($operator->insn->name),
+                    $operator->insn->value,
+                    $pc->pos(),
+                ),
+            );
+
             $status = $processor->process();
+
+            $this->logger->info(
+                sprintf(
+                    'Start to process a post method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
+                    strtolower($operator->insn->name),
+                    $operator->insn->value,
+                    $pc->pos(),
+                ),
+            );
+
             $processor->after();
 
             // Finish this loop when returning ProcessedStatus::FINISH
             if ($status === ProcessedStatus::FINISH) {
                 $isFinished = true;
-                break;
+                continue;
             }
 
             if ($status !== ProcessedStatus::SUCCESS) {
@@ -86,12 +138,41 @@ class Executor implements ExecutorInterface
         }
 
         if ($isFinished === false) {
+            $this->logger->emergency(
+                sprintf('Illegal finish an executor'),
+            );
+
             throw new ExecutorExeption(
-                'The executor did not finish - maybe did not call the `%s` (0x%02x)',
-                Insn::LEAVE->name,
-                Insn::LEAVE->value,
+                sprintf(
+                    'The executor did not finish - maybe did not call the `%s` (0x%02x)',
+                    strtolower(Insn::LEAVE->name),
+                    Insn::LEAVE->value,
+                ),
             );
         }
+
+        if (count($vmStack) > 0) {
+            $this->logger->warning(
+                sprintf(
+                    'The VM stack has more remained stacked (remaining: %d) which cause memory leak in the near future',
+                    count($vmStack),
+                ),
+            );
+        }
+
+        if (count($operations) !== $pc->pos()) {
+            $this->logger->warning(
+                sprintf(
+                    'Unmatched expected processing operations and the program counter positions (expected operations: %d, actually program counter: %d)',
+                    count($operations),
+                    $pc->pos(),
+                ),
+            );
+        }
+
+        $this->logger->info(
+            sprintf('Success to finish normally an executor'),
+        );
 
         return ExecutedStatus::SUCCESS;
     }
