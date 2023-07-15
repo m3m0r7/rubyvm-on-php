@@ -19,7 +19,7 @@ _Notice: I tested Ruby version 3.2 only_
 $ composer require m3m0r7/rubyvm-on-php
 ```
 
-2. Save The below code as `HelloWorld.rb`
+2. Save the below code as `HelloWorld.rb`
 
 ```ruby
 puts RubyVM::InstructionSequence.compile("puts 'HelloWorld!\n'", "HelloWorld.rb").to_binary
@@ -28,7 +28,7 @@ puts RubyVM::InstructionSequence.compile("puts 'HelloWorld!\n'", "HelloWorld.rb"
 3. Output `.yarv` file as following
 
 ```shell
-ruby HelloWorld.rb > HelloWorld.yarv
+$ ruby HelloWorld.rb > HelloWorld.yarv
 ```
 
 3. Create PHP file with below code and save as `HelloWorld.php`
@@ -69,8 +69,15 @@ $executor->execute();
 
 4. Run `php HelloWorld.php` and you will get outputted `HelloWorld!` from RubyVM.
 
+## Test
+
+```
+$ ./vendor/bin/phpunit tests/
+```
+
+
 ## Other my toys
 
 - [PHPJava](https://github.com/php-java/php-java) - Implement a JVM written in PHP
-- [nfc-for-php](https://github.com/m3m0r7/nfc-for-php) - A NFC Reader (Control a hardware) written in PHP
+- [nfc-for-php](https://github.com/m3m0r7/nfc-for-php) - A NFC Reader (Control a NFC hardware) written in PHP
 - [PHPPython](https://github.com/m3m0r7/PHPPython) - Implement a PYC executor written in PHP

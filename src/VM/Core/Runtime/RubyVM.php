@@ -40,12 +40,16 @@ class RubyVM implements RubyVMInterface
         return $this;
     }
 
-    public function disassemble(RubyVersion $useVersion): ExecutorInterface
+    public function disassemble(RubyVersion $useVersion = null): ExecutorInterface
     {
         /**
          * @var Runtime|null $kernel
          */
-        $runtime = $this->registeredRuntimes[$useVersion->value] ?? null;
+        if ($useVersion === null) {
+            $runtime = $this->registeredRuntimes[$useVersion->value] ?? null;
+        } else {
+            $runtime = $this->registeredRuntimes[array_key_first($this->registeredRuntimes)] ?? null;
+        }
 
         if ($runtime === null) {
             throw new RubyVMException(

@@ -28,6 +28,12 @@ trait StreamGeneric
         return $read;
     }
 
+    public function readAll(): string
+    {
+        rewind($this->handle);
+        return stream_get_contents($this->handle);
+    }
+
     public function pos(int $newPos = null, int $whence = SEEK_SET): int
     {
         if ($newPos === null) {

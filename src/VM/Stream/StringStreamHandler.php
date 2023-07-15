@@ -13,7 +13,7 @@ class StringStreamHandler implements StreamHandlerInterface
 
     public function __construct(public readonly string $string)
     {
-        $this->handle = fopen('php://memory', 'rb');
+        $this->handle = fopen('php://memory', 'w+');
         fwrite($this->handle, $string);
         rewind($this->handle);
     }
@@ -27,6 +27,7 @@ class StringStreamHandler implements StreamHandlerInterface
 
     public function size(): ?int
     {
-        return strlen($this->string);
+        // Add EOF byte
+        return strlen($this->string) + 1;
     }
 }

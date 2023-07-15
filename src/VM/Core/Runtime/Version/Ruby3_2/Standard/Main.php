@@ -11,14 +11,14 @@ use RubyVM\VM\Stream\StreamHandlerInterface;
 class Main implements MainInterface
 {
     public function __construct(
-        private readonly StreamHandlerInterface $stdout,
-        private readonly StreamHandlerInterface $stdin,
-        private readonly StreamHandlerInterface $stderr,
+        private readonly StreamHandlerInterface $stdOut,
+        private readonly StreamHandlerInterface $stdIn,
+        private readonly StreamHandlerInterface $stdErr,
     ) {
     }
 
     public function puts(StringSymbol $stringSymbol): void
     {
-        $this->stdout->write($stringSymbol->string);
+        $this->stdOut->write($stringSymbol->string);
     }
 }
