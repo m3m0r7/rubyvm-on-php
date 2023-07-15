@@ -21,4 +21,9 @@ class Main implements MainInterface
     {
         $this->stdOut->write((string) $symbol);
     }
+
+    public function phpinfo(): void
+    {
+        $this->stdOut->write("PHP Version: " . PHP_VERSION . "\n");
+    }
 }

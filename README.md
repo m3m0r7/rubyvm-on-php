@@ -105,6 +105,17 @@ $executor->execute();
 $executor->debugger()->showExecutedOperations();
 ```
 
+## Custom method
+
+The RubyVM on PHP has custom method in the main context.
+Try to call `phpinfo` as below Ruby code on the RubyVM on PHP:
+
+```ruby
+phpinfo
+```
+
+Then you got displayed `PHP Version: 8.2.7`
+
 ## Test
 
 ```
