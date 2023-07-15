@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
+use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
@@ -32,12 +33,11 @@ class BuiltinDup implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        throw new OperationProcessorException(
-            sprintf(
-                'The `%s` (opcode: 0x%02x) processor is not implemented yet',
-                strtolower($this->insn->name),
-                $this->insn->value,
-            )
-        );
+        $this->context->vmStack()->push($operand = $this->context->vmStack()->pop());
+        $this->context->vmStack()->push(new OperandEntry(
+            clone $operand->operand,
+        ));
+
+        return ProcessedStatus::SUCCESS;
     }
 }
