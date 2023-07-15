@@ -152,4 +152,22 @@ class SyntaxTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
         $this->assertSame("1.3333333333333333", $rubyVMManager->stdOut->readAll());
     }
+
+    public function testVariable(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            variable_test1 = 15
+            variable_test2 = 10
+            puts variable_test1 + variable_test2
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame("25", $rubyVMManager->stdOut->readAll());
+    }
 }

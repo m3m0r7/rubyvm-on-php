@@ -20,7 +20,7 @@ trait Validatable
                     'The %s caught unknown operand %s but this validator expects %s',
                     $this->insn->name,
                     get_class($operandData),
-                    CallDataInterface::class,
+                    $expectClassName,
                 ),
             );
         }

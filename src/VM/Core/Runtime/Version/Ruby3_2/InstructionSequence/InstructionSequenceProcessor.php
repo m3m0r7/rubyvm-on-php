@@ -21,12 +21,17 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequenceBody;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequenceProcessorInterface;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
+use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
+use RubyVM\VM\Core\Runtime\Symbol\Object_;
+use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
+use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\CallData;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\CatchEntries;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\InsnsBodyEntries;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\InsnsPositionEntries;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\VariableEntries;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceBody as Ruby3_2_InstructionSequenceBody;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Internal\Arithmetic;
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\InstructionSequenceProcessorException;
 use RubyVM\VM\Stream\BinaryStreamReader;
@@ -292,7 +297,20 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                                     operand: $instructionSequenceBody
                                         ->callInfoEntries[$callInfoEntryIndex++],
                                 ),
-
+                                InsnType::TS_NUM,
+                                InsnType::TS_LINDEX => new OperandEntry(
+                                    operand: new Object_(
+                                        info: new ObjectInfo(
+                                            type: SymbolType::FIXNUM,
+                                            specialConst: 1,
+                                            frozen: 1,
+                                            internal: 1,
+                                        ),
+                                        symbol: new NumberSymbol(
+                                            Arithmetic::fix2int($reader->smallValue()),
+                                        ),
+                                    )
+                                ),
                                 // Not implemented yet
                                 InsnType::TS_VARIABLE,
                                 InsnType::TS_IVC,
@@ -301,11 +319,9 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                                 InsnType::TS_ISE,
                                 InsnType::TS_ISEQ,
                                 InsnType::TS_FUNCPTR,
-                                InsnType::TS_NUM,
                                 InsnType::TS_BUILTIN,
                                 InsnType::TS_CDHASH,
-                                InsnType::TS_ICVARC,
-                                InsnType::TS_LINDEX => throw new ExecutorExeption(
+                                InsnType::TS_ICVARC => throw new ExecutorExeption(
                                     sprintf(
                                         'The OperandType#%s is not supported',
                                         $operandType->name,

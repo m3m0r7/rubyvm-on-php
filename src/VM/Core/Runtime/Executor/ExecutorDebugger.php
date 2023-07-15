@@ -46,6 +46,7 @@ class ExecutorDebugger
             'OPCODE',
             'TIME',
             'STACKS',
+            'REGISTERED LOCAL TABLES',
             'MEMORY',
             ]
         );
@@ -57,16 +58,15 @@ class ExecutorDebugger
          * @var int $memoryUsage
          */
         foreach ($this->snapshots as [$insn, $context, $time, $memoryUsage]) {
-            $table->addRow(
-                [
+            $table->addRow([
                 $context->programCounter()->pos(),
                 strtolower($insn->name),
                 sprintf('0x%02x', $insn->value),
                 "{$time}s",
                 count($context->vmStack()),
+                count($context->environmentTable()),
                 sprintf("%.2f KB", ($memoryUsage / 1000)),
-                ]
-            );
+            ]);
         }
 
         $table->render();

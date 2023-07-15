@@ -16,6 +16,7 @@ class OperationProcessorContext implements ContextInterface
         private ProgramCounter $pc,
         private InstructionSequence $instructionSequence,
         private LoggerInterface $logger,
+        private EnvironmentTable $environmentTable,
     ) {
     }
 
@@ -25,6 +26,7 @@ class OperationProcessorContext implements ContextInterface
         $this->vmStack = clone $this->vmStack;
         $this->pc = clone $this->pc;
         $this->instructionSequence = clone $this->instructionSequence;
+        $this->environmentTable = clone $this->environmentTable;
     }
 
     public function self(): MainInterface
@@ -50,5 +52,10 @@ class OperationProcessorContext implements ContextInterface
     public function instructionSequence(): InstructionSequence
     {
         return $this->instructionSequence;
+    }
+
+    public function environmentTable(): EnvironmentTable
+    {
+        return $this->environmentTable;
     }
 }

@@ -32,6 +32,7 @@ class Executor implements ExecutorInterface
         $operations = $this->instructionSequence->operations();
         $vmStack = new VMStack();
         $pc = new ProgramCounter();
+        $environmentTable = new EnvironmentTable();
 
         $isFinished = false;
 
@@ -79,6 +80,7 @@ class Executor implements ExecutorInterface
                 $pc,
                 $this->instructionSequence,
                 $this->logger,
+                $environmentTable,
             );
 
             $startTime = microtime(true);

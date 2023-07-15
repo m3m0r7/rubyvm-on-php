@@ -15,4 +15,6 @@ interface ContextInterface
     public function programCounter(): ProgramCounter;
     public function logger(): LoggerInterface;
     public function instructionSequence(): InstructionSequence;
+
+    public function environmentTable(): EnvironmentTable;
 }
