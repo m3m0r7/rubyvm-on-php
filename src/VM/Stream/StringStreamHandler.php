@@ -16,7 +16,7 @@ class StringStreamHandler implements StreamHandlerInterface
     public function __construct(string $string)
     {
         // Add EOF byte
-        $this->string = $string .= "\x1A";
+        $this->string = $string .= "\x03";
         $this->handle = fopen('php://memory', 'w+');
         fwrite($this->handle, $this->string);
         rewind($this->handle);
