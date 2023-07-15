@@ -25,6 +25,7 @@ use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FixedNumberLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StringLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\SymbolLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Standard\Main;
@@ -245,6 +246,7 @@ class Kernel implements KernelInterface
     private function resolveLoader(ObjectInfo $info, Offset $offset): LoaderInterface
     {
         return match ($info->type) {
+            SymbolType::FIXNUM => new FixedNumberLoader($this, $offset),
             SymbolType::SYMBOL => new SymbolLoader($this, $offset),
             SymbolType::STRING => new StringLoader($this, $offset),
             default => throw new ResolverException("Cannot resolve a symbol: {$info->type->name} - maybe the symbol type is not supported yet"),

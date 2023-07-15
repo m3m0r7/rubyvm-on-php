@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\Standard;
 
 use RubyVM\VM\Core\Runtime\MainInterface;
-use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
+use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Stream\StreamHandlerInterface;
 
 class Main implements MainInterface
@@ -17,8 +17,8 @@ class Main implements MainInterface
     ) {
     }
 
-    public function puts(StringSymbol $stringSymbol): void
+    public function puts(SymbolInterface $symbol): void
     {
-        $this->stdOut->write($stringSymbol->string);
+        $this->stdOut->write((string) $symbol);
     }
 }

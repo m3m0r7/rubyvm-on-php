@@ -2,7 +2,7 @@
 
 
 The RubyVM on PHP is implementation RubyVM written in PHP 100%.
-RubyVM has not completely documentation and I was referred [Ruby source code](https://github.com/ruby/ruby) when contributing this project.
+Completely documentation not exists how to implement RubyVM and I was referred [Ruby source code](https://github.com/ruby/ruby) when contributing this project.
 
 _Notice: This project is very ultra super hyper maximum experimental implementation_
 
@@ -86,6 +86,42 @@ $ ./vendor/bin/phpunit tests/
 ```
 ./vendor/bin/phpcbf src/ tests/
 ```
+
+## How to contribute
+
+1) Build your ruby environment from source code with `-DIBF_ISEQ_DEBUG` flag
+
+```
+$ git clone git@github.com:ruby/ruby.git
+$ ./configure cppflags="-DIBF_ISEQ_DEBUG=1"
+$ mkdir build && make -j16
+```
+
+2) When you built ruby environment, you will got `vm.inc` file which is wrote how to execute each INSN commands
+
+3) You can get logging at `iseq_load_**` when running ruby code as following
+
+```
+...omitted
+
+ibf_load_object: type=0x15 special=1 frozen=1 internal=1      // The type is a FIX_NUMBER (2)
+ibf_load_object: index=0x3 obj=0x5
+ibf_load_object: list=0xf0 offsets=0x12b80fcf0 offset=0xe1
+ibf_load_object: type=0x15 special=1 frozen=1 internal=1      // The type is a FIX_NUMBER (3)
+ibf_load_object: index=0x4 obj=0x7
+ibf_load_object: list=0xf0 offsets=0x12b80fcf0 offset=0xcd
+ibf_load_object: type=0x5 special=0 frozen=1 internal=0       // The type is a STRING SYMBOL (puts)
+
+...omitted
+```
+
+The above logs is created below example code:
+
+```
+puts 1 + 2 + 3
+```
+
+4) Refer it and now you can implement INSN command in the RubyVM on PHP
 
 ## Other my toys
 

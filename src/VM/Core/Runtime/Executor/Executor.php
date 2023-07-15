@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor;
 
 use Psr\Log\LoggerInterface;
+use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\MainInterface;
@@ -29,6 +30,8 @@ class Executor implements ExecutorInterface
         $operations = $this->instructionSequence->operations();
         $vmStack = new VMStack();
         $pc = new ProgramCounter();
+
+        $isFinished = false;
 
         for (; $pc->pos() < count($operations); $pc->increase()) {
             /**
@@ -61,6 +64,7 @@ class Executor implements ExecutorInterface
 
             // Finish this loop when returning ProcessedStatus::FINISH
             if ($status === ProcessedStatus::FINISH) {
+                $isFinished = true;
                 break;
             }
 
@@ -79,6 +83,14 @@ class Executor implements ExecutorInterface
                     ),
                 );
             }
+        }
+
+        if ($isFinished === false) {
+            throw new ExecutorExeption(
+                'The executor did not finish - maybe did not call the `%s` (0x%02x)',
+                Insn::LEAVE->name,
+                Insn::LEAVE->value,
+            );
         }
 
         return ExecutedStatus::SUCCESS;

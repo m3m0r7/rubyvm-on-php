@@ -10,6 +10,7 @@ use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
@@ -77,8 +78,22 @@ class BuiltinOptPlus implements OperationProcessorInterface
 
         $value = null;
         if ($operator instanceof StringSymbol) {
+            if ((string) $operator !== '+') {
+                throw new OperationProcessorException(
+                    sprintf(
+                        'The `%s` (opcode: 0x%02x) processor cannot process %s operator because string concatenating was allowed only `+`',
+                        strtolower($this->insn->name),
+                        $this->insn->value,
+                        $operator,
+                    )
+                );
+            }
+
             if ($leftOperand instanceof StringSymbol && $rightOperand instanceof StringSymbol) {
-                $value = $this->calculateString($operator, $leftOperand, $rightOperand);
+                $value = $this->calculateStringPlusString($leftOperand, $rightOperand);
+            }
+            if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
+                $value = $this->calculateNumberPlusNumber($leftOperand, $rightOperand);
             }
         }
 
@@ -98,18 +113,8 @@ class BuiltinOptPlus implements OperationProcessorInterface
         return ProcessedStatus::SUCCESS;
     }
 
-    private function calculateString(StringSymbol $operator, StringSymbol $leftOperand, StringSymbol $rightOperand): Object_
+    private function calculateStringPlusString(StringSymbol $leftOperand, StringSymbol $rightOperand): Object_
     {
-        if ((string) $operator !== '+') {
-            throw new OperationProcessorException(
-                sprintf(
-                    'The `%s` (opcode: 0x%02x) processor cannot process %s operator because string concatenating was allowed only `+`',
-                    strtolower($this->insn->name),
-                    $this->insn->value,
-                    $operator,
-                )
-            );
-        }
         return new Object_(
             new ObjectInfo(
                 SymbolType::STRING,
@@ -119,6 +124,20 @@ class BuiltinOptPlus implements OperationProcessorInterface
             ),
             new StringSymbol(
                 $leftOperand . $rightOperand
+            ),
+        );
+    }
+    private function calculateNumberPlusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
+    {
+        return new Object_(
+            new ObjectInfo(
+                SymbolType::FIXNUM,
+                0,
+                1,
+                0
+            ),
+            new NumberSymbol(
+                $leftOperand->number + $rightOperand->number
             ),
         );
     }
