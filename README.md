@@ -117,7 +117,7 @@ ibf_load_object: type=0x5 special=0 frozen=1 internal=0       // The type is a S
 
 The above logs is created below example code:
 
-```
+```ruby
 puts 1 + 2 + 3
 ```
 
