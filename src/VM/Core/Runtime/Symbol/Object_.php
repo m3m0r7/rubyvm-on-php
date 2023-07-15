@@ -43,10 +43,15 @@ class Object_
 
             throw new NotFoundInstanceMethod(
                 sprintf(
-                    'Not found instance method %s#%s. In the actually, arguments count are unmatched or anymore problems when throwing this exception.',
+                    <<< _
+                    Not found instance method %s#%s. In the actually, arguments count are unmatched or anymore problems when throwing this exception.
+                    Use try-catch statement and checking a previous exception via this exception if you want to solve kindly this problems.
+                    _,
                     $classNamePath[array_key_last($classNamePath)],
                     $name,
                 ),
+                $e->getCode(),
+                $e,
             );
         }
 
