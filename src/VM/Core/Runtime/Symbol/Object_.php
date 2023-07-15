@@ -38,7 +38,7 @@ class Object_
     private function calculateXOR(NumberSymbol $symbol): Object_
     {
         /**
-         * @var NumberSymbol $symbol
+         * @var NumberSymbol $currentSymbol
          */
         $currentSymbol = $this->symbol;
         return new self(
