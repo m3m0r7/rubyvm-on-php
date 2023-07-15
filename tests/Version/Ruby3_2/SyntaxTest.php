@@ -234,4 +234,49 @@ class SyntaxTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
         $this->assertSame("4", $rubyVMManager->stdOut->readAll());
     }
+    public function testTrueAndFalse(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            puts true && false
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame("false", $rubyVMManager->stdOut->readAll());
+    }
+    public function testTrueOrFalse(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            puts true || false
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame("true", $rubyVMManager->stdOut->readAll());
+    }
+    public function testTrueAndTrue(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            puts true && true
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame("true", $rubyVMManager->stdOut->readAll());
+    }
 }

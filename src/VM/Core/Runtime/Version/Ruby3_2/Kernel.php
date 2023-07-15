@@ -23,10 +23,12 @@ use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FalseLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FixedNumberLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FloatLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StringLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\SymbolLoader;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\TrueLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Standard\Main;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Verification\VerificationHeader;
 use RubyVM\VM\Exception\ResolverException;
@@ -310,6 +312,8 @@ class Kernel implements KernelInterface
     private function resolveLoader(ObjectInfo $info, Offset $offset): LoaderInterface
     {
         return match ($info->type) {
+            SymbolType::TRUE => new TrueLoader($this, $offset),
+            SymbolType::FALSE => new FalseLoader($this, $offset),
             SymbolType::FLOAT => new FloatLoader($this, $offset),
             SymbolType::FIXNUM => new FixedNumberLoader($this, $offset),
             SymbolType::SYMBOL => new SymbolLoader($this, $offset),
