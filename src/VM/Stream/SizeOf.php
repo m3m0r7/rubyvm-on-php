@@ -15,6 +15,7 @@ enum SizeOf
     case LONG;
     case INT;
     case LONG_LONG;
+    case DOUBLE;
 
     public function size(): int
     {
@@ -22,8 +23,13 @@ enum SizeOf
             self::BOOL, self::CHAR, self::BYTE => 1,
             self::SHORT => 2,
             self::INT, self::LONG => 4,
-            self::LONG_LONG => 8,
-            default => throw new BinaryStreamReaderException('Unknown SizeOf type'),
+            self::LONG_LONG, self::DOUBLE => 8,
+            default => throw new BinaryStreamReaderException(
+                sprintf(
+                    'Unknown SizeOf type %s',
+                    $this->name,
+                ),
+            ),
         };
     }
 
@@ -33,12 +39,12 @@ enum SizeOf
             self::BOOL, self::CHAR, self::BYTE => 0xff,
             self::SHORT => 0xffff,
             self::INT, self::LONG => 0xffffffff,
-            self::LONG_LONG => 0xffffffffffffffff,
+            self::LONG_LONG, self::DOUBLE => 0xffffffffffffffff,
             default => throw new BinaryStreamReaderException(
                 sprintf(
                     'Unknown SizeOf type %s',
-                    $this,
-                )
+                    $this->name,
+                ),
             ),
         };
     }

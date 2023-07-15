@@ -9,6 +9,7 @@ use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Symbol\FloatSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
@@ -49,6 +50,9 @@ class BuiltinOptMult implements OperationProcessorInterface
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
             $value = $this->calculateNumberMultiplyNumber($leftOperand, $rightOperand);
         }
+        if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
+            $value = $this->calculateFloatMultiplyFloat($leftOperand, $rightOperand);
+        }
         return $value;
     }
 
@@ -62,6 +66,21 @@ class BuiltinOptMult implements OperationProcessorInterface
                 0
             ),
             new NumberSymbol(
+                $leftOperand->number * $rightOperand->number
+            ),
+        );
+    }
+
+    private function calculateFloatMultiplyFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
+    {
+        return new Object_(
+            new ObjectInfo(
+                SymbolType::FLOAT,
+                0,
+                1,
+                0
+            ),
+            new FloatSymbol(
                 $leftOperand->number * $rightOperand->number
             ),
         );

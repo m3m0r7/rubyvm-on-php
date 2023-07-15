@@ -6,6 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Offset;
 
 use RubyVM\VM\Core\Runtime\Entry\AbstractEntries;
 use RubyVM\VM\Exception\VerificationException;
+use RubyVM\VM\Stream\SizeOf;
 
 class Offset
 {
@@ -24,5 +25,15 @@ class Offset
     public function increase(): Offset
     {
         return new Offset($this->offset + 1);
+    }
+
+    /**
+     * NOTE: see also IBF_ALIGNED_OFFSET(align, offset) implementation
+     */
+    public function align(SizeOf $size): Offset
+    {
+        return new Offset(
+            ((int) (($this->offset - 1) / $size->size()) + 1) * $size->size(),
+        );
     }
 }

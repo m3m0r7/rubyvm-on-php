@@ -47,6 +47,20 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         );
     }
 
+    public function double(): float
+    {
+        /**
+         * FIXME: This code depend on the machine. We must fix non-depending on the machine.
+         *
+         * @see https://www.php.net/manual/en/function.pack.php
+         */
+        return $this->readWithEndian(
+            littleEndian: 'e',
+            bigEndian: 'E',
+            bytes: SizeOf::DOUBLE,
+        );
+    }
+
     public function short(): int
     {
         $value = $this->unsignedShort();
@@ -116,7 +130,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         return $this->streamHandler->read($bytes);
     }
 
-    private function readWithEndian(string $littleEndian, string $bigEndian, SizeOf $bytes): int
+    private function readWithEndian(string $littleEndian, string $bigEndian, SizeOf $bytes): int|float
     {
         $read = unpack(
             $this->endian === Endian::LITTLE_ENDIAN

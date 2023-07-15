@@ -7,7 +7,6 @@ namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2;
 use RubyVM\VM\Core\Helper\DefaultOperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
-use RubyVM\VM\Core\Runtime\Executor\OperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
@@ -16,7 +15,6 @@ use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
 use RubyVM\VM\Core\Runtime\Offset\Offsets;
 use RubyVM\VM\Core\Runtime\RubyVersion;
-use RubyVM\VM\Core\Runtime\RubyVM;
 use RubyVM\VM\Core\Runtime\RubyVMInterface;
 use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\LoaderInterface;
@@ -26,6 +24,7 @@ use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FixedNumberLoader;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FloatLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StringLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\SymbolLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Standard\Main;
@@ -311,6 +310,7 @@ class Kernel implements KernelInterface
     private function resolveLoader(ObjectInfo $info, Offset $offset): LoaderInterface
     {
         return match ($info->type) {
+            SymbolType::FLOAT => new FloatLoader($this, $offset),
             SymbolType::FIXNUM => new FixedNumberLoader($this, $offset),
             SymbolType::SYMBOL => new SymbolLoader($this, $offset),
             SymbolType::STRING => new StringLoader($this, $offset),

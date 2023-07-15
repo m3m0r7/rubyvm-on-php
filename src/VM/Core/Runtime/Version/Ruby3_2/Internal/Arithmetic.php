@@ -10,6 +10,7 @@ class Arithmetic
 
     /**
      * NOTE: refer INT2FIX implementation
+     *
      * @see https://github.com/ruby/ruby/blob/master/include/ruby/internal/arithmetic/long.h
      */
     public static function fix2int(int $value): int
@@ -20,6 +21,7 @@ class Arithmetic
 
     /**
      * NOTE: refer INT2FIX implementation
+     *
      * @see https://github.com/ruby/ruby/blob/master/include/ruby/internal/arithmetic/long.h
      */
     public static function int2fix(int $value): int
