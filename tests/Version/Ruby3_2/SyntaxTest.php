@@ -72,4 +72,20 @@ class SyntaxTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
         $this->assertSame("64", $rubyVMManager->stdOut->readAll());
     }
+
+    public function testNumberDivideNumber(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            puts 4 / 3
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame("1", $rubyVMManager->stdOut->readAll());
+    }
 }
