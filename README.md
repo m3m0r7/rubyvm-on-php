@@ -121,7 +121,7 @@ The above logs is created below example code:
 puts 1 + 2 + 3
 ```
 
-4) Refer it and now you can implement INSN command in the RubyVM on PHP
+4) Refer it and now you can contribute to implement INSN command in the RubyVM on PHP
 
 ## Other my toys
 
