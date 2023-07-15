@@ -24,4 +24,20 @@ class MethodTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
         $this->assertSame("HelloWorld!", $rubyVMManager->stdOut->readAll());
     }
+
+    public function testPHPInfoMethod(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            phpinfo
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame("PHP Version: " . PHP_VERSION . "\n", $rubyVMManager->stdOut->readAll());
+    }
 }
