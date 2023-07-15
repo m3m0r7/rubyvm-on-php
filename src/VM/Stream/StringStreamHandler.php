@@ -11,10 +11,14 @@ class StringStreamHandler implements StreamHandlerInterface
 {
     use StreamGeneric;
 
-    public function __construct(public readonly string $string)
+    protected readonly string $string;
+
+    public function __construct(string $string)
     {
+        // Add EOF byte
+        $this->string = $string .= "\x1A";
         $this->handle = fopen('php://memory', 'w+');
-        fwrite($this->handle, $string);
+        fwrite($this->handle, $this->string);
         rewind($this->handle);
     }
 
@@ -28,6 +32,6 @@ class StringStreamHandler implements StreamHandlerInterface
     public function size(): ?int
     {
         // Add EOF byte
-        return strlen($this->string) + 1;
+        return strlen($this->string);
     }
 }
