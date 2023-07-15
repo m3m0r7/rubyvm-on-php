@@ -153,7 +153,7 @@ class SyntaxTest extends TestApplication
         $this->assertSame("1.3333333333333333", $rubyVMManager->stdOut->readAll());
     }
 
-    public function testVariable(): void
+    public function testLocalVariable(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< _
@@ -169,5 +169,53 @@ class SyntaxTest extends TestApplication
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
         $this->assertSame("25", $rubyVMManager->stdOut->readAll());
+    }
+
+    public function testMod(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            puts 3 % 5
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame("3", $rubyVMManager->stdOut->readAll());
+    }
+
+    public function testAnd(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            puts 3 & 1
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame("1", $rubyVMManager->stdOut->readAll());
+    }
+
+    public function testOr(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            puts 2 | 1
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame("3", $rubyVMManager->stdOut->readAll());
     }
 }
