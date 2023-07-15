@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Symbol;
 
+use RubyVM\VM\Core\Helper\DefaultInstanceMethodEntries;
+use RubyVM\VM\Core\Runtime\Executor\InstanceMethodInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
 
@@ -22,18 +24,31 @@ class Object_
 
     public function __call(string $name, array $arguments)
     {
-        $result = match ($name) {
-            '^' => $this->symbol->calculateXOR(...$arguments),
-            '**' => $this->symbol->calculatePower(...$arguments),
-            '>>' => $this->symbol->calculateRightShift(...$arguments),
-            'to_int' => $this->symbol->toInt(...$arguments),
-            default => throw new NotFoundInstanceMethod(
+        $defaultMethodEntries = new DefaultInstanceMethodEntries();
+
+        try {
+            /**
+             * @var InstanceMethodInterface|null $entry
+             */
+            $entry = $defaultMethodEntries[$name] ?? null;
+
+            if ($entry === null) {
+                throw new \Error();
+            }
+
+            $result = $entry->process($this->symbol, ...$arguments);
+        } catch (\Error $e) {
+            // Call to undefined method when not defined on symbol
+            $classNamePath = explode('\\', get_class($this->symbol));
+
+            throw new NotFoundInstanceMethod(
                 sprintf(
-                    'Not found instance method `%s`',
+                    'Not found instance method %s#%s. In the actually, arguments count are unmatched or anymore problems when throwing this exception.',
+                    $classNamePath[array_key_last($classNamePath)],
                     $name,
                 ),
-            ),
-        };
+            );
+        }
 
         return new Object_(
             new ObjectInfo(
