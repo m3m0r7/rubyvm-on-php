@@ -37,12 +37,11 @@ class VerificationHeader implements VerificationInterface
         $expectedVersions = [];
         foreach ($this->kernel->expectedVersions() as $expectedRubyVersion) {
             $expectedVersion = $expectedRubyVersion->value;
-            if (
-                version_compare(
-                    $expectedVersion,
-                    $actualVersion,
-                    '==',
-                )
+            if (version_compare(
+                $expectedVersion,
+                $actualVersion,
+                '==',
+            )
             ) {
                 return;
             }

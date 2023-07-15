@@ -17,9 +17,11 @@ class TestApplication extends TestCase
         $uri = stream_get_meta_data($handle)['uri'];
 
         $compilerHandle = tmpfile();
-        fwrite($compilerHandle, <<<_
+        fwrite(
+            $compilerHandle, <<<_
         puts RubyVM::InstructionSequence.compile_file("{$uri}").to_binary
-        _);
+        _
+        );
         $compilerRubyUri = stream_get_meta_data($compilerHandle)['uri'];
 
         exec("{$binaryPath} {$compilerRubyUri}", $output);

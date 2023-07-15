@@ -44,8 +44,7 @@ class InstructionSequenceBody implements InstructionSequenceBodyInterface
         public readonly CallInfoEntries $callInfoEntries,
         public readonly int $bytecodeOffset,
         public readonly int $bytecodeSize,
-    )
-    {
+    ) {
     }
 
 

@@ -43,9 +43,9 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         $newPos = $this->context->programCounter()->increase();
 
         $callDataOperand = $this->context
-                ->instructionSequence()
-                ->operations()
-                ->get($newPos);
+            ->instructionSequence()
+            ->operations()
+            ->get($newPos);
 
         $this->validateType(
             OperandEntry::class,

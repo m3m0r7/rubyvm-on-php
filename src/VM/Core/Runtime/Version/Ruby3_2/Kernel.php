@@ -148,9 +148,11 @@ class Kernel implements KernelInterface
         $this->stream()->pos($this->instructionSequenceListOffset);
 
         for ($i = 0; $i < $this->instructionSequenceListSize; $i++) {
-            $this->instructionSequenceList->append(new Offset(
-                $this->stream()->unsignedByte(),
-            ));
+            $this->instructionSequenceList->append(
+                new Offset(
+                    $this->stream()->unsignedByte(),
+                )
+            );
         }
 
         return $this;
@@ -166,9 +168,11 @@ class Kernel implements KernelInterface
         $this->stream()->pos($this->globalObjectListOffset);
 
         for ($i = 0; $i < $this->globalObjectListSize; $i++) {
-            $this->globalObjectList->append(new Offset(
-                $this->stream()->unsignedLong(),
-            ));
+            $this->globalObjectList->append(
+                new Offset(
+                    $this->stream()->unsignedLong(),
+                )
+            );
         }
         return $this;
     }
@@ -213,16 +217,18 @@ class Kernel implements KernelInterface
          */
         $info = $this
             ->stream()
-            ->dryPosTransaction(function (BinaryStreamReader $stream) use ($offset) {
-                $stream->pos($offset->offset);
-                $byte = $stream->unsignedByte();
-                return new ObjectInfo(
-                    type:         SymbolType::of(($byte >> 0) & 0x1f),
-                    specialCount: (bool) ($byte >> 5) & 0x01,
-                    frozen:       (bool) ($byte >> 6) & 0x01,
-                    internal:     (bool) ($byte >> 7) & 0x01,
-                );
-            });
+            ->dryPosTransaction(
+                function (BinaryStreamReader $stream) use ($offset) {
+                    $stream->pos($offset->offset);
+                    $byte = $stream->unsignedByte();
+                    return new ObjectInfo(
+                        type:         SymbolType::of(($byte >> 0) & 0x1f),
+                        specialCount: (bool) ($byte >> 5) & 0x01,
+                        frozen:       (bool) ($byte >> 6) & 0x01,
+                        internal:     (bool) ($byte >> 7) & 0x01,
+                    );
+                }
+            );
 
         return $this->globalObjectTable[$index] = new Object_(
             offset: $offset,
