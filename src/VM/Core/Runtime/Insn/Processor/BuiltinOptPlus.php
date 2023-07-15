@@ -20,9 +20,7 @@ use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinOptPlus implements OperationProcessorInterface
 {
-    use OperatorCalculatable {
-        process as processArithmetic;
-    }
+    use OperatorCalculatable;
 
     private Insn $insn;
 

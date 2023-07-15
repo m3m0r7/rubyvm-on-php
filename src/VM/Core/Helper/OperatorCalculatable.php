@@ -18,7 +18,7 @@ trait OperatorCalculatable
 {
     use Validatable;
 
-    private function process(string $expectedOperator): ProcessedStatus
+    private function processArithmetic(string $expectedOperator): ProcessedStatus
     {
         $newPos = $this->context->programCounter()->increase();
 

@@ -17,9 +17,7 @@ use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 
 class BuiltinOptMinus implements OperationProcessorInterface
 {
-    use OperatorCalculatable {
-        process as processArithmetic;
-    }
+    use OperatorCalculatable;
 
     private Insn $insn;
 
