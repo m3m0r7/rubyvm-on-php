@@ -42,4 +42,13 @@ enum SymbolType
     case ZOMBIE;
     case RSV_0x1e; // TODO: Reserved case
     case RSV_0x1f; // TODO: Reserved case
+
+    public static function findBySymbol(SymbolInterface $symbol): self
+    {
+        return match ($symbol) {
+            NumberSymbol::class => self::FIXNUM,
+            StringSymbol::class => self::STRING,
+            default => self::NONE,
+        };
+    }
 }

@@ -22,10 +22,11 @@ class Object_
 
     public function __call(string $name, array $arguments)
     {
-        return match ($name) {
-            '^' => $this->calculateXOR(...$arguments),
-            '**' => $this->calculatePower(...$arguments),
-            '>>' => $this->calculateRightShift(...$arguments),
+        $result = match ($name) {
+            '^' => $this->symbol->calculateXOR(...$arguments),
+            '**' => $this->symbol->calculatePower(...$arguments),
+            '>>' => $this->symbol->calculateRightShift(...$arguments),
+            'to_int' => $this->symbol->toInt(...$arguments),
             default => throw new NotFoundInstanceMethod(
                 sprintf(
                     'Not found instance method `%s`',
@@ -33,66 +34,15 @@ class Object_
                 ),
             ),
         };
-    }
 
-    private function calculateXOR(NumberSymbol $symbol): Object_
-    {
-        /**
-         * @var NumberSymbol $currentSymbol
-         */
-        $currentSymbol = $this->symbol;
-        return new self(
+        return new Object_(
             new ObjectInfo(
-                type: SymbolType::FIXNUM,
-                specialConst: 1,
+                type: SymbolType::findBySymbol($result),
+                specialConst: 0,
                 frozen: 1,
                 internal: 0,
             ),
-            new NumberSymbol(
-                $currentSymbol->number ^ $symbol->number,
-            ),
-            null,
-            $this->id,
-        );
-    }
-
-    private function calculatePower(NumberSymbol $symbol): Object_
-    {
-        /**
-         * @var NumberSymbol $currentSymbol
-         */
-        $currentSymbol = $this->symbol;
-        return new self(
-            new ObjectInfo(
-                type: SymbolType::FIXNUM,
-                specialConst: 1,
-                frozen: 1,
-                internal: 0,
-            ),
-            new NumberSymbol(
-                $currentSymbol->number ** $symbol->number,
-            ),
-            null,
-            $this->id,
-        );
-    }
-
-    private function calculateRightShift(NumberSymbol $symbol): Object_
-    {
-        /**
-         * @var NumberSymbol $currentSymbol
-         */
-        $currentSymbol = $this->symbol;
-        return new self(
-            new ObjectInfo(
-                type: SymbolType::FIXNUM,
-                specialConst: 1,
-                frozen: 1,
-                internal: 0,
-            ),
-            new NumberSymbol(
-                $currentSymbol->number >> $symbol->number,
-            ),
+            $result,
             null,
             $this->id,
         );

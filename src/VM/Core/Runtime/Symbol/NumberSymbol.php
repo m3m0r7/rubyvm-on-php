@@ -15,4 +15,30 @@ class NumberSymbol implements SymbolInterface
     {
         return (string) $this->number;
     }
+
+    public function calculateXOR(NumberSymbol $symbol): self
+    {
+        return new self(
+            $this->number ^ $symbol->number,
+        );
+    }
+
+    public function calculatePower(NumberSymbol $symbol): self
+    {
+        return new NumberSymbol(
+            $this->number ** $symbol->number,
+        );
+    }
+
+    public function calculateRightShift(NumberSymbol $symbol): self
+    {
+        return new NumberSymbol(
+            $this->number >> $symbol->number,
+        );
+    }
+
+    public function toInt(): self
+    {
+        return clone $this;
+    }
 }

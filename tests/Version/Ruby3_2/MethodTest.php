@@ -88,4 +88,20 @@ class MethodTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
         $this->assertSame("1", $rubyVMManager->stdOut->readAll());
     }
+
+    public function testToInt(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            puts 65535.to_int
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame("65535", $rubyVMManager->stdOut->readAll());
+    }
 }
