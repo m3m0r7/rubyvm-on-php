@@ -13,6 +13,7 @@ use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\MainInterface;
+use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 
 class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
@@ -92,11 +93,16 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         );
 
         /**
-         * @var MainInterface $self
+         * @var MainInterface|Object_ $targetSymbol
          */
-        $self = $class->operand;
+        $targetSymbol = $class->operand;
 
-        $self->{$symbol->string}(...$this->translateForArguments(...$arguments));
+        $result = $targetSymbol->{$symbol->string}(...$this->translateForArguments(...$arguments));
+
+        if ($targetSymbol instanceof Object_) {
+            $this->context->vmStack()
+                ->push(new OperandEntry($result));
+        }
 
         return ProcessedStatus::SUCCESS;
     }
