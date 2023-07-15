@@ -11,12 +11,20 @@ use RubyVM\VM\Core\Runtime\MainInterface;
 class OperationProcessorContext implements ContextInterface
 {
     public function __construct(
-        private readonly MainInterface $main,
-        private readonly VMStack $vmStack,
-        private readonly ProgramCounter $pc,
-        private readonly InstructionSequence $instructionSequence,
-        private readonly LoggerInterface $logger,
+        private MainInterface $main,
+        private VMStack $vmStack,
+        private ProgramCounter $pc,
+        private InstructionSequence $instructionSequence,
+        private LoggerInterface $logger,
     ) {
+    }
+
+    public function __clone()
+    {
+        $this->main = clone $this->main;
+        $this->vmStack = clone $this->vmStack;
+        $this->pc = clone $this->pc;
+        $this->instructionSequence = clone $this->instructionSequence;
     }
 
     public function self(): MainInterface

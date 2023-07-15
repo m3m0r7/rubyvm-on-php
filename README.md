@@ -75,6 +75,36 @@ $executor->execute();
 
 4. Run `php HelloWorld.php` and you will get outputted `HelloWorld!` from RubyVM.
 
+## Use an executor debugger
+
+The RubyVM on PHP is provided an executor debugger that can display processed an INSN and anymore into a table as following:
+
+
+```
++-----------------+------------------------+--------+------+--------+----------+
+| PROGRAM COUNTER | INSN                   | OPCODE | TIME | STACKS | MEMORY   |
++-----------------+------------------------+--------+------+--------+----------+
+| 0               | putself                | 0x12   | 0s   | 0      | 16.76 KB |
+| 1               | putstring              | 0x15   | 0s   | 1      | 0.99 KB  |
+| 3               | opt_send_without_block | 0x33   | 0s   | 2      | 1.03 KB  |
+| 5               | leave                  | 0x3c   | 0s   | 0      | 0.78 KB  |
++-----------------+------------------------+--------+------+--------+----------+
+```
+
+If you want to display above table then add below code from the Quick start.
+
+```php
+// Disassemble instruction sequence binary formatted and get executor
+$executor = $rubyVM->disassemble(
+    useVersion: \RubyVM\VM\Core\Runtime\RubyVersion::VERSION_3_2,
+);
+
+$executor->execute();
+
+// You can display processed an INSN table when adding below code
+$executor->debugger()->showExecutedOperations();
+```
+
 ## Test
 
 ```

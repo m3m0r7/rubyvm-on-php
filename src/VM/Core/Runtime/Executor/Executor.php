@@ -16,6 +16,7 @@ use RubyVM\VM\Exception\ExecutorUnknownException;
 class Executor implements ExecutorInterface
 {
     protected array $operations = [];
+    protected readonly ExecutorDebugger $executorDebugger;
 
     public function __construct(
         private readonly MainInterface $main,
@@ -23,6 +24,7 @@ class Executor implements ExecutorInterface
         private readonly InstructionSequence $instructionSequence,
         private readonly LoggerInterface $logger,
     ) {
+        $this->executorDebugger = new ExecutorDebugger();
     }
 
     public function execute(): ExecutedStatus
@@ -48,6 +50,7 @@ class Executor implements ExecutorInterface
                 );
             }
 
+
             $this->logger->info(
                 sprintf(
                     'Start to process an INSN `%s` (0x%02x) (ProgramCounter: %d)',
@@ -70,15 +73,20 @@ class Executor implements ExecutorInterface
                 ),
             );
 
+            $context = new OperationProcessorContext(
+                $this->main,
+                $vmStack,
+                $pc,
+                $this->instructionSequence,
+                $this->logger,
+            );
+
+            $startTime = microtime(true);
+            $snapshotContext = clone $context;
+
             $processor->prepare(
                 $operator->insn,
-                new OperationProcessorContext(
-                    $this->main,
-                    $vmStack,
-                    $pc,
-                    $this->instructionSequence,
-                    $this->logger,
-                ),
+                $context,
             );
 
             $this->logger->info(
@@ -113,6 +121,12 @@ class Executor implements ExecutorInterface
             );
 
             $processor->after();
+
+            $this->executorDebugger->append(
+                $operator->insn,
+                (int) (microtime(true) - $startTime),
+                $snapshotContext,
+            );
 
             // Finish this loop when returning ProcessedStatus::FINISH
             if ($status === ProcessedStatus::FINISH) {
@@ -175,5 +189,10 @@ class Executor implements ExecutorInterface
         );
 
         return ExecutedStatus::SUCCESS;
+    }
+
+    public function debugger(): ExecutorDebugger
+    {
+        return $this->executorDebugger;
     }
 }
