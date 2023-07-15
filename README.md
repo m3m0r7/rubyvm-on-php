@@ -100,7 +100,7 @@ $ make -j16
 
 2) When you built ruby environment, you will got `vm.inc` file which is wrote how to execute each INSN commands
 
-3) You can get logging at `iseq_load_**` when running ruby code as following
+3) You can get logging at `ibf_load_**` when running ruby code as following
 
 ```
 ...omitted
