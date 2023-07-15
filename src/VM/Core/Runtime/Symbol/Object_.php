@@ -11,9 +11,9 @@ class Object_
     public readonly ID $id;
 
     public function __construct(
-        public Offset $offset,
         public ObjectInfo $info,
         public SymbolInterface $symbol,
+        public ?Offset $offset = null,
     ) {
         $this->id = new ID($this);
     }

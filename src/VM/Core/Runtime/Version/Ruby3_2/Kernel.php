@@ -231,7 +231,6 @@ class Kernel implements KernelInterface
             );
 
         return $this->globalObjectTable[$index] = new Object_(
-            offset: $offset,
             info: $info,
             symbol: $this
                 ->stream()
@@ -239,6 +238,7 @@ class Kernel implements KernelInterface
                     fn () => $this->resolveLoader($info, $offset->increase())
                         ->load()
                 ),
+            offset: $offset,
         );
     }
 

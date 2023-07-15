@@ -11,9 +11,11 @@ trait ArgumentTranslatable
 {
     use Validatable;
 
-    public function translateForArguments(OperandEntry $operand, OperandEntry ...$operands): array
+    public function translateForArguments(OperandEntry ...$operands): array
     {
-        if (empty($operands)) {
+
+        $newSymbols = [];
+        foreach ($operands as $operand) {
             /**
              * @var Object_ $object
              */
@@ -21,18 +23,6 @@ trait ArgumentTranslatable
             $this->validateType(
                 Object_::class,
                 $object,
-            );
-            return [$object->symbol];
-        }
-        $newSymbols = [];
-        foreach ([$operand, ...$operands] as $operand) {
-            /**
-             * @var Object_ $object
-             */
-            $object = $operand->operand;
-            $this->validateType(
-                Object_::class,
-                $operands,
             );
             $newSymbols[] = $object->symbol;
         }

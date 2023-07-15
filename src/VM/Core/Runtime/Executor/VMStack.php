@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use RubyVM\VM\Exception\VMStackException;
+
 class VMStack
 {
     protected array $stacks = [];
@@ -15,7 +17,13 @@ class VMStack
 
     public function pop(): OperandEntry
     {
-        return array_pop($this->stacks);
+        $item = array_pop($this->stacks);
+        if ($item === null) {
+            throw new VMStackException(
+                'The VMStack is empty'
+            );
+        }
+        return $item;
     }
 
     public function shift(): OperandEntry

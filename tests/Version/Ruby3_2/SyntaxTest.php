@@ -7,13 +7,13 @@ use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
 use RubyVM\VM\Core\Runtime\RubyVersion;
 use Tests\RubyVM\Helper\TestApplication;
 
-class MethodTest extends TestApplication
+class SyntaxTest extends TestApplication
 {
-    public function testPutsMethod(): void
+    public function testConcatString(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< _
-            puts "HelloWorld!"
+            puts "Hello" + "World" + "!"
             _,
         );
 

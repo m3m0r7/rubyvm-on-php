@@ -10,7 +10,7 @@ class StringSymbol implements SymbolInterface
 {
     public function __construct(
         public readonly string $string,
-        public readonly Encoding $encoding,
+        public readonly Encoding $encoding = Encoding::RUBY_ENCINDEX_UTF_8,
     ) {
     }
 

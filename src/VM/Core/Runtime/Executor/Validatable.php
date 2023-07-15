@@ -8,10 +8,10 @@ use RubyVM\VM\Exception\OperationProcessorException;
 
 trait Validatable
 {
-    public function validateType(string $expectClassName, mixed $data, mixed ...$otherData): void
+    public function validateType(string $expectClassName, mixed ...$data): void
     {
-        foreach ([$data, ...$otherData] as $operandData) {
-            if ($data instanceof $expectClassName) {
+        foreach ($data as $operandData) {
+            if ($operandData instanceof $expectClassName) {
                 continue;
             }
 
