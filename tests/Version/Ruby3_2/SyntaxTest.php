@@ -56,4 +56,20 @@ class SyntaxTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
         $this->assertSame("-4", $rubyVMManager->stdOut->readAll());
     }
+
+    public function testNumberMultiplyNumber(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            puts 2 * 4 * 8
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame("64", $rubyVMManager->stdOut->readAll());
+    }
 }
