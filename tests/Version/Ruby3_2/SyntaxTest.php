@@ -279,4 +279,23 @@ class SyntaxTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
         $this->assertSame("true", $rubyVMManager->stdOut->readAll());
     }
+
+    public function testMultiBoolean(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            boolean1 = true
+            boolean2 = false
+            boolean3 = true
+            puts boolean1 && boolean2 || boolean3 && boolean1 || boolean2 && boolean3
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame("true", $rubyVMManager->stdOut->readAll());
+    }
 }

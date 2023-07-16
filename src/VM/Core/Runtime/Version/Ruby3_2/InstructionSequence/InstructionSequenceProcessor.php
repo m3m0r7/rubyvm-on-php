@@ -310,7 +310,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                                         ),
                                         symbol: new NumberSymbol(
                                             // NOTE: do not use Arithmetic::fix2int
-                                            $reader->smallValue() - Option::VM_ENV_DATA_SIZE,
+                                            $reader->smallValue(),
                                         ),
                                     )
                                 ),
