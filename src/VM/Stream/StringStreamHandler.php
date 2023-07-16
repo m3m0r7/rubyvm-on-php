@@ -17,7 +17,7 @@ class StringStreamHandler implements StreamHandlerInterface
     {
         // Add EOF byte
         $this->string = $string .= "\x03";
-        $this->handle = fopen('php://memory', 'w+');
+        $this->handle = fopen('php://memory', 'r+b');
         fwrite($this->handle, $this->string);
         rewind($this->handle);
     }

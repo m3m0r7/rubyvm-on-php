@@ -13,7 +13,7 @@ class FileStreamHandler implements StreamHandlerInterface
 
     public function __construct(public readonly string $path)
     {
-        $this->handle = fopen($path, 'rb');
+        $this->handle = fopen($path, 'r+b');
     }
 
     public function write(string $string): void

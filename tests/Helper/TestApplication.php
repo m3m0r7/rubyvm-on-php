@@ -25,7 +25,7 @@ class TestApplication extends TestCase
         $compilerRubyUri = stream_get_meta_data($compilerHandle)['uri'];
 
         exec("{$binaryPath} {$compilerRubyUri}", $output);
-        $binary = (string) implode($output);
+        $binary = (string) implode("\n", $output);
 
         $stdOut = new StreamHandler(fopen('php://memory', 'w+'));
         $stdIn = new StreamHandler(fopen('php://memory', 'w+'));
