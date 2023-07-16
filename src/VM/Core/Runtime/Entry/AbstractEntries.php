@@ -63,7 +63,7 @@ abstract class AbstractEntries implements EntriesInterface
                 ),
             );
         }
-        $this->items[$offset ? $this->filterKeyName($offset) :  count($this->items)] = $value;
+        $this->items[$offset ? $this->filterKeyName($offset) : count($this->items)] = $value;
     }
 
     public function offsetUnset(mixed $offset): void

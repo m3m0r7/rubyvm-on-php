@@ -125,7 +125,8 @@ $ ./vendor/bin/phpunit tests/
 ## Linter
 
 ```
-./vendor/bin/phpcbf src/ tests/
+./vendor/bin/php-cs-fixer fix --rules=@PSR12 src/
+./vendor/bin/php-cs-fixer fix --rules=@PSR12 tests/
 ```
 
 ## How to contribute

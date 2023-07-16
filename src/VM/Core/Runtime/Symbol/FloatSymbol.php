@@ -19,7 +19,8 @@ class FloatSymbol implements SymbolInterface
                 sprintf(
                     '%.16f',
                     $this->number
-                ), '0'
+                ),
+                '0'
             );
         }
 

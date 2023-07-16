@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\Internal;
 
 class Arithmetic
 {
-    const RUBY_FIXNUM_FLAG = 0x01;
+    public const RUBY_FIXNUM_FLAG = 0x01;
 
     /**
      * NOTE: refer INT2FIX implementation

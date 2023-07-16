@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\RubyVM\Helper;
@@ -18,7 +19,8 @@ class TestApplication extends TestCase
 
         $compilerHandle = tmpfile();
         fwrite(
-            $compilerHandle, <<<_
+            $compilerHandle,
+            <<<_
         puts RubyVM::InstructionSequence.compile_file("{$uri}").to_binary
         _
         );

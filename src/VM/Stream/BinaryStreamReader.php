@@ -23,7 +23,8 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
     public function int(): int
     {
         $value = $this->unsignedInt();
-        return $value - (($value & SizeOf::INT->size()) > 0
+        return $value - (
+            ($value & SizeOf::INT->size()) > 0
             ? SizeOf::INT->mask() + 1
             : 0
         );
@@ -32,7 +33,8 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
     public function long(): int
     {
         $value = $this->unsignedLong();
-        return $value - (($value & SizeOf::LONG->size()) > 0
+        return $value - (
+            ($value & SizeOf::LONG->size()) > 0
             ? SizeOf::LONG->mask() + 1
             : 0
         );
@@ -41,7 +43,8 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
     public function longLong(): int
     {
         $value = $this->unsignedLongLong();
-        return $value - (($value & SizeOf::LONG_LONG->size()) > 0
+        return $value - (
+            ($value & SizeOf::LONG_LONG->size()) > 0
             ? SizeOf::LONG_LONG->mask() + 1
             : 0
         );
@@ -64,7 +67,8 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
     public function short(): int
     {
         $value = $this->unsignedShort();
-        return $value - (($value & SizeOf::SHORT->size()) > 0
+        return $value - (
+            ($value & SizeOf::SHORT->size()) > 0
             ? SizeOf::SHORT->mask() + 1
             : 0
         );
@@ -73,7 +77,8 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
     public function byte(): int
     {
         $value = $this->unsignedByte();
-        return $value - (($value & SizeOf::BYTE->size()) > 0
+        return $value - (
+            ($value & SizeOf::BYTE->size()) > 0
             ? SizeOf::BYTE->mask() + 1
             : 0
         );
