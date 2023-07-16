@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Symbol;
 
+use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Helper\DefaultInstanceMethodEntries;
 use RubyVM\VM\Core\Runtime\Executor\InstanceMethodInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
@@ -38,16 +39,14 @@ class Object_
 
             $result = $entry->process($this->symbol, ...$arguments);
         } catch (\Error $e) {
-            // Call to undefined method when not defined on symbol
-            $classNamePath = explode('\\', get_class($this->symbol));
-
             throw new NotFoundInstanceMethod(
                 sprintf(
                     <<< _
                     Not found instance method %s#%s. In the actually, arguments count are unmatched or anymore problems when throwing this exception.
                     Use try-catch statement and checking a previous exception via this exception if you want to solve kindly this problems.
                     _,
-                    $classNamePath[array_key_last($classNamePath)],
+                    // Call to undefined method when not defined on symbol
+                    ClassHelper::nameBySymbol($this->symbol),
                     $name,
                 ),
                 $e->getCode(),

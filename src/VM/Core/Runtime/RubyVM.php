@@ -11,8 +11,6 @@ use RubyVM\VM\Exception\RubyVMException;
 
 class RubyVM implements RubyVMInterface
 {
-    const RUBY_ENCINDEX_BUILTIN_MAX = 12;
-
     protected array $registeredRuntimes = [];
 
     public function __construct(public readonly Option $option)

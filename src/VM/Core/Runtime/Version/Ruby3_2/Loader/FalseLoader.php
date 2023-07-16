@@ -20,8 +20,8 @@ class FalseLoader implements LoaderInterface
     public function load(): SymbolInterface
     {
         $this->kernel->stream()->pos($this->offset->offset);
-        $value = $this->kernel->stream()->smallValue();
+        $this->kernel->stream()->smallValue();
 
-        return new BooleanSymbol((bool) $value);
+        return new BooleanSymbol(false);
     }
 }

@@ -21,9 +21,11 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequenceBody;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequenceProcessorInterface;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
+use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
+use RubyVM\VM\Core\Runtime\Symbol\OffsetSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\CallData;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\CatchEntries;
@@ -273,7 +275,6 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         )
                     );
 
-
                     $types = $operationMap[$this->insnOperationOffsets()[$insnValue]] ?? null;
                     if ($types === null) {
                         throw new ExecutorExeption(
@@ -297,7 +298,8 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                                     operand: $instructionSequenceBody
                                         ->callInfoEntries[$callInfoEntryIndex++],
                                 ),
-                                InsnType::TS_NUM,
+
+                                // see: https://github.com/ruby/ruby/blob/ruby_3_2/iseq.c#L2090
                                 InsnType::TS_LINDEX => new OperandEntry(
                                     operand: new Object_(
                                         info: new ObjectInfo(
@@ -307,9 +309,21 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                                             internal: 1,
                                         ),
                                         symbol: new NumberSymbol(
-                                            Arithmetic::fix2int($reader->smallValue()),
+                                            // NOTE: do not use Arithmetic::fix2int
+                                            $reader->smallValue() - Option::VM_ENV_DATA_SIZE,
                                         ),
                                     )
+                                ),
+
+                                // NOTE: here is not implemented on actually the RubyVM.
+                                // This is originally implemented by the RubyVM on PHP.
+                                InsnType::TS_OFFSET => new OperandEntry(
+                                    operand: new Object_(
+                                        info: ObjectInfo::none(),
+                                        symbol: new OffsetSymbol(
+                                            offset: $reader->smallValue(),
+                                        ),
+                                    ),
                                 ),
                                 // Not implemented yet
                                 InsnType::TS_VARIABLE,
@@ -321,6 +335,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                                 InsnType::TS_FUNCPTR,
                                 InsnType::TS_BUILTIN,
                                 InsnType::TS_CDHASH,
+                                InsnType::TS_NUM,
                                 InsnType::TS_ICVARC => throw new ExecutorExeption(
                                     sprintf(
                                         'The OperandType#%s is not supported',
@@ -328,7 +343,8 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                                     ),
                                 ),
                                 default => new UnknownEntry(
-                                    $reader->smallValue()
+                                    $reader->smallValue(),
+                                    $types[$opIndex],
                                 ),
                             },
                         );

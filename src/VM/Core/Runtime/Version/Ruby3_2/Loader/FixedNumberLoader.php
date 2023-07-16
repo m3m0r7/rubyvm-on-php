@@ -25,6 +25,7 @@ class FixedNumberLoader implements LoaderInterface
 
         return new NumberSymbol(
             Arithmetic::fix2int($value),
+            true,
         );
     }
 }

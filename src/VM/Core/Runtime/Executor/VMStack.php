@@ -41,7 +41,7 @@ class VMStack implements \Countable
     public function dup(): void
     {
         $object = $this->pop();
-        $this->push($object, $object);
+        $this->push($object, clone $object);
     }
 
     public function push(OperandEntry $entry, OperandEntry ...$otherEntries): void

@@ -16,4 +16,14 @@ class ObjectInfo
         public readonly int $internal,
     ) {
     }
+
+    public static function none(): self
+    {
+        return new ObjectInfo(
+            type: SymbolType::NONE,
+            specialConst: 0,
+            frozen: 0,
+            internal: 0,
+        );
+    }
 }

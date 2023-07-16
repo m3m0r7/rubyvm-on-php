@@ -7,6 +7,7 @@ namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader;
 use RubyVM\VM\Core\Runtime\Encoding;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
+use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\RubyVM;
 use RubyVM\VM\Core\Runtime\Symbol\LoaderInterface;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
@@ -27,7 +28,7 @@ class StringLoader implements LoaderInterface
         $len = $this->kernel->stream()->smallValue();
 
         // see: https://github.com/ruby/ruby/blob/2f603bc4/compile.c#L12567
-        if ($encIndex > RubyVM::RUBY_ENCINDEX_BUILTIN_MAX) {
+        if ($encIndex > Option::RUBY_ENCINDEX_BUILTIN_MAX) {
             throw new RubyVMException('Not implemented yet in encIndex > RUBY_ENCINDEX_BUILTIN_MAX comparison');
         }
 

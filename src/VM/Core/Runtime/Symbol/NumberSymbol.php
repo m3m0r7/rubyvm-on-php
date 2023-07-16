@@ -8,6 +8,7 @@ class NumberSymbol implements SymbolInterface
 {
     public function __construct(
         public readonly int $number,
+        public readonly bool $isFixed = false,
     ) {
     }
 

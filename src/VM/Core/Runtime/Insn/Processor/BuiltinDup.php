@@ -33,10 +33,7 @@ class BuiltinDup implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        $this->context->vmStack()->push($operand = $this->context->vmStack()->pop());
-        $this->context->vmStack()->push(new OperandEntry(
-            clone $operand->operand,
-        ));
+        $this->context->vmStack()->dup();
 
         return ProcessedStatus::SUCCESS;
     }

@@ -25,4 +25,5 @@ enum InsnType: string
     case TS_FUNCPTR = 'F';
     case TS_NUM = 'N';
     case TS_BUILTIN = 'R';
+
 }

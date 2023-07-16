@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor;
 
 use Psr\Log\LoggerInterface;
+use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
-use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\MainInterface;
+use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\ExecutorFailedException;
 use RubyVM\VM\Exception\ExecutorUnknownException;
@@ -40,17 +41,43 @@ class Executor implements ExecutorInterface
             sprintf('Start an executor (total program counter: %d)', count($operations)),
         );
 
-        for (; $pc->pos() < count($operations) && !$isFinished; $pc->increase()) {
+        $infinityLoopCounter = 0;
+
+        // NOTE: Exceeded counter increments self value including ProcessedStatus::SUCCESS and ProcessedStatus::JUMPED
+        // requires this value because a role is outside of the program counter.
+        $exceededCounter = 0;
+
+        for (;$pc->pos() < count($operations) && !$isFinished; ++$exceededCounter, $pc->increase()) {
+            if ($exceededCounter > Option::MAX_STACK_EXCEEDED) {
+                throw new ExecutorExeption(
+                    'The executor got max stack exceeded - maybe falling into infinity loop at an executor'
+                );
+            }
+            if ($pc->pos() === $pc->previousPos()) {
+                $infinityLoopCounter++;
+                if ($infinityLoopCounter >= Option::DETECT_INFINITY_LOOP) {
+                    throw new ExecutorExeption(
+                        'The executor detected infinity loop because the program counter not changes internal counter - you should review incorrect implementation'
+                    );
+                }
+            } else {
+                $infinityLoopCounter = 0;
+            }
+
             /**
              * @var OperationEntry|mixed $operator
              */
             $operator = $operations[$pc->pos()] ?? null;
             if (!($operator instanceof OperationEntry)) {
                 throw new ExecutorExeption(
-                    'The operator is not instantiated by OperationEntry - maybe an operation code processor has bug(s) or incorrect in implementation'
+                    sprintf(
+                        'The operator is not instantiated by OperationEntry (actual: %s) - maybe an operation code processor has bug(s) or incorrect in implementation',
+                        is_object($operator)
+                            ? ClassHelper::nameBy($operator)
+                            : gettype($operator),
+                    )
                 );
             }
-
 
             $this->logger->info(
                 sprintf(
@@ -133,6 +160,10 @@ class Executor implements ExecutorInterface
             // Finish this loop when returning ProcessedStatus::FINISH
             if ($status === ProcessedStatus::FINISH) {
                 $isFinished = true;
+                continue;
+            }
+
+            if ($status === ProcessedStatus::JUMPED) {
                 continue;
             }
 
