@@ -10,6 +10,33 @@ use Tests\RubyVM\Helper\TestApplication;
 
 class LogicTest extends TestApplication
 {
+    public function testForStatementWithLocalVariable()
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            test_array = [1, 2, 3, 4, 5]
+
+            for i in test_array
+              puts i.to_s + "\n"
+            end
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<_
+        1
+        2
+        3
+        4
+        5
+
+        _, $rubyVMManager->stdOut->readAll());
+
+    }
     public function testFizzBuzz()
     {
         $rubyVMManager = $this->createRubyVMFromCode(

@@ -13,7 +13,7 @@ class ExecutedResult
         private readonly ExecutorInterface $executor,
         public readonly ExecutedStatus $executedStatus,
         public readonly ?SymbolInterface $returnValue = null,
-        private readonly ?Throwable $throwed = null,
+        public readonly ?Throwable $throwed = null,
         private readonly ?ExecutorDebugger $debugger = null,
     ) {
 

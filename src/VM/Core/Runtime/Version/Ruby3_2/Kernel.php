@@ -24,6 +24,7 @@ use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\ArrayLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FalseLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FixedNumberLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FloatLoader;
@@ -311,6 +312,7 @@ class Kernel implements KernelInterface
             SymbolType::FIXNUM => new FixedNumberLoader($this, $offset),
             SymbolType::SYMBOL => new SymbolLoader($this, $offset),
             SymbolType::STRING => new StringLoader($this, $offset),
+            SymbolType::ARRAY => new ArrayLoader($this, $offset),
             default => throw new ResolverException("Cannot resolve a symbol: {$info->type->name} - maybe the symbol type is not supported yet"),
         };
     }
