@@ -15,7 +15,6 @@ use RubyVM\VM\Exception\TranslationException;
  */
 trait Translatable
 {
-
     use Validatable;
 
     protected function translateAnEntryToInstructionSequenceNumber(OperationEntry|OperandEntry $entry): int

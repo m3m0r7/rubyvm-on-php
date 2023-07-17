@@ -47,4 +47,3 @@ class Align
         return $high;
     }
 }
-

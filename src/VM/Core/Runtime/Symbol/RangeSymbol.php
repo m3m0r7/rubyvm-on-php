@@ -23,7 +23,8 @@ class RangeSymbol implements SymbolInterface
     {
         $values = [];
 
-        $end = $this->end->number + ($this->excludeEnd
+        $end = $this->end->number + (
+            $this->excludeEnd
             ? 0
             : 1
         );
