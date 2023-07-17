@@ -133,6 +133,7 @@ class LogicTest extends TestApplication
         97
         98
         Fizz
+        Buzz
 
         _, $rubyVMManager->stdOut->readAll());
     }

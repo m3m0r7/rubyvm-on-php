@@ -39,7 +39,7 @@ class StructSymbol implements SymbolInterface
             );
         }
 
-        $end = $rangeSymbol->end->number + ($rangeSymbol->excludeEnd ? 1 : 0);
+        $end = $rangeSymbol->end->number + ($rangeSymbol->excludeEnd ? 0 : 1);
         for ($i = $rangeSymbol->begin->number; $i < $end; $i += $rangeSymbol->steps) {
             $context->environmentTableEntries()
                 ->get(Option::RSV_TABLE_INDEX_0)
@@ -57,7 +57,7 @@ class StructSymbol implements SymbolInterface
                         ),
                     )
                 );
-            $executed[] = $context->executor()->execute();
+            $context->executor()->execute();
         }
     }
 }
