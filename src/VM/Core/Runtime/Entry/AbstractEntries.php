@@ -76,9 +76,11 @@ abstract class AbstractEntries implements EntriesInterface
         return count($this->items);
     }
 
-    public function append(mixed $value): void
+    public function append(mixed ...$values): void
     {
-        $this->offsetSet(null, $value);
+        foreach ($values as $value) {
+            $this->offsetSet(null, $value);
+        }
     }
     public function set(mixed $index, mixed $value): void
     {

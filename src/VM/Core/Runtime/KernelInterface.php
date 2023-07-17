@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime;
 
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
+use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
+use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Verification\Verifier;
 use RubyVM\VM\Stream\BinaryStreamReaderInterface;
 
 interface KernelInterface
@@ -23,4 +24,6 @@ interface KernelInterface
 
     public function findId(int $index): ID;
     public function findObject(int $index): Object_;
+
+    public function loadInstructionSequence(Aux $aux): InstructionSequence;
 }

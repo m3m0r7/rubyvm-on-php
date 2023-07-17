@@ -73,7 +73,7 @@ trait OperatorCalculatable
         if ($value === null) {
             throw new OperationProcessorException(
                 sprintf(
-                    'The `%s` (opcode: 0x%02x) processor cannot process `%s` operator because it was not implemented or unknown operator',
+                    'The `%s` (opcode: 0x%02x) processor cannot process `%s` operator because it was not implemented or cannot comparison operator',
                     strtolower($this->insn->name),
                     $this->insn->value,
                     $operator,

@@ -10,9 +10,9 @@ use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 
 class BuiltinGetlocalWC0 implements OperationProcessorInterface
 {
@@ -63,7 +63,8 @@ class BuiltinGetlocalWC0 implements OperationProcessorInterface
         $this->context->vmStack()->push(
             new OperandEntry(
                 $this->context
-                    ->environmentTable()
+                    ->environmentTableEntries()
+                    ->get(Option::RSV_TABLE_INDEX_0)
                     ->get($index->number),
             ),
         );

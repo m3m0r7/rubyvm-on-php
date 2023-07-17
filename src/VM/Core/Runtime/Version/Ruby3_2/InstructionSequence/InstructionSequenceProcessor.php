@@ -136,7 +136,6 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             ? new InstructionSequence(
                 aux: $aux = new Aux(
                     loader: new AuxLoader(
-                        obj: 0,
                         index: $parentISeqIndex,
                     ),
                 ),
@@ -151,7 +150,6 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             ? new InstructionSequence(
                 aux: $aux = new Aux(
                     loader: new AuxLoader(
-                        obj: 0,
                         index: $localISeqIndex,
                     ),
                 ),
@@ -165,7 +163,6 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             ? new InstructionSequence(
                 aux: $aux = new Aux(
                     loader: new AuxLoader(
-                        obj: 0,
                         index: $mandatoryOnlyIseqIndex,
                     ),
                 ),
@@ -269,6 +266,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                 $callInfoEntryIndex = 0;
                 $reader->pos($bytecodeOffset);
 
+
                 for ($codeIndex = 0; $codeIndex < $instructionSequenceSize;) {
                     $insn = Insn::of($insnValue = $reader->smallValue());
                     $entries->append(
@@ -350,6 +348,31 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                                 ),
                             },
                         );
+                    }
+
+                    // NOTE: In this statement, change next operand to be instruction sequence number.
+                    // however originally RubyVM is not needed here because it is implemented by using only integer types but RubyVM on PHP is written in the OOP.
+                    // So RubyVM on PHP needs explicitly changing operand.
+                    if ($insn === Insn::SEND) {
+                        // Especially, Insn::SEND is demanded an NumberSymbol within the next sequence.
+                        $entries->append(
+                            new OperandEntry(
+                                operand: new Object_(
+                                    info: new ObjectInfo(
+                                        type: SymbolType::FIXNUM,
+                                        specialConst: 1,
+                                        internal: 1,
+                                        frozen: 1,
+                                    ),
+                                    symbol: new NumberSymbol(
+                                        number: $reader->smallValue(),
+                                        isFixed: true,
+                                    ),
+                                ),
+                            )
+                        );
+                        $codeIndex++;
+                        continue;
                     }
                 }
 

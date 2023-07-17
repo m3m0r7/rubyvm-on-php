@@ -6,27 +6,37 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
+use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\MainInterface;
 
 class OperationProcessorContext implements ContextInterface
 {
     public function __construct(
-        private MainInterface $main,
-        private VMStack $vmStack,
-        private ProgramCounter $pc,
-        private InstructionSequence $instructionSequence,
-        private LoggerInterface $logger,
-        private EnvironmentTable $environmentTable,
+        private readonly KernelInterface $kernel,
+        private readonly ExecutorInterface $executor,
+        private readonly MainInterface $main,
+        private readonly VMStack $vmStack,
+        private readonly ProgramCounter $pc,
+        private readonly OperationProcessorEntries $operationProcessorEntries,
+        private readonly InstructionSequence $instructionSequence,
+        private readonly LoggerInterface $logger,
+        private readonly EnvironmentTableEntries $environmentTableEntries,
     ) {
     }
 
-    public function __clone()
+    public function createSnapshot(): self
     {
-        $this->main = clone $this->main;
-        $this->vmStack = clone $this->vmStack;
-        $this->pc = clone $this->pc;
-        $this->instructionSequence = clone $this->instructionSequence;
-        $this->environmentTable = clone $this->environmentTable;
+        return new self(
+            kernel: clone $this->kernel,
+            executor: clone $this->executor,
+            main: clone $this->main,
+            vmStack: clone $this->vmStack,
+            pc: clone $this->pc,
+            operationProcessorEntries: clone $this->operationProcessorEntries,
+            instructionSequence: clone $this->instructionSequence,
+            logger: $this->logger, // NOTE: Do not clone because logger is shared resource
+            environmentTableEntries: clone $this->environmentTableEntries,
+        );
     }
 
     public function self(): MainInterface
@@ -54,8 +64,23 @@ class OperationProcessorContext implements ContextInterface
         return $this->instructionSequence;
     }
 
-    public function environmentTable(): EnvironmentTable
+    public function environmentTableEntries(): EnvironmentTableEntries
     {
-        return $this->environmentTable;
+        return $this->environmentTableEntries;
+    }
+
+    public function kernel(): KernelInterface
+    {
+        return $this->kernel;
+    }
+
+    public function operationProcessorEntries(): OperationProcessorEntries
+    {
+        return $this->operationProcessorEntries;
+    }
+
+    public function executor(): ExecutorInterface
+    {
+        return $this->executor;
     }
 }

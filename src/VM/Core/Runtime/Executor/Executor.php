@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
+use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Exception\ExecutorExeption;
@@ -16,24 +17,29 @@ use RubyVM\VM\Exception\ExecutorUnknownException;
 
 class Executor implements ExecutorInterface
 {
+    private const RSV_LOCAL_TABLE_0 = 0;
+    private const RSV_LOCAL_TABLE_1 = 1;
+    private const RSV_LOCAL_TABLE_2 = 2;
+
     protected array $operations = [];
     protected readonly ExecutorDebugger $executorDebugger;
 
     public function __construct(
+        private readonly KernelInterface $kernel,
         private readonly MainInterface $main,
         private readonly OperationProcessorEntries $operationProcessorEntries,
         private readonly InstructionSequence $instructionSequence,
         private readonly LoggerInterface $logger,
+        private readonly EnvironmentTableEntries $environmentTableEntries,
     ) {
         $this->executorDebugger = new ExecutorDebugger();
     }
 
-    public function execute(): ExecutedStatus
-    {
+    public function execute(
+        VMStack $vmStack = new VMStack(),
+    ): ExecutedStatus {
         $operations = $this->instructionSequence->operations();
-        $vmStack = new VMStack();
         $pc = new ProgramCounter();
-        $environmentTable = new EnvironmentTable();
 
         $isFinished = false;
 
@@ -101,17 +107,13 @@ class Executor implements ExecutorInterface
                 ),
             );
 
-            $context = new OperationProcessorContext(
-                $this->main,
+            $context = $this->createContext(
                 $vmStack,
                 $pc,
-                $this->instructionSequence,
-                $this->logger,
-                $environmentTable,
             );
 
             $startTime = microtime(true);
-            $snapshotContext = clone $context;
+            $snapshotContext = $context->createSnapshot();
 
             $processor->prepare(
                 $operator->insn,
@@ -222,6 +224,23 @@ class Executor implements ExecutorInterface
         );
 
         return ExecutedStatus::SUCCESS;
+    }
+
+    public function createContext(
+        VMStack $vmStack = new VMStack(),
+        ProgramCounter $pc = new ProgramCounter(),
+    ): OperationProcessorContext {
+        return new OperationProcessorContext(
+            $this->kernel,
+            $this,
+            $this->main,
+            $vmStack,
+            $pc,
+            $this->operationProcessorEntries,
+            $this->instructionSequence,
+            $this->logger,
+            $this->environmentTableEntries,
+        );
     }
 
     public function debugger(): ExecutorDebugger

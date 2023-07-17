@@ -46,7 +46,7 @@ class Object_
                     Use try-catch statement and checking a previous exception via this exception if you want to solve kindly this problems.
                     _,
                     // Call to undefined method when not defined on symbol
-                    ClassHelper::nameBySymbol($this->symbol),
+                    ClassHelper::nameBy($this->symbol),
                     $name,
                 ),
                 $e->getCode(),

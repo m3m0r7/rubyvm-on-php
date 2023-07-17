@@ -10,6 +10,7 @@ use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
+use RubyVM\VM\Core\Runtime\Executor\Translatable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\MainInterface;
@@ -19,7 +20,7 @@ use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
 {
     use Validatable;
-    use ArgumentTranslatable;
+    use Translatable;
 
     private Insn $insn;
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2;
 
 use RubyVM\VM\Core\Helper\DefaultOperationProcessorEntries;
+use RubyVM\VM\Core\Runtime\Executor\EnvironmentTableEntries;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
@@ -73,7 +74,6 @@ class Kernel implements KernelInterface
         }
         $aux = new Aux(
             loader: new AuxLoader(
-                obj: 0,
                 index: 0,
             ),
         );
@@ -81,28 +81,13 @@ class Kernel implements KernelInterface
         /**
          * @var InstructionSequence|null $instructionSequence
          */
-        $instructionSequence = $this->instructionSequences->get($aux->loader->index);
-
-        if (!$instructionSequence) {
-            $instructionSequence = new InstructionSequence(
-                aux: $aux,
-                processor: new InstructionSequenceProcessor(
-                    kernel: $this,
-                    aux: $aux,
-                ),
-            );
-
-            $instructionSequence->load();
-
-            $this->instructionSequences->set(
-                $aux->loader->index,
-                $instructionSequence,
-            );
-        }
+        $instructionSequence = $this->loadInstructionSequence($aux);
 
         $operationProcessorEntries = new DefaultOperationProcessorEntries();
+        $environmentTableEntries = new EnvironmentTableEntries();
 
         return new Executor(
+            $this,
             new Main(
                 $this->vm->option()->stdOut ?? new StreamHandler(STDOUT),
                 $this->vm->option()->stdIn ?? new StreamHandler(STDIN),
@@ -111,6 +96,7 @@ class Kernel implements KernelInterface
             $operationProcessorEntries,
             $instructionSequence,
             $this->vm->option()->logger,
+            $environmentTableEntries,
         );
     }
 
@@ -164,12 +150,13 @@ class Kernel implements KernelInterface
         );
 
         for ($i = 0; $i < $this->instructionSequenceListSize; $i++) {
-            $this->instructionSequenceList->append(
-                new Offset(
-                    // VALUE iseq_list;       /* [iseq0, ...] */
-                    $this->stream()->unsignedLong(),
-                )
-            );
+            $this->instructionSequenceList
+                ->append(
+                    new Offset(
+                        // VALUE iseq_list;       /* [iseq0, ...] */
+                        $this->stream()->unsignedLong(),
+                    )
+                );
         }
 
         $this->vm->option()->logger->info(
@@ -326,5 +313,29 @@ class Kernel implements KernelInterface
             SymbolType::STRING => new StringLoader($this, $offset),
             default => throw new ResolverException("Cannot resolve a symbol: {$info->type->name} - maybe the symbol type is not supported yet"),
         };
+    }
+
+    public function loadInstructionSequence(Aux $aux): InstructionSequence
+    {
+        $instructionSequence = $this->instructionSequences->get($aux->loader->index);
+
+        if (!$instructionSequence) {
+            $instructionSequence = new InstructionSequence(
+                aux: $aux,
+                processor: new InstructionSequenceProcessor(
+                    kernel: $this,
+                    aux: $aux,
+                ),
+            );
+
+            $instructionSequence->load();
+
+            $this->instructionSequences->set(
+                $aux->loader->index,
+                $instructionSequence,
+            );
+        };
+
+        return $instructionSequence;
     }
 }

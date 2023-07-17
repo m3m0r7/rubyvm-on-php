@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader;
 
-use RubyVM\VM\Core\Runtime\Encoding;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
 use RubyVM\VM\Core\Runtime\Structure\Range;
@@ -14,7 +13,6 @@ use RubyVM\VM\Core\Runtime\Symbol\RangeSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\StructSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\RubyVMException;
-use RubyVM\VM\Stream\SizeOf;
 
 class StructLoader implements LoaderInterface
 {
@@ -23,6 +21,7 @@ class StructLoader implements LoaderInterface
         protected readonly Offset $offset,
     ) {
     }
+
     public function load(): SymbolInterface
     {
         $this->kernel->stream()->pos($this
@@ -37,7 +36,7 @@ class StructLoader implements LoaderInterface
             ->symbol;
 
         $endSymbol = $this->kernel
-            ->findObject($range->begin)
+            ->findObject($range->end)
             ->symbol;
 
         if (!($beginSymbol instanceof NumberSymbol)) {

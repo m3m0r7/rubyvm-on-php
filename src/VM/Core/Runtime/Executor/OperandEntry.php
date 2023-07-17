@@ -10,7 +10,7 @@ use RubyVM\VM\Core\Runtime\Symbol\Object_;
 class OperandEntry
 {
     public function __construct(
-        public readonly Object_|CallInfoEntryInterface|MainInterface $operand
+        public readonly Object_|CallInfoEntryInterface|MainInterface|ExecutorInterface $operand
     ) {
     }
 }

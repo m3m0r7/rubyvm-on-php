@@ -42,4 +42,11 @@ class NumberSymbol implements SymbolInterface
     {
         return clone $this;
     }
+
+    public function toString(): SymbolInterface
+    {
+        return new StringSymbol(
+            string: "{$this->number}",
+        );
+    }
 }
