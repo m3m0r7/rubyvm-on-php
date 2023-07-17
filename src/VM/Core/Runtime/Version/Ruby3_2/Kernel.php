@@ -27,6 +27,7 @@ use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FalseLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FixedNumberLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FloatLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StringLoader;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StructLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\SymbolLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\TrueLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Standard\Main;
@@ -165,7 +166,8 @@ class Kernel implements KernelInterface
         for ($i = 0; $i < $this->instructionSequenceListSize; $i++) {
             $this->instructionSequenceList->append(
                 new Offset(
-                    $this->stream()->unsignedByte(),
+                    // VALUE iseq_list;       /* [iseq0, ...] */
+                    $this->stream()->unsignedLong(),
                 )
             );
         }
@@ -217,6 +219,9 @@ class Kernel implements KernelInterface
 
     public function findId(int $index): ID
     {
+        $this->vm->option()->logger->info(
+            sprintf('Start to find object by ID (index: %d)', $index),
+        );
         return $this->findObject($index)->id;
     }
 
@@ -312,6 +317,7 @@ class Kernel implements KernelInterface
     private function resolveLoader(ObjectInfo $info, Offset $offset): LoaderInterface
     {
         return match ($info->type) {
+            SymbolType::STRUCT => new StructLoader($this, $offset),
             SymbolType::TRUE => new TrueLoader($this, $offset),
             SymbolType::FALSE => new FalseLoader($this, $offset),
             SymbolType::FLOAT => new FloatLoader($this, $offset),

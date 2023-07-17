@@ -130,7 +130,7 @@ class VerificationHeader implements VerificationInterface
     {
         $size = $this->kernel->stream()->size();
 
-        if (($this->kernel->instructionSequenceListOffset + ($this->kernel->instructionSequenceListSize * SizeOf::LONG->size())) <= $size) {
+        if (($this->kernel->instructionSequenceListOffset + ($this->kernel->instructionSequenceListSize * SizeOf::UNSIGNED_LONG->size())) <= $size) {
             return;
         }
 

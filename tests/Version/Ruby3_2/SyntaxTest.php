@@ -299,4 +299,35 @@ class SyntaxTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
         $this->assertSame("true", $rubyVMManager->stdOut->readAll());
     }
+    public function testManyLocalVariables(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            boolean1 = true
+            boolean2 = false
+            boolean3 = true
+            boolean4 = true
+            boolean5 = true
+            boolean6 = true
+            boolean7 = true
+            boolean8 = true
+            boolean9 = true
+            boolean10 = true
+            boolean11 = true
+            boolean12 = true
+            boolean13 = true
+            boolean14 = true
+            boolean15 = true
+            boolean16 = true
+            puts boolean1 || boolean2 || boolean3 || boolean4 || boolean5 || boolean6 || boolean7 || boolean8 || boolean9 || boolean10 || boolean11 || boolean12 || boolean13 || boolean14 || boolean15 || boolean16
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame("true", $rubyVMManager->stdOut->readAll());
+    }
 }

@@ -31,7 +31,7 @@ interface BinaryStreamReaderInterface
 
     public function unsignedByte(): int;
 
-    public function dryReadUnsignedValue(SizeOf|int $bytesOrSize): int|string;
+    public function dryReadValue(int|SizeOf $bytesOrSize): int|string;
 
     public function pos(int $newPos = null): int;
 

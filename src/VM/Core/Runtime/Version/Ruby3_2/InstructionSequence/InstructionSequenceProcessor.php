@@ -40,6 +40,8 @@ use RubyVM\VM\Stream\BinaryStreamReader;
 
 class InstructionSequenceProcessor implements InstructionSequenceProcessorInterface
 {
+    protected Object_ $path;
+
     public function __construct(
         private readonly KernelInterface $kernel,
         private readonly Aux $aux,
@@ -117,7 +119,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
 
         $builtinInlineP = $this->kernel->stream()->smallValue();
 
-        $path = $this->kernel->findObject($locationPathObjIndex);
+        $this->path = $this->kernel->findObject($locationPathObjIndex);
 
         // see: https://github.com/ruby/ruby/blob/2f603bc4/compile.c#L12298
         $callInfoEntries = $this->loadCallInfoEntries($ciEntriesOffset, $ciSize);
@@ -377,9 +379,9 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                     if ($keywordLength > 0) {
                         $keywords = [];
                         for ($j = 0; $j < $keywordLength; $j++) {
-                            $keywords[] = $this->kernel->findObject(
-                                $reader->smallValue(),
-                            );
+                            $keyword = $reader->smallValue();
+                            $keywords[] = $this->kernel
+                                ->findObject($keyword);
                         }
                     }
 
@@ -437,6 +439,11 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
     {
         $entries = new CatchEntries();
         return $entries;
+    }
+
+    public function path(): string
+    {
+        return (string) $this->path->symbol;
     }
 
 

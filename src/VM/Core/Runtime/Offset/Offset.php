@@ -6,6 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Offset;
 
 use RubyVM\VM\Core\Runtime\Entry\AbstractEntries;
 use RubyVM\VM\Exception\VerificationException;
+use RubyVM\VM\Stream\Align;
 use RubyVM\VM\Stream\SizeOf;
 
 class Offset
@@ -28,12 +29,23 @@ class Offset
     }
 
     /**
-     * NOTE: see also IBF_ALIGNED_OFFSET(align, offset) implementation
+     * NOTE: see also IBF_OBJBODY and IBF_ALIGNED_OFFSET(align, offset) implementation
      */
-    public function align(SizeOf $size): Offset
+    public function align(SizeOf|array|int $size): Offset
     {
+        if (is_array($size)) {
+            $alignedSize = Align::alignOf($size);
+            return $this->align($alignedSize);
+        }
+
+        if ($size instanceof SizeOf) {
+            return new Offset(
+                ((int)(($this->offset - 1) / $size->size()) + 1) * $size->size(),
+            );
+        }
+
         return new Offset(
-            ((int) (($this->offset - 1) / $size->size()) + 1) * $size->size(),
+            ((int)(($this->offset - 1) / $size) + 1) * $size,
         );
     }
 }

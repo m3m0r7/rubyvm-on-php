@@ -94,7 +94,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         return $this->readWithEndian(
             littleEndian: 'V',
             bigEndian: 'N',
-            bytes: SizeOf::LONG,
+            bytes: SizeOf::UNSIGNED_LONG,
         );
     }
 
@@ -103,7 +103,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         return $this->readWithEndian(
             littleEndian: 'P',
             bigEndian: 'J',
-            bytes: SizeOf::LONG_LONG,
+            bytes: SizeOf::UNSIGNED_LONG_LONG,
         );
     }
 
@@ -112,7 +112,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         return $this->readWithEndian(
             littleEndian: 'v',
             bigEndian: 'n',
-            bytes: SizeOf::SHORT,
+            bytes: SizeOf::UNSIGNED_SHORT,
         );
     }
 
@@ -121,7 +121,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         return $this->readWithEndian(
             littleEndian: 'C',
             bigEndian: 'C',
-            bytes: SizeOf::BYTE,
+            bytes: SizeOf::UNSIGNED_BYTE,
         );
     }
 
@@ -171,7 +171,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         }
     }
 
-    public function dryReadUnsignedValue(int|SizeOf $bytesOrSize): int|string
+    public function dryReadValue(int|SizeOf $bytesOrSize): int|string
     {
         $pos = $this->streamHandler->pos();
         try {
@@ -179,11 +179,17 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
                 return $this->read($bytesOrSize);
             }
             return match ($bytesOrSize) {
-                SizeOf::BOOL, SizeOf::BYTE => $this->unsignedByte(),
+                SizeOf::BOOL, SizeOf::BYTE => $this->byte(),
                 SizeOf::CHAR => $this->char(),
-                SizeOf::INT => $this->unsignedInt(),
-                SizeOf::LONG => $this->unsignedLong(),
-                SizeOf::LONG_LONG => $this->unsignedLongLong(),
+                SizeOf::SHORT => $this->short(),
+                SizeOf::INT => $this->int(),
+                SizeOf::LONG => $this->long(),
+                SizeOf::LONG_LONG => $this->longLong(),
+                SizeOf::UNSIGNED_BYTE => $this->unsignedByte(),
+                SizeOf::UNSIGNED_SHORT => $this->unsignedShort(),
+                SizeOf::UNSIGNED_INT => $this->unsignedInt(),
+                SizeOf::UNSIGNED_LONG => $this->unsignedLong(),
+                SizeOf::UNSIGNED_LONG_LONG => $this->unsignedLongLong(),
                 default => throw new BinaryStreamReaderException('Unknown sizeof type'),
             };
         } finally {
@@ -222,7 +228,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
             $x = 1;
         }
         for ($i = 1; $i < $n; $i++) {
-            $byte = $this->dryReadUnsignedValue(SizeOf::BYTE);
+            $byte = $this->dryReadValue(SizeOf::UNSIGNED_BYTE);
             if (is_string($byte)) {
                 throw new RubyVMException(
                     sprintf(
