@@ -20,4 +20,6 @@ interface ContextInterface
     public function environmentTableEntries(): EnvironmentTableEntries;
     public function operationProcessorEntries(): OperationProcessorEntries;
     public function executor(): ExecutorInterface;
+
+    public function debugger(): ExecutorDebugger;
 }

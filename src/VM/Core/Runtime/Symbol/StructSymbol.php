@@ -57,7 +57,7 @@ class StructSymbol implements SymbolInterface
                         ),
                     )
                 );
-            $context->executor()->execute();
+            $executed[] = $context->executor()->execute();
         }
     }
 }

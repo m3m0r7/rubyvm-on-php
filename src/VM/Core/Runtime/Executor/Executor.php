@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use PHPUnit\Event\Code\Throwable;
 use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
@@ -11,6 +12,8 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Core\Runtime\Option;
+use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
+use RubyVM\VM\Core\Runtime\Symbol\VoidSymbol;
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\ExecutorFailedException;
 use RubyVM\VM\Exception\ExecutorUnknownException;
@@ -22,7 +25,6 @@ class Executor implements ExecutorInterface
     private const RSV_LOCAL_TABLE_2 = 2;
 
     protected array $operations = [];
-    protected readonly ExecutorDebugger $executorDebugger;
 
     public function __construct(
         private readonly KernelInterface $kernel,
@@ -31,13 +33,34 @@ class Executor implements ExecutorInterface
         private readonly InstructionSequence $instructionSequence,
         private readonly LoggerInterface $logger,
         private readonly EnvironmentTableEntries $environmentTableEntries,
+        private readonly ExecutorDebugger $debugger = new ExecutorDebugger(),
     ) {
-        $this->executorDebugger = new ExecutorDebugger();
     }
 
-    public function execute(
-        VMStack $vmStack = new VMStack(),
-    ): ExecutedStatus {
+    public function execute(VMStack $vmStack = new VMStack()): ExecutedResult
+    {
+        try {
+            $result = $this->_execute($vmStack);
+            return new ExecutedResult(
+                executor: $this,
+                executedStatus: $result->executedStatus,
+                returnValue: $result->returnValue,
+                throwed: null,
+                debugger: $this->debugger,
+            );
+        } catch (\Throwable $e) {
+            return new ExecutedResult(
+                executor: $this,
+                executedStatus: ExecutedStatus::IN_COMPLETED,
+                returnValue: null,
+                throwed: $e,
+                debugger: $this->debugger,
+            );
+        }
+    }
+
+    private function _execute(VMStack $vmStack = new VMStack()): ExecutedResult
+    {
         $operations = $this->instructionSequence->operations();
         $pc = new ProgramCounter();
 
@@ -153,7 +176,7 @@ class Executor implements ExecutorInterface
 
             $processor->after();
 
-            $this->executorDebugger->append(
+            $this->debugger->append(
                 $operator->insn,
                 (int) (microtime(true) - $startTime),
                 $snapshotContext,
@@ -200,7 +223,7 @@ class Executor implements ExecutorInterface
             );
         }
 
-        if (count($vmStack) > 0) {
+        if (count($vmStack) > 1) {
             $this->logger->warning(
                 sprintf(
                     'The VM stack has more remained stacked (remaining: %d) which cause memory leak in the near future',
@@ -223,7 +246,25 @@ class Executor implements ExecutorInterface
             sprintf('Success to finish normally an executor'),
         );
 
-        return ExecutedStatus::SUCCESS;
+        if (count($vmStack) === 1) {
+            return new ExecutedResult(
+                executor: $this,
+                executedStatus: ExecutedStatus::SUCCESS,
+                returnValue: $vmStack->pop()
+                    ->operand
+                    ->symbol,
+                throwed: null,
+                debugger: $this->debugger,
+            );
+        }
+
+        return new ExecutedResult(
+            executor: $this,
+            executedStatus: ExecutedStatus::SUCCESS,
+            returnValue: new VoidSymbol(),
+            throwed: null,
+            debugger: $this->debugger,
+        );
     }
 
     public function createContext(
@@ -240,11 +281,7 @@ class Executor implements ExecutorInterface
             $this->instructionSequence,
             $this->logger,
             $this->environmentTableEntries,
+            $this->debugger,
         );
-    }
-
-    public function debugger(): ExecutorDebugger
-    {
-        return $this->executorDebugger;
     }
 }

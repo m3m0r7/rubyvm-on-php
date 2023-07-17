@@ -21,6 +21,7 @@ class OperationProcessorContext implements ContextInterface
         private readonly InstructionSequence $instructionSequence,
         private readonly LoggerInterface $logger,
         private readonly EnvironmentTableEntries $environmentTableEntries,
+        private readonly ExecutorDebugger $debugger,
     ) {
     }
 
@@ -36,6 +37,7 @@ class OperationProcessorContext implements ContextInterface
             instructionSequence: clone $this->instructionSequence,
             logger: $this->logger, // NOTE: Do not clone because logger is shared resource
             environmentTableEntries: clone $this->environmentTableEntries,
+            debugger: $this->debugger, // NOTE: Do not clone because logger is shared resource
         );
     }
 
@@ -82,5 +84,10 @@ class OperationProcessorContext implements ContextInterface
     public function executor(): ExecutorInterface
     {
         return $this->executor;
+    }
+
+    public function debugger(): ExecutorDebugger
+    {
+        return $this->debugger;
     }
 }

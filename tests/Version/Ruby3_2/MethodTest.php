@@ -22,7 +22,7 @@ class MethodTest extends TestApplication
             ->rubyVM
             ->disassemble(RubyVersion::VERSION_3_2);
 
-        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("HelloWorld!", $rubyVMManager->stdOut->readAll());
     }
 
@@ -38,7 +38,7 @@ class MethodTest extends TestApplication
             ->rubyVM
             ->disassemble(RubyVersion::VERSION_3_2);
 
-        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("PHP Version: " . PHP_VERSION . "\n", $rubyVMManager->stdOut->readAll());
     }
 
@@ -54,7 +54,7 @@ class MethodTest extends TestApplication
             ->rubyVM
             ->disassemble(RubyVersion::VERSION_3_2);
 
-        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("7", $rubyVMManager->stdOut->readAll());
     }
 
@@ -70,7 +70,7 @@ class MethodTest extends TestApplication
             ->rubyVM
             ->disassemble(RubyVersion::VERSION_3_2);
 
-        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("32", $rubyVMManager->stdOut->readAll());
     }
 
@@ -86,7 +86,7 @@ class MethodTest extends TestApplication
             ->rubyVM
             ->disassemble(RubyVersion::VERSION_3_2);
 
-        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("1", $rubyVMManager->stdOut->readAll());
     }
 
@@ -102,7 +102,7 @@ class MethodTest extends TestApplication
             ->rubyVM
             ->disassemble(RubyVersion::VERSION_3_2);
 
-        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute());
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("65535", $rubyVMManager->stdOut->readAll());
     }
 }

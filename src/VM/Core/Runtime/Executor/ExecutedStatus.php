@@ -9,4 +9,5 @@ enum ExecutedStatus
     case SUCCESS;
     case FAILED;
     case UNKNOWN;
+    case IN_COMPLETED;
 }

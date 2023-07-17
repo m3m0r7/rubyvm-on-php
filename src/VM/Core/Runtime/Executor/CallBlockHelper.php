@@ -37,10 +37,14 @@ trait CallBlockHelper
                 instructionSequence: $instructionSequence,
                 logger: $this->context->logger(),
                 environmentTableEntries: $this->context->environmentTableEntries(),
+                debugger: $this->context->debugger(),
             ));
 
             return $blockObject->symbol->{(string) $callInfo->callData()->mid()->object->symbol}(
-                $executor->createContext(),
+                $executor->createContext(
+                    new VMStack(),
+                    new ProgramCounter(),
+                ),
                 ...$this->translateForArguments(
                     ...$arguments
                 ),
