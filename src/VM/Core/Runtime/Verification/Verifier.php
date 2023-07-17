@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Verification;
 
-use RubyVM\VM\Core\Runtime\RubyVM;
 use RubyVM\VM\Exception\VerifierException;
 
 class Verifier

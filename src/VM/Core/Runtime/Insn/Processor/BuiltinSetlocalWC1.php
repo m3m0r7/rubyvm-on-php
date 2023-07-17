@@ -14,7 +14,6 @@ use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinSetlocalWC1 implements OperationProcessorInterface
 {
@@ -37,8 +36,6 @@ class BuiltinSetlocalWC1 implements OperationProcessorInterface
     public function after(): void
     {
     }
-
-
 
     public function process(): ProcessedStatus
     {

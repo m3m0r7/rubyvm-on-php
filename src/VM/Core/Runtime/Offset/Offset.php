@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Offset;
 
-use RubyVM\VM\Core\Runtime\Entry\AbstractEntries;
 use RubyVM\VM\Exception\VerificationException;
 use RubyVM\VM\Stream\Align;
 use RubyVM\VM\Stream\SizeOf;
@@ -40,12 +39,12 @@ class Offset
 
         if ($size instanceof SizeOf) {
             return new Offset(
-                ((int)(($this->offset - 1) / $size->size()) + 1) * $size->size(),
+                ((int) (($this->offset - 1) / $size->size()) + 1) * $size->size(),
             );
         }
 
         return new Offset(
-            ((int)(($this->offset - 1) / $size) + 1) * $size,
+            ((int) (($this->offset - 1) / $size) + 1) * $size,
         );
     }
 }

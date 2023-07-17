@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Symbol;
 
-use RubyVM\VM\Core\Runtime\Encoding;
-
 class OffsetSymbol implements SymbolInterface
 {
     public function __construct(

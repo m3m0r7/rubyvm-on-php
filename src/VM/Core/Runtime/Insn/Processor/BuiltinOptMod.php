@@ -42,7 +42,6 @@ class BuiltinOptMod implements OperationProcessorInterface
         return $this->processArithmetic('%');
     }
 
-
     private function calculate(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
     {
         $value = null;

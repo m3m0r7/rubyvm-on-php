@@ -13,7 +13,6 @@ use RubyVM\VM\Core\Runtime\Insn\Insn;
 
 class BuiltinDuparray implements OperationProcessorInterface
 {
-
     use Validatable;
 
     private Insn $insn;

@@ -14,7 +14,6 @@ use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
-use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinOptOr implements OperationProcessorInterface
 {
@@ -37,7 +36,6 @@ class BuiltinOptOr implements OperationProcessorInterface
     public function after(): void
     {
     }
-
 
     public function process(): ProcessedStatus
     {

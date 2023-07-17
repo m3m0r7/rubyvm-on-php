@@ -9,7 +9,6 @@ use RubyVM\VM\Core\Runtime\Offset\Offset;
 use RubyVM\VM\Core\Runtime\Symbol\FloatSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\LoaderInterface;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Internal\Arithmetic;
 use RubyVM\VM\Stream\SizeOf;
 
 class FloatLoader implements LoaderInterface

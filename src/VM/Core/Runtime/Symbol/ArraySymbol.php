@@ -6,7 +6,6 @@ namespace RubyVM\VM\Core\Runtime\Symbol;
 
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Exception\RubyVMException;
 
 class ArraySymbol implements SymbolInterface
 {
@@ -18,7 +17,7 @@ class ArraySymbol implements SymbolInterface
     public function __toString(): string
     {
         return sprintf(
-            "<array: %d>",
+            '<array: %d>',
             count($this->array)
         );
     }

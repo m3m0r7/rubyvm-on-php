@@ -15,14 +15,11 @@ use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Insn\InsnType;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
-use RubyVM\VM\Core\Runtime\InstructionSequence\IDTable;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequenceBody;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequenceProcessorInterface;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
-use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
@@ -267,7 +264,6 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                 $callInfoEntryIndex = 0;
                 $reader->pos($bytecodeOffset);
 
-
                 for ($codeIndex = 0; $codeIndex < $instructionSequenceSize;) {
                     $insn = Insn::of($insnValue = $reader->smallValue());
                     $entries->append(
@@ -326,7 +322,6 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                                         ),
                                     ),
                                 ),
-
 
                                 InsnType::TS_ID => new OperandEntry(
                                     $this->kernel
@@ -478,51 +473,50 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         return (string) $this->path->symbol;
     }
 
-
     private function insnOperations(): array
     {
         return [
-            "",     "\0", "LN",   "\0", "LN",   "\0", "LN",   "\0", "LN",   "\0",
-            "LN",   "\0", "NN",   "\0", "N",    "\0", "IA",   "\0", "IA",   "\0",
-            "IJ",   "\0", "IJ",   "\0", "K",    "\0", "I",    "\0", "I",    "\0",
-            "I",    "\0", "I",    "\0", "",     "\0", "",     "\0", "V",    "\0",
-            "N",    "\0", "V",    "\0", "N",    "\0", "",     "\0", "NN",   "\0",
-            "",     "\0", "N",    "\0", "N",    "\0", "V",    "\0", "V",    "\0",
-            "NN",   "\0", "",     "\0", "V",    "\0", "N",    "\0", "N",    "\0",
-            "",     "\0", "",     "\0", "N",    "\0", "",     "\0", "N",    "\0",
-            "N",    "\0", "N",    "\0", "N",    "\0", "NVV",  "\0", "N",    "\0",
-            "LL",   "\0", "N",    "\0", "ISN",  "\0", "IS",   "\0", "IS",   "\0",
-            "CS",   "\0", "C",    "\0", "C",    "\0", "VC",   "\0", "C",    "\0",
-            "VC",   "\0", "N",    "\0", "N",    "\0", "CS",   "\0", "C",    "\0",
-            "",     "\0", "N",    "\0", "O",    "\0", "O",    "\0", "O",    "\0",
-            "O",    "\0", "ST",   "\0", "HO",   "\0", "C",    "\0", "C",    "\0",
-            "C",    "\0", "C",    "\0", "C",    "\0", "C",    "\0", "CC",   "\0",
-            "C",    "\0", "C",    "\0", "C",    "\0", "C",    "\0", "C",    "\0",
-            "C",    "\0", "C",    "\0", "C",    "\0", "C",    "\0", "VC",   "\0",
-            "VC",   "\0", "C",    "\0", "C",    "\0", "C",    "\0", "C",    "\0",
-            "C",    "\0", "C",    "\0", "R",    "\0", "RN",   "\0", "RN",   "\0",
-            "L",    "\0", "L",    "\0", "L",    "\0", "L",    "\0", "",     "\0",
-            "",     "\0", "",     "\0", "LN",   "\0", "LN",   "\0", "LN",   "\0",
-            "LN",   "\0", "LN",   "\0", "NN",   "\0", "N",    "\0", "IA",   "\0",
-            "IA",   "\0", "IJ",   "\0", "IJ",   "\0", "K",    "\0", "I",    "\0",
-            "I",    "\0", "I",    "\0", "I",    "\0", "",     "\0", "",     "\0",
-            "V",    "\0", "N",    "\0", "V",    "\0", "N",    "\0", "",     "\0",
-            "NN",   "\0", "",     "\0", "N",    "\0", "N",    "\0", "V",    "\0",
-            "V",    "\0", "NN",   "\0", "",     "\0", "V",    "\0", "N",    "\0",
-            "N",    "\0", "",     "\0", "",     "\0", "N",    "\0", "",     "\0",
-            "N",    "\0", "N",    "\0", "N",    "\0", "N",    "\0", "NVV",  "\0",
-            "N",    "\0", "LL",   "\0", "N",    "\0", "ISN",  "\0", "IS",   "\0",
-            "IS",   "\0", "CS",   "\0", "C",    "\0", "C",    "\0", "VC",   "\0",
-            "C",    "\0", "VC",   "\0", "N",    "\0", "N",    "\0", "CS",   "\0",
-            "C",    "\0", "",     "\0", "N",    "\0", "O",    "\0", "O",    "\0",
-            "O",    "\0", "O",    "\0", "ST",   "\0", "HO",   "\0", "C",    "\0",
-            "C",    "\0", "C",    "\0", "C",    "\0", "C",    "\0", "C",    "\0",
-            "CC",   "\0", "C",    "\0", "C",    "\0", "C",    "\0", "C",    "\0",
-            "C",    "\0", "C",    "\0", "C",    "\0", "C",    "\0", "C",    "\0",
-            "VC",   "\0", "VC",   "\0", "C",    "\0", "C",    "\0", "C",    "\0",
-            "C",    "\0", "C",    "\0", "C",    "\0", "R",    "\0", "RN",   "\0",
-            "RN",   "\0", "L",    "\0", "L",    "\0", "L",    "\0", "L",    "\0",
-            "",     "\0", "",     "\0",
+            '',     "\0", 'LN',   "\0", 'LN',   "\0", 'LN',   "\0", 'LN',   "\0",
+            'LN',   "\0", 'NN',   "\0", 'N',    "\0", 'IA',   "\0", 'IA',   "\0",
+            'IJ',   "\0", 'IJ',   "\0", 'K',    "\0", 'I',    "\0", 'I',    "\0",
+            'I',    "\0", 'I',    "\0", '',     "\0", '',     "\0", 'V',    "\0",
+            'N',    "\0", 'V',    "\0", 'N',    "\0", '',     "\0", 'NN',   "\0",
+            '',     "\0", 'N',    "\0", 'N',    "\0", 'V',    "\0", 'V',    "\0",
+            'NN',   "\0", '',     "\0", 'V',    "\0", 'N',    "\0", 'N',    "\0",
+            '',     "\0", '',     "\0", 'N',    "\0", '',     "\0", 'N',    "\0",
+            'N',    "\0", 'N',    "\0", 'N',    "\0", 'NVV',  "\0", 'N',    "\0",
+            'LL',   "\0", 'N',    "\0", 'ISN',  "\0", 'IS',   "\0", 'IS',   "\0",
+            'CS',   "\0", 'C',    "\0", 'C',    "\0", 'VC',   "\0", 'C',    "\0",
+            'VC',   "\0", 'N',    "\0", 'N',    "\0", 'CS',   "\0", 'C',    "\0",
+            '',     "\0", 'N',    "\0", 'O',    "\0", 'O',    "\0", 'O',    "\0",
+            'O',    "\0", 'ST',   "\0", 'HO',   "\0", 'C',    "\0", 'C',    "\0",
+            'C',    "\0", 'C',    "\0", 'C',    "\0", 'C',    "\0", 'CC',   "\0",
+            'C',    "\0", 'C',    "\0", 'C',    "\0", 'C',    "\0", 'C',    "\0",
+            'C',    "\0", 'C',    "\0", 'C',    "\0", 'C',    "\0", 'VC',   "\0",
+            'VC',   "\0", 'C',    "\0", 'C',    "\0", 'C',    "\0", 'C',    "\0",
+            'C',    "\0", 'C',    "\0", 'R',    "\0", 'RN',   "\0", 'RN',   "\0",
+            'L',    "\0", 'L',    "\0", 'L',    "\0", 'L',    "\0", '',     "\0",
+            '',     "\0", '',     "\0", 'LN',   "\0", 'LN',   "\0", 'LN',   "\0",
+            'LN',   "\0", 'LN',   "\0", 'NN',   "\0", 'N',    "\0", 'IA',   "\0",
+            'IA',   "\0", 'IJ',   "\0", 'IJ',   "\0", 'K',    "\0", 'I',    "\0",
+            'I',    "\0", 'I',    "\0", 'I',    "\0", '',     "\0", '',     "\0",
+            'V',    "\0", 'N',    "\0", 'V',    "\0", 'N',    "\0", '',     "\0",
+            'NN',   "\0", '',     "\0", 'N',    "\0", 'N',    "\0", 'V',    "\0",
+            'V',    "\0", 'NN',   "\0", '',     "\0", 'V',    "\0", 'N',    "\0",
+            'N',    "\0", '',     "\0", '',     "\0", 'N',    "\0", '',     "\0",
+            'N',    "\0", 'N',    "\0", 'N',    "\0", 'N',    "\0", 'NVV',  "\0",
+            'N',    "\0", 'LL',   "\0", 'N',    "\0", 'ISN',  "\0", 'IS',   "\0",
+            'IS',   "\0", 'CS',   "\0", 'C',    "\0", 'C',    "\0", 'VC',   "\0",
+            'C',    "\0", 'VC',   "\0", 'N',    "\0", 'N',    "\0", 'CS',   "\0",
+            'C',    "\0", '',     "\0", 'N',    "\0", 'O',    "\0", 'O',    "\0",
+            'O',    "\0", 'O',    "\0", 'ST',   "\0", 'HO',   "\0", 'C',    "\0",
+            'C',    "\0", 'C',    "\0", 'C',    "\0", 'C',    "\0", 'C',    "\0",
+            'CC',   "\0", 'C',    "\0", 'C',    "\0", 'C',    "\0", 'C',    "\0",
+            'C',    "\0", 'C',    "\0", 'C',    "\0", 'C',    "\0", 'C',    "\0",
+            'VC',   "\0", 'VC',   "\0", 'C',    "\0", 'C',    "\0", 'C',    "\0",
+            'C',    "\0", 'C',    "\0", 'C',    "\0", 'R',    "\0", 'RN',   "\0",
+            'RN',   "\0", 'L',    "\0", 'L',    "\0", 'L',    "\0", 'L',    "\0",
+            '',     "\0", '',     "\0",
         ];
     }
 

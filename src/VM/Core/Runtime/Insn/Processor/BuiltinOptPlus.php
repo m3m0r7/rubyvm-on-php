@@ -6,7 +6,6 @@ namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
 use RubyVM\VM\Core\Helper\OperatorCalculatable;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
-use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
@@ -17,7 +16,6 @@ use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
-use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinOptPlus implements OperationProcessorInterface
 {

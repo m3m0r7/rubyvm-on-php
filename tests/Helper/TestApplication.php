@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Tests\RubyVM\Helper;
 
 use PHPUnit\Framework\TestCase;
-use RubyVM\VM\Core\Runtime\RubyVersion;
-use RubyVM\VM\Core\Runtime\RubyVM;
 use RubyVM\VM\Stream\StreamHandler;
 
 class TestApplication extends TestCase

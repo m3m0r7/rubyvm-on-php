@@ -23,7 +23,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("HelloWorld!", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('HelloWorld!', $rubyVMManager->stdOut->readAll());
     }
 
     public function testNumberPlusNumber(): void
@@ -39,7 +39,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("6", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('6', $rubyVMManager->stdOut->readAll());
     }
 
     public function testNumberMinusNumber(): void
@@ -55,7 +55,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("-4", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('-4', $rubyVMManager->stdOut->readAll());
     }
 
     public function testNumberMultiplyNumber(): void
@@ -71,7 +71,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("64", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('64', $rubyVMManager->stdOut->readAll());
     }
 
     public function testNumberDivideNumber(): void
@@ -87,7 +87,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("1", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('1', $rubyVMManager->stdOut->readAll());
     }
 
     public function testFloatPlusFloat(): void
@@ -103,7 +103,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("6.0", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('6.0', $rubyVMManager->stdOut->readAll());
     }
 
     public function testFloatMinusFloat(): void
@@ -119,7 +119,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("-4.0", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('-4.0', $rubyVMManager->stdOut->readAll());
     }
 
     public function testFloatMultiplyFloat(): void
@@ -135,7 +135,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("64.0", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('64.0', $rubyVMManager->stdOut->readAll());
     }
 
     public function testFloatDivideFloat(): void
@@ -151,7 +151,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("1.3333333333333333", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('1.3333333333333333', $rubyVMManager->stdOut->readAll());
     }
 
     public function testLocalVariable(): void
@@ -169,7 +169,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("25", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('25', $rubyVMManager->stdOut->readAll());
     }
 
     public function testMod(): void
@@ -185,7 +185,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("3", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('3', $rubyVMManager->stdOut->readAll());
     }
 
     public function testAnd(): void
@@ -201,7 +201,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("1", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('1', $rubyVMManager->stdOut->readAll());
     }
 
     public function testOr(): void
@@ -217,7 +217,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("3", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('3', $rubyVMManager->stdOut->readAll());
     }
 
     public function testLeftShift(): void
@@ -233,7 +233,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("4", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('4', $rubyVMManager->stdOut->readAll());
     }
     public function testTrueAndFalse(): void
     {
@@ -248,7 +248,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("false", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('false', $rubyVMManager->stdOut->readAll());
     }
     public function testTrueOrFalse(): void
     {
@@ -263,7 +263,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("true", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('true', $rubyVMManager->stdOut->readAll());
     }
     public function testStringPlusNumber(): void
     {
@@ -278,7 +278,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("HelloWorld65535", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('HelloWorld65535', $rubyVMManager->stdOut->readAll());
     }
     public function testTrueAndTrue(): void
     {
@@ -293,7 +293,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("true", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('true', $rubyVMManager->stdOut->readAll());
     }
 
     public function testMultiBoolean(): void
@@ -312,7 +312,7 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("true", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('true', $rubyVMManager->stdOut->readAll());
     }
     public function testManyLocalVariables(): void
     {
@@ -343,6 +343,6 @@ class SyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("true", $rubyVMManager->stdOut->readAll());
+        $this->assertSame('true', $rubyVMManager->stdOut->readAll());
     }
 }

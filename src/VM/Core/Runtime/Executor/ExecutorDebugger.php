@@ -7,7 +7,6 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Option;
 use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Output\StreamOutput;
 
 class ExecutorDebugger
@@ -66,7 +65,7 @@ class ExecutorDebugger
                 "{$time}s",
                 count($context->vmStack()),
                 count($context->environmentTableEntries()->get(Option::RSV_TABLE_INDEX_0)),
-                sprintf("%.2f KB", ($memoryUsage / 1000)),
+                sprintf('%.2f KB', ($memoryUsage / 1000)),
             ]);
         }
 

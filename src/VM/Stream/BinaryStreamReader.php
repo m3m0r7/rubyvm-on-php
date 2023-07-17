@@ -197,7 +197,6 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         }
     }
 
-
     /**
      * @see https://github.com/ruby/ruby/blob/2f603bc4/compile.c#L11299
      */

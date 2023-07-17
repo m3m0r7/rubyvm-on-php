@@ -50,7 +50,6 @@ trait StreamGeneric
             );
         }
 
-
         if ($result < $newPos && feof($this->handle)) {
             throw new FileStreamHandlerException(
                 sprintf(

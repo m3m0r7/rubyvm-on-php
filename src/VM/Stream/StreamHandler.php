@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Stream;
 
-use RubyVM\VM\Exception\FileStreamHandlerException;
 use RubyVM\VM\Exception\StreamHandlerException;
 
 class StreamHandler implements StreamHandlerInterface

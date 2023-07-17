@@ -48,7 +48,6 @@ class StructLoader implements LoaderInterface
             );
         }
 
-
         if (!($endSymbol instanceof NumberSymbol)) {
             throw new RubyVMException(
                 sprintf(
@@ -57,7 +56,6 @@ class StructLoader implements LoaderInterface
                 ),
             );
         }
-
 
         return new StructSymbol(
             classIndex: $range->classIndex,

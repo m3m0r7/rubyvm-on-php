@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Helper;
 
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-
 class ClassHelper
 {
     public static function nameBy(object $obj): string

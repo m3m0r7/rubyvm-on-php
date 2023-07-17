@@ -21,7 +21,6 @@ class TrueLoader implements LoaderInterface
     {
         $this->kernel->stream()->pos($this->offset->offset);
 
-
         $this->kernel->stream()->smallValue();
 
         return new BooleanSymbol(true);

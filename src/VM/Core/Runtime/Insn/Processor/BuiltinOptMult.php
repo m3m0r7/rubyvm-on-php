@@ -15,7 +15,6 @@ use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
-use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinOptMult implements OperationProcessorInterface
 {

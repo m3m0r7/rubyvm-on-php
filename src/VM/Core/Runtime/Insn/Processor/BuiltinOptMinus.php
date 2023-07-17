@@ -70,7 +70,6 @@ class BuiltinOptMinus implements OperationProcessorInterface
         );
     }
 
-
     private function calculateFloatMinusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
     {
         return new Object_(

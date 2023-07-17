@@ -13,9 +13,6 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\ObjectParameterInterface;
 use RubyVM\VM\Core\Runtime\InstructionSequence\VariableInterfce;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\CatchEntries;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\VariableEntries;
-use RubyVM\VM\Exception\EntryOutOfBoundException;
-use RubyVM\VM\Exception\RubyVMException;
-use RubyVM\VM\Stream\BinaryStreamReader;
 
 class InstructionSequenceBody implements InstructionSequenceBodyInterface
 {
@@ -46,7 +43,6 @@ class InstructionSequenceBody implements InstructionSequenceBodyInterface
         public readonly int $bytecodeSize,
     ) {
     }
-
 
     public function type(): int
     {

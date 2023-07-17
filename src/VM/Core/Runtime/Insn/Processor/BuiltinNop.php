@@ -8,7 +8,6 @@ use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
-use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinNop implements OperationProcessorInterface
 {
