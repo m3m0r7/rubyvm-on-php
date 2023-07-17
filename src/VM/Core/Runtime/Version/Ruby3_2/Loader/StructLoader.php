@@ -58,6 +58,7 @@ class StructLoader implements LoaderInterface
             );
         }
 
+
         return new StructSymbol(
             classIndex: $range->classIndex,
             len: $range->length,

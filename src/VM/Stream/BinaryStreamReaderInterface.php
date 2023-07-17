@@ -14,7 +14,7 @@ interface BinaryStreamReaderInterface
 
     public function long(): int;
 
-    public function longLong(): int;
+    public function longLong(): int|float;
     public function double(): float;
 
     public function short(): int;
@@ -25,7 +25,7 @@ interface BinaryStreamReaderInterface
 
     public function unsignedLong(): int;
 
-    public function unsignedLongLong(): int;
+    public function unsignedLongLong(): int|float;
 
     public function unsignedShort(): int;
 

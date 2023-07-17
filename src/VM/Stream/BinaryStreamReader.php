@@ -40,7 +40,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         );
     }
 
-    public function longLong(): int
+    public function longLong(): int|float
     {
         $value = $this->unsignedLongLong();
         return $value - (

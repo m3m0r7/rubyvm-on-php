@@ -5,13 +5,23 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
+use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
+use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
+use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
+use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
+use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
+use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
+use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
+use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinDefinemethod implements OperationProcessorInterface
 {
+    use Validatable;
+
     private Insn $insn;
 
     private ContextInterface $context;
@@ -32,12 +42,50 @@ class BuiltinDefinemethod implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        throw new OperationProcessorException(
-            sprintf(
-                'The `%s` (opcode: 0x%02x) processor is not implemented yet',
-                strtolower($this->insn->name),
-                $this->insn->value,
-            )
+        $newPos = $this->context->programCounter()->increase();
+
+        $id = $this->context
+            ->instructionSequence()
+            ->operations()
+            ->get($newPos);
+
+        $this->validateType(OperandEntry::class, $id);
+
+        /**
+         * @var StringSymbol $methodNameSymbol
+         */
+        $methodNameSymbol = $id->operand->object->symbol;
+
+        $newPos = $this->context->programCounter()->increase();
+
+        $iseq = $this->context
+            ->instructionSequence()
+            ->operations()
+            ->get($newPos);
+
+        $this->validateType(OperandEntry::class, $iseq);
+
+        /**
+         * @var NumberSymbol $symbol
+         */
+        $symbol = $iseq->operand->symbol;
+        $this->validateType(NumberSymbol::class, $symbol);
+
+        $instructionSequence = $this->context->kernel()->loadInstructionSequence(
+            aux: new Aux(
+                loader: new AuxLoader(
+                    index: $symbol->number,
+                ),
+            ),
         );
+
+        $instructionSequence->load();
+
+        $this->context->self()->def(
+            $methodNameSymbol,
+            $instructionSequence,
+        );
+
+        return ProcessedStatus::SUCCESS;
     }
 }

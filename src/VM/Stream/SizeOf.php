@@ -39,7 +39,7 @@ enum SizeOf
         };
     }
 
-    public function mask(): int
+    public function mask(): int|float
     {
         return match ($this) {
             self::BOOL, self::CHAR, self::BYTE, self::UNSIGNED_BYTE => 0xff,

@@ -22,6 +22,7 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequenceProcessorInter
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
 use RubyVM\VM\Core\Runtime\Option;
+use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
@@ -325,11 +326,19 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                                         ),
                                     ),
                                 ),
+
+
+                                InsnType::TS_ID => new OperandEntry(
+                                    $this->kernel
+                                        ->findId(
+                                            $reader->smallValue()
+                                        ),
+                                ),
+
                                 // Not implemented yet
                                 InsnType::TS_VARIABLE,
                                 InsnType::TS_IVC,
                                 InsnType::TS_IC,
-                                InsnType::TS_ID,
                                 InsnType::TS_ISE,
                                 InsnType::TS_ISEQ,
                                 InsnType::TS_FUNCPTR,
@@ -353,7 +362,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                     // NOTE: In this statement, change next operand to be instruction sequence number.
                     // however originally RubyVM is not needed here because it is implemented by using only integer types but RubyVM on PHP is written in the OOP.
                     // So RubyVM on PHP needs explicitly changing operand.
-                    if ($insn === Insn::SEND) {
+                    if ($insn === Insn::SEND || $insn === Insn::DEFINEMETHOD) {
                         // Especially, Insn::SEND is demanded an NumberSymbol within the next sequence.
                         $entries->append(
                             new OperandEntry(

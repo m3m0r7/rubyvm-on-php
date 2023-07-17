@@ -18,10 +18,10 @@ class Range extends AbstractStructure implements StructureInterface
     public static function structure(): array
     {
         return [
-            'classIndex' => SizeOf::LONG_LONG,
-            'length' => SizeOf::LONG_LONG,
-            'begin' => SizeOf::LONG_LONG,
-            'end' => SizeOf::LONG_LONG,
+            'classIndex' => SizeOf::UNSIGNED_LONG_LONG,
+            'length' => SizeOf::UNSIGNED_LONG_LONG,
+            'begin' => SizeOf::UNSIGNED_LONG_LONG,
+            'end' => SizeOf::UNSIGNED_LONG_LONG,
             'excl' => SizeOf::INT,
         ];
     }
