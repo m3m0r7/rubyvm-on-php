@@ -265,6 +265,21 @@ class SyntaxTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("true", $rubyVMManager->stdOut->readAll());
     }
+    public function testStringPlusNumber(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            puts "HelloWorld" + 65535.to_s
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame("HelloWorld65535", $rubyVMManager->stdOut->readAll());
+    }
     public function testTrueAndTrue(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(
