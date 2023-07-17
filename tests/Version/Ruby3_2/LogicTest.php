@@ -35,8 +35,33 @@ class LogicTest extends TestApplication
         5
 
         _, $rubyVMManager->stdOut->readAll());
-
     }
+
+    public function testForStatementWithLocalVariableAnotherSyntax()
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            [1, 2, 3, 4, 5].each do | i |
+              puts i.to_s + "\n"
+            end
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<_
+        1
+        2
+        3
+        4
+        5
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
+
     public function testFizzBuzz()
     {
         $rubyVMManager = $this->createRubyVMFromCode(
