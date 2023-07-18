@@ -52,9 +52,7 @@ class Executor implements ExecutorInterface
             $this->kernel,
             $this,
             $this->main,
-            $previousContext
-                ? $previousContext->vmStack()
-                : new VMStack(),
+            new VMStack(),
             new ProgramCounter(),
             $this->operationProcessorEntries,
             $this->instructionSequence,
@@ -138,10 +136,11 @@ class Executor implements ExecutorInterface
             if (!($operator instanceof OperationEntry)) {
                 throw new ExecutorExeption(
                     sprintf(
-                        'The operator is not instantiated by OperationEntry (actual: %s) - maybe an operation code processor has bug(s) or incorrect in implementation',
+                        'The operator is not instantiated by OperationEntry (actual: %s) - maybe an operation code processor has bug(s) or incorrect in implementation [%s]',
                         is_object($operator)
                             ? ClassHelper::nameBy($operator)
                             : gettype($operator),
+                        (string) $operations,
                     )
                 );
             }
