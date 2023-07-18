@@ -11,7 +11,8 @@ use RubyVM\VM\Stream\StreamHandlerInterface;
 class Option
 {
     public const DETECT_INFINITY_LOOP = 3;
-    public const MAX_STACK_EXCEEDED = 255;
+    public const MAX_TIME_EXCEEDED = 5;
+    public const MAX_STACK_EXCEEDED = 30;
     public const RUBY_ENCINDEX_BUILTIN_MAX = 12;
     public const VM_ENV_DATA_SIZE = 3;
     public const RSV_TABLE_INDEX_0 = 0;

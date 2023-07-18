@@ -57,31 +57,15 @@ class BuiltinOptMult implements OperationProcessorInterface
 
     private function calculateNumberMultiplyNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
-        return new Object_(
-            new ObjectInfo(
-                SymbolType::FIXNUM,
-                0,
-                1,
-                0
-            ),
-            new NumberSymbol(
-                $leftOperand->number * $rightOperand->number
-            ),
-        );
+        return (new NumberSymbol(
+            $leftOperand->number * $rightOperand->number
+        ))->toObject();
     }
 
     private function calculateFloatMultiplyFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
     {
-        return new Object_(
-            new ObjectInfo(
-                SymbolType::FLOAT,
-                0,
-                1,
-                0
-            ),
-            new FloatSymbol(
-                $leftOperand->number * $rightOperand->number
-            ),
-        );
+        return (new FloatSymbol(
+            $leftOperand->number * $rightOperand->number
+        ))->toObject();
     }
 }

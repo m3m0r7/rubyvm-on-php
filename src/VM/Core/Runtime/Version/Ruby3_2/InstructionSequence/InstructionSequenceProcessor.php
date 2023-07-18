@@ -298,29 +298,18 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
 
                                 // see: https://github.com/ruby/ruby/blob/ruby_3_2/iseq.c#L2090
                                 InsnType::TS_LINDEX => new OperandEntry(
-                                    operand: new Object_(
-                                        info: new ObjectInfo(
-                                            type: SymbolType::FIXNUM,
-                                            specialConst: 1,
-                                            frozen: 1,
-                                            internal: 1,
-                                        ),
-                                        symbol: new NumberSymbol(
-                                            // NOTE: do not use Arithmetic::fix2int
-                                            $reader->smallValue(),
-                                        ),
-                                    )
+                                    operand: (new NumberSymbol(
+                                        // NOTE: do not use Arithmetic::fix2int
+                                        $reader->smallValue(),
+                                    ))->toObject()
                                 ),
 
                                 // NOTE: here is not implemented on actually the RubyVM.
                                 // This is originally implemented by the RubyVM on PHP.
                                 InsnType::TS_OFFSET => new OperandEntry(
-                                    operand: new Object_(
-                                        info: ObjectInfo::none(),
-                                        symbol: new OffsetSymbol(
-                                            offset: $reader->smallValue(),
-                                        ),
-                                    ),
+                                    operand: (new OffsetSymbol(
+                                        offset: $reader->smallValue(),
+                                    ))->toObject(),
                                 ),
 
                                 InsnType::TS_ID => new OperandEntry(
@@ -361,18 +350,10 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         // Especially, Insn::SEND is demanded an NumberSymbol within the next sequence.
                         $entries->append(
                             new OperandEntry(
-                                operand: new Object_(
-                                    info: new ObjectInfo(
-                                        type: SymbolType::FIXNUM,
-                                        specialConst: 1,
-                                        internal: 1,
-                                        frozen: 1,
-                                    ),
-                                    symbol: new NumberSymbol(
-                                        number: $reader->smallValue(),
-                                        isFixed: true,
-                                    ),
-                                ),
+                                operand: (new NumberSymbol(
+                                    number: $reader->smallValue(),
+                                    isFixed: true,
+                                ))->toObject(),
                             )
                         );
                         $codeIndex++;

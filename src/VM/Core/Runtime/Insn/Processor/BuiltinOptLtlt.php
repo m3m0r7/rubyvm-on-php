@@ -53,16 +53,8 @@ class BuiltinOptLtlt implements OperationProcessorInterface
 
     private function calculateNumberLeftShiftNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
-        return new Object_(
-            new ObjectInfo(
-                SymbolType::FIXNUM,
-                0,
-                1,
-                0
-            ),
-            new NumberSymbol(
-                $leftOperand->number << $rightOperand->number
-            ),
-        );
+        return (new NumberSymbol(
+            $leftOperand->number << $rightOperand->number
+        ))->toObject();
     }
 }

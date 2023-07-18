@@ -22,4 +22,8 @@ interface ContextInterface
     public function executor(): ExecutorInterface;
 
     public function debugger(): ExecutorDebugger;
+    public function createSnapshot(): self;
+    public function depth(): int;
+    public function elapsedTime(): float;
+    public function startTime(): float;
 }

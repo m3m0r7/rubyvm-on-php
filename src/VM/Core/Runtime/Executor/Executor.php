@@ -24,6 +24,10 @@ class Executor implements ExecutorInterface
 
     protected array $operations = [];
 
+    protected bool $breakPoint = false;
+
+    protected ContextInterface $context;
+
     public function __construct(
         private readonly KernelInterface $kernel,
         private readonly MainInterface $main,
@@ -32,13 +36,42 @@ class Executor implements ExecutorInterface
         private readonly LoggerInterface $logger,
         private readonly EnvironmentTableEntries $environmentTableEntries,
         private readonly ExecutorDebugger $debugger = new ExecutorDebugger(),
+        ?ContextInterface $previousContext = null
     ) {
+        $this->context = $this->createContext($previousContext);
     }
 
-    public function execute(VMStack $vmStack = new VMStack()): ExecutedResult
+    public function context(): ContextInterface
+    {
+        return $this->context;
+    }
+
+    public function createContext(?ContextInterface $previousContext = null): ContextInterface
+    {
+        return new OperationProcessorContext(
+            $this->kernel,
+            $this,
+            $this->main,
+            $previousContext
+                ? $previousContext->vmStack()
+                : new VMStack(),
+            new ProgramCounter(),
+            $this->operationProcessorEntries,
+            $this->instructionSequence,
+            $this->logger,
+            $this->environmentTableEntries,
+            $this->debugger,
+            $previousContext
+                ? $previousContext->depth() + 1
+                : 0,
+            $previousContext?->startTime() ?? null,
+        );
+    }
+
+    public function execute(): ExecutedResult
     {
         try {
-            $result = $this->_execute($vmStack);
+            $result = $this->_execute();
             return new ExecutedResult(
                 executor: $this,
                 executedStatus: $result->executedStatus,
@@ -57,10 +90,26 @@ class Executor implements ExecutorInterface
         }
     }
 
-    private function _execute(VMStack $vmStack = new VMStack()): ExecutedResult
+    private function _execute(): ExecutedResult
     {
+        // NOTE: Exceeded counter increments self value including ProcessedStatus::SUCCESS and ProcessedStatus::JUMPED
+        // requires this value because a role is outside of the program counter.
+        if ($this->context->depth() > Option::MAX_STACK_EXCEEDED) {
+            throw new ExecutorExeption(
+                'The executor got max stack exceeded - maybe falling into infinity loop at an executor'
+            );
+        }
+
+        if (!$this->breakPoint && $this->context->elapsedTime() > Option::MAX_TIME_EXCEEDED) {
+            throw new ExecutorExeption(
+                sprintf(
+                    'The executor got max time exceeded %d sec. The process is very heavy or detected an infinity loop',
+                    Option::MAX_TIME_EXCEEDED,
+                ),
+            );
+        }
+
         $operations = $this->instructionSequence->operations();
-        $pc = new ProgramCounter();
 
         $isFinished = false;
 
@@ -70,17 +119,8 @@ class Executor implements ExecutorInterface
 
         $infinityLoopCounter = 0;
 
-        // NOTE: Exceeded counter increments self value including ProcessedStatus::SUCCESS and ProcessedStatus::JUMPED
-        // requires this value because a role is outside of the program counter.
-        $exceededCounter = 0;
-
-        for (;$pc->pos() < count($operations) && !$isFinished; ++$exceededCounter, $pc->increase()) {
-            if ($exceededCounter > Option::MAX_STACK_EXCEEDED) {
-                throw new ExecutorExeption(
-                    'The executor got max stack exceeded - maybe falling into infinity loop at an executor'
-                );
-            }
-            if ($pc->pos() === $pc->previousPos()) {
+        for (;$this->context->programCounter()->pos() < count($operations) && !$isFinished; $this->context->programCounter()->increase()) {
+            if ($this->context->programCounter()->pos() === $this->context->programCounter()->previousPos()) {
                 $infinityLoopCounter++;
                 if ($infinityLoopCounter >= Option::DETECT_INFINITY_LOOP) {
                     throw new ExecutorExeption(
@@ -94,7 +134,7 @@ class Executor implements ExecutorInterface
             /**
              * @var OperationEntry|mixed $operator
              */
-            $operator = $operations[$pc->pos()] ?? null;
+            $operator = $operations[$this->context->programCounter()->pos()] ?? null;
             if (!($operator instanceof OperationEntry)) {
                 throw new ExecutorExeption(
                     sprintf(
@@ -111,7 +151,7 @@ class Executor implements ExecutorInterface
                     'Start to process an INSN `%s` (0x%02x) (ProgramCounter: %d)',
                     strtolower($operator->insn->name),
                     $operator->insn->value,
-                    $pc->pos(),
+                    $this->context->programCounter()->pos(),
                 ),
             );
 
@@ -124,21 +164,16 @@ class Executor implements ExecutorInterface
                     'Start to prepare an INSN `%s` (0x%02x) (ProgramCounter: %d)',
                     strtolower($operator->insn->name),
                     $operator->insn->value,
-                    $pc->pos(),
+                    $this->context->programCounter()->pos(),
                 ),
             );
 
-            $context = $this->createContext(
-                $vmStack,
-                $pc,
-            );
-
             $startTime = microtime(true);
-            $snapshotContext = $context->createSnapshot();
+            $snapshotContext = $this->context->createSnapshot();
 
             $processor->prepare(
                 $operator->insn,
-                $context,
+                $this->context,
             );
 
             $this->logger->info(
@@ -146,7 +181,7 @@ class Executor implements ExecutorInterface
                     'Start to process a before method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
                     strtolower($operator->insn->name),
                     $operator->insn->value,
-                    $pc->pos(),
+                    $this->context->programCounter()->pos(),
                 ),
             );
 
@@ -157,8 +192,16 @@ class Executor implements ExecutorInterface
                     'Start to process a main routine method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
                     strtolower($operator->insn->name),
                     $operator->insn->value,
-                    $pc->pos(),
+                    $this->context->programCounter()->pos(),
                 ),
+            );
+
+            $details = null;
+
+            $this->debugger->append(
+                $operator->insn,
+                $snapshotContext,
+                $this->makeDetails($operator->insn),
             );
 
             $status = $processor->process();
@@ -168,17 +211,19 @@ class Executor implements ExecutorInterface
                     'Start to process a post method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
                     strtolower($operator->insn->name),
                     $operator->insn->value,
-                    $pc->pos(),
+                    $this->context->programCounter()->pos(),
                 ),
             );
 
             $processor->after();
 
-            $this->debugger->append(
-                $operator->insn,
-                (int) (microtime(true) - $startTime),
-                $snapshotContext,
-            );
+            if ($this->breakPoint) {
+                $this->processBreakPoint(
+                    $operator->insn,
+                    $snapshotContext,
+                    $this->context,
+                );
+            }
 
             // Finish this loop when returning ProcessedStatus::FINISH
             if ($status === ProcessedStatus::FINISH) {
@@ -221,21 +266,12 @@ class Executor implements ExecutorInterface
             );
         }
 
-        if (count($vmStack) > 1) {
-            $this->logger->warning(
-                sprintf(
-                    'The VM stack has more remained stacked (remaining: %d) which cause memory leak in the near future',
-                    count($vmStack),
-                ),
-            );
-        }
-
-        if (count($operations) !== $pc->pos()) {
+        if (count($operations) !== $this->context->programCounter()->pos()) {
             $this->logger->warning(
                 sprintf(
                     'Unmatched expected processing operations and the program counter positions (expected operations: %d, actually program counter: %d)',
                     count($operations),
-                    $pc->pos(),
+                    $this->context->programCounter()->pos(),
                 ),
             );
         }
@@ -244,11 +280,13 @@ class Executor implements ExecutorInterface
             sprintf('Success to finish normally an executor'),
         );
 
-        if (count($vmStack) === 1) {
+        if (count($this->context->vmStack()) >= 1) {
             return new ExecutedResult(
                 executor: $this,
                 executedStatus: ExecutedStatus::SUCCESS,
-                returnValue: $vmStack->pop()
+                returnValue: $this->context
+                    ->vmStack()
+                    ->pop()
                     ->operand
                     ->symbol,
                 throwed: null,
@@ -265,21 +303,92 @@ class Executor implements ExecutorInterface
         );
     }
 
-    public function createContext(
-        VMStack $vmStack = new VMStack(),
-        ProgramCounter $pc = new ProgramCounter(),
-    ): OperationProcessorContext {
-        return new OperationProcessorContext(
-            $this->kernel,
-            $this,
-            $this->main,
-            $vmStack,
-            $pc,
-            $this->operationProcessorEntries,
-            $this->instructionSequence,
-            $this->logger,
-            $this->environmentTableEntries,
-            $this->debugger,
-        );
+    public function breakPoint(): bool
+    {
+        return $this->breakPoint;
+    }
+
+    public function enableBreakpoint(bool $enabled = true): self
+    {
+        $this->breakPoint = $enabled;
+        return $this;
+    }
+
+    private function processBreakPoint(Insn $insn, ContextInterface $previousContext, ContextInterface $nextContext): void
+    {
+        printf('Enter to next step (y/n/q): ');
+        $entered = fread(STDIN, 1024);
+        $command = strtolower(trim($entered));
+        if ($command === '' || $command === 'y') {
+            $this->debugger->showExecutedOperations();
+            printf(
+                "Current INSN: %s(0x%02x)\n",
+                strtolower($insn->name),
+                $insn->value,
+            );
+            printf(
+                "Previous Stacks: %s\n",
+                (string) $previousContext->vmStack(),
+            );
+            printf(
+                "Previous Local Tables: %s\n",
+                (string) $previousContext->environmentTableEntries(),
+            );
+            printf(
+                "Current Stacks: %s\n",
+                (string) $nextContext->vmStack(),
+            );
+            printf(
+                "Current Local Tables: %s\n",
+                (string) $nextContext->environmentTableEntries(),
+            );
+        }
+        printf("\n");
+        if ($command === 'exit' || $command === 'quit' || $command === 'q') {
+            echo "Finished executor, Goodbye ✋\n";
+            exit(0);
+        }
+    }
+
+    private function makeDetails(Insn $insn): ?string
+    {
+        $context = $this->context->createSnapshot();
+        if ($insn === Insn::OPT_SEND_WITHOUT_BLOCK) {
+            $details = '';
+            $currentPos = $context->programCounter()->pos();
+            $vmStack = clone $context->vmStack();
+
+            /**
+             * @var OperandEntry $callDataOperand
+             */
+            $callDataOperand = $context
+                ->instructionSequence()
+                ->operations()
+                ->get($currentPos + 1);
+
+            $arguments = [];
+            for ($i = 0; $i < $callDataOperand->operand->callData()->argumentsCount(); $i++) {
+                $arguments[] = $vmStack->pop();
+            }
+
+            /**
+             * @var OperandEntry|MainInterface $class
+             */
+            $class = $vmStack->pop();
+
+            $context->programCounter()->set($currentPos);
+            return sprintf(
+                '%s#%s(argc: %d)',
+                ClassHelper::nameBy($class->operand),
+                (string) $callDataOperand
+                    ->operand
+                    ->callData()
+                    ->mid()
+                    ->object
+                    ->symbol,
+                count($arguments),
+            );
+        }
+        return null;
     }
 }

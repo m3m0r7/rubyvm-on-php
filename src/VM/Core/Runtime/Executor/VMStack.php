@@ -4,25 +4,31 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Helper\DebugFormat;
+use RubyVM\VM\Core\Runtime\Symbol\Object_;
+use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\VMStackException;
 
 class VMStack implements \Countable
 {
-    protected array $stacks = [];
+    use DebugFormat;
+
+    protected array $items = [];
 
     public function pos(): int
     {
-        return count($this->stacks);
+        return count($this->items);
     }
 
     public function count(): int
     {
-        return count($this->stacks);
+        return count($this->items);
     }
 
     public function pop(): OperandEntry
     {
-        $item = array_pop($this->stacks);
+        $item = array_pop($this->items);
         if ($item === null) {
             throw new VMStackException(
                 'The VMStack is empty'
@@ -34,7 +40,7 @@ class VMStack implements \Countable
     public function shift(): OperandEntry
     {
         return array_shift(
-            $this->stacks,
+            $this->items,
         );
     }
 
@@ -47,7 +53,7 @@ class VMStack implements \Countable
     public function push(OperandEntry $entry, OperandEntry ...$otherEntries): void
     {
         array_push(
-            $this->stacks,
+            $this->items,
             $entry,
             ...$otherEntries,
         );

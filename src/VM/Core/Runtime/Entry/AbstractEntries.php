@@ -13,6 +13,15 @@ abstract class AbstractEntries implements EntriesInterface
     {
     }
 
+    public function __clone(): void
+    {
+        foreach ($this->items as $key => $value) {
+            $this->items[$key] = is_object($value)
+                ? clone $value
+                : $value;
+        }
+    }
+
     public function verify(mixed $value): bool
     {
         return true;
@@ -117,5 +126,10 @@ abstract class AbstractEntries implements EntriesInterface
             return $index->name;
         }
         return $index;
+    }
+
+    public function toArray(): array
+    {
+        return $this->items;
     }
 }

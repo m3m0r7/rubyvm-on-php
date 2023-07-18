@@ -11,6 +11,8 @@ use RubyVM\VM\Core\Runtime\MainInterface;
 
 class OperationProcessorContext implements ContextInterface
 {
+    private float $startTime = 0.0;
+
     public function __construct(
         private readonly KernelInterface $kernel,
         private readonly ExecutorInterface $executor,
@@ -22,7 +24,24 @@ class OperationProcessorContext implements ContextInterface
         private readonly LoggerInterface $logger,
         private readonly EnvironmentTableEntries $environmentTableEntries,
         private readonly ExecutorDebugger $debugger,
+        private readonly int $depth = 0,
+        ?float $startTime = null,
     ) {
+        $this->startTime = $startTime ?? microtime(true);
+    }
+
+    public function startTime(): float
+    {
+        return $this->startTime;
+    }
+    public function elapsedTime(): float
+    {
+        return microtime(true) - $this->startTime;
+    }
+
+    public function depth(): int
+    {
+        return $this->depth;
     }
 
     public function createSnapshot(): self

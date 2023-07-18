@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
+use RubyVM\VM\Core\Runtime\Executor\LocalTable;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
@@ -18,6 +19,7 @@ use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 class BuiltinSetlocalWC0 implements OperationProcessorInterface
 {
     use Validatable;
+    use LocalTable;
 
     private Insn $insn;
 
@@ -39,50 +41,7 @@ class BuiltinSetlocalWC0 implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        $newPos = $this->context->programCounter()->increase();
-
-        $operand = $this->context
-            ->instructionSequence()
-            ->operations()
-            ->get($newPos);
-
-        $this->validateType(
-            OperandEntry::class,
-            $operand,
-        );
-
-        $this->validateType(
-            Object_::class,
-            $operand->operand,
-        );
-
-        /**
-         * @var SymbolInterface $value
-         */
-        $operandValue = $this->context->vmStack()->pop();
-
-        $this->validateType(
-            OperandEntry::class,
-            $operandValue,
-        );
-
-        $this->validateType(
-            Object_::class,
-            $operandValue->operand,
-        );
-
-        /**
-         * @var NumberSymbol $index
-         */
-        $index = $operand->operand->symbol;
-
-        $this->context->environmentTableEntries()
-            ->get(Option::RSV_TABLE_INDEX_0)
-            ->set(
-                $index->number,
-                $operandValue->operand,
-            );
-
+        $this->setLocalTableFromStack(Option::RSV_TABLE_INDEX_0);
         return ProcessedStatus::SUCCESS;
     }
 }

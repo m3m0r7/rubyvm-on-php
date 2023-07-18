@@ -14,4 +14,17 @@ class NilSymbol implements SymbolInterface
     {
         return '<nil>';
     }
+
+    public function toObject(): Object_
+    {
+        return new Object_(
+            info: new ObjectInfo(
+                type: SymbolType::NIL,
+                specialConst: 0,
+                frozen: 1,
+                internal: 0,
+            ),
+            symbol: $this,
+        );
+    }
 }

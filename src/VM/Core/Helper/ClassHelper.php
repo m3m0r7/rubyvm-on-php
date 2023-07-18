@@ -6,8 +6,11 @@ namespace RubyVM\VM\Core\Helper;
 
 class ClassHelper
 {
-    public static function nameBy(object $obj): string
+    public static function nameBy(mixed $obj): string
     {
+        if (!is_object($obj)) {
+            return gettype($obj);
+        }
         $classNamePath = explode('\\', get_class($obj));
 
         return $classNamePath[array_key_last($classNamePath)];

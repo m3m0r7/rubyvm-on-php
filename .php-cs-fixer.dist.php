@@ -1,4 +1,5 @@
 <?php
+
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
     ->exclude('vendor')
@@ -9,7 +10,7 @@ return (new PhpCsFixer\Config())->setRules([
     'concat_space' => ['spacing' => 'one'],
     'whitespace_after_comma_in_array' => true,
     'return_type_declaration' => [
-        'space_before' => 'none'
+        'space_before' => 'none',
     ],
     'method_argument_space' => true,
     'single_quote' => true,

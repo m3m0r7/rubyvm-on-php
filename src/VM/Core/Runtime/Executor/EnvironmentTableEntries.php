@@ -33,4 +33,16 @@ class EnvironmentTableEntries extends AbstractEntries
             $value ?? new EnvironmentTable(),
         );
     }
+
+    public function __toString(): string
+    {
+        $result = [];
+        /**
+         * @var EnvironmentTable $item
+         */
+        foreach ($this->items as $item) {
+            $result[] = (string) $item;
+        }
+        return '[' . implode(', ', $result) . ']';
+    }
 }

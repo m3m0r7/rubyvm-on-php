@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
+use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
+use RubyVM\VM\Core\Runtime\Executor\ProgramCounter;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
+use RubyVM\VM\Core\Runtime\Executor\VMStack;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
@@ -51,7 +54,7 @@ class BuiltinDefinemethod implements OperationProcessorInterface
         /**
          * @var StringSymbol $methodNameSymbol
          */
-        $methodNameSymbol = $id->operand->object->symbol;
+        $methodNameSymbol = ($methodObject = $id->operand->object)->symbol;
 
         $newPos = $this->context->programCounter()->increase();
 
@@ -78,10 +81,24 @@ class BuiltinDefinemethod implements OperationProcessorInterface
 
         $instructionSequence->load();
 
-        $this->context->self()->def(
-            $methodNameSymbol,
-            $instructionSequence,
-        );
+
+        $executor = (new Executor(
+            kernel: $this->context->kernel(),
+            main: $this->context->self(),
+            operationProcessorEntries: $this->context->operationProcessorEntries(),
+            instructionSequence: $this->context->instructionSequence(),
+            logger: $this->context->logger(),
+            environmentTableEntries: $this->context->environmentTableEntries(),
+            debugger: $this->context->debugger(),
+            previousContext: $this->context,
+        ))->enableBreakpoint($this->context->executor()->breakPoint());
+
+        $this->context
+            ->self()
+            ->def(
+                $methodNameSymbol,
+                $executor->context(),
+            );
 
         return ProcessedStatus::SUCCESS;
     }

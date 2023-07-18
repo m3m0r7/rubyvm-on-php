@@ -11,7 +11,12 @@ use RubyVM\VM\Core\Runtime\Symbol\Object_;
 class OperandEntry
 {
     public function __construct(
-        public readonly Object_|CallInfoEntryInterface|MainInterface|ID $operand
+        public Object_|CallInfoEntryInterface|MainInterface|ID|ExecutedResult $operand
     ) {
+    }
+
+    public function __clone()
+    {
+        $this->operand = clone $this->operand;
     }
 }

@@ -8,6 +8,7 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
+use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\VMCallFlagBit;
 use RubyVM\VM\Exception\OperationProcessorException;
 
@@ -38,17 +39,19 @@ trait CallBlockHelper
                 logger: $this->context->logger(),
                 environmentTableEntries: $this->context->environmentTableEntries(),
                 debugger: $this->context->debugger(),
-            ));
+                previousContext: $this->context,
+            ))->enableBreakpoint($this->context->executor()->breakPoint());
 
-            return $blockObject->symbol->{(string) $callInfo->callData()->mid()->object->symbol}(
-                $executor->createContext(
-                    new VMStack(),
-                    new ProgramCounter(),
-                ),
+            $result = $blockObject->symbol->{(string) $callInfo->callData()->mid()->object->symbol}(
+                $executor->context(),
                 ...$this->translateForArguments(
                     ...$arguments
                 ),
             );
+            if ($result instanceof SymbolInterface) {
+                return $result->toObject();
+            }
+            return null;
         }
 
         // TODO: implement a super call

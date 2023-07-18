@@ -17,4 +17,19 @@ class BooleanSymbol implements SymbolInterface
             ? 'true'
             : 'false';
     }
+
+    public function toObject(): Object_
+    {
+        return new Object_(
+            info: new ObjectInfo(
+                type: $this->boolean
+                    ? SymbolType::TRUE
+                    : SymbolType::FALSE,
+                specialConst: 0,
+                frozen: 1,
+                internal: 0,
+            ),
+            symbol: $this,
+        );
+    }
 }

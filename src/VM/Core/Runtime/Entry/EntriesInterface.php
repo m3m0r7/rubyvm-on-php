@@ -6,4 +6,5 @@ namespace RubyVM\VM\Core\Runtime\Entry;
 
 interface EntriesInterface extends \ArrayAccess, \Countable, \IteratorAggregate
 {
+    public function toArray(): array;
 }

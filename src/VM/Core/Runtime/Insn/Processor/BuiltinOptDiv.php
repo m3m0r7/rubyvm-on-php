@@ -57,31 +57,15 @@ class BuiltinOptDiv implements OperationProcessorInterface
 
     private function calculateNumberDivideNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
-        return new Object_(
-            new ObjectInfo(
-                SymbolType::FIXNUM,
-                0,
-                1,
-                0
-            ),
-            new NumberSymbol(
-                (int) ($leftOperand->number / $rightOperand->number)
-            ),
-        );
+        return (new NumberSymbol(
+            (int) ($leftOperand->number / $rightOperand->number)
+        ))->toObject();
     }
 
     private function calculateFloatDivideFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
     {
-        return new Object_(
-            new ObjectInfo(
-                SymbolType::FLOAT,
-                0,
-                1,
-                0
-            ),
-            new FloatSymbol(
-                $leftOperand->number / $rightOperand->number
-            ),
-        );
+        return (new FloatSymbol(
+            $leftOperand->number / $rightOperand->number
+        ))->toObject();
     }
 }

@@ -61,44 +61,21 @@ class BuiltinOptPlus implements OperationProcessorInterface
 
     private function calculateStringPlusString(StringSymbol $leftOperand, StringSymbol $rightOperand): Object_
     {
-        return new Object_(
-            new ObjectInfo(
-                SymbolType::STRING,
-                0,
-                1,
-                0
-            ),
-            new StringSymbol(
-                $leftOperand . $rightOperand
-            ),
-        );
+        return (new StringSymbol(
+            $leftOperand . $rightOperand
+        ))->toObject();
     }
+
     private function calculateNumberPlusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
-        return new Object_(
-            new ObjectInfo(
-                SymbolType::FIXNUM,
-                0,
-                1,
-                0
-            ),
-            new NumberSymbol(
-                $leftOperand->number + $rightOperand->number
-            ),
-        );
+        return (new NumberSymbol(
+            $leftOperand->number + $rightOperand->number
+        ))->toObject();
     }
     private function calculateFloatPlusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
     {
-        return new Object_(
-            new ObjectInfo(
-                SymbolType::FLOAT,
-                0,
-                1,
-                0
-            ),
-            new FloatSymbol(
-                $leftOperand->number + $rightOperand->number
-            ),
-        );
+        return (new FloatSymbol(
+            $leftOperand->number + $rightOperand->number
+        ))->toObject();
     }
 }

@@ -19,13 +19,13 @@ class ExecutorDebugger
         $this->currentMemoryUsage = memory_get_usage(false);
     }
 
-    public function append(Insn $insn, int $time, ContextInterface $context): void
+    public function append(Insn $insn, ContextInterface $context, string $insnDetails = null): void
     {
         $this->snapshots[] = [
             $insn,
-            clone $context,
-            $time,
+            $context,
             memory_get_usage(false) - $this->currentMemoryUsage,
+            $insnDetails,
         ];
 
         $this->currentMemoryUsage = memory_get_usage(false);
@@ -44,8 +44,7 @@ class ExecutorDebugger
             'PROGRAM COUNTER',
             'INSN',
             'OPCODE',
-            'TIME',
-            'STACKS',
+            'PREVIOUS STACKS',
             'REGISTERED LOCAL TABLES',
             'MEMORY',
             ]
@@ -54,17 +53,15 @@ class ExecutorDebugger
         /**
          * @var Insn $insn
          * @var ContextInterface $context
-         * @var int $time
          * @var int $memoryUsage
          */
-        foreach ($this->snapshots as [$insn, $context, $time, $memoryUsage]) {
+        foreach ($this->snapshots as [$insn, $context, $memoryUsage, $insnDetails]) {
             $table->addRow([
                 $context->programCounter()->pos(),
-                strtolower($insn->name),
+                strtolower($insn->name) . ($insnDetails ? "({$insnDetails})" : ''),
                 sprintf('0x%02x', $insn->value),
-                "{$time}s",
-                count($context->vmStack()),
-                count($context->environmentTableEntries()->get(Option::RSV_TABLE_INDEX_0)),
+                (string) $context->vmStack(),
+                (string) $context->environmentTableEntries(),
                 sprintf('%.2f KB', ($memoryUsage / 1000)),
             ]);
         }

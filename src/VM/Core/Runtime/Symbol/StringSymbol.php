@@ -18,4 +18,17 @@ class StringSymbol implements SymbolInterface
     {
         return $this->string;
     }
+
+    public function toObject(): Object_
+    {
+        return new Object_(
+            info: new ObjectInfo(
+                type: SymbolType::STRING,
+                specialConst: 0,
+                frozen: 1,
+                internal: 0,
+            ),
+            symbol: $this,
+        );
+    }
 }

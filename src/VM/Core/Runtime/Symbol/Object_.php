@@ -23,6 +23,11 @@ class Object_
         $this->id = $id ?? new ID($this);
     }
 
+    public function __clone()
+    {
+        $this->symbol = clone $this->symbol;
+    }
+
     public function __call(string $name, array $arguments)
     {
         $defaultMethodEntries = new DefaultInstanceMethodEntries();

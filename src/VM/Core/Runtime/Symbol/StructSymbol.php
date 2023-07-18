@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Symbol;
 
+use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Exception\RubyVMException;
@@ -25,7 +26,7 @@ class StructSymbol implements SymbolInterface
         return (string) '<Unknown>';
     }
 
-    public function each(OperationProcessorContext $context): void
+    public function each(OperationProcessorContext $context): SymbolInterface
     {
         $rangeSymbol = $this->symbol;
         if (!($rangeSymbol instanceof RangeSymbol)) {
@@ -43,19 +44,39 @@ class StructSymbol implements SymbolInterface
                 ->get(Option::RSV_TABLE_INDEX_0)
                 ->set(
                     Option::VM_ENV_DATA_SIZE,
-                    new Object_(
-                        info: new ObjectInfo(
-                            type: SymbolType::FIXNUM,
-                            specialConst: 1,
-                            frozen: 1,
-                            internal: 1,
-                        ),
-                        symbol: new NumberSymbol(
-                            $i,
-                        ),
-                    )
+                    (new NumberSymbol($i))->toObject()
                 );
-            $context->executor()->execute();
+
+            $result = (new Executor(
+                kernel: $context->kernel(),
+                main: $context->self(),
+                operationProcessorEntries: $context->operationProcessorEntries(),
+                instructionSequence: $context->instructionSequence(),
+                logger: $context->logger(),
+                environmentTableEntries: $context->environmentTableEntries(),
+                debugger: $context->debugger(),
+                previousContext: $context,
+            ))->enableBreakpoint($context->executor()->breakPoint())->execute();
+
+            // An occurred exception to be throwing
+            if ($result->throwed) {
+                throw $result->throwed;
+            }
         }
+
+        return (new NilSymbol());
+    }
+
+    public function toObject(): Object_
+    {
+        return new Object_(
+            info: new ObjectInfo(
+                type: SymbolType::STRUCT,
+                specialConst: 0,
+                frozen: 1,
+                internal: 0,
+            ),
+            symbol: $this,
+        );
     }
 }

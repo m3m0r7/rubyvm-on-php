@@ -26,4 +26,17 @@ class FloatSymbol implements SymbolInterface
 
         return "{$this->number}.0";
     }
+
+    public function toObject(): Object_
+    {
+        return new Object_(
+            info: new ObjectInfo(
+                type: SymbolType::FLOAT,
+                specialConst: 0,
+                frozen: 1,
+                internal: 0,
+            ),
+            symbol: $this,
+        );
+    }
 }

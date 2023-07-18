@@ -14,4 +14,17 @@ class VoidSymbol implements SymbolInterface
     {
         return '<void>';
     }
+
+    public function toObject(): Object_
+    {
+        return new Object_(
+            info: new ObjectInfo(
+                type: SymbolType::SYMBOL,
+                specialConst: 0,
+                frozen: 1,
+                internal: 0,
+            ),
+            symbol: $this,
+        );
+    }
 }

@@ -38,15 +38,8 @@ class BuiltinPutobjectINT2FIX0 implements OperationProcessorInterface
     {
         $this->context->vmStack()->push(
             new OperandEntry(
-                new Object_(
-                    new ObjectInfo(
-                        SymbolType::FIXNUM,
-                        1,
-                        1,
-                        1,
-                    ),
-                    new NumberSymbol(0),
-                )
+                (new NumberSymbol(0, true))
+                    ->toObject()
             ),
         );
 

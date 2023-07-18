@@ -8,6 +8,7 @@ use RubyVM\VM\Core\Helper\DefaultOperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Executor\EnvironmentTableEntries;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
+use RubyVM\VM\Core\Runtime\Executor\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
@@ -21,6 +22,7 @@ use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\LoaderInterface;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
+use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
@@ -290,16 +292,17 @@ class Kernel implements KernelInterface
             ),
         );
 
-        return $this->globalObjectTable[$index] = new Object_(
-            info: $info,
-            symbol: $this
-                ->stream()
-                ->dryPosTransaction(
-                    fn () => $this->resolveLoader($info, $offset->increase())
-                        ->load()
-                ),
-            offset: $offset,
-        );
+        /**
+         * @var SymbolInterface $symbol
+         */
+        $symbol = $this
+            ->stream()
+            ->dryPosTransaction(
+                fn () => $this->resolveLoader($info, $offset->increase())
+                    ->load()
+            );
+
+        return $this->globalObjectTable[$index] = $symbol->toObject($offset);
     }
 
     private function resolveLoader(ObjectInfo $info, Offset $offset): LoaderInterface
@@ -319,7 +322,9 @@ class Kernel implements KernelInterface
 
     public function loadInstructionSequence(Aux $aux): InstructionSequence
     {
-        $instructionSequence = $this->instructionSequences->get($aux->loader->index);
+        $instructionSequence = $this
+            ->instructionSequences
+            ->get($aux->loader->index);
 
         if (!$instructionSequence) {
             $instructionSequence = new InstructionSequence(
