@@ -81,17 +81,19 @@ The RubyVM on PHP is provided an executor debugger that can display processed an
 
 
 ```
-+-----------------+------------------------+--------+------+--------+----------+
-| PROGRAM COUNTER | INSN                   | OPCODE | TIME | STACKS | MEMORY   |
-+-----------------+------------------------+--------+------+--------+----------+
-| 0               | putself                | 0x12   | 0s   | 0      | 16.76 KB |
-| 1               | putstring              | 0x15   | 0s   | 1      | 0.99 KB  |
-| 3               | opt_send_without_block | 0x33   | 0s   | 2      | 1.03 KB  |
-| 5               | leave                  | 0x3c   | 0s   | 0      | 0.78 KB  |
-+-----------------+------------------------+--------+------+--------+----------+
++-----------------+------------------------------------------------+--------+------------------------------------------------------------------------+-------------------------+----------+
+| PROGRAM COUNTER | INSN                                           | OPCODE | PREVIOUS STACKS                                                        | REGISTERED LOCAL TABLES | MEMORY   |
++-----------------+------------------------------------------------+--------+------------------------------------------------------------------------+-------------------------+----------+
+| 0               | putself                                        | 0x12   | [total: 0]                                                             | []                      | 61.49 KB |
+| 1               | putstring                                      | 0x15   | [total: 1, OperandEntry<Main>]                                         | []                      | 40.66 KB |
+| 3               | opt_send_without_block(Main#puts(HelloWorld!)) | 0x33   | [total: 2, OperandEntry<Main>, OperandEntry<StringSymbol@HelloWorld!>] | []                      | 33.72 KB |
+| 5               | leave                                          | 0x3c   | [total: 1, OperandEntry<NilSymbol@<nil>>]                              | []                      | 32.66 KB |
++-----------------+------------------------------------------------+--------+------------------------------------------------------------------------+-------------------------+----------+
 ```
 
 If you want to display above table then add below code from the Quick start.
+
+_Notice: The executor debugger is using a lot of memories. We recommend to use disabling ordinarily. In depending on the case, may be using `-d memory_limit=NEEDING_MEMORY_BYTES` parameters to be working when calling `php` command_
 
 ```php
 // Disassemble instruction sequence binary formatted and get executor
@@ -99,11 +101,48 @@ $executor = $rubyVM->disassemble(
     useVersion: \RubyVM\VM\Core\Runtime\RubyVersion::VERSION_3_2,
 );
 
-$executor->execute();
+// Enable recording processed sequences with using `enableProcessedRecords` method.
+$executor->enableProcessedRecords(true)->execute();
 
 // You can display processed an INSN table when adding below code
 $executor->debugger()->showExecutedOperations();
 ```
+
+
+### Breakpoint
+
+The RubyVM on PHP is providing breakpoint. The breakpoint is available to confirm to process a sequence step by step.
+Which collect previous stacks, registered local tables and so on. this is required debugging this project.
+
+```
+
+// Disassemble instruction sequence binary formatted and get executor
+$executor = $rubyVM->disassemble(
+    useVersion: \RubyVM\VM\Core\Runtime\RubyVersion::VERSION_3_2,
+);
+
+// Enable breakpoint with using `enableBreakPoint` method.
+$executor->enableBreakPoint(true)->execute();
+```
+
+When you enabled breakpoint, displays as below:
+
+```
++-----------------+-----------+--------+--------------------------------+-------------------------+-----------+
+| PROGRAM COUNTER | INSN      | OPCODE | PREVIOUS STACKS                | REGISTERED LOCAL TABLES | MEMORY    |
++-----------------+-----------+--------+--------------------------------+-------------------------+-----------+
+| 0               | putself   | 0x12   | [total: 0]                     | []                      | 61.49 KB  |
+| 1               | putstring | 0x15   | [total: 1, OperandEntry<Main>] | []                      | 865.01 KB |
++-----------------+-----------+--------+--------------------------------+-------------------------+-----------+
+Current INSN: putstring(0x15)
+Previous Stacks: [total: 1, OperandEntry<Main>]#966
+Previous Local Tables: []
+Current Stacks: [total: 2, OperandEntry<Main>, OperandEntry<StringSymbol@HelloWorld!>]#561
+Current Local Tables: []
+
+Enter to next step (y/n/q): <INPUT_YOU_EXPECTING_NEXT_STEP>
+```
+
 
 ## Custom method
 

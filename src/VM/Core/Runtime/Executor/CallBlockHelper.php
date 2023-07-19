@@ -39,7 +39,7 @@ trait CallBlockHelper
                 logger: $this->context->logger(),
                 debugger: $this->context->debugger(),
                 previousContext: $this->context,
-            ))->enableBreakpoint($this->context->executor()->breakPoint());
+            ));
 
             $result = $blockObject->symbol->{(string) $callInfo->callData()->mid()->object->symbol}(
                 $executor->context(),

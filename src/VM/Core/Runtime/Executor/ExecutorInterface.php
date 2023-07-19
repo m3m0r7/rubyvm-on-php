@@ -8,8 +8,9 @@ interface ExecutorInterface
 {
     public function execute(): ExecutedResult;
 
-    public function breakPoint(): bool;
     public function enableBreakpoint(bool $enabled = true): self;
+
+    public function enableProcessedRecords(bool $enabled = true): self;
 
     public function context(): ContextInterface;
 

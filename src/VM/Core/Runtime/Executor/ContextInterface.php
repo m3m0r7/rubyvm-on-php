@@ -20,10 +20,11 @@ interface ContextInterface
     public function environmentTableEntries(): EnvironmentTableEntries;
     public function operationProcessorEntries(): OperationProcessorEntries;
     public function executor(): ExecutorInterface;
-
     public function debugger(): ExecutorDebugger;
     public function createSnapshot(): self;
     public function depth(): int;
     public function elapsedTime(): float;
     public function startTime(): float;
+    public function shouldBreakPoint(): bool;
+    public function shouldProcessedRecords(): bool;
 }

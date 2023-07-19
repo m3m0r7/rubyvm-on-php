@@ -36,7 +36,7 @@ class ArraySymbol implements SymbolInterface
                 logger: $context->logger(),
                 debugger: $context->debugger(),
                 previousContext: $context,
-            ))->enableBreakpoint($context->executor()->breakPoint());
+            ));
 
             $executor->context()
                 ->environmentTableEntries()

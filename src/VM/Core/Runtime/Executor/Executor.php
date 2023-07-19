@@ -25,7 +25,8 @@ class Executor implements ExecutorInterface
 
     protected array $operations = [];
 
-    protected bool $breakPoint = false;
+    protected bool $shouldBreakPoint = false;
+    protected bool $shouldProcessedRecords = false;
 
     protected ContextInterface $context;
 
@@ -36,7 +37,7 @@ class Executor implements ExecutorInterface
         private readonly InstructionSequence $instructionSequence,
         private readonly LoggerInterface $logger,
         private readonly ExecutorDebugger $debugger = new ExecutorDebugger(),
-        ?ContextInterface $previousContext = null
+        private readonly ?ContextInterface $previousContext = null
     ) {
         $this->context = $this->createContext($previousContext);
     }
@@ -63,6 +64,8 @@ class Executor implements ExecutorInterface
                 ? $previousContext->depth() + 1
                 : 0,
             $previousContext?->startTime() ?? null,
+            $previousContext?->shouldProcessedRecords() ?? $this->shouldProcessedRecords,
+            $previousContext?->shouldBreakPoint() ?? $this->shouldBreakPoint,
         );
     }
 
@@ -90,6 +93,8 @@ class Executor implements ExecutorInterface
 
     private function _execute(): ExecutedResult
     {
+        $this->debugger->bindContext($this->context);
+
         // NOTE: Exceeded counter increments self value including ProcessedStatus::SUCCESS and ProcessedStatus::JUMPED
         // requires this value because a role is outside of the program counter.
         if ($this->context->depth() > Option::MAX_STACK_EXCEEDED) {
@@ -98,7 +103,7 @@ class Executor implements ExecutorInterface
             );
         }
 
-        if (!$this->breakPoint && $this->context->elapsedTime() > Option::MAX_TIME_EXCEEDED) {
+        if (!$this->context->shouldBreakPoint() && $this->context->elapsedTime() > Option::MAX_TIME_EXCEEDED) {
             throw new ExecutorExeption(
                 sprintf(
                     'The executor got max time exceeded %d sec. The process is very heavy or detected an infinity loop',
@@ -197,11 +202,13 @@ class Executor implements ExecutorInterface
 
             $details = null;
 
-            $this->debugger->append(
-                $operator->insn,
-                $snapshotContext,
-                $this->makeDetails($operator->insn),
-            );
+            if ($this->context->shouldProcessedRecords()) {
+                $this->debugger->append(
+                    $operator->insn,
+                    $snapshotContext,
+                    $this->makeDetails($operator->insn),
+                );
+            }
 
             $status = $processor->process();
 
@@ -216,7 +223,7 @@ class Executor implements ExecutorInterface
 
             $processor->after();
 
-            if ($this->breakPoint) {
+            if ($this->context->shouldBreakPoint()) {
                 $this->processBreakPoint(
                     $operator->insn,
                     $snapshotContext,
@@ -302,14 +309,12 @@ class Executor implements ExecutorInterface
         );
     }
 
-    public function breakPoint(): bool
-    {
-        return $this->breakPoint;
-    }
-
     public function enableBreakpoint(bool $enabled = true): self
     {
-        $this->breakPoint = $enabled;
+        $this->shouldBreakPoint = $enabled;
+
+        // Renew context
+        $this->context = $this->createContext($this->previousContext);
         return $this;
     }
 
@@ -401,5 +406,14 @@ class Executor implements ExecutorInterface
             );
         }
         return null;
+    }
+
+    public function enableProcessedRecords(bool $enabled = true): ExecutorInterface
+    {
+        $this->shouldProcessedRecords = $enabled;
+
+        // Renew context
+        $this->context = $this->createContext($this->previousContext);
+        return $this;
     }
 }

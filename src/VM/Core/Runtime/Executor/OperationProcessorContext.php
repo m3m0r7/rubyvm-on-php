@@ -24,8 +24,10 @@ class OperationProcessorContext implements ContextInterface
         private readonly LoggerInterface $logger,
         private readonly EnvironmentTableEntries $environmentTableEntries,
         private readonly ExecutorDebugger $debugger,
-        private readonly int $depth = 0,
-        ?float $startTime = null,
+        private readonly int $depth,
+        ?float $startTime,
+        private readonly bool $shouldProcessedRecords,
+        private readonly bool $shouldBreakPoint,
     ) {
         $this->startTime = $startTime ?? microtime(true);
     }
@@ -57,6 +59,10 @@ class OperationProcessorContext implements ContextInterface
             logger: $this->logger, // NOTE: Do not clone because logger is shared resource
             environmentTableEntries: clone $this->environmentTableEntries,
             debugger: $this->debugger, // NOTE: Do not clone because logger is shared resource
+            depth: $this->depth,
+            startTime: $this->startTime,
+            shouldProcessedRecords: $this->shouldProcessedRecords,
+            shouldBreakPoint: $this->shouldBreakPoint,
         );
     }
 
@@ -108,5 +114,15 @@ class OperationProcessorContext implements ContextInterface
     public function debugger(): ExecutorDebugger
     {
         return $this->debugger;
+    }
+
+    public function shouldProcessedRecords(): bool
+    {
+        return $this->shouldProcessedRecords;
+    }
+
+    public function shouldBreakPoint(): bool
+    {
+        return $this->shouldBreakPoint;
     }
 }

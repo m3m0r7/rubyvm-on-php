@@ -74,7 +74,7 @@ class Main implements MainInterface
             logger: $context->logger(),
             debugger: $context->debugger(),
             previousContext: $context,
-        ))->enableBreakpoint($context->executor()->breakPoint());
+        ));
 
         /**
          * @var SymbolInterface $argument

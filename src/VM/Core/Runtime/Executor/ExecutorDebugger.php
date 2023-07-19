@@ -13,10 +13,16 @@ class ExecutorDebugger
 {
     protected array $snapshots = [];
     protected int $currentMemoryUsage;
+    protected ContextInterface $context;
 
     public function __construct()
     {
         $this->currentMemoryUsage = memory_get_usage(false);
+    }
+
+    public function bindContext(ContextInterface $context): void
+    {
+        $this->context = $context;
     }
 
     public function append(Insn $insn, ContextInterface $context, string $insnDetails = null): void
@@ -33,10 +39,15 @@ class ExecutorDebugger
 
     public function showExecutedOperations(): void
     {
+        $handle = fopen('php://stdout', 'rw+');
+
+        if ($this->context->shouldProcessedRecords() === false) {
+            fwrite($handle, "No processed records enabled.\n");
+            return;
+        }
+
         $table = new Table(
-            new StreamOutput(
-                fopen('php://stdout', 'rw+'),
-            )
+            new StreamOutput($handle),
         );
 
         $table->setHeaders(
