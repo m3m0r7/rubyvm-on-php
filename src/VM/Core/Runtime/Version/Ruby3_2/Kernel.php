@@ -99,7 +99,6 @@ class Kernel implements KernelInterface
             $operationProcessorEntries,
             $instructionSequence,
             $this->vm->option()->logger,
-            $environmentTableEntries,
         );
     }
 

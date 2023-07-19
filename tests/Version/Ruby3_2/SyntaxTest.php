@@ -345,4 +345,108 @@ class SyntaxTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame('true', $rubyVMManager->stdOut->readAll());
     }
+
+
+    public function testDefineMethod(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            def test(i)
+                puts i.to_s
+            end
+            test(65535)
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame('65535', $rubyVMManager->stdOut->readAll());
+    }
+
+    public function testCompareLessThan()
+    {
+
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            puts (1 < 20).to_s
+            puts ","
+            puts (100 < 20).to_s
+            puts ","
+            puts (20 < 20).to_s
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame('true,false,false', $rubyVMManager->stdOut->readAll());
+    }
+
+    public function testCompareLessOrEqualsThan()
+    {
+
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            puts (1 <= 20).to_s
+            puts ","
+            puts (100 <= 20).to_s
+            puts ","
+            puts (20 <= 20).to_s
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame('true,false,true', $rubyVMManager->stdOut->readAll());
+    }
+
+    public function testCompareGreaterThan()
+    {
+
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            puts (1 > 20).to_s
+            puts ","
+            puts (100 > 20).to_s
+            puts ","
+            puts (20 > 20).to_s
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame('false,true,false', $rubyVMManager->stdOut->readAll());
+    }
+
+    public function testCompareGreaterOrEqualsThan()
+    {
+
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            puts (1 >= 20).to_s
+            puts ","
+            puts (100 >= 20).to_s
+            puts ","
+            puts (20 >= 20).to_s
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame('false,true,true', $rubyVMManager->stdOut->readAll());
+    }
 }

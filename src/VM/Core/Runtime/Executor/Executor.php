@@ -11,6 +11,7 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Core\Runtime\Option;
+use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\Symbol\VoidSymbol;
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\ExecutorFailedException;
@@ -34,7 +35,6 @@ class Executor implements ExecutorInterface
         private readonly OperationProcessorEntries $operationProcessorEntries,
         private readonly InstructionSequence $instructionSequence,
         private readonly LoggerInterface $logger,
-        private readonly EnvironmentTableEntries $environmentTableEntries,
         private readonly ExecutorDebugger $debugger = new ExecutorDebugger(),
         ?ContextInterface $previousContext = null
     ) {
@@ -52,12 +52,12 @@ class Executor implements ExecutorInterface
             $this->kernel,
             $this,
             $this->main,
-            new VMStack(),
+            $previousContext?->vmStack() ?? new VMStack(),
             new ProgramCounter(),
             $this->operationProcessorEntries,
             $this->instructionSequence,
             $this->logger,
-            $this->environmentTableEntries,
+            new EnvironmentTableEntries(),
             $this->debugger,
             $previousContext
                 ? $previousContext->depth() + 1
@@ -326,16 +326,18 @@ class Executor implements ExecutorInterface
                 $insn->value,
             );
             printf(
-                "Previous Stacks: %s\n",
+                "Previous Stacks: %s#%d\n",
                 (string) $previousContext->vmStack(),
+                spl_object_id($previousContext->vmStack()),
             );
             printf(
                 "Previous Local Tables: %s\n",
                 (string) $previousContext->environmentTableEntries(),
             );
             printf(
-                "Current Stacks: %s\n",
+                "Current Stacks: %s#%d\n",
                 (string) $nextContext->vmStack(),
+                spl_object_id($nextContext->vmStack()),
             );
             printf(
                 "Current Local Tables: %s\n",
@@ -377,7 +379,7 @@ class Executor implements ExecutorInterface
 
             $context->programCounter()->set($currentPos);
             return sprintf(
-                '%s#%s(argc: %d)',
+                '%s#%s(%d)',
                 ClassHelper::nameBy($class->operand),
                 (string) $callDataOperand
                     ->operand
@@ -385,7 +387,17 @@ class Executor implements ExecutorInterface
                     ->mid()
                     ->object
                     ->symbol,
-                count($arguments),
+                implode(
+                    ', ',
+                    array_map(
+                        fn ($argument) => match ($argument::class) {
+                            SymbolInterface::class =>  (string) $argument,
+                            OperandEntry::class => (string) $argument->operand->symbol,
+                            default => '?',
+                        },
+                        $arguments,
+                    ),
+                ),
             );
         }
         return null;

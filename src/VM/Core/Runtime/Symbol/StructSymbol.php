@@ -40,23 +40,26 @@ class StructSymbol implements SymbolInterface
 
         $end = $rangeSymbol->end->number + ($rangeSymbol->excludeEnd ? 0 : 1);
         for ($i = $rangeSymbol->begin->number; $i < $end; $i += $rangeSymbol->steps) {
-            $context->environmentTableEntries()
+
+            $executor = (new Executor(
+                kernel: $context->kernel(),
+                main: $context->self(),
+                operationProcessorEntries: $context->operationProcessorEntries(),
+                instructionSequence: $context->instructionSequence(),
+                logger: $context->logger(),
+                debugger: $context->debugger(),
+                previousContext: $context,
+            ))->enableBreakpoint($context->executor()->breakPoint());
+
+            $executor->context()
+                ->environmentTableEntries()
                 ->get(Option::RSV_TABLE_INDEX_0)
                 ->set(
                     Option::VM_ENV_DATA_SIZE,
                     (new NumberSymbol($i))->toObject()
                 );
 
-            $result = (new Executor(
-                kernel: $context->kernel(),
-                main: $context->self(),
-                operationProcessorEntries: $context->operationProcessorEntries(),
-                instructionSequence: $context->instructionSequence(),
-                logger: $context->logger(),
-                environmentTableEntries: $context->environmentTableEntries(),
-                debugger: $context->debugger(),
-                previousContext: $context,
-            ))->enableBreakpoint($context->executor()->breakPoint())->execute();
+            $result = $executor->execute();
 
             // An occurred exception to be throwing
             if ($result->throwed) {

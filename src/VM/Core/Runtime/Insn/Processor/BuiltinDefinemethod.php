@@ -88,7 +88,6 @@ class BuiltinDefinemethod implements OperationProcessorInterface
             operationProcessorEntries: $this->context->operationProcessorEntries(),
             instructionSequence: $instructionSequence,
             logger: $this->context->logger(),
-            environmentTableEntries: $this->context->environmentTableEntries(),
             debugger: $this->context->debugger(),
             previousContext: $this->context,
         ))->enableBreakpoint($this->context->executor()->breakPoint());

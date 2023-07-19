@@ -7,6 +7,7 @@ namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\Standard;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
+use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
@@ -47,11 +48,11 @@ class Main implements MainInterface
     public function __call(string $name, array $arguments): ExecutedResult
     {
         /**
-         * @var ContextInterface|null $method
+         * @var ContextInterface|null $context
          */
-        $method = $this->userLandMethods[$name] ?? null;
+        $context = $this->userLandMethods[$name] ?? null;
 
-        if ($method === null) {
+        if ($context === null) {
             throw new OperationProcessorException(
                 sprintf(
                     'Method not found %s#%s',
@@ -61,15 +62,25 @@ class Main implements MainInterface
             );
         }
 
+        $executor = (new Executor(
+            kernel: $context->kernel(),
+            main: $context->self(),
+            operationProcessorEntries: $context->operationProcessorEntries(),
+            instructionSequence: $context->instructionSequence(),
+            logger: $context->logger(),
+            debugger: $context->debugger(),
+            previousContext: $context,
+        ))->enableBreakpoint($context->executor()->breakPoint());
+
         /**
          * @var SymbolInterface $argument
          */
         foreach ($arguments as $index => $argument) {
-            $method->environmentTableEntries()
+            $executor->context()->environmentTableEntries()
                 ->get(Option::RSV_TABLE_INDEX_0)
                 ->set(Option::VM_ENV_DATA_SIZE + $index, $argument->toObject());
         }
 
-        return $method->executor()->execute();
+        return $executor->execute();
     }
 }
