@@ -379,7 +379,7 @@ class Executor implements ExecutorInterface
 
             $context->programCounter()->set($currentPos);
             return sprintf(
-                '%s#%s(%d)',
+                '%s#%s(%s)',
                 ClassHelper::nameBy($class->operand),
                 (string) $callDataOperand
                     ->operand
