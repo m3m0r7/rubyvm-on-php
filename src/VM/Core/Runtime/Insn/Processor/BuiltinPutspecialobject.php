@@ -5,13 +5,20 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
+use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
+use RubyVM\VM\Core\Runtime\Executor\Validatable;
+use RubyVM\VM\Core\Runtime\Executor\VMSpecialObjectType;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Option;
+use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinPutspecialobject implements OperationProcessorInterface
 {
+    use Validatable;
+
     private Insn $insn;
 
     private ContextInterface $context;
@@ -32,12 +39,35 @@ class BuiltinPutspecialobject implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        throw new OperationProcessorException(
-            sprintf(
-                'The `%s` (opcode: 0x%02x) processor is not implemented yet',
-                strtolower($this->insn->name),
-                $this->insn->value,
-            )
+        $newPos = $this->context->programCounter()->increase();
+
+        /**
+         * @var OperandEntry $operand
+         */
+        $operand = $this->context
+            ->instructionSequence()
+            ->operations()
+            ->get($newPos);
+
+        $this->validateType(
+            OperandEntry::class,
+            $operand,
         );
+
+        /**
+         * @var NumberSymbol $symbol
+         */
+        $symbol = $operand->operand->symbol;
+
+        $this->validateType(
+            NumberSymbol::class,
+            $symbol,
+        );
+
+        $type =  VMSpecialObjectType::of($symbol->number);
+
+        $this->context->vmStack()->push(new OperandEntry($this->context->self()));
+
+        return ProcessedStatus::SUCCESS;
     }
 }

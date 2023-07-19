@@ -114,6 +114,8 @@ class Executor implements ExecutorInterface
 
         $operations = $this->instructionSequence->operations();
 
+        echo $operations;
+
         $isFinished = false;
 
         $this->logger->info(
