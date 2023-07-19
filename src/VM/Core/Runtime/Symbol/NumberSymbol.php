@@ -43,10 +43,17 @@ class NumberSymbol implements SymbolInterface
         return clone $this;
     }
 
+    public function toFloat(): FloatSymbol
+    {
+        return new FloatSymbol(
+            (float) $this->number,
+        );
+    }
+
     public function toString(): SymbolInterface
     {
         return new StringSymbol(
-            string: "{$this->number}",
+            string: (string) $this,
         );
     }
 

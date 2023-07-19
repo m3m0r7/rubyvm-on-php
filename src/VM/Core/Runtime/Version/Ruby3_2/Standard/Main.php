@@ -29,7 +29,11 @@ class Main implements MainInterface
 
     public function puts(SymbolInterface $symbol): SymbolInterface
     {
-        $this->stdOut->write((string) $symbol);
+        $string = (string) $symbol;
+        if (!str_ends_with($string, "\n")) {
+            $string .= "\n";
+        }
+        $this->stdOut->write($string);
 
         // The puts returns (nil)
         return new NilSymbol();

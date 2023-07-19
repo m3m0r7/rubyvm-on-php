@@ -23,7 +23,7 @@ class MethodTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame('HelloWorld!', $rubyVMManager->stdOut->readAll());
+        $this->assertSame("HelloWorld!\n", $rubyVMManager->stdOut->readAll());
     }
 
     public function testPHPInfoMethod(): void
@@ -55,7 +55,7 @@ class MethodTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame('7', $rubyVMManager->stdOut->readAll());
+        $this->assertSame("7\n", $rubyVMManager->stdOut->readAll());
     }
 
     public function testPower(): void
@@ -71,7 +71,7 @@ class MethodTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame('32', $rubyVMManager->stdOut->readAll());
+        $this->assertSame("32\n", $rubyVMManager->stdOut->readAll());
     }
 
     public function testRightShift(): void
@@ -87,7 +87,7 @@ class MethodTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame('1', $rubyVMManager->stdOut->readAll());
+        $this->assertSame("1\n", $rubyVMManager->stdOut->readAll());
     }
 
     public function testToInt(): void
@@ -103,6 +103,6 @@ class MethodTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame('65535', $rubyVMManager->stdOut->readAll());
+        $this->assertSame("65535\n", $rubyVMManager->stdOut->readAll());
     }
 }

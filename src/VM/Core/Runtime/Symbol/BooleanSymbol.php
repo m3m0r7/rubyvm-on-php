@@ -18,6 +18,13 @@ class BooleanSymbol implements SymbolInterface
             : 'false';
     }
 
+    public function toString(): SymbolInterface
+    {
+        return new StringSymbol(
+            string: (string) $this,
+        );
+    }
+
     public function toObject(): Object_
     {
         return new Object_(

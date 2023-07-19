@@ -391,7 +391,7 @@ class Executor implements ExecutorInterface
                     ', ',
                     array_map(
                         fn ($argument) => match ($argument::class) {
-                            SymbolInterface::class =>  (string) $argument,
+                            SymbolInterface::class => (string) $argument,
                             OperandEntry::class => (string) $argument->operand->symbol,
                             default => '?',
                         },
