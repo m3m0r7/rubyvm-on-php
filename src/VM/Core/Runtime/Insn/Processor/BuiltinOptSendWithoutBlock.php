@@ -80,11 +80,6 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
 
         $this->validateType(
             OperandEntry::class,
-            $class,
-        );
-
-        $this->validateType(
-            OperandEntry::class,
             ...$arguments,
         );
 
@@ -96,11 +91,6 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             ->mid()
             ->object
             ->symbol;
-
-        $this->validateType(
-            StringSymbol::class,
-            $symbol,
-        );
 
         /**
          * @var MainInterface|Object_ $targetSymbol

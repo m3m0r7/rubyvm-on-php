@@ -38,7 +38,6 @@ class BuiltinPop implements OperationProcessorInterface
     public function process(): ProcessedStatus
     {
         $value = $this->context->vmStack()->pop();
-        $this->validateType(OperandEntry::class, $value);
 
         return ProcessedStatus::SUCCESS;
     }

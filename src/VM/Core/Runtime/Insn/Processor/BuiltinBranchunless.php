@@ -41,29 +41,9 @@ class BuiltinBranchunless implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        $newPos = $this->context->programCounter()->increase();
+        $offsetSymbol = $this->getOperandAndValidateOffsetSymbol();
 
-        /**
-         * @var OperandEntry $operand
-         */
-        $operand = $this->context
-            ->instructionSequence()
-            ->operations()
-            ->get($newPos);
-
-        $this->validateType(OperandEntry::class, $operand);
-        $this->validateType(OffsetSymbol::class, $operand->operand->symbol);
-
-        /**
-         * @var OffsetSymbol $offsetSymbol
-         */
-        $offsetSymbol = $operand->operand->symbol;
-
-        $value = $this->context->vmStack()->pop();
-
-        $this->validateType(OperandEntry::class, $value);
-        $this->validateType(Object_::class, $value->operand);
-        $symbol = $value->operand->symbol;
+        $symbol = $this->getStackAndValidateSymbol();
 
         if ($this->unless($symbol)) {
             $this->context

@@ -44,65 +44,25 @@ class BuiltinSend implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        /**
-         * @var OperandEntry $operand
-         */
-        $operand = $this->context
-            ->instructionSequence()
-            ->operations()
-            ->get($this->context->programCounter()->increase());
-
-        $this->validateType(
-            OperandEntry::class,
-            $operand,
-        );
-
-        /**
-         * @var CallInfoEntry $callInfo
-         */
-        $callInfo = $operand->operand;
-
-        $this->validateType(
-            CallInfoEntryInterface::class,
-            $callInfo,
-        );
+        $callInfo = $this->getOperandAndValidateCallInfo();
 
         $arguments = [];
         for ($i = 0; $i < $callInfo->callData()->argumentsCount(); $i++) {
             $arguments[] = $this->context->vmStack()->pop();
         }
 
-        /**
-         * @var Object_ $blockObject
-         */
-        $blockObject = $this->context->vmStack()->pop()->operand;
-
-        $this->validateType(
-            Object_::class,
-            $blockObject,
-        );
+        $blockObject = $this->getStackAndValidateObject();
 
         $this->validateType(
             OperandEntry::class,
             ...$arguments,
         );
 
-        /**
-         * @var OperandEntry $blockIseq
-         */
-        $blockIseqOperand = $this->context
-            ->instructionSequence()
-            ->operations()
-            ->get($this->context->programCounter()->increase());
-
-        $this->validateType(
-            OperandEntry::class,
-            $blockIseqOperand,
-        );
+        $blockIseqNumber = $this->getOperandAndValidateNumberSymbol();
 
         $result = $this->callBlockWithArguments(
             $callInfo,
-            $blockIseqOperand->operand->symbol,
+            $blockIseqNumber,
             $blockObject,
             false,
             ...$arguments,

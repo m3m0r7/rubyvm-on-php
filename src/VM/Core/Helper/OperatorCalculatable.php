@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Helper;
 
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
@@ -15,17 +16,10 @@ use RubyVM\VM\Exception\OperationProcessorException;
 trait OperatorCalculatable
 {
     use Validatable;
+    use OperandHelper;
 
     private function processArithmetic(string $expectedOperator): ProcessedStatus
     {
-        $newPos = $this->context->programCounter()->increase();
-
-        $callDataOperand = $this->context
-            ->instructionSequence()
-            ->operations()
-            ->get($newPos);
-
-        $this->validateType(OperandEntry::class, $callDataOperand);
 
         $recv = $this->context->vmStack()->pop();
         $obj = $this->context->vmStack()->pop();
@@ -33,11 +27,11 @@ trait OperatorCalculatable
         $this->validateType(OperandEntry::class, $recv);
         $this->validateType(OperandEntry::class, $obj);
 
+        $callDataOperand = $this->getOperandAndValidateCallInfo();
         /**
          * @var SymbolInterface $operator
          */
-        $operator = $callDataOperand->operand
-            ->callData
+        $operator = $callDataOperand->callData
             ->mid
             ->object
             ->symbol;

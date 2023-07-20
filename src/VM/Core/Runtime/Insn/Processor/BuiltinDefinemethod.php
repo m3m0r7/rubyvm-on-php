@@ -44,39 +44,19 @@ class BuiltinDefinemethod implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        $newPos = $this->context->programCounter()->increase();
-
-        $id = $this->context
-            ->instructionSequence()
-            ->operations()
-            ->get($newPos);
-
-        $this->validateType(OperandEntry::class, $id);
-
         /**
          * @var StringSymbol $methodNameSymbol
          */
-        $methodNameSymbol = ($methodObject = $id->operand->object)->symbol;
+        $methodNameSymbol = $this->getOperandAndValidateID()
+            ->object
+            ->symbol;
 
-        $newPos = $this->context->programCounter()->increase();
-
-        $iseq = $this->context
-            ->instructionSequence()
-            ->operations()
-            ->get($newPos);
-
-        $this->validateType(OperandEntry::class, $iseq);
-
-        /**
-         * @var NumberSymbol $symbol
-         */
-        $symbol = $iseq->operand->symbol;
-        $this->validateType(NumberSymbol::class, $symbol);
+        $iseqNumber = $this->getOperandAndValidateNumberSymbol();
 
         $instructionSequence = $this->context->kernel()->loadInstructionSequence(
             aux: new Aux(
                 loader: new AuxLoader(
-                    index: $symbol->number,
+                    index: $iseqNumber->number,
                 ),
             ),
         );

@@ -10,7 +10,7 @@ use RubyVM\VM\Core\Runtime\Symbol\ID;
 class CallData implements CallDataInterface
 {
     public function __construct(
-        public readonly mixed $mid,
+        public readonly ID $mid,
         public readonly int $flag,
         public readonly int $argc,
         public readonly ?array $keywords,

@@ -41,72 +41,9 @@ class BuiltinDefineclass implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-
-        $newPos = $this->context->programCounter()->increase();
-
-        /**
-         * @var OperandEntry $id
-         */
-        $idOperand = $this->context
-            ->instructionSequence()
-            ->operations()
-            ->get($newPos);
-
-        $this->validateType(
-            OperandEntry::class,
-            $idOperand,
-        );
-
-        $newPos = $this->context->programCounter()->increase();
-
-        /**
-         * @var OperandEntry $iseqOperand
-         */
-        $iseqOperand = $this->context
-            ->instructionSequence()
-            ->operations()
-            ->get($newPos);
-
-
-        $this->validateType(
-            OperandEntry::class,
-            $iseqOperand,
-        );
-
-        /**
-         * @var NumberSymbol $iseqNumber
-         */
-        $iseqNumber = $iseqOperand->operand->symbol;
-
-        /**
-         * @var ID $id
-         */
-        $id = $idOperand->operand;
-
-        $this->validateType(
-            ID::class,
-            $id,
-        );
-
-        $newPos = $this->context->programCounter()->increase();
-
-        /**
-         * @var OperandEntry $flagsOperand
-         */
-        $flagsOperand = $this->context
-            ->instructionSequence()
-            ->operations()
-            ->get($newPos);
-
-        /**
-         * @var NumberSymbol $flags
-         */
-        $flags = $flagsOperand->operand->symbol;
-
-        $this->validateType(
-            NumberSymbol::class,
-            $flags,
-        );
+        $id = $this->getOperandAndValidateID();
+        $iseqNumber = $this->getOperandAndValidateNumberSymbol();
+        $flags = $this->getOperandAndValidateNumberSymbol();
 
         var_dump($flags, $iseqNumber, $id);
 

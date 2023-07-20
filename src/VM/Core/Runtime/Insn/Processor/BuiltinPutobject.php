@@ -37,16 +37,7 @@ class BuiltinPutobject implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        $newPos = $this->context->programCounter()->increase();
-
-        $operand = $this->context
-            ->instructionSequence()
-            ->operations()
-            ->get($newPos);
-
-        $this->validateType(OperandEntry::class, $operand);
-
-        $this->context->vmStack()->push($operand);
+        $this->context->vmStack()->push($this->getOperand());
 
         return ProcessedStatus::SUCCESS;
     }
