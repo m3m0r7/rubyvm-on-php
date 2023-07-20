@@ -230,4 +230,51 @@ class LogicTest extends TestApplication
 
         _, $rubyVMManager->stdOut->readAll());
     }
+
+    public function testShowArrayInMethod()
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            def display_array(arr)
+                puts arr
+            end
+
+            puts display_array([1, 2, 3])
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<_
+        1
+        2
+        3
+
+
+        _, $rubyVMManager->stdOut->readAll());
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< _
+            def display_array(arr)
+                arr
+            end
+
+            puts display_array([1, 2, 3])
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<_
+        1
+        2
+        3
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
 }

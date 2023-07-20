@@ -4,94 +4,41 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use RubyVM\VM\Core\Runtime\InstructionSequence\IDTable;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Internal\Arithmetic;
 
 trait LocalTable
 {
     use Validatable;
+    use OperandHelper;
 
     public function getLocalTableToStack(int $localTableIndex): void
     {
-        $newPos = $this->context->programCounter()->increase();
-
-        $operand = $this->context
-            ->instructionSequence()
-            ->operations()
-            ->get($newPos);
-
-        $this->validateType(
-            OperandEntry::class,
-            $operand,
-        );
-
-        $this->validateType(
-            Object_::class,
-            $operand->operand,
-        );
-
-        /**
-         * @var NumberSymbol $index
-         */
-        $index = $operand->operand->symbol;
-
+        $index = $this->getOperandAndValidateNumberSymbol()->number;
         $this->context->vmStack()->push(
             new OperandEntry(
                 $this->context
                     ->environmentTableEntries()
                     ->get($localTableIndex)
-                    ->get($index->number),
+                    ->get($index),
             ),
         );
     }
 
     public function setLocalTableFromStack(int $localTableIndex): void
     {
-
-        $newPos = $this->context->programCounter()->increase();
-
-        $operand = $this->context
-            ->instructionSequence()
-            ->operations()
-            ->get($newPos);
-
-        $this->validateType(
-            OperandEntry::class,
-            $operand,
-        );
-
-        $this->validateType(
-            Object_::class,
-            $operand->operand,
-        );
-
-        /**
-         * @var SymbolInterface $value
-         */
-        $operandValue = $this->context->vmStack()->pop();
-
-        $this->validateType(
-            OperandEntry::class,
-            $operandValue,
-        );
-
-        $this->validateType(
-            Object_::class,
-            $operandValue->operand,
-        );
-
-        /**
-         * @var NumberSymbol $index
-         */
-        $index = $operand->operand->symbol;
+        $index = $this->getOperandAndValidateNumberSymbol()->number;
+        $operand = $this->getStackAndValidateObject();
 
         $this->context->environmentTableEntries()
             ->get($localTableIndex)
             ->set(
-                $index->number,
-                clone $operandValue->operand,
+                $index,
+                clone $operand,
             );
     }
 }

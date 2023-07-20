@@ -12,10 +12,13 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\LocationInterface;
 use RubyVM\VM\Core\Runtime\InstructionSequence\ObjectParameterInterface;
 use RubyVM\VM\Core\Runtime\InstructionSequence\VariableInterfce;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\CatchEntries;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\OuterVariableEntries;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\VariableEntries;
 
 class InstructionSequenceBody implements InstructionSequenceBodyInterface
 {
+    protected InstructionSequenceCompileData $compileData;
+
     public function __construct(
         public readonly int $type,
         public readonly int $stackMax,
@@ -32,7 +35,7 @@ class InstructionSequenceBody implements InstructionSequenceBodyInterface
         public readonly int $icvArcSize,
         public readonly int $iseSize,
         public readonly int $icSize,
-        public readonly VariableEntries $outerVariables,
+        public readonly OuterVariableEntries $outerVariables,
         public readonly VariableEntries $localTable,
         public readonly CatchEntries $catchTable,
         public readonly ?InstructionSequenceInterface $parentISeq,
@@ -42,6 +45,12 @@ class InstructionSequenceBody implements InstructionSequenceBodyInterface
         public readonly int $bytecodeOffset,
         public readonly int $bytecodeSize,
     ) {
+        $this->compileData = new InstructionSequenceCompileData();
+    }
+
+    public function compileData(): InstructionSequenceCompileData
+    {
+        return $this->compileData;
     }
 
     public function type(): int
@@ -52,5 +61,10 @@ class InstructionSequenceBody implements InstructionSequenceBodyInterface
     public function stackMax(): int
     {
         return $this->stackMax;
+    }
+
+    public function inlineCache(): int
+    {
+        return $this->icSize;
     }
 }

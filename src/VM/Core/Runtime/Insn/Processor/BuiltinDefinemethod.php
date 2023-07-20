@@ -6,18 +6,14 @@ namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
-use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\Executor\ProgramCounter;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
-use RubyVM\VM\Core\Runtime\Executor\VMStack;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
-use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
-use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinDefinemethod implements OperationProcessorInterface
 {
@@ -62,7 +58,6 @@ class BuiltinDefinemethod implements OperationProcessorInterface
         );
 
         $instructionSequence->load();
-
 
         $executor = (new Executor(
             kernel: $this->context->kernel(),

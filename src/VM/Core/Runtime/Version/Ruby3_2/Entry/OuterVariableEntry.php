@@ -6,10 +6,11 @@ namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry;
 
 use RubyVM\VM\Core\Runtime\Symbol\ID;
 
-class VariableEntry
+class OuterVariableEntry
 {
     public function __construct(
-        public readonly ID $id
+        public readonly ID $key,
+        protected readonly int $value,
     ) {
     }
 }

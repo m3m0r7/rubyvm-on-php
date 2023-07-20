@@ -8,11 +8,12 @@ use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Option;
+use Traversable;
 
-class ArraySymbol implements SymbolInterface
+class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \IteratorAggregate
 {
     public function __construct(
-        public readonly array $array,
+        public array $array,
     ) {
     }
 
@@ -67,5 +68,35 @@ class ArraySymbol implements SymbolInterface
             ),
             symbol: $this,
         );
+    }
+
+    public function getIterator(): Traversable
+    {
+        return new \ArrayIterator($this->array);
+    }
+
+    public function offsetExists(mixed $offset): bool
+    {
+        return isset($this->array[$offset]);
+    }
+
+    public function offsetGet(mixed $offset): mixed
+    {
+        return $this->array[$offset];
+    }
+
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        $this->array[$offset] = $value;
+    }
+
+    public function offsetUnset(mixed $offset): void
+    {
+        unset($this->array[$offset]);
+    }
+
+    public function count(): int
+    {
+        return count($this->array);
     }
 }

@@ -8,7 +8,6 @@ use RubyVM\VM\Core\Helper\DefaultOperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Executor\EnvironmentTableEntries;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
-use RubyVM\VM\Core\Runtime\Executor\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
@@ -30,6 +29,7 @@ use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\ArrayLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FalseLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FixedNumberLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FloatLoader;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\NilLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StringLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StructLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\SymbolLoader;
@@ -307,6 +307,7 @@ class Kernel implements KernelInterface
     private function resolveLoader(ObjectInfo $info, Offset $offset): LoaderInterface
     {
         return match ($info->type) {
+            SymbolType::NIL => new NilLoader($this, $offset),
             SymbolType::STRUCT => new StructLoader($this, $offset),
             SymbolType::TRUE => new TrueLoader($this, $offset),
             SymbolType::FALSE => new FalseLoader($this, $offset),

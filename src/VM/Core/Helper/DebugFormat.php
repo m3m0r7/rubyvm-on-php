@@ -17,16 +17,16 @@ trait DebugFormat
         $result = [
             count($targetItems),
         ];
-        foreach ($targetItems as $item) {
+        foreach ($targetItems as $index => $item) {
             $result[] = ClassHelper::nameBy($item) . '<' . match($item::class) {
                 SymbolInterface::class => (string) $item,
                 OperandEntry::class => (string) match (($item->operand)::class) {
-                    Object_::class => ClassHelper::nameBy($item->operand->symbol) . "@{$item->operand->symbol}",
+                    Object_::class => ClassHelper::nameBy($item->operand->symbol) . "({$item->operand->symbol})",
                     default => ClassHelper::nameBy($item->operand),
                 },
-                Object_::class => ClassHelper::nameBy($item->symbol) . "@{$item->symbol}",
+                Object_::class => ClassHelper::nameBy($item->symbol) . "({$item->symbol})",
                 default => 'unknown',
-            } . '>';
+            } . "#{$index}>";
         }
 
         return sprintf(

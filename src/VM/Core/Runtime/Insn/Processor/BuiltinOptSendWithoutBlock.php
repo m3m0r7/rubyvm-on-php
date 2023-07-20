@@ -51,37 +51,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        $newPos = $this->context->programCounter()->increase();
-
-        $callDataOperand = $this->context
-            ->instructionSequence()
-            ->operations()
-            ->get($newPos);
-
-        $this->validateType(
-            OperandEntry::class,
-            $callDataOperand,
-        );
-
-        $this->validateType(
-            CallInfoEntryInterface::class,
-            $callDataOperand->operand,
-        );
-
-        /**
-         * @var CallInfoEntryInterface $callInfo
-         */
-        $callInfo = $callDataOperand->operand;
-        $arguments = [];
-        for ($i = 0; $i < $callInfo->callData()->argumentsCount(); $i++) {
-            $arguments[] = $operand = $this->context->vmStack()->pop();
-        }
-        $class = $this->context->vmStack()->pop();
-
-        $this->validateType(
-            OperandEntry::class,
-            ...$arguments,
-        );
+        $callInfo = $this->getOperandAndValidateCallInfo();
 
         /**
          * @var StringSymbol $symbol
@@ -92,15 +62,25 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             ->object
             ->symbol;
 
+        $arguments = [];
+        for ($i = 0; $i < $callInfo->callData()->argumentsCount(); $i++) {
+            $arguments[] = $operand = $this->context->vmStack()->pop();
+        }
+
+        $this->validateType(
+            OperandEntry::class,
+            ...$arguments,
+        );
         /**
          * @var MainInterface|Object_ $targetSymbol
          */
-        $targetSymbol = $class->operand;
+        $targetSymbol = $this->getStack()
+            ->operand;
 
         /**
          * @var SymbolInterface|ExecutedResult|null $result
          */
-        $result = $targetSymbol->{$symbol->string}(...$this->translateForArguments(...$arguments));
+        $result = $targetSymbol->{(string) $symbol}(...$this->translateForArguments(...$arguments));
         if ($result instanceof Object_) {
             $this->context->vmStack()
                 ->push(new OperandEntry($result));

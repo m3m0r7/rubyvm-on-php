@@ -7,11 +7,11 @@ namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
 use RubyVM\VM\Core\Runtime\Symbol\LoaderInterface;
-use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
+use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Internal\Arithmetic;
+use RubyVM\VM\Stream\SizeOf;
 
-class FixedNumberLoader implements LoaderInterface
+class NilLoader implements LoaderInterface
 {
     public function __construct(
         protected readonly KernelInterface $kernel,
@@ -20,11 +20,13 @@ class FixedNumberLoader implements LoaderInterface
     }
     public function load(): SymbolInterface
     {
-        $this->kernel->stream()->pos($this->offset->offset);
+        $this->kernel->stream()->pos(
+            $this->offset->offset,
+        );
         $value = $this->kernel->stream()->smallValue();
 
-        return new NumberSymbol(
-            Arithmetic::fix2int($value),
+        return new NilSymbol(
+            $value,
         );
     }
 }

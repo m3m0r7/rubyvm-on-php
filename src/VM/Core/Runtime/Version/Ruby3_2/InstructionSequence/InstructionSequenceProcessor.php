@@ -11,6 +11,7 @@ use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationEntries;
 use RubyVM\VM\Core\Runtime\Executor\OperationEntry;
 use RubyVM\VM\Core\Runtime\Executor\UnknownEntry;
+use RubyVM\VM\Core\Runtime\IDList;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Insn\InsnType;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
@@ -22,16 +23,16 @@ use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
 use RubyVM\VM\Core\Runtime\Symbol\OffsetSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\CallData;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\CatchEntries;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\InsnsBodyEntries;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\InsnsPositionEntries;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\OuterVariableEntries;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\OuterVariableEntry;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\VariableEntries;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\VariableEntry;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceBody as Ruby3_2_InstructionSequenceBody;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Internal\Arithmetic;
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\InstructionSequenceProcessorException;
 use RubyVM\VM\Stream\BinaryStreamReader;
@@ -300,7 +301,6 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                                 InsnType::TS_NUM,
                                 InsnType::TS_LINDEX => new OperandEntry(
                                     operand: (new NumberSymbol(
-                                        // NOTE: do not use Arithmetic::fix2int
                                         $reader->smallValue(),
                                     ))->toObject()
                                 ),
@@ -320,10 +320,17 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                                         ),
                                 ),
 
+
+                                InsnType::TS_IC => new OperandEntry(
+                                    $this->processInlineCache(
+                                        $reader,
+                                        $instructionSequenceBody,
+                                    ),
+                                ),
+
                                 // Not implemented yet
                                 InsnType::TS_VARIABLE,
                                 InsnType::TS_IVC,
-                                InsnType::TS_IC,
                                 InsnType::TS_ISE,
                                 InsnType::TS_ISEQ,
                                 InsnType::TS_FUNCPTR,
@@ -369,6 +376,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                 return $entries;
             }
         );
+
     }
 
     private function loadCallInfoEntries(int $callInfoEntriesOffset, int $callInfoSize): CallInfoEntries
@@ -414,15 +422,39 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         );
     }
 
-    private function loadOuterVariables(int $outerVariableOffset): VariableEntries
+    private function loadOuterVariables(int $outerVariableOffset): OuterVariableEntries
     {
-        $entries = new VariableEntries();
-        return $entries;
+        return $this->kernel->stream()->dryPosTransaction(
+            function (BinaryStreamReader $reader) use ($outerVariableOffset) {
+                $entries = new OuterVariableEntries();
+                $reader->pos($outerVariableOffset);
+
+                $tableSize = $reader->smallValue();
+
+                for ($i = 0; $i < $tableSize; $i++) {
+                    $key = $this->kernel->findId($reader->smallValue());
+                    $value = $reader->smallValue();
+
+                    $entries[] = new OuterVariableEntry(
+                        $key,
+                        $value,
+                    );
+                }
+
+                return $entries;
+            },
+        );
     }
 
     private function loadParamOptTable(int $paramOptTableOffset, int $paramOptNum): int
     {
-        return -1;
+        return $this->kernel->stream()->dryPosTransaction(
+            function (BinaryStreamReader $reader) use ($paramOptTableOffset, $paramOptNum) {
+                $reader->pos($paramOptTableOffset);
+                // TODO: implement here
+                return -1;
+            },
+        );
     }
 
     private function loadKeyword(int $paramKeywordOffset): Keyword
@@ -444,8 +476,18 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
 
     private function loadLocalTable(int $localTableOffset, int $localTableSize): VariableEntries
     {
-        $entries = new VariableEntries();
-        return $entries;
+        return $this->kernel->stream()->dryPosTransaction(
+            function (BinaryStreamReader $reader) use ($localTableOffset, $localTableSize) {
+                $entries = new VariableEntries();
+                $reader->pos($localTableOffset);
+
+                for ($i = 0; $i < $localTableSize; $i++) {
+                    $entries[] = new VariableEntry($this->kernel->findId($reader->unsignedLong()));
+                }
+
+                return $entries;
+            }
+        );
     }
 
     private function loadCatchTable(int $catchTableOffset, int $catchTableSize): CatchEntries
@@ -457,6 +499,18 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
     public function path(): string
     {
         return (string) $this->path->symbol;
+    }
+
+    private function processInlineCache(BinaryStreamReader $reader, Ruby3_2_InstructionSequenceBody $instructionSequenceBody): IDList
+    {
+        $icSize = $instructionSequenceBody
+            ->compileData()
+            ->icSize++;
+
+        $id = $reader->smallValue();
+        $array = $this->kernel->findObject($id);
+
+        return new IDList($array);
     }
 
     private function insnOperations(): array

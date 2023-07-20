@@ -8,6 +8,11 @@ class Arithmetic
 {
     public const RUBY_FIXNUM_FLAG = 0x01;
 
+    public static function isFixNum(int $value): bool
+    {
+        return !!($value & static::RUBY_FIXNUM_FLAG);
+    }
+
     /**
      * NOTE: refer INT2FIX implementation
      *
@@ -15,7 +20,6 @@ class Arithmetic
      */
     public static function fix2int(int $value): int
     {
-        // NOTE: no needing `& ~static::RUBY_FIXNUM_FLAG` mask because the bit will lost when shifting to right
         return $value >> 1;
     }
 

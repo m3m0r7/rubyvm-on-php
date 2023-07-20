@@ -142,9 +142,7 @@ class Executor implements ExecutorInterface
                 throw new ExecutorExeption(
                     sprintf(
                         'The operator is not instantiated by OperationEntry (actual: %s) - maybe an operation code processor has bug(s) or incorrect in implementation [%s]',
-                        is_object($operator)
-                            ? ClassHelper::nameBy($operator)
-                            : gettype($operator),
+                        ClassHelper::nameBy($operator),
                         (string) $operations,
                     )
                 );

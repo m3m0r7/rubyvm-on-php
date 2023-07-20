@@ -6,6 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Core\Runtime\Option;
+use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
 use RubyVM\VM\Core\Runtime\Symbol\FloatSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
@@ -101,6 +102,21 @@ trait OperandHelper
 
         $this->validateType(
             OffsetSymbol::class,
+            $symbol,
+        );
+
+        return $symbol;
+    }
+
+    private function getOperandAndValidateArraySymbol(): ArraySymbol
+    {
+        /**
+         * @var ArraySymbol $symbol
+         */
+        $symbol = $this->getOperandAndValidateSymbol();
+
+        $this->validateType(
+            ArraySymbol::class,
             $symbol,
         );
 

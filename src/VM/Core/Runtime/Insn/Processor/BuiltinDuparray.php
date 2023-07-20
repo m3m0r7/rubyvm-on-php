@@ -37,9 +37,10 @@ class BuiltinDuparray implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        $this->context->vmStack()->push(
-            $this->getOperand(),
-        );
+        $this->context->vmStack()->push(new OperandEntry(
+            $this->getOperandAndValidateArraySymbol()
+                ->toObject(),
+        ));
 
         return ProcessedStatus::SUCCESS;
     }

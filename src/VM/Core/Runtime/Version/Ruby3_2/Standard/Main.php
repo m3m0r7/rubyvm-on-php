@@ -10,7 +10,9 @@ use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Core\Runtime\Option;
+use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
+use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
@@ -19,6 +21,7 @@ use RubyVM\VM\Stream\StreamHandlerInterface;
 class Main implements MainInterface
 {
     protected array $userLandMethods = [];
+    protected array $userLandClasses = [];
 
     public function __construct(
         private readonly StreamHandlerInterface $stdOut,
@@ -29,7 +32,17 @@ class Main implements MainInterface
 
     public function puts(SymbolInterface $symbol): SymbolInterface
     {
-        $string = (string) $symbol;
+        $string = '';
+        if ($symbol instanceof ArraySymbol) {
+            foreach ($symbol as $number) {
+                $string .= "{$number}\n";
+            }
+        } elseif ($symbol instanceof NilSymbol) {
+            // When an argument is a nil symbol, then displays a break only
+            $string = "\n";
+        } else {
+            $string = (string) $symbol;
+        }
         if (!str_ends_with($string, "\n")) {
             $string .= "\n";
         }
@@ -42,6 +55,14 @@ class Main implements MainInterface
     public function phpinfo(): void
     {
         $this->stdOut->write('PHP Version: ' . PHP_VERSION . "\n");
+    }
+
+    public function class(NumberSymbol $flags, StringSymbol $className, ContextInterface $context): void
+    {
+        $this->userLandClasses[(string) $className] = new ClassDefinition(
+            $flags->number,
+            $context,
+        );
     }
 
     public function def(StringSymbol $methodName, ContextInterface $context): void
@@ -76,13 +97,23 @@ class Main implements MainInterface
             previousContext: $context,
         ));
 
+        $appendEnvIndex = $context
+            ->instructionSequence()
+            ->body()
+            ->data
+            ->inlineCache() * 2;
+
         /**
          * @var SymbolInterface $argument
          */
         foreach ($arguments as $index => $argument) {
             $executor->context()->environmentTableEntries()
                 ->get(Option::RSV_TABLE_INDEX_0)
-                ->set(Option::VM_ENV_DATA_SIZE + $index, $argument->toObject());
+                ->set(
+                    // FIXME: Is the logic correctly? I don't know why below code works.
+                    Option::VM_ENV_DATA_SIZE + $appendEnvIndex + $index,
+                    $argument->toObject()
+                );
         }
 
         return $executor->execute();

@@ -40,7 +40,7 @@ class BuiltinPutobjectINT2FIX0 implements OperationProcessorInterface
     {
         $this->context->vmStack()->push(
             new OperandEntry(
-                (new NumberSymbol(0, true))
+                (new NumberSymbol(0))
                     ->toObject()
             ),
         );
