@@ -6,5 +6,4 @@ namespace RubyVM\VM\Core\Runtime;
 
 class IDList
 {
-
 }

@@ -21,6 +21,7 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequenceBody;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequenceProcessorInterface;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
+use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\OffsetSymbol;
@@ -313,19 +314,12 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                                     ))->toObject(),
                                 ),
 
+                                InsnType::TS_IC,
                                 InsnType::TS_ID => new OperandEntry(
                                     $this->kernel
                                         ->findId(
                                             $reader->smallValue()
                                         ),
-                                ),
-
-
-                                InsnType::TS_IC => new OperandEntry(
-                                    $this->processInlineCache(
-                                        $reader,
-                                        $instructionSequenceBody,
-                                    ),
                                 ),
 
                                 // Not implemented yet
@@ -499,18 +493,6 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
     public function path(): string
     {
         return (string) $this->path->symbol;
-    }
-
-    private function processInlineCache(BinaryStreamReader $reader, Ruby3_2_InstructionSequenceBody $instructionSequenceBody): IDList
-    {
-        $icSize = $instructionSequenceBody
-            ->compileData()
-            ->icSize++;
-
-        $id = $reader->smallValue();
-        $array = $this->kernel->findObject($id);
-
-        return new IDList($array);
     }
 
     private function insnOperations(): array

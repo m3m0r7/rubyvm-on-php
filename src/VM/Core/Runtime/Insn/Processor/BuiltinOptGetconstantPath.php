@@ -34,6 +34,8 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
+        $operand = $this->getOperandAndValidateID();
+        var_dump($operand);
         throw new OperationProcessorException(
             sprintf(
                 'The `%s` (opcode: 0x%02x) processor is not implemented yet',

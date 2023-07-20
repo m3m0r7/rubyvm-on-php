@@ -8,6 +8,9 @@ use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
+use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\OperationEntry;
+use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
@@ -15,6 +18,7 @@ use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Internal\Arithmetic;
 use RubyVM\VM\Exception\OperationProcessorException;
 use RubyVM\VM\Stream\StreamHandlerInterface;
 
@@ -97,12 +101,10 @@ class Main implements MainInterface
             previousContext: $context,
         ));
 
-        $appendEnvIndex = $context
-            ->instructionSequence()
-            ->body()
-            ->data
-            ->inlineCache() * 2;
-
+        // FIXME: Is the logic correctly? Here is temporarily implementation.
+        $envIndex = $this->tryToGetFirstLocalTableIndex(
+            $context,
+        );
         /**
          * @var SymbolInterface $argument
          */
@@ -110,12 +112,36 @@ class Main implements MainInterface
             $executor->context()->environmentTableEntries()
                 ->get(Option::RSV_TABLE_INDEX_0)
                 ->set(
-                    // FIXME: Is the logic correctly? I don't know why below code works.
-                    Option::VM_ENV_DATA_SIZE + $appendEnvIndex + $index,
-                    $argument->toObject()
+                    $envIndex + $index,
+                    $argument->toObject(),
                 );
         }
 
         return $executor->execute();
+    }
+
+    private function tryToGetFirstLocalTableIndex(ContextInterface $context): int
+    {
+        $entries = $context->instructionSequence()->body()->operationEntries;
+        /**
+         * @var OperationEntry $operationEntry
+         */
+        for ($i = 0; $i < count($entries); $i++) {
+            if ($entries[$i]->insn !== Insn::GETLOCAL_WC_0) {
+                continue;
+            }
+            /**
+             * @var OperandEntry $operand
+             */
+            $operand = $entries[$i + 1];
+
+            /**
+             * @var NumberSymbol $symbol
+             */
+            $symbol = $operand->operand->symbol;
+            return $symbol->number;
+        }
+
+        return Option::VM_ENV_DATA_SIZE;
     }
 }
