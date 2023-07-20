@@ -10,9 +10,11 @@ use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Option;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinGetlocalWC1 implements OperationProcessorInterface
 {
+    use OperandHelper;
     use LocalTable;
 
     private Insn $insn;

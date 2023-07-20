@@ -8,9 +8,11 @@ use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinDup implements OperationProcessorInterface
 {
+    use OperandHelper;
     private Insn $insn;
 
     private ContextInterface $context;

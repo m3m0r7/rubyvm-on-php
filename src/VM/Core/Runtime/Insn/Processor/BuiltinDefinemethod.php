@@ -17,9 +17,11 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinDefinemethod implements OperationProcessorInterface
 {
+    use OperandHelper;
     use Validatable;
 
     private Insn $insn;

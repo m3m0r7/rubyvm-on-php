@@ -10,9 +10,11 @@ use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinDuparray implements OperationProcessorInterface
 {
+    use OperandHelper;
     use Validatable;
 
     private Insn $insn;

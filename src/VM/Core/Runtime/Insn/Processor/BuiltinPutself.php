@@ -9,9 +9,11 @@ use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinPutself implements OperationProcessorInterface
 {
+    use OperandHelper;
     private Insn $insn;
 
     private ContextInterface $context;

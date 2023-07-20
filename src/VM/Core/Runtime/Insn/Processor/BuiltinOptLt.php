@@ -14,9 +14,11 @@ use RubyVM\VM\Core\Runtime\Symbol\FloatSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinOptLt implements OperationProcessorInterface
 {
+    use OperandHelper;
     use OperatorCalculatable;
 
     private Insn $insn;

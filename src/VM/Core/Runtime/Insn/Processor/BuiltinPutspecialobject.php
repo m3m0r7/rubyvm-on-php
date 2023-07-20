@@ -14,9 +14,11 @@ use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Exception\OperationProcessorException;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinPutspecialobject implements OperationProcessorInterface
 {
+    use OperandHelper;
     use Validatable;
 
     private Insn $insn;

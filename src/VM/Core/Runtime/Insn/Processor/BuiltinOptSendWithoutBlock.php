@@ -23,9 +23,11 @@ use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 use RubyVM\VM\Exception\OperationProcessorException;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
 {
+    use OperandHelper;
     use Validatable;
     use Translatable;
 

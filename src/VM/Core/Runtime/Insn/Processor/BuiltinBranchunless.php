@@ -13,9 +13,11 @@ use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\OffsetSymbol;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinBranchunless implements OperationProcessorInterface
 {
+    use OperandHelper;
     use Validatable;
     use SymbolTestable;
 

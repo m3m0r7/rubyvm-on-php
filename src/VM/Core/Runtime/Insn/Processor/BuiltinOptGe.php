@@ -15,9 +15,11 @@ use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinOptGe implements OperationProcessorInterface
 {
+    use OperandHelper;
     use OperatorCalculatable;
 
     private Insn $insn;

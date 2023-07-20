@@ -15,9 +15,11 @@ use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinSetlocalWC0 implements OperationProcessorInterface
 {
+    use OperandHelper;
     use Validatable;
     use LocalTable;
 

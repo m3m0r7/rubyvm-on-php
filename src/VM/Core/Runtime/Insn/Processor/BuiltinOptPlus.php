@@ -16,9 +16,11 @@ use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinOptPlus implements OperationProcessorInterface
 {
+    use OperandHelper;
     use OperatorCalculatable;
 
     private Insn $insn;

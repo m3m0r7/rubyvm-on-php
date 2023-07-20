@@ -13,9 +13,11 @@ use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinPutobjectINT2FIX1 implements OperationProcessorInterface
 {
+    use OperandHelper;
     private Insn $insn;
 
     private ContextInterface $context;

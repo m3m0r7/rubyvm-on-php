@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 trait Validatable
@@ -12,6 +13,7 @@ trait Validatable
     {
         foreach ($data as $operandData) {
             if ($operandData instanceof $expectClassName) {
+                assert($operandData instanceof $expectClassName);
                 continue;
             }
 

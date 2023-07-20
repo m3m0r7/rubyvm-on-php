@@ -14,9 +14,11 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Exception\OperationProcessorException;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinDefineclass implements OperationProcessorInterface
 {
+    use OperandHelper;
     use Validatable;
 
     private Insn $insn;

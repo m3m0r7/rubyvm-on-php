@@ -15,9 +15,11 @@ use RubyVM\VM\Core\Runtime\Executor\Translatable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinSend implements OperationProcessorInterface
 {
+    use OperandHelper;
     use Validatable;
     use Translatable;
     use CallBlockHelper;
