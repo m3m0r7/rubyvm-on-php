@@ -25,6 +25,11 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
         );
     }
 
+    public function new(): self
+    {
+        return new self([]);
+    }
+
     public function each(ContextInterface $context): void
     {
         for ($i = 0; $i < count($this->array); $i++) {

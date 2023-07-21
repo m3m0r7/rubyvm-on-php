@@ -206,6 +206,21 @@ trait OperandHelper
         return $symbol;
     }
 
+    private function getStackAndValidateArraySymbol(): ArraySymbol
+    {
+        /**
+         * @var ArraySymbol $symbol
+         */
+        $symbol = $this->getStackAndValidateSymbol();
+
+        $this->validateType(
+            ArraySymbol::class,
+            $symbol,
+        );
+
+        return $symbol;
+    }
+
     private function getStackAndValidateStructSymbol(): StructSymbol
     {
         /**

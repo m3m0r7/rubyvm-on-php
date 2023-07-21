@@ -6,6 +6,7 @@ namespace RubyVM\VM\Core\Helper;
 
 use RubyVM\VM\Core\Runtime\Entry\AbstractEntries;
 use RubyVM\VM\Core\Runtime\Entry\EntryType;
+use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\New_;
 use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\Power;
 use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\RightShift;
 use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\StrictEquals;
@@ -26,6 +27,7 @@ final class DefaultInstanceMethodEntries extends AbstractEntries
         $this->set(Power::name(), new Power());
         $this->set(StrictEquals::name(), new StrictEquals());
         $this->set(ToString::name(), new ToString());
+        $this->set(New_::name(), new New_());
     }
 
     public function verify(mixed $value): bool
