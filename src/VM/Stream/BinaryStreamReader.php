@@ -230,12 +230,8 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
             $x = 1;
         }
         for ($i = 1; $i < $n; ++$i) {
-            $byte = $this->dryReadValue(SizeOf::UNSIGNED_BYTE);
-            if (is_string($byte)) {
-                throw new RubyVMException(sprintf('Unexpected read a small value (read stream is expecting a byte but got a string)'));
-            }
             $x <<= 8;
-            $x |= $byte;
+            $x |= $this->unsignedByte();
         }
 
         $this->pos(

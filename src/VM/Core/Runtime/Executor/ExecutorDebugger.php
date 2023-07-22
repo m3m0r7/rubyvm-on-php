@@ -29,10 +29,9 @@ class ExecutorDebugger
         $this->context = $context;
     }
 
-    public function append(string $definitionName, Insn $insn, ContextInterface $context): void
+    public function append(Insn $insn, ContextInterface $context): void
     {
         $this->snapshots[] = [
-            $definitionName,
             $insn,
             $context,
             memory_get_usage(false) - $this->currentMemoryUsage,
@@ -65,19 +64,24 @@ class ExecutorDebugger
                 'LOCAL TABLES',
             ]
         );
-        $table->setColumnMaxWidth(0, 3);
-        $table->setColumnMaxWidth(1, 12);
-        $table->setColumnMaxWidth(2, 40);
+        $table->setColumnMaxWidth(0, 3)
+            ->setColumnWidth(0, 3)
+        ;
+
+        $table->setColumnMaxWidth(1, 30)
+            ->setColumnWidth(1, 30)
+        ;
+
+        $table->setColumnMaxWidth(2, 30);
         $table->setColumnMaxWidth(3, 60);
         $table->setColumnMaxWidth(4, 60);
 
         /**
-         * @var string           $definitionName,
          * @var Insn             $insn
          * @var ContextInterface $context
          * @var int              $memoryUsage
          */
-        foreach ($this->snapshots as $index => [$definitionName, $insn, $context, $memoryUsage, $insnDetails]) {
+        foreach ($this->snapshots as $index => [$insn, $context, $memoryUsage, $insnDetails]) {
             if ($index > 0) {
                 $table->addRows([
                     new TableSeparator(),
@@ -85,7 +89,7 @@ class ExecutorDebugger
             }
             $table->addRow([
                 $context->programCounter()->pos(),
-                $definitionName,
+                implode(' -> ', $context->traces()),
                 sprintf(
                     '[0x%02x] %s %s',
                     $insn->value,

@@ -38,13 +38,13 @@ class BuiltinNewarray implements OperationProcessorInterface
         $entries = [];
         $num = $this->getOperandAsNumberSymbol();
 
-        for ($i = 0; $i < $num->number; ++$i) {
-            $entries[$num->number - $i] = $this->getStackAsNumberSymbol();
+        for ($i = $num->number - 1; $i >= 0; --$i) {
+            $entries[$i] = $this->getStackAsNumberSymbol();
         }
 
         $this->context->vmStack()->push(
             new OperandEntry(
-                (new ArraySymbol($entries))
+                (new ArraySymbol(array_values($entries)))
                     ->toObject(),
             ),
         );

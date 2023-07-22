@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Symbol;
 
+use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Option;
@@ -18,7 +19,7 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
     public function __toString(): string
     {
         return sprintf(
-            '<array: %d>',
+            '[%d]',
             count($this->array)
         );
     }
@@ -32,7 +33,6 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
     {
         for ($i = 0; $i < count($this->array); ++$i) {
             $executor = (new Executor(
-                currentDefinition: $context->executor()->currentDefinition(),
                 kernel: $context->kernel(),
                 main: $context->self(),
                 operationProcessorEntries: $context->operationProcessorEntries(),
@@ -50,6 +50,10 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
                     (new NumberSymbol($this->array[$i]->number))
                         ->toObject()
                 )
+            ;
+
+            $executor->context()
+                ->appendTrace(ClassHelper::nameBy($this) . '#' . __FUNCTION__)
             ;
 
             $result = $executor->execute();
@@ -77,7 +81,7 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
                 frozen: 1,
                 internal: 0,
             ),
-            symbol: $this,
+            symbol: clone $this,
         );
     }
 

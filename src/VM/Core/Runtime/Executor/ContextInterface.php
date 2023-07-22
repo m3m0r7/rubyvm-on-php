@@ -44,4 +44,8 @@ interface ContextInterface
     public function shouldProcessedRecords(): bool;
 
     public function renewEnvironmentTableEntries(): self;
+
+    public function appendTrace(string ...$definitions): self;
+
+    public function traces(): array;
 }

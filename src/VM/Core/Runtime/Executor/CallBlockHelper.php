@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
@@ -33,7 +32,6 @@ trait CallBlockHelper
             $instructionSequence->load();
 
             $executor = (new Executor(
-                currentDefinition: ClassHelper::nameBy($blockObject->symbol),
                 kernel: $this->context->kernel(),
                 main: $this->context->self(),
                 operationProcessorEntries: $this->context->operationProcessorEntries(),

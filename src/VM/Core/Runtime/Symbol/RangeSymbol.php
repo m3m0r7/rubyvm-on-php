@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Symbol;
 
+use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Option;
@@ -33,14 +34,13 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
 
     public function __toString(): string
     {
-        return (string) "<RangeSymbol: {$this->begin->number}..{$this->end->number}>";
+        return "[{$this->begin->number}..{$this->end->number}]";
     }
 
     public function each(OperationProcessorContext $context): SymbolInterface
     {
         foreach ($this->array as $number) {
             $executor = (new Executor(
-                currentDefinition: $context->executor()->currentDefinition(),
                 kernel: $context->kernel(),
                 main: $context->self(),
                 operationProcessorEntries: $context->operationProcessorEntries(),
@@ -49,6 +49,10 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
                 debugger: $context->debugger(),
                 previousContext: $context,
             ));
+
+            $executor->context()
+                ->appendTrace(ClassHelper::nameBy($this) . '#' . __FUNCTION__)
+            ;
 
             $executor->context()
                 ->environmentTableEntries()

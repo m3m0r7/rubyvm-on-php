@@ -62,7 +62,6 @@ class BuiltinDefinemethod implements OperationProcessorInterface
         $instructionSequence->load();
 
         $executor = (new Executor(
-            currentDefinition: $methodNameSymbol->string,
             kernel: $this->context->kernel(),
             main: $this->context->self(),
             operationProcessorEntries: $this->context->operationProcessorEntries(),
@@ -71,6 +70,10 @@ class BuiltinDefinemethod implements OperationProcessorInterface
             debugger: $this->context->debugger(),
             previousContext: $this->context,
         ));
+
+        $executor->context()
+            ->appendTrace($methodNameSymbol->string)
+        ;
 
         $this->context
             ->self()

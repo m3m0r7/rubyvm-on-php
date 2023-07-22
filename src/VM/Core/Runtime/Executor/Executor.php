@@ -24,13 +24,12 @@ class Executor implements ExecutorInterface
 
     protected array $operations = [];
 
-    protected bool $shouldBreakPoint = false;
-    protected bool $shouldProcessedRecords = false;
+    protected ?bool $shouldBreakPoint = null;
+    protected ?bool $shouldProcessedRecords = null;
 
     protected ContextInterface $context;
 
     public function __construct(
-        private readonly string $currentDefinition,
         private readonly KernelInterface $kernel,
         private readonly MainInterface $main,
         private readonly OperationProcessorEntries $operationProcessorEntries,
@@ -39,7 +38,7 @@ class Executor implements ExecutorInterface
         private readonly ExecutorDebugger $debugger = new ExecutorDebugger(),
         private readonly ?ContextInterface $previousContext = null
     ) {
-        $this->context = $this->createContext($previousContext);
+        $this->context = $this->createContext($this->previousContext);
     }
 
     public function context(): ContextInterface
@@ -47,7 +46,7 @@ class Executor implements ExecutorInterface
         return $this->context;
     }
 
-    public function createContext(ContextInterface $previousContext = null): ContextInterface
+    public function createContext(?ContextInterface $previousContext = null): ContextInterface
     {
         return new OperationProcessorContext(
             $this->kernel,
@@ -64,8 +63,9 @@ class Executor implements ExecutorInterface
                 ? $previousContext->depth() + 1
                 : 0,
             $previousContext?->startTime() ?? null,
-            $previousContext?->shouldProcessedRecords() ?? $this->shouldProcessedRecords,
-            $previousContext?->shouldBreakPoint() ?? $this->shouldBreakPoint,
+            $this->shouldProcessedRecords ?? $previousContext?->shouldProcessedRecords() ?? false,
+            $this->shouldBreakPoint ?? $previousContext?->shouldBreakPoint() ?? false,
+            $previousContext?->traces() ?? [],
         );
     }
 
@@ -189,7 +189,6 @@ class Executor implements ExecutorInterface
 
             if ($this->context->shouldProcessedRecords()) {
                 $this->debugger->append(
-                    $this->currentDefinition,
                     $operator->insn,
                     $snapshotContext,
                 );
@@ -286,7 +285,7 @@ class Executor implements ExecutorInterface
         $this->shouldBreakPoint = $enabled;
 
         // Renew context
-        $this->context = $this->createContext($this->previousContext);
+        $this->context = $this->createContext($this->context);
 
         return $this;
     }
@@ -335,13 +334,8 @@ class Executor implements ExecutorInterface
         $this->shouldProcessedRecords = $enabled;
 
         // Renew context
-        $this->context = $this->createContext($this->previousContext);
+        $this->context = $this->createContext($this->context);
 
         return $this;
-    }
-
-    public function currentDefinition(): string
-    {
-        return $this->currentDefinition;
     }
 }

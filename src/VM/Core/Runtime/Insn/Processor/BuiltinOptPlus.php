@@ -9,6 +9,7 @@ use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
 use RubyVM\VM\Core\Runtime\Symbol\FloatSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
@@ -56,6 +57,9 @@ class BuiltinOptPlus implements OperationProcessorInterface
         if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
             $value = $this->calculateFloatPlusFloat($leftOperand, $rightOperand);
         }
+        if ($leftOperand instanceof ArraySymbol && $rightOperand instanceof ArraySymbol) {
+            $value = $this->calculateArrayPlusArray($leftOperand, $rightOperand);
+        }
 
         return $value;
     }
@@ -78,6 +82,16 @@ class BuiltinOptPlus implements OperationProcessorInterface
     {
         return (new FloatSymbol(
             $leftOperand->number + $rightOperand->number
+        ))->toObject();
+    }
+
+    private function calculateArrayPlusArray(ArraySymbol $leftOperand, ArraySymbol $rightOperand): Object_
+    {
+        return (new ArraySymbol(
+            [
+                ...$leftOperand,
+                ...$rightOperand,
+            ],
         ))->toObject();
     }
 }

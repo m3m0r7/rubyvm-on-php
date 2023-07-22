@@ -13,8 +13,10 @@ use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
+use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
+use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\RangeSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
@@ -91,7 +93,6 @@ class Main implements MainInterface
         }
 
         $executor = (new Executor(
-            currentDefinition: $name,
             kernel: $context->kernel(),
             main: $context->self(),
             operationProcessorEntries: $context->operationProcessorEntries(),
@@ -104,6 +105,7 @@ class Main implements MainInterface
 
         $envIndex = $this->calculateFirstLocalTableIndex(
             $context,
+            $arguments,
         );
 
         /**
@@ -122,24 +124,42 @@ class Main implements MainInterface
         return $executor->execute();
     }
 
-    private function calculateFirstLocalTableIndex(ContextInterface $context): int
+    private function calculateFirstLocalTableIndex(ContextInterface $context, array $arguments = []): int
     {
         // FIXME: Is the logic correctly? Here is temporarily implementation.
 
-        // counted opt_getconstant_path
-        $size = $context->instructionSequence()->body()->data->inlineCacheSize();
+        $size = 0;
+        $ignoredIndexes = [];
 
         $entries = $context->instructionSequence()->body()->operationEntries;
+
+        $min = null;
         for ($i = 0; $i < count($entries); ++$i) {
+            /**
+             * @var OperationEntry $operationEntry
+             */
             $operationEntry = $entries[$i];
             if (!$entries[$i] instanceof OperationEntry) {
                 continue;
             }
-            match ($operationEntry->insn) {
-                Insn::NEWARRAY,
-                Insn::NEWRANGE => $size++,
-                default => null,
-            };
+            if ($operationEntry->insn === Insn::SETLOCAL_WC_0 || $operationEntry->insn === Insn::SETLOCAL_WC_1) {
+                $i++;
+                $number = $entries[$i]->operand->symbol->number;
+                $ignoredIndexes[] = $number;
+            } elseif (($operationEntry->insn === Insn::GETLOCAL_WC_0 || $operationEntry->insn === Insn::GETLOCAL_WC_1)) {
+                $i++;
+                $number = $entries[$i]->operand->symbol->number;
+                if (in_array($number, $ignoredIndexes, true)) {
+                    continue;
+                }
+                if ($min === null || $min > $number) {
+                    $min = $number;
+                }
+            }
+        }
+
+        if ($min !== null) {
+            return $min;
         }
 
         return Option::VM_ENV_DATA_SIZE + $size;

@@ -28,6 +28,7 @@ class OperationProcessorContext implements ContextInterface
         ?float $startTime,
         private readonly bool $shouldProcessedRecords,
         private readonly bool $shouldBreakPoint,
+        private array $traces = [],
     ) {
         $this->startTime = $startTime ?? microtime(true);
     }
@@ -71,6 +72,7 @@ class OperationProcessorContext implements ContextInterface
             startTime: $this->startTime,
             shouldProcessedRecords: $this->shouldProcessedRecords,
             shouldBreakPoint: $this->shouldBreakPoint,
+            traces: $this->traces,
         );
     }
 
@@ -132,5 +134,17 @@ class OperationProcessorContext implements ContextInterface
     public function shouldBreakPoint(): bool
     {
         return $this->shouldBreakPoint;
+    }
+
+    public function appendTrace(string ...$definitions): ContextInterface
+    {
+        array_push($this->traces, ...$definitions);
+
+        return $this;
+    }
+
+    public function traces(): array
+    {
+        return $this->traces;
     }
 }

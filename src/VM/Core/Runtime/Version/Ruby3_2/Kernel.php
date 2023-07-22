@@ -87,8 +87,7 @@ class Kernel implements KernelInterface
         $operationProcessorEntries = new DefaultOperationProcessorEntries();
         $environmentTableEntries = new EnvironmentTableEntries();
 
-        return new Executor(
-            '<main>',
+        $executor = new Executor(
             $this,
             new Main(
                 $this->vm->option()->stdOut ?? new StreamHandler(STDOUT),
@@ -99,6 +98,10 @@ class Kernel implements KernelInterface
             $instructionSequence,
             $this->vm->option()->logger,
         );
+
+        $executor->context()->appendTrace('<main>');
+
+        return $executor;
     }
 
     /**
