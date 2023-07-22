@@ -66,7 +66,7 @@ class ExecutorDebugger
             ]
         );
         $table->setColumnMaxWidth(0, 3);
-        $table->setColumnMaxWidth(1, 10);
+        $table->setColumnMaxWidth(1, 12);
         $table->setColumnMaxWidth(2, 40);
         $table->setColumnMaxWidth(3, 60);
         $table->setColumnMaxWidth(4, 60);
