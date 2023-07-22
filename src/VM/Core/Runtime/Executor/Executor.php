@@ -193,7 +193,6 @@ class Executor implements ExecutorInterface
                     $this->currentDefinition,
                     $operator->insn,
                     $snapshotContext,
-                    $this->makeDetails($operator->insn),
                 );
             }
 
@@ -330,61 +329,6 @@ class Executor implements ExecutorInterface
 
             exit(0);
         }
-    }
-
-    private function makeDetails(Insn $insn): ?string
-    {
-        $context = $this->context->createSnapshot();
-        if (Insn::OPT_SEND_WITHOUT_BLOCK === $insn) {
-            $details = '';
-            $currentPos = $context->programCounter()->pos();
-            $vmStack = clone $context->vmStack();
-
-            /**
-             * @var OperandEntry $callDataOperand
-             */
-            $callDataOperand = $context
-                ->instructionSequence()
-                ->operations()
-                ->get($currentPos + 1)
-            ;
-
-            $arguments = [];
-            for ($i = 0; $i < $callDataOperand->operand->callData()->argumentsCount(); ++$i) {
-                $arguments[] = $vmStack->pop();
-            }
-
-            /**
-             * @var MainInterface|OperandEntry $class
-             */
-            $class = $vmStack->pop();
-
-            $context->programCounter()->set($currentPos);
-
-            return sprintf(
-                '%s#%s(%s)',
-                ClassHelper::nameBy($class->operand),
-                (string) $callDataOperand
-                    ->operand
-                    ->callData()
-                    ->mid()
-                    ->object
-                    ->symbol,
-                implode(
-                    ', ',
-                    array_map(
-                        fn ($argument) => match ($argument::class) {
-                            SymbolInterface::class => (string) $argument,
-                            OperandEntry::class => (string) $argument->operand->symbol,
-                            default => '?',
-                        },
-                        $arguments,
-                    ),
-                ),
-            );
-        }
-
-        return null;
     }
 
     public function enableProcessedRecords(bool $enabled = true): ExecutorInterface
