@@ -61,6 +61,13 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
         }
     }
 
+    public function push(SymbolInterface $symbol): SymbolInterface
+    {
+        $this->array[] = $symbol;
+
+        return $this;
+    }
+
     public function toObject(): Object_
     {
         return new Object_(

@@ -87,10 +87,10 @@ class ExecutorDebugger
                 $context->programCounter()->pos(),
                 $definitionName,
                 sprintf(
-                    "[0x%02x] %s %s",
+                    '[0x%02x] %s %s',
                     $insn->value,
                     strtolower($insn->name),
-                    ($insnDetails ? "({$insnDetails})" : ''),
+                    $insnDetails ? "({$insnDetails})" : '',
                 ),
                 (string) $context->vmStack(),
                 (string) $context->environmentTableEntries(),
@@ -99,7 +99,6 @@ class ExecutorDebugger
 
         $table->render();
     }
-
 
     private function makeDetails(Insn $insn, ContextInterface $context): ?string
     {
@@ -152,7 +151,7 @@ class ExecutorDebugger
                 ),
             );
         }
-        if (Insn::GETLOCAL_WC_0 === $insn || Insn::GETLOCAL_WC_1 === $insn || Insn::SETLOCAL_WC_1 === $insn || Insn::SETLOCAL_WC_1 === $insn) {
+        if (Insn::GETLOCAL_WC_0 === $insn || Insn::GETLOCAL_WC_1 === $insn || Insn::SETLOCAL_WC_0 === $insn || Insn::SETLOCAL_WC_1 === $insn) {
             $currentPos = $context->programCounter()->pos();
 
             /**
@@ -166,7 +165,7 @@ class ExecutorDebugger
                 ->symbol
             ;
 
-            return sprintf("ref: %d", $number->number);
+            return sprintf('ref: %d', $number->number);
         }
 
         return null;

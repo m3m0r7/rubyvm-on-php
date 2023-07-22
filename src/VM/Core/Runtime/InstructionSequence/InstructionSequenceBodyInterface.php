@@ -12,7 +12,9 @@ interface InstructionSequenceBodyInterface
 
     public function stackMax(): int;
 
-    public function inlineCache(): int;
+    public function inlineCacheSize(): int;
 
     public function compileData(): InstructionSequenceCompileData;
+
+    public function parentInstructionSequence(): ?InstructionSequenceInterface;
 }

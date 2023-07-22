@@ -63,8 +63,13 @@ class InstructionSequenceBody implements InstructionSequenceBodyInterface
         return $this->stackMax;
     }
 
-    public function inlineCache(): int
+    public function inlineCacheSize(): int
     {
         return $this->icSize;
+    }
+
+    public function parentInstructionSequence(): ?InstructionSequenceInterface
+    {
+        return $this->parentISeq;
     }
 }

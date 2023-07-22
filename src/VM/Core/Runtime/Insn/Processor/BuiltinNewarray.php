@@ -35,12 +35,16 @@ class BuiltinNewarray implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        // PHP is not needing
-        $this->getOperandAsNumberSymbol();
+        $entries = [];
+        $num = $this->getOperandAsNumberSymbol();
+
+        for ($i = 0; $i < $num->number; ++$i) {
+            $entries[$num->number - $i] = $this->getStackAsNumberSymbol();
+        }
 
         $this->context->vmStack()->push(
             new OperandEntry(
-                (new ArraySymbol([]))
+                (new ArraySymbol($entries))
                     ->toObject(),
             ),
         );

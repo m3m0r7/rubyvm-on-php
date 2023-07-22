@@ -22,7 +22,7 @@ class OperationProcessorContext implements ContextInterface
         private readonly OperationProcessorEntries $operationProcessorEntries,
         private readonly InstructionSequence $instructionSequence,
         private readonly LoggerInterface $logger,
-        private readonly EnvironmentTableEntries $environmentTableEntries,
+        private EnvironmentTableEntries $environmentTableEntries,
         private readonly ExecutorDebugger $debugger,
         private readonly int $depth,
         ?float $startTime,
@@ -30,6 +30,13 @@ class OperationProcessorContext implements ContextInterface
         private readonly bool $shouldBreakPoint,
     ) {
         $this->startTime = $startTime ?? microtime(true);
+    }
+
+    public function renewEnvironmentTableEntries(): self
+    {
+        $this->environmentTableEntries = new EnvironmentTableEntries();
+
+        return $this;
     }
 
     public function startTime(): float

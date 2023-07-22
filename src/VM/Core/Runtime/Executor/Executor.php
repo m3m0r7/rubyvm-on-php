@@ -11,7 +11,6 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\Symbol\VoidSymbol;
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\ExecutorFailedException;
@@ -59,7 +58,7 @@ class Executor implements ExecutorInterface
             $this->operationProcessorEntries,
             $this->instructionSequence,
             $this->logger,
-            new EnvironmentTableEntries(),
+            $previousContext?->environmentTableEntries() ?? new EnvironmentTableEntries(),
             $this->debugger,
             $previousContext
                 ? $previousContext->depth() + 1

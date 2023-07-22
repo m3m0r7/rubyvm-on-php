@@ -14,6 +14,7 @@ return (new PhpCsFixer\Config())->setRules([
     'return_type_declaration' => [
         'space_before' => 'none',
     ],
+    'yoda_style' => false,
     'method_argument_space' => true,
     'single_quote' => true,
     'void_return' => true,

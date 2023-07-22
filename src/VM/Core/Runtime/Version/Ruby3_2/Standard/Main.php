@@ -8,7 +8,6 @@ use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
-use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationEntry;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\MainInterface;
@@ -99,11 +98,11 @@ class Main implements MainInterface
             instructionSequence: $context->instructionSequence(),
             logger: $context->logger(),
             debugger: $context->debugger(),
-            previousContext: $context,
+            previousContext: $context
+                ->renewEnvironmentTableEntries(),
         ));
 
-        // FIXME: Is the logic correctly? Here is temporarily implementation.
-        $envIndex = $this->tryToGetFirstLocalTableIndex(
+        $envIndex = $this->calculateFirstLocalTableIndex(
             $context,
         );
 
@@ -123,28 +122,26 @@ class Main implements MainInterface
         return $executor->execute();
     }
 
-    private function tryToGetFirstLocalTableIndex(ContextInterface $context): int
+    private function calculateFirstLocalTableIndex(ContextInterface $context): int
     {
+        // FIXME: Is the logic correctly? Here is temporarily implementation.
+
+        // counted opt_getconstant_path
+        $size = $context->instructionSequence()->body()->data->inlineCacheSize();
+
         $entries = $context->instructionSequence()->body()->operationEntries;
-        // @var OperationEntry $operationEntry
         for ($i = 0; $i < count($entries); ++$i) {
-            if (!($entries[$i] instanceof OperationEntry) || (Insn::GETLOCAL_WC_0 !== $entries[$i]->insn && Insn::GETLOCAL_WC_1 !== $entries[$i]->insn)) {
+            $operationEntry = $entries[$i];
+            if (!$entries[$i] instanceof OperationEntry) {
                 continue;
             }
-
-            /**
-             * @var OperandEntry $operand
-             */
-            $operand = $entries[$i + 1];
-
-            /**
-             * @var NumberSymbol $symbol
-             */
-            $symbol = $operand->operand->symbol;
-
-            return $symbol->number;
+            match ($operationEntry->insn) {
+                Insn::NEWARRAY,
+                Insn::NEWRANGE => $size++,
+                default => null,
+            };
         }
 
-        return Option::VM_ENV_DATA_SIZE;
+        return Option::VM_ENV_DATA_SIZE + $size;
     }
 }

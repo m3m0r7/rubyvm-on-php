@@ -8,14 +8,27 @@ use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Option;
 
-class RangeSymbol implements SymbolInterface
+class RangeSymbol implements SymbolInterface, \ArrayAccess
 {
+    protected array $array = [];
+
     public function __construct(
         public readonly NumberSymbol $begin,
         public readonly NumberSymbol $end,
         public readonly bool $excludeEnd,
         public readonly int $steps = 1,
     ) {
+        if ($this->begin->number > $this->end->number) {
+            return;
+        }
+
+        foreach (range(
+            $this->begin->number,
+            $this->end->number - ($this->excludeEnd ? 1 : 0),
+            $this->steps,
+        ) as $i) {
+            $this->array[] = new NumberSymbol($i);
+        }
     }
 
     public function __toString(): string
@@ -25,8 +38,7 @@ class RangeSymbol implements SymbolInterface
 
     public function each(OperationProcessorContext $context): SymbolInterface
     {
-        $end = $this->end->number + ($this->excludeEnd ? 0 : 1);
-        for ($i = $this->begin->number; $i < $end; $i += $this->steps) {
+        foreach ($this->array as $number) {
             $executor = (new Executor(
                 currentDefinition: $context->executor()->currentDefinition(),
                 kernel: $context->kernel(),
@@ -43,7 +55,7 @@ class RangeSymbol implements SymbolInterface
                 ->get(Option::RSV_TABLE_INDEX_0)
                 ->set(
                     Option::VM_ENV_DATA_SIZE,
-                    (new NumberSymbol($i))->toObject()
+                    $number->toObject()
                 )
             ;
 
@@ -69,5 +81,25 @@ class RangeSymbol implements SymbolInterface
             ),
             symbol: $this,
         );
+    }
+
+    public function offsetExists(mixed $offset): bool
+    {
+        return isset($this->array[$offset]);
+    }
+
+    public function offsetGet(mixed $offset): mixed
+    {
+        return $this->array[$offset];
+    }
+
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        $this->array[$offset] = $value;
+    }
+
+    public function offsetUnset(mixed $offset): void
+    {
+        unset($this->array[$offset]);
     }
 }

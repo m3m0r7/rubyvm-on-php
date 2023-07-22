@@ -16,8 +16,8 @@ trait LocalTable
             new OperandEntry(
                 $this->context
                     ->environmentTableEntries()
-                    ->get($localTableIndex)
-                    ->get($index),
+                    ->get(0)
+                    ->get($this->calculateLocalTableLevel($index, $localTableIndex)),
             ),
         );
     }
@@ -28,11 +28,25 @@ trait LocalTable
         $operand = $this->getStackAsObject();
 
         $this->context->environmentTableEntries()
-            ->get($localTableIndex)
+            ->get(0)
             ->set(
-                $index,
+                $this->calculateLocalTableLevel($index, $localTableIndex),
                 clone $operand,
             )
         ;
+    }
+
+    private function calculateLocalTableLevel(int $index, int $level): int
+    {
+        //        if ($level === 0) {
+        //            return $index;
+        //        }
+        //        $newIndex = $index;
+        //        for ($i = 0; $i < $level; $i++) {
+        //            // cf. vm_get_ep/vm_env_write
+        //            $newIndex = $newIndex & ~0x03;
+        //        }
+        //        return $index - $newIndex;
+        return $index;
     }
 }

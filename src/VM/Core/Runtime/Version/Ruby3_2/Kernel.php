@@ -327,20 +327,30 @@ class Kernel implements KernelInterface
         ;
 
         if (!$instructionSequence) {
-            $instructionSequence = new InstructionSequence(
-                aux: $aux,
-                processor: new InstructionSequenceProcessor(
-                    kernel: $this,
-                    aux: $aux,
-                ),
-            );
+            // load all sequences
+            for ($i = 0; $i < $this->instructionSequenceListSize; ++$i) {
+                $targetAux = new Aux(
+                    loader: new AuxLoader(
+                        $i,
+                    ),
+                );
+                $instructionSequence = new InstructionSequence(
+                    aux: $targetAux,
+                    processor: new InstructionSequenceProcessor(
+                        kernel: $this,
+                        aux: $targetAux,
+                    ),
+                );
 
-            $instructionSequence->load();
+                $instructionSequence->load();
 
-            $this->instructionSequences->set(
-                $aux->loader->index,
-                $instructionSequence,
-            );
+                $this->instructionSequences->set(
+                    $targetAux->loader->index,
+                    $instructionSequence,
+                );
+            }
+
+            return $this->loadInstructionSequence($aux);
         }
 
         return $instructionSequence;

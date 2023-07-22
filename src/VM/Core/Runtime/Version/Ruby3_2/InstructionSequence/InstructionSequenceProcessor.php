@@ -20,6 +20,7 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequenceBody;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequenceProcessorInterface;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
+use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\OffsetSymbol;
@@ -104,7 +105,6 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         $icvArcSize = $this->kernel->stream()->smallValue();
         $iseSize = $this->kernel->stream()->smallValue();
         $icSize = $this->kernel->stream()->smallValue();
-
         $ciSize = $this->kernel->stream()->smallValue();
         $stackMax = $this->kernel->stream()->smallValue();
 
@@ -302,12 +302,15 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                                     ))->toObject(),
                                 ),
 
-                                InsnType::TS_IC,
+                                InsnType::TS_IC => new OperandEntry(
+                                    $this->processInlineCache(
+                                        $reader->smallValue()
+                                    )
+                                ),
                                 InsnType::TS_ID => new OperandEntry(
-                                    $this->kernel
-                                        ->findId(
-                                            $reader->smallValue()
-                                        ),
+                                    $this->kernel->findId(
+                                        $reader->smallValue(),
+                                    ),
                                 ),
 
                                 // Not implemented yet
@@ -475,6 +478,11 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
     public function path(): string
     {
         return (string) $this->path->symbol;
+    }
+
+    private function processInlineCache(int $value): ID
+    {
+        return $this->kernel->findId($value);
     }
 
     private function insnOperations(): array

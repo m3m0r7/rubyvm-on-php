@@ -39,10 +39,15 @@ class Object_
             $entry = $defaultMethodEntries[$name] ?? null;
 
             if (null === $entry) {
-                throw new \Error();
+                // Call a method if method exists on a symbol
+                if (method_exists($this->symbol, $name)) {
+                    $result = $this->symbol->{$name}(...$arguments);
+                } else {
+                    throw new \Error('Not found method');
+                }
+            } else {
+                $result = $entry->process($this->symbol, ...$arguments);
             }
-
-            $result = $entry->process($this->symbol, ...$arguments);
         } catch (\Error $e) {
             throw new NotFoundInstanceMethod(sprintf(<<< '_'
                     Not found instance method %s#%s. In the actually, arguments count are unmatched or anymore problems when throwing this exception.

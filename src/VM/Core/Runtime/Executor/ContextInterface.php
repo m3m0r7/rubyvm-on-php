@@ -42,4 +42,6 @@ interface ContextInterface
     public function shouldBreakPoint(): bool;
 
     public function shouldProcessedRecords(): bool;
+
+    public function renewEnvironmentTableEntries(): self;
 }
