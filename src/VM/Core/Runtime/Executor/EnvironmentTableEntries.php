@@ -42,10 +42,10 @@ class EnvironmentTableEntries extends AbstractEntries
         /**
          * @var EnvironmentTable $item
          */
-        foreach ($this->items as $item) {
-            $result[] = (string) $item;
+        foreach ($this->items as $index => $item) {
+            $result[] = "[{$index}] {$item}";
         }
 
-        return '[' . implode(', ', $result) . ']';
+        return implode("\n", $result);
     }
 }

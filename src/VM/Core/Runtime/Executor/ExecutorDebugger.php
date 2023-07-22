@@ -10,6 +10,7 @@ use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Output\StreamOutput;
 
 class ExecutorDebugger
@@ -57,13 +58,18 @@ class ExecutorDebugger
 
         $table->setHeaders(
             [
-                'PROGRAM COUNTER',
+                'PC',
                 'CALLEE',
-                'INSN (OPCODE)',
+                'INSN',
                 'PREVIOUS STACKS',
-                'REGISTERED LOCAL TABLES',
+                'LOCAL TABLES',
             ]
         );
+        $table->setColumnMaxWidth(0, 3);
+        $table->setColumnMaxWidth(1, 10);
+        $table->setColumnMaxWidth(2, 40);
+        $table->setColumnMaxWidth(3, 60);
+        $table->setColumnMaxWidth(4, 60);
 
         /**
          * @var string           $definitionName,
@@ -71,7 +77,12 @@ class ExecutorDebugger
          * @var ContextInterface $context
          * @var int              $memoryUsage
          */
-        foreach ($this->snapshots as [$definitionName, $insn, $context, $memoryUsage, $insnDetails]) {
+        foreach ($this->snapshots as $index => [$definitionName, $insn, $context, $memoryUsage, $insnDetails]) {
+            if ($index > 0) {
+                $table->addRows([
+                    new TableSeparator(),
+                ]);
+            }
             $table->addRow([
                 $context->programCounter()->pos(),
                 $definitionName,

@@ -14,9 +14,7 @@ trait DebugFormat
     {
         $targetItems = $this->items ?? [];
 
-        $result = [
-            count($targetItems),
-        ];
+        $result = [];
         foreach ($targetItems as $index => $item) {
             $result[] = ClassHelper::nameBy($item) . '<' . match ($item::class) {
                 SymbolInterface::class => (string) $item,
@@ -29,12 +27,9 @@ trait DebugFormat
             } . "#{$index}>";
         }
 
-        return sprintf(
-            '[total: %s]',
-            rtrim(
-                implode(', ', $result),
-                ", \t\n\r\0\x0B",
-            ),
+        return rtrim(
+            implode(', ', $result),
+            ", \t\n\r\0\x0B",
         );
     }
 }
