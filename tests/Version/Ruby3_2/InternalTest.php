@@ -18,10 +18,8 @@ class InternalTest extends TestApplication
     /**
      * This test ensure environment indexes. The method is increasing an environment index of starting from default size
      * when using arrays in definemethod and defineclass insn.
-     *
-     *
      */
-    public function testInternalEnvIndexTest()
+    public function testInternalEnvIndexTest(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< '_'

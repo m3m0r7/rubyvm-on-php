@@ -13,10 +13,8 @@ use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
-use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\RangeSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
@@ -143,11 +141,11 @@ class Main implements MainInterface
                 continue;
             }
             if ($operationEntry->insn === Insn::SETLOCAL_WC_0 || $operationEntry->insn === Insn::SETLOCAL_WC_1) {
-                $i++;
+                ++$i;
                 $number = $entries[$i]->operand->symbol->number;
                 $ignoredIndexes[] = $number;
-            } elseif (($operationEntry->insn === Insn::GETLOCAL_WC_0 || $operationEntry->insn === Insn::GETLOCAL_WC_1)) {
-                $i++;
+            } elseif ($operationEntry->insn === Insn::GETLOCAL_WC_0 || $operationEntry->insn === Insn::GETLOCAL_WC_1) {
+                ++$i;
                 $number = $entries[$i]->operand->symbol->number;
                 if (in_array($number, $ignoredIndexes, true)) {
                     continue;
