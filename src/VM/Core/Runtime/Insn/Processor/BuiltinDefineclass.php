@@ -6,18 +6,13 @@ namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
-use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
-use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
-use RubyVM\VM\Core\Runtime\Symbol\ID;
-use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
-use RubyVM\VM\Exception\OperationProcessorException;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinDefineclass implements OperationProcessorInterface
@@ -48,9 +43,9 @@ class BuiltinDefineclass implements OperationProcessorInterface
         /**
          * @var StringSymbol $className
          */
-        $className = $this->getOperandAndValidateID()->object->symbol;
-        $iseqNumber = $this->getOperandAndValidateNumberSymbol();
-        $flags = $this->getOperandAndValidateNumberSymbol();
+        $className = $this->getOperandAsID()->object->symbol;
+        $iseqNumber = $this->getOperandAsNumberSymbol();
+        $flags = $this->getOperandAsNumberSymbol();
 
         $instructionSequence = $this->context->kernel()->loadInstructionSequence(
             aux: new Aux(
@@ -62,8 +57,8 @@ class BuiltinDefineclass implements OperationProcessorInterface
 
         $instructionSequence->load();
 
-
         $executor = (new Executor(
+            currentDefinition: $className->string,
             kernel: $this->context->kernel(),
             main: $this->context->self(),
             operationProcessorEntries: $this->context->operationProcessorEntries(),
@@ -79,7 +74,8 @@ class BuiltinDefineclass implements OperationProcessorInterface
                 $flags,
                 $className,
                 $executor->context(),
-            );
+            )
+        ;
 
         return ProcessedStatus::SUCCESS;
     }

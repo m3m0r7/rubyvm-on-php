@@ -20,7 +20,7 @@ class Verifier
 
     public function isVerified(string $verifyName): bool
     {
-        return $this->verified[$verifyName] === true;
+        return true === $this->verified[$verifyName];
     }
 
     public function verify(VerificationInterface $verification): bool
@@ -29,21 +29,18 @@ class Verifier
         if ($verify) {
             $this->verified[$verification->verifierName()] = true;
         }
+
         return $verify;
     }
 
     public function done(): void
     {
         foreach ($this->verified as $verifierName => $isVerified) {
-            if ($isVerified === true) {
+            if (true === $isVerified) {
                 continue;
             }
-            throw new VerifierException(
-                sprintf(
-                    'The %s is not verified. The verifier requires verification to be all done',
-                    $verifierName,
-                )
-            );
+
+            throw new VerifierException(sprintf('The %s is not verified. The verifier requires verification to be all done', $verifierName));
         }
     }
 }

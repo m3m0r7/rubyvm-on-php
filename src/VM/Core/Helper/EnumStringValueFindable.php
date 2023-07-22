@@ -15,12 +15,7 @@ trait EnumStringValueFindable
                 return $case;
             }
         }
-        throw new NotFoundEnumValueException(
-            sprintf(
-                'Unknown case value %s#%s',
-                self::class,
-                $value,
-            ),
-        );
+
+        throw new NotFoundEnumValueException(sprintf('Unknown case value %s#%s', self::class, $value));
     }
 }

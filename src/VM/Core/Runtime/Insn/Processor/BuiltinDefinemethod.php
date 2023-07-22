@@ -43,23 +43,26 @@ class BuiltinDefinemethod implements OperationProcessorInterface
         /**
          * @var StringSymbol $methodNameSymbol
          */
-        $methodNameSymbol = $this->getOperandAndValidateID()
+        $methodNameSymbol = $this->getOperandAsID()
             ->object
-            ->symbol;
+            ->symbol
+        ;
 
-        $iseqNumber = $this->getOperandAndValidateNumberSymbol();
-
-        $instructionSequence = $this->context->kernel()->loadInstructionSequence(
-            aux: new Aux(
-                loader: new AuxLoader(
-                    index: $iseqNumber->number,
+        $instructionSequence = $this->context->kernel()
+            ->loadInstructionSequence(
+                aux: new Aux(
+                    loader: new AuxLoader(
+                        index: $this->getOperandAsNumberSymbol()
+                            ->number,
+                    ),
                 ),
-            ),
-        );
+            )
+        ;
 
         $instructionSequence->load();
 
         $executor = (new Executor(
+            currentDefinition: $methodNameSymbol->string,
             kernel: $this->context->kernel(),
             main: $this->context->self(),
             operationProcessorEntries: $this->context->operationProcessorEntries(),
@@ -74,7 +77,8 @@ class BuiltinDefinemethod implements OperationProcessorInterface
             ->def(
                 $methodNameSymbol,
                 $executor->context(),
-            );
+            )
+        ;
 
         return ProcessedStatus::SUCCESS;
     }

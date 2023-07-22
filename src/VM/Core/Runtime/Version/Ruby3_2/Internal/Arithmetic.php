@@ -10,11 +10,11 @@ class Arithmetic
 
     public static function isFixNum(int $value): bool
     {
-        return !!($value & static::RUBY_FIXNUM_FLAG);
+        return (bool) ($value & static::RUBY_FIXNUM_FLAG);
     }
 
     /**
-     * NOTE: refer INT2FIX implementation
+     * NOTE: refer INT2FIX implementation.
      *
      * @see https://github.com/ruby/ruby/blob/master/include/ruby/internal/arithmetic/long.h
      */
@@ -24,7 +24,7 @@ class Arithmetic
     }
 
     /**
-     * NOTE: refer INT2FIX implementation
+     * NOTE: refer INT2FIX implementation.
      *
      * @see https://github.com/ruby/ruby/blob/master/include/ruby/internal/arithmetic/long.h
      */

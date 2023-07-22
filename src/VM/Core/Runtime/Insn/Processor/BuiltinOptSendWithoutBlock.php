@@ -4,24 +4,18 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
-use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Executor\CallInfoEntryInterface;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\Executor\ReturnType;
 use RubyVM\VM\Core\Runtime\Executor\Translatable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\MainInterface;
-use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 use RubyVM\VM\Exception\OperationProcessorException;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
@@ -51,7 +45,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        $callInfo = $this->getOperandAndValidateCallInfo();
+        $callInfo = $this->getOperandAsCallInfo();
 
         /**
          * @var StringSymbol $symbol
@@ -60,10 +54,11 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             ->callData()
             ->mid()
             ->object
-            ->symbol;
+            ->symbol
+        ;
 
         $arguments = [];
-        for ($i = 0; $i < $callInfo->callData()->argumentsCount(); $i++) {
+        for ($i = 0; $i < $callInfo->callData()->argumentsCount(); ++$i) {
             $arguments[] = $operand = $this->context->vmStack()->pop();
         }
 
@@ -71,23 +66,27 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             OperandEntry::class,
             ...$arguments,
         );
+
         /**
          * @var MainInterface|Object_ $targetSymbol
          */
         $targetSymbol = $this->getStack()
-            ->operand;
+            ->operand
+        ;
 
         /**
-         * @var SymbolInterface|ExecutedResult|null $result
+         * @var null|ExecutedResult|SymbolInterface $result
          */
         $result = $targetSymbol->{(string) $symbol}(...$this->translateForArguments(...$arguments));
         if ($result instanceof Object_) {
             $this->context->vmStack()
-                ->push(new OperandEntry($result));
+                ->push(new OperandEntry($result))
+            ;
+
             return ProcessedStatus::SUCCESS;
         }
 
-        if ($result === null) {
+        if (null === $result) {
             // This is same at UNDEFINED on originally RubyVM
             return ProcessedStatus::SUCCESS;
         }
@@ -96,20 +95,22 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             if ($result->throwed) {
                 throw $result->throwed;
             }
-            if ($result->returnValue !== null) {
+            if (null !== $result->returnValue) {
                 $this->context->vmStack()
-                    ->push(new OperandEntry($result->returnValue->toObject()));
+                    ->push(new OperandEntry($result->returnValue->toObject()))
+                ;
             }
+
             return ProcessedStatus::SUCCESS;
         }
         if ($result instanceof SymbolInterface) {
             $this->context->vmStack()
-                ->push(new OperandEntry($result->toObject()));
+                ->push(new OperandEntry($result->toObject()))
+            ;
+
             return ProcessedStatus::SUCCESS;
         }
 
-        throw new OperationProcessorException(
-            'Unreachable here because the opt_send_without_block is not properly implementation'
-        );
+        throw new OperationProcessorException('Unreachable here because the opt_send_without_block is not properly implementation');
     }
 }

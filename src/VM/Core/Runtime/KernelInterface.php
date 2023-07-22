@@ -14,15 +14,18 @@ use RubyVM\VM\Stream\BinaryStreamReaderInterface;
 interface KernelInterface
 {
     public function setup(): KernelInterface;
+
     public function process(): ExecutorInterface;
 
     /**
      * @return RubyVersion[]
      */
     public function expectedVersions(): array;
+
     public function stream(): BinaryStreamReaderInterface;
 
     public function findId(int $index): ID;
+
     public function findObject(int $index): Object_;
 
     public function loadInstructionSequence(Aux $aux): InstructionSequence;

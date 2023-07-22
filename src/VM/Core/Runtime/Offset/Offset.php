@@ -13,12 +13,7 @@ class Offset
     public function __construct(public readonly int $offset)
     {
         if ($this->offset < 0) {
-            throw new VerificationException(
-                sprintf(
-                    'An offset cannot negative value (actual: %d)',
-                    $this->offset,
-                ),
-            );
+            throw new VerificationException(sprintf('An offset cannot negative value (actual: %d)', $this->offset));
         }
     }
 
@@ -28,12 +23,13 @@ class Offset
     }
 
     /**
-     * NOTE: see also IBF_OBJBODY and IBF_ALIGNED_OFFSET(align, offset) implementation
+     * NOTE: see also IBF_OBJBODY and IBF_ALIGNED_OFFSET(align, offset) implementation.
      */
     public function align(SizeOf|array|int $size): Offset
     {
         if (is_array($size)) {
             $alignedSize = Align::alignOf($size);
+
             return $this->align($alignedSize);
         }
 

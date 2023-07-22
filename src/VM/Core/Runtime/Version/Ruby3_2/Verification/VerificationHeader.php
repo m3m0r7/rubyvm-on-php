@@ -18,17 +18,13 @@ class VerificationHeader implements VerificationInterface
 
     private function verifyMagicByte(): void
     {
-        if ($this->kernel->magic === 'YARB') {
+        if ('YARB' === $this->kernel->magic) {
             return;
         }
 
         $magicBytes = array_values(unpack('C*', $this->kernel->magic));
-        throw new VerificationException(
-            sprintf(
-                'The magic byte is not matched expecting YARB (actual: ' . implode(', ', array_fill(0, count($magicBytes), '0x%02x')) . ')',
-                ...$magicBytes,
-            )
-        );
+
+        throw new VerificationException(sprintf('The magic byte is not matched expecting YARB (actual: ' . implode(', ', array_fill(0, count($magicBytes), '0x%02x')) . ')', ...$magicBytes));
     }
 
     private function verifyVersion(): void
@@ -49,33 +45,19 @@ class VerificationHeader implements VerificationInterface
             $expectedVersions[] = $expectedVersion;
         }
 
-        throw new VerificationException(
-            sprintf(
-                'The YARB structure is not matched expecting ruby version (expected: [%s], actual: %s)',
-                implode(', ', $expectedVersions),
-                $actualVersion,
-            ),
-        );
+        throw new VerificationException(sprintf('The YARB structure is not matched expecting ruby version (expected: [%s], actual: %s)', implode(', ', $expectedVersions), $actualVersion));
     }
 
     private function verifyFileSize(): void
     {
         $size = $this->kernel->stream()->size();
-        if ($size === null) {
-            throw new VerificationException(
-                'The stream size is invalid (size: null)'
-            );
+        if (null === $size) {
+            throw new VerificationException('The stream size is invalid (size: null)');
         }
 
         // NOTE: Append an EOF byte when comparing
         if ($size !== ($this->kernel->size + 1)) {
-            throw new VerificationException(
-                sprintf(
-                    'The stream size is invalid (expected: %d, actual: %d)',
-                    $this->kernel->size,
-                    $size,
-                ),
-            );
+            throw new VerificationException(sprintf('The stream size is invalid (expected: %d, actual: %d)', $this->kernel->size, $size));
         }
     }
 
@@ -88,11 +70,7 @@ class VerificationHeader implements VerificationInterface
         $size = $this->kernel->stream()->size();
 
         if ($this->kernel->instructionSequenceListSize > $size) {
-            throw new VerificationException(
-                sprintf(
-                    'Overflowed the instruction sequence list size. Maybe the YARB structure was broken or unsupported.',
-                ),
-            );
+            throw new VerificationException(sprintf('Overflowed the instruction sequence list size. Maybe the YARB structure was broken or unsupported.'));
         }
     }
 
@@ -104,11 +82,7 @@ class VerificationHeader implements VerificationInterface
             return;
         }
 
-        throw new VerificationException(
-            sprintf(
-                'Overflowed the global object list size. Maybe the YARB structure was broken or unsupported.',
-            ),
-        );
+        throw new VerificationException(sprintf('Overflowed the global object list size. Maybe the YARB structure was broken or unsupported.'));
     }
 
     private function verifyInstructionListOffset(): void
@@ -119,11 +93,7 @@ class VerificationHeader implements VerificationInterface
             return;
         }
 
-        throw new VerificationException(
-            sprintf(
-                'Overflowed the instruction sequence list offset. Maybe the YARB structure was broken or unsupported.',
-            ),
-        );
+        throw new VerificationException(sprintf('Overflowed the instruction sequence list offset. Maybe the YARB structure was broken or unsupported.'));
     }
 
     private function verifyGlobalObjectListOffset(): void
@@ -134,11 +104,7 @@ class VerificationHeader implements VerificationInterface
             return;
         }
 
-        throw new VerificationException(
-            sprintf(
-                'Overflowed the global object list offset. Maybe the YARB structure was broken or unsupported.',
-            ),
-        );
+        throw new VerificationException(sprintf('Overflowed the global object list offset. Maybe the YARB structure was broken or unsupported.'));
     }
 
     public function verify(): bool

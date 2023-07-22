@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Entry;
 
-use ArrayIterator;
 use RubyVM\VM\Exception\EntryException;
 
 abstract class AbstractEntries implements EntriesInterface
@@ -29,13 +28,15 @@ abstract class AbstractEntries implements EntriesInterface
 
     public function verifyOffset(mixed $key): bool
     {
-        if ($this->entryType() === EntryType::HASH) {
-            if ($key === null) {
+        if (EntryType::HASH === $this->entryType()) {
+            if (null === $key) {
                 return false;
             }
+
             return is_string($key) || is_int($key);
         }
-        return $key === null || is_int($key);
+
+        return null === $key || is_int($key);
     }
 
     public function offsetExists(mixed $offset): bool
@@ -51,26 +52,10 @@ abstract class AbstractEntries implements EntriesInterface
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if (!$this->verify($value)) {
-            throw new EntryException(
-                sprintf(
-                    'The entry value is not verified on %s (%s)',
-                    static::class,
-                    is_object($value)
-                        ? get_class($value)
-                        : gettype($value),
-                ),
-            );
+            throw new EntryException(sprintf('The entry value is not verified on %s (%s)', static::class, is_object($value) ? get_class($value) : gettype($value)));
         }
         if (!$this->verifyOffset($offset)) {
-            throw new EntryException(
-                sprintf(
-                    'The entry key is not verified on %s (%s)',
-                    static::class,
-                    is_object($value)
-                        ? get_class($value)
-                        : gettype($value),
-                ),
-            );
+            throw new EntryException(sprintf('The entry key is not verified on %s (%s)', static::class, is_object($value) ? get_class($value) : gettype($value)));
         }
         $this->items[$offset ? $this->filterKeyName($offset) : count($this->items)] = $value;
     }
@@ -91,6 +76,7 @@ abstract class AbstractEntries implements EntriesInterface
             $this->offsetSet(null, $value);
         }
     }
+
     public function set(mixed $index, mixed $value): void
     {
         $this->offsetSet($index, $value);
@@ -105,14 +91,15 @@ abstract class AbstractEntries implements EntriesInterface
     {
         return $this->offsetGet($index) ?? null;
     }
+
     protected function entryType(): EntryType
     {
         return EntryType::LIST;
     }
 
-    public function getIterator(): ArrayIterator
+    public function getIterator(): \ArrayIterator
     {
-        return new ArrayIterator($this->items);
+        return new \ArrayIterator($this->items);
     }
 
     protected function filterKeyName(mixed $index): string|int|null
@@ -125,6 +112,7 @@ abstract class AbstractEntries implements EntriesInterface
         if (is_object($index) && enum_exists($index::class, false)) {
             return $index->name;
         }
+
         return $index;
     }
 

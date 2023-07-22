@@ -49,19 +49,15 @@ class RubyVM implements RubyVMInterface
         );
 
         $selectedVersion = null;
-        /**
-         * @var Runtime|null $kernel
-         */
-        if ($useVersion === null) {
+        // @var Runtime|null $kernel
+        if (null === $useVersion) {
             $runtime = $this->registeredRuntimes[$selectedVersion = array_key_first($this->registeredRuntimes)] ?? null;
         } else {
             $runtime = $this->registeredRuntimes[$selectedVersion = $useVersion->value] ?? null;
         }
 
-        if ($runtime === null) {
-            throw new RubyVMException(
-                'The RubyVM is not registered a kernel - You should call RubyVM::register method before calling the disassemble method'
-            );
+        if (null === $runtime) {
+            throw new RubyVMException('The RubyVM is not registered a kernel - You should call RubyVM::register method before calling the disassemble method');
         }
 
         $this->option->logger->info(
@@ -71,7 +67,8 @@ class RubyVM implements RubyVMInterface
         $executor = $runtime
             ->kernel
             ->setup()
-            ->process();
+            ->process()
+        ;
 
         $this->option->logger->info(
             sprintf('Complete to disassemble an instruction sequence'),
@@ -84,7 +81,8 @@ class RubyVM implements RubyVMInterface
         // Verify structures
         $runtime
             ->verifier
-            ->done();
+            ->done()
+        ;
 
         $this->option->logger->info(
             sprintf('Complete to verify process'),

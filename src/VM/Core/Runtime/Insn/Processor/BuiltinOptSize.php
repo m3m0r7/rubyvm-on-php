@@ -41,7 +41,7 @@ class BuiltinOptSize implements OperationProcessorInterface
         // No used
         $this->getOperand();
 
-        $recv = $this->getStackAndValidateSymbol();
+        $recv = $this->getStackAsSymbol();
 
         if ($recv instanceof ArraySymbol) {
             $this->context->vmStack()->push(
@@ -51,15 +51,10 @@ class BuiltinOptSize implements OperationProcessorInterface
                     ))->toObject()
                 ),
             );
+
             return ProcessedStatus::SUCCESS;
         }
 
-        throw new OperationProcessorException(
-            sprintf(
-                'The %s is not compatible type %s',
-                strtolower($this->insn->name),
-                ClassHelper::nameBy($recv),
-            ),
-        );
+        throw new OperationProcessorException(sprintf('The %s is not compatible type %s', strtolower($this->insn->name), ClassHelper::nameBy($recv)));
     }
 }

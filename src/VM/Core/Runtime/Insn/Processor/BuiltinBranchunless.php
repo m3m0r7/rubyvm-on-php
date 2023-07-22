@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
-use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\SymbolTestable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\OffsetSymbol;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinBranchunless implements OperationProcessorInterface
@@ -41,14 +38,16 @@ class BuiltinBranchunless implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        $offsetSymbol = $this->getOperandAndValidateOffsetSymbol();
+        $offsetSymbol = $this->getOperandAsOffsetSymbol();
 
-        $symbol = $this->getStackAndValidateSymbol();
+        $symbol = $this->getStackAsSymbol();
 
         if ($this->unless($symbol)) {
             $this->context
                 ->programCounter()
-                ->increase($offsetSymbol->offset);
+                ->increase($offsetSymbol->offset)
+            ;
+
             return ProcessedStatus::JUMPED;
         }
 

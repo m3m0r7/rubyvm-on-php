@@ -23,9 +23,7 @@ class StringStreamHandler implements StreamHandlerInterface
 
     public function write(string $string): void
     {
-        throw new StreamHandlerException(
-            'The StringStreamHandler does not provide writer'
-        );
+        throw new StreamHandlerException('The StringStreamHandler does not provide writer');
     }
 
     public function size(): ?int

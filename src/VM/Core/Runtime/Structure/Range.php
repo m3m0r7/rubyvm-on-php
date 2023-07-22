@@ -7,11 +7,11 @@ namespace RubyVM\VM\Core\Runtime\Structure;
 use RubyVM\VM\Stream\SizeOf;
 
 /**
- * @property-read int $classIndex
- * @property-read int $length
- * @property-read int $begin
- * @property-read int $end
- * @property-read int $excl
+ * @property int $classIndex
+ * @property int $length
+ * @property int $begin
+ * @property int $end
+ * @property int $excl
  */
 class Range extends AbstractStructure implements StructureInterface
 {

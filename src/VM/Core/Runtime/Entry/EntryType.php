@@ -7,5 +7,6 @@ namespace RubyVM\VM\Core\Runtime\Entry;
 enum EntryType
 {
     case LIST;
+
     case HASH;
 }

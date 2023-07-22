@@ -34,29 +34,20 @@ class Object_
 
         try {
             /**
-             * @var InstanceMethodInterface|null $entry
+             * @var null|InstanceMethodInterface $entry
              */
             $entry = $defaultMethodEntries[$name] ?? null;
 
-            if ($entry === null) {
+            if (null === $entry) {
                 throw new \Error();
             }
 
             $result = $entry->process($this->symbol, ...$arguments);
         } catch (\Error $e) {
-            throw new NotFoundInstanceMethod(
-                sprintf(
-                    <<< _
+            throw new NotFoundInstanceMethod(sprintf(<<< '_'
                     Not found instance method %s#%s. In the actually, arguments count are unmatched or anymore problems when throwing this exception.
                     Use try-catch statement and checking a previous exception via this exception if you want to solve kindly this problems.
-                    _,
-                    // Call to undefined method when not defined on symbol
-                    ClassHelper::nameBy($this->symbol),
-                    $name,
-                ),
-                $e->getCode(),
-                $e,
-            );
+                    _, /* Call to undefined method when not defined on symbol */ ClassHelper::nameBy($this->symbol), $name, ), $e->getCode(), $e, );
         }
 
         return new Object_(

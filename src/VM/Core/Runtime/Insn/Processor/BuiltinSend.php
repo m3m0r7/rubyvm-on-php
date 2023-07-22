@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\Executor\CallBlockHelper;
-use RubyVM\VM\Core\Runtime\Executor\CallInfoEntry;
-use RubyVM\VM\Core\Runtime\Executor\CallInfoEntryInterface;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
@@ -14,7 +12,6 @@ use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Translatable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinSend implements OperationProcessorInterface
@@ -44,21 +41,21 @@ class BuiltinSend implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        $callInfo = $this->getOperandAndValidateCallInfo();
+        $callInfo = $this->getOperandAsCallInfo();
 
         $arguments = [];
-        for ($i = 0; $i < $callInfo->callData()->argumentsCount(); $i++) {
+        for ($i = 0; $i < $callInfo->callData()->argumentsCount(); ++$i) {
             $arguments[] = $this->context->vmStack()->pop();
         }
 
-        $blockObject = $this->getStackAndValidateObject();
+        $blockObject = $this->getStackAsObject();
 
         $this->validateType(
             OperandEntry::class,
             ...$arguments,
         );
 
-        $blockIseqNumber = $this->getOperandAndValidateNumberSymbol();
+        $blockIseqNumber = $this->getOperandAsNumberSymbol();
 
         $result = $this->callBlockWithArguments(
             $callInfo,
@@ -68,7 +65,7 @@ class BuiltinSend implements OperationProcessorInterface
             ...$arguments,
         );
 
-        if ($result !== null) {
+        if (null !== $result) {
             $this->context->vmStack()->push(new OperandEntry($result));
         }
 

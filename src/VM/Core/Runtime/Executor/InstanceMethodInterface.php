@@ -9,5 +9,6 @@ use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 interface InstanceMethodInterface
 {
     public static function name(): string;
+
     public function process(SymbolInterface $symbol, ...$arguments): SymbolInterface;
 }

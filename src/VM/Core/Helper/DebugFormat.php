@@ -18,7 +18,7 @@ trait DebugFormat
             count($targetItems),
         ];
         foreach ($targetItems as $index => $item) {
-            $result[] = ClassHelper::nameBy($item) . '<' . match($item::class) {
+            $result[] = ClassHelper::nameBy($item) . '<' . match ($item::class) {
                 SymbolInterface::class => (string) $item,
                 OperandEntry::class => (string) match (($item->operand)::class) {
                     Object_::class => ClassHelper::nameBy($item->operand->symbol) . "({$item->operand->symbol})",

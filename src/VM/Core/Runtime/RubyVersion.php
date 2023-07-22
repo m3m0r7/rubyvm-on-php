@@ -7,5 +7,6 @@ namespace RubyVM\VM\Core\Runtime;
 enum RubyVersion: string
 {
     case VERSION_3_2 = '3.2';
+
     case VERSION_3_3 = '3.3';
 }

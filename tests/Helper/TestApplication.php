@@ -7,6 +7,11 @@ namespace Tests\RubyVM\Helper;
 use PHPUnit\Framework\TestCase;
 use RubyVM\VM\Stream\StreamHandler;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class TestApplication extends TestCase
 {
     protected function createRubyVMFromCode(string $code, string $binaryPath = 'ruby'): RubyVMManager

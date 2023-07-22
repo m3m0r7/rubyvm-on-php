@@ -164,7 +164,7 @@ $ ./vendor/bin/phpunit tests/
 ## Linter
 
 ```
-./vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php .
+./vendor/bin/php-cs-fixer fix --allow-risky=yes
 ```
 
 ## How to contribute

@@ -13,6 +13,7 @@ class ProgramCounter
     {
         $this->previousCounter = $this->counter;
         $this->counter += $add;
+
         return $this->counter;
     }
 
@@ -25,12 +26,14 @@ class ProgramCounter
     {
         $this->previousCounter = $this->counter;
         $this->counter = $newPos;
+
         return $newPos;
     }
 
     public function decrease(): int
     {
         $this->previousCounter = $this->counter;
+
         return --$this->counter;
     }
 

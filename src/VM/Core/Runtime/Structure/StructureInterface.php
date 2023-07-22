@@ -9,8 +9,9 @@ use RubyVM\VM\Stream\SizeOf;
 interface StructureInterface
 {
     /**
-     * @return array<string, SizeOf|int>
+     * @return array<string, int|SizeOf>
      */
     public static function structure(): array;
+
     public function __get(string $name): int|string|float;
 }

@@ -71,9 +71,7 @@ class Kernel implements KernelInterface
     public function process(): ExecutorInterface
     {
         if (!isset($this->vm)) {
-            throw new RubyVMException(
-                'The RubyVM is not set'
-            );
+            throw new RubyVMException('The RubyVM is not set');
         }
         $aux = new Aux(
             loader: new AuxLoader(
@@ -82,7 +80,7 @@ class Kernel implements KernelInterface
         );
 
         /**
-         * @var InstructionSequence|null $instructionSequence
+         * @var null|InstructionSequence $instructionSequence
          */
         $instructionSequence = $this->loadInstructionSequence($aux);
 
@@ -90,6 +88,7 @@ class Kernel implements KernelInterface
         $environmentTableEntries = new EnvironmentTableEntries();
 
         return new Executor(
+            '<main>',
             $this,
             new Main(
                 $this->vm->option()->stdOut ?? new StreamHandler(STDOUT),
@@ -103,7 +102,7 @@ class Kernel implements KernelInterface
     }
 
     /**
-     * Setup RubyVM
+     * Setup RubyVM.
      *
      * @see https://github.com/ruby/ruby/blob/2f603bc4/compile.c#L11087
      */
@@ -139,7 +138,7 @@ class Kernel implements KernelInterface
     }
 
     /**
-     * Setup instruction sequence offsets
+     * Setup instruction sequence offsets.
      *
      * @return $this
      */
@@ -151,14 +150,15 @@ class Kernel implements KernelInterface
             sprintf('Setup an instruction sequence list (offset: %d)', $this->instructionSequenceListOffset),
         );
 
-        for ($i = 0; $i < $this->instructionSequenceListSize; $i++) {
+        for ($i = 0; $i < $this->instructionSequenceListSize; ++$i) {
             $this->instructionSequenceList
                 ->append(
                     new Offset(
                         // VALUE iseq_list;       /* [iseq0, ...] */
                         $this->stream()->unsignedLong(),
                     )
-                );
+                )
+            ;
         }
 
         $this->vm->option()->logger->info(
@@ -169,7 +169,7 @@ class Kernel implements KernelInterface
     }
 
     /**
-     * Setup global object offsets
+     * Setup global object offsets.
      *
      * @return $this
      */
@@ -181,7 +181,7 @@ class Kernel implements KernelInterface
             sprintf('Setup a global object list (offset: %d)', $this->globalObjectListOffset),
         );
 
-        for ($i = 0; $i < $this->globalObjectListSize; $i++) {
+        for ($i = 0; $i < $this->globalObjectListSize; ++$i) {
             $this->globalObjectList->append(
                 new Offset(
                     $this->stream()->unsignedLong(),
@@ -211,18 +211,14 @@ class Kernel implements KernelInterface
         $this->vm->option()->logger->info(
             sprintf('Start to find object by ID (index: %d)', $index),
         );
+
         return $this->findObject($index)->id;
     }
 
     public function findObject(int $index): Object_
     {
         if (!isset($this->globalObjectList[$index])) {
-            throw new RubyVMException(
-                sprintf(
-                    'Cannot resolve to refer index#%d in the global object list',
-                    $index,
-                )
-            );
+            throw new RubyVMException(sprintf('Cannot resolve to refer index#%d in the global object list', $index));
         }
 
         $this->vm->option()->logger->info(
@@ -271,14 +267,16 @@ class Kernel implements KernelInterface
                 function (BinaryStreamReader $stream) use ($offset) {
                     $stream->pos($offset->offset);
                     $byte = $stream->unsignedByte();
+
                     return new ObjectInfo(
-                        type:         SymbolType::of(($byte >> 0) & 0x1f),
+                        type: SymbolType::of(($byte >> 0) & 0x1F),
                         specialConst: (bool) ($byte >> 5) & 0x01,
-                        frozen:       (bool) ($byte >> 6) & 0x01,
-                        internal:     (bool) ($byte >> 7) & 0x01,
+                        frozen: (bool) ($byte >> 6) & 0x01,
+                        internal: (bool) ($byte >> 7) & 0x01,
                     );
                 }
-            );
+            )
+        ;
 
         $this->vm->option()->logger->info(
             sprintf(
@@ -299,7 +297,8 @@ class Kernel implements KernelInterface
             ->dryPosTransaction(
                 fn () => $this->resolveLoader($info, $offset->increase())
                     ->load()
-            );
+            )
+        ;
 
         return $this->globalObjectTable[$index] = $symbol->toObject($offset);
     }
@@ -324,7 +323,8 @@ class Kernel implements KernelInterface
     {
         $instructionSequence = $this
             ->instructionSequences
-            ->get($aux->loader->index);
+            ->get($aux->loader->index)
+        ;
 
         if (!$instructionSequence) {
             $instructionSequence = new InstructionSequence(
@@ -341,7 +341,7 @@ class Kernel implements KernelInterface
                 $aux->loader->index,
                 $instructionSequence,
             );
-        };
+        }
 
         return $instructionSequence;
     }

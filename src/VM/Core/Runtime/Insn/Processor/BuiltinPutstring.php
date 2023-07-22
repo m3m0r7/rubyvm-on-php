@@ -41,7 +41,8 @@ class BuiltinPutstring implements OperationProcessorInterface
                     ->instructionSequence()
                     ->operations()
                     ->get($newPos),
-            );
+            )
+        ;
 
         return ProcessedStatus::SUCCESS;
     }

@@ -10,7 +10,6 @@ use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
-use RubyVM\VM\Exception\OperationProcessorException;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinOptAref implements OperationProcessorInterface
@@ -39,8 +38,8 @@ class BuiltinOptAref implements OperationProcessorInterface
         // No used
         $this->getOperand();
 
-        $recv = $this->getStackAndValidateNumberSymbol();
-        $obj = $this->getStackAndValidateSymbol();
+        $recv = $this->getStackAsNumberSymbol();
+        $obj = $this->getStackAsSymbol();
 
         /**
          * @var NumberSymbol $selectedNumber
@@ -53,6 +52,7 @@ class BuiltinOptAref implements OperationProcessorInterface
                     ->toObject(),
             ),
         );
+
         return ProcessedStatus::SUCCESS;
     }
 }

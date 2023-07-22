@@ -13,7 +13,7 @@ class ClassHelper
         if (!is_object($obj)) {
             return gettype($obj);
         }
-        if (get_class($obj) === Object_::class) {
+        if (Object_::class === get_class($obj)) {
             return 'Object';
         }
         $classNamePath = explode('\\', get_class($obj));

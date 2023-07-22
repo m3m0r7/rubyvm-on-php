@@ -31,6 +31,7 @@ class Executor implements ExecutorInterface
     protected ContextInterface $context;
 
     public function __construct(
+        private readonly string $currentDefinition,
         private readonly KernelInterface $kernel,
         private readonly MainInterface $main,
         private readonly OperationProcessorEntries $operationProcessorEntries,
@@ -47,7 +48,7 @@ class Executor implements ExecutorInterface
         return $this->context;
     }
 
-    public function createContext(?ContextInterface $previousContext = null): ContextInterface
+    public function createContext(ContextInterface $previousContext = null): ContextInterface
     {
         return new OperationProcessorContext(
             $this->kernel,
@@ -73,6 +74,7 @@ class Executor implements ExecutorInterface
     {
         try {
             $result = $this->_execute();
+
             return new ExecutedResult(
                 executor: $this,
                 executedStatus: $result->executedStatus,
@@ -98,18 +100,11 @@ class Executor implements ExecutorInterface
         // NOTE: Exceeded counter increments self value including ProcessedStatus::SUCCESS and ProcessedStatus::JUMPED
         // requires this value because a role is outside of the program counter.
         if ($this->context->depth() > Option::MAX_STACK_EXCEEDED) {
-            throw new ExecutorExeption(
-                'The executor got max stack exceeded - maybe falling into infinity loop at an executor'
-            );
+            throw new ExecutorExeption('The executor got max stack exceeded - maybe falling into infinity loop at an executor');
         }
 
         if (!$this->context->shouldBreakPoint() && $this->context->elapsedTime() > Option::MAX_TIME_EXCEEDED) {
-            throw new ExecutorExeption(
-                sprintf(
-                    'The executor got max time exceeded %d sec. The process is very heavy or detected an infinity loop',
-                    Option::MAX_TIME_EXCEEDED,
-                ),
-            );
+            throw new ExecutorExeption(sprintf('The executor got max time exceeded %d sec. The process is very heavy or detected an infinity loop', Option::MAX_TIME_EXCEEDED));
         }
 
         $operations = $this->instructionSequence->operations();
@@ -122,30 +117,22 @@ class Executor implements ExecutorInterface
 
         $infinityLoopCounter = 0;
 
-        for (;$this->context->programCounter()->pos() < count($operations) && !$isFinished; $this->context->programCounter()->increase()) {
+        for (; $this->context->programCounter()->pos() < count($operations) && !$isFinished; $this->context->programCounter()->increase()) {
             if ($this->context->programCounter()->pos() === $this->context->programCounter()->previousPos()) {
-                $infinityLoopCounter++;
+                ++$infinityLoopCounter;
                 if ($infinityLoopCounter >= Option::DETECT_INFINITY_LOOP) {
-                    throw new ExecutorExeption(
-                        'The executor detected infinity loop because the program counter not changes internal counter - you should review incorrect implementation'
-                    );
+                    throw new ExecutorExeption('The executor detected infinity loop because the program counter not changes internal counter - you should review incorrect implementation');
                 }
             } else {
                 $infinityLoopCounter = 0;
             }
 
             /**
-             * @var OperationEntry|mixed $operator
+             * @var mixed|OperationEntry $operator
              */
             $operator = $operations[$this->context->programCounter()->pos()] ?? null;
-            if (!($operator instanceof OperationEntry)) {
-                throw new ExecutorExeption(
-                    sprintf(
-                        'The operator is not instantiated by OperationEntry (actual: %s) - maybe an operation code processor has bug(s) or incorrect in implementation [%s]',
-                        ClassHelper::nameBy($operator),
-                        (string) $operations,
-                    )
-                );
+            if (!$operator instanceof OperationEntry) {
+                throw new ExecutorExeption(sprintf('The operator is not instantiated by OperationEntry (actual: %s) - maybe an operation code processor has bug(s) or incorrect in implementation [%s]', ClassHelper::nameBy($operator), (string) $operations));
             }
 
             $this->logger->info(
@@ -159,7 +146,8 @@ class Executor implements ExecutorInterface
 
             $processor = $this
                 ->operationProcessorEntries
-                ->get($operator->insn);
+                ->get($operator->insn)
+            ;
 
             $this->logger->info(
                 sprintf(
@@ -202,6 +190,7 @@ class Executor implements ExecutorInterface
 
             if ($this->context->shouldProcessedRecords()) {
                 $this->debugger->append(
+                    $this->currentDefinition,
                     $operator->insn,
                     $snapshotContext,
                     $this->makeDetails($operator->insn),
@@ -230,44 +219,31 @@ class Executor implements ExecutorInterface
             }
 
             // Finish this loop when returning ProcessedStatus::FINISH
-            if ($status === ProcessedStatus::FINISH) {
+            if (ProcessedStatus::FINISH === $status) {
                 $isFinished = true;
+
                 continue;
             }
 
-            if ($status === ProcessedStatus::JUMPED) {
+            if (ProcessedStatus::JUMPED === $status) {
                 continue;
             }
 
-            if ($status !== ProcessedStatus::SUCCESS) {
-                $throwClass = $status === ProcessedStatus::FAILED
+            if (ProcessedStatus::SUCCESS !== $status) {
+                $throwClass = ProcessedStatus::FAILED === $status
                     ? ExecutorFailedException::class
                     : ExecutorUnknownException::class;
 
-                throw new $throwClass(
-                    sprintf(
-                        'The `%s` (opcode: 0x%02x) processor returns %s (%d) status code',
-                        $operator->insn->name,
-                        $operator->insn->value,
-                        $status->name,
-                        $status->value,
-                    ),
-                );
+                throw new $throwClass(sprintf('The `%s` (opcode: 0x%02x) processor returns %s (%d) status code', $operator->insn->name, $operator->insn->value, $status->name, $status->value));
             }
         }
 
-        if ($isFinished === false) {
+        if (false === $isFinished) {
             $this->logger->emergency(
                 sprintf('Illegal finish an executor'),
             );
 
-            throw new ExecutorExeption(
-                sprintf(
-                    'The executor did not finish - maybe did not call the `%s` (0x%02x)',
-                    strtolower(Insn::LEAVE->name),
-                    Insn::LEAVE->value,
-                ),
-            );
+            throw new ExecutorExeption(sprintf('The executor did not finish - maybe did not call the `%s` (0x%02x)', strtolower(Insn::LEAVE->name), Insn::LEAVE->value));
         }
 
         if (count($operations) !== $this->context->programCounter()->pos()) {
@@ -313,6 +289,7 @@ class Executor implements ExecutorInterface
 
         // Renew context
         $this->context = $this->createContext($this->previousContext);
+
         return $this;
     }
 
@@ -321,7 +298,7 @@ class Executor implements ExecutorInterface
         printf('Enter to next step (y/n/q): ');
         $entered = fread(STDIN, 1024);
         $command = strtolower(trim($entered));
-        if ($command === '' || $command === 'y') {
+        if ('' === $command || 'y' === $command) {
             $this->debugger->showExecutedOperations();
             printf(
                 "Current INSN: %s(0x%02x)\n",
@@ -348,8 +325,9 @@ class Executor implements ExecutorInterface
             );
         }
         printf("\n");
-        if ($command === 'exit' || $command === 'quit' || $command === 'q') {
+        if ('exit' === $command || 'quit' === $command || 'q' === $command) {
             echo "Finished executor, Goodbye ✋\n";
+
             exit(0);
         }
     }
@@ -357,7 +335,7 @@ class Executor implements ExecutorInterface
     private function makeDetails(Insn $insn): ?string
     {
         $context = $this->context->createSnapshot();
-        if ($insn === Insn::OPT_SEND_WITHOUT_BLOCK) {
+        if (Insn::OPT_SEND_WITHOUT_BLOCK === $insn) {
             $details = '';
             $currentPos = $context->programCounter()->pos();
             $vmStack = clone $context->vmStack();
@@ -368,19 +346,21 @@ class Executor implements ExecutorInterface
             $callDataOperand = $context
                 ->instructionSequence()
                 ->operations()
-                ->get($currentPos + 1);
+                ->get($currentPos + 1)
+            ;
 
             $arguments = [];
-            for ($i = 0; $i < $callDataOperand->operand->callData()->argumentsCount(); $i++) {
+            for ($i = 0; $i < $callDataOperand->operand->callData()->argumentsCount(); ++$i) {
                 $arguments[] = $vmStack->pop();
             }
 
             /**
-             * @var OperandEntry|MainInterface $class
+             * @var MainInterface|OperandEntry $class
              */
             $class = $vmStack->pop();
 
             $context->programCounter()->set($currentPos);
+
             return sprintf(
                 '%s#%s(%s)',
                 ClassHelper::nameBy($class->operand),
@@ -403,6 +383,7 @@ class Executor implements ExecutorInterface
                 ),
             );
         }
+
         return null;
     }
 
@@ -412,6 +393,12 @@ class Executor implements ExecutorInterface
 
         // Renew context
         $this->context = $this->createContext($this->previousContext);
+
         return $this;
+    }
+
+    public function currentDefinition(): string
+    {
+        return $this->currentDefinition;
     }
 }

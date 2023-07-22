@@ -12,9 +12,7 @@ use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Symbol\FloatSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinOptDiv implements OperationProcessorInterface
@@ -54,6 +52,7 @@ class BuiltinOptDiv implements OperationProcessorInterface
         if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
             $value = $this->calculateFloatDivideFloat($leftOperand, $rightOperand);
         }
+
         return $value;
     }
 

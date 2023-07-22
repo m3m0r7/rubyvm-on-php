@@ -9,7 +9,6 @@ use RubyVM\VM\Core\Runtime\Offset\Offset;
 use RubyVM\VM\Core\Runtime\Symbol\LoaderInterface;
 use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-use RubyVM\VM\Stream\SizeOf;
 
 class NilLoader implements LoaderInterface
 {
@@ -18,6 +17,7 @@ class NilLoader implements LoaderInterface
         protected readonly Offset $offset,
     ) {
     }
+
     public function load(): SymbolInterface
     {
         $this->kernel->stream()->pos(

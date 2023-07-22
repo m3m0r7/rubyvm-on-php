@@ -20,9 +20,7 @@ abstract class AbstractStructure implements StructureInterface
          */
         foreach (static::structure() as $name => $sizeOf) {
             if (!($sizeOf instanceof SizeOf) && !is_int($sizeOf)) {
-                throw new RubyVMException(
-                    'The AbstractStructure::structure accepts processing instantiated by SizeOf or integer property'
-                );
+                throw new RubyVMException('The AbstractStructure::structure accepts processing instantiated by SizeOf or integer property');
             }
             $this->structureProperties[$name] = match ($sizeOf) {
                 SizeOf::CHAR => $this->reader->char(),

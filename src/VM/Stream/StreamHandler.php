@@ -13,9 +13,7 @@ class StreamHandler implements StreamHandlerInterface
     public function __construct(public readonly mixed $pipe)
     {
         if (!is_resource($pipe)) {
-            throw new StreamHandlerException(
-                'The specified parameter is not a stream'
-            );
+            throw new StreamHandlerException('The specified parameter is not a stream');
         }
         $this->handle = $pipe;
     }

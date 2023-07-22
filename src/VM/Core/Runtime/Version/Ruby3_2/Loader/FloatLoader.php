@@ -18,6 +18,7 @@ class FloatLoader implements LoaderInterface
         protected readonly Offset $offset,
     ) {
     }
+
     public function load(): SymbolInterface
     {
         $this->kernel->stream()->pos(

@@ -9,6 +9,7 @@ use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequen
 interface InstructionSequenceBodyInterface
 {
     public function type(): int;
+
     public function stackMax(): int;
 
     public function inlineCache(): int;

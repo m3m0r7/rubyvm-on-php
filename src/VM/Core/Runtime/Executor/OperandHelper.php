@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Runtime\MainInterface;
-use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
 use RubyVM\VM\Core\Runtime\Symbol\FloatSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\ID;
@@ -17,28 +16,27 @@ use RubyVM\VM\Core\Runtime\Symbol\StructSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 
 /**
- * This trait helps an IDE
+ * This trait helps an IDE.
  */
 trait OperandHelper
 {
     use Validatable;
 
-    private function getOperandAndValidateSymbol(): SymbolInterface
+    private function getOperandAsSymbol(): SymbolInterface
     {
-
-        $operand = $this->getOperandAndValidateAny(
+        $operand = $this->getOperandAsAny(
             Object_::class
         );
 
         return $operand->symbol;
     }
 
-    private function getOperandAndValidateNumberSymbol(): NumberSymbol
+    private function getOperandAsNumberSymbol(): NumberSymbol
     {
         /**
          * @var NumberSymbol $symbol
          */
-        $symbol = $this->getOperandAndValidateSymbol();
+        $symbol = $this->getOperandAsSymbol();
 
         $this->validateType(
             NumberSymbol::class,
@@ -48,27 +46,12 @@ trait OperandHelper
         return $symbol;
     }
 
-    private function getOperandAndValidateStructSymbol(): StructSymbol
-    {
-        /**
-         * @var StructSymbol $symbol
-         */
-        $symbol = $this->getOperandAndValidateSymbol();
-
-        $this->validateType(
-            StructSymbol::class,
-            $symbol,
-        );
-
-        return $symbol;
-    }
-
-    private function getOperandAndValidateStringSymbol(): StringSymbol
+    private function getOperandAsStringSymbol(): StringSymbol
     {
         /**
          * @var StringSymbol $symbol
          */
-        $symbol = $this->getOperandAndValidateSymbol();
+        $symbol = $this->getOperandAsSymbol();
 
         $this->validateType(
             StringSymbol::class,
@@ -78,12 +61,12 @@ trait OperandHelper
         return $symbol;
     }
 
-    private function getOperandAndValidateFloatSymbol(): FloatSymbol
+    private function getOperandAsFloatSymbol(): FloatSymbol
     {
         /**
          * @var FloatSymbol $symbol
          */
-        $symbol = $this->getOperandAndValidateSymbol();
+        $symbol = $this->getOperandAsSymbol();
 
         $this->validateType(
             FloatSymbol::class,
@@ -93,12 +76,12 @@ trait OperandHelper
         return $symbol;
     }
 
-    private function getOperandAndValidateOffsetSymbol(): OffsetSymbol
+    private function getOperandAsOffsetSymbol(): OffsetSymbol
     {
         /**
          * @var OffsetSymbol $symbol
          */
-        $symbol = $this->getOperandAndValidateSymbol();
+        $symbol = $this->getOperandAsSymbol();
 
         $this->validateType(
             OffsetSymbol::class,
@@ -108,12 +91,12 @@ trait OperandHelper
         return $symbol;
     }
 
-    private function getOperandAndValidateArraySymbol(): ArraySymbol
+    private function getOperandAsArraySymbol(): ArraySymbol
     {
         /**
          * @var ArraySymbol $symbol
          */
-        $symbol = $this->getOperandAndValidateSymbol();
+        $symbol = $this->getOperandAsSymbol();
 
         $this->validateType(
             ArraySymbol::class,
@@ -123,29 +106,29 @@ trait OperandHelper
         return $symbol;
     }
 
-    private function getOperandAndValidateID(): ID
+    private function getOperandAsID(): ID
     {
-        return $this->getOperandAndValidateAny(ID::class);
+        return $this->getOperandAsAny(ID::class);
     }
 
-    private function getOperandAndValidateMain(): MainInterface
+    private function getOperandAsMain(): MainInterface
     {
-        return $this->getOperandAndValidateAny(MainInterface::class);
+        return $this->getOperandAsAny(MainInterface::class);
     }
 
-    private function getOperandAndValidateCallInfo(): CallInfoEntryInterface
+    private function getOperandAsCallInfo(): CallInfoEntryInterface
     {
-        return $this->getOperandAndValidateAny(CallInfoEntryInterface::class);
+        return $this->getOperandAsAny(CallInfoEntryInterface::class);
     }
 
-    private function getOperandAndValidateExecutedResult(): ExecutedResult
+    private function getOperandAsExecutedResult(): ExecutedResult
     {
-        return $this->getOperandAndValidateAny(ExecutedResult::class);
+        return $this->getOperandAsAny(ExecutedResult::class);
     }
 
-    private function getOperandAndValidateObject(): Object_
+    private function getOperandAsObject(): Object_
     {
-        return $this->getOperandAndValidateAny(
+        return $this->getOperandAsAny(
             Object_::class
         );
     }
@@ -158,7 +141,8 @@ trait OperandHelper
         $operand = $this->context
             ->instructionSequence()
             ->operations()
-            ->get($this->context->programCounter()->increase());
+            ->get($this->context->programCounter()->increase())
+        ;
 
         $this->validateType(
             OperandEntry::class,
@@ -168,7 +152,7 @@ trait OperandHelper
         return $operand;
     }
 
-    private function getOperandAndValidateAny(string $className): Object_|CallInfoEntryInterface|MainInterface|ID|ExecutedResult
+    private function getOperandAsAny(string $className): Object_|CallInfoEntryInterface|MainInterface|ID|ExecutedResult
     {
         $operand = $this->getOperand();
 
@@ -180,23 +164,21 @@ trait OperandHelper
         return $operand->operand;
     }
 
-
-    private function getStackAndValidateSymbol(): SymbolInterface
+    private function getStackAsSymbol(): SymbolInterface
     {
-
-        $operand = $this->getStackAndValidateAny(
+        $operand = $this->getStackAsAny(
             Object_::class
         );
 
         return $operand->symbol;
     }
 
-    private function getStackAndValidateNumberSymbol(): NumberSymbol
+    private function getStackAsNumberSymbol(): NumberSymbol
     {
         /**
          * @var NumberSymbol $symbol
          */
-        $symbol = $this->getStackAndValidateSymbol();
+        $symbol = $this->getStackAsSymbol();
 
         $this->validateType(
             NumberSymbol::class,
@@ -206,12 +188,12 @@ trait OperandHelper
         return $symbol;
     }
 
-    private function getStackAndValidateArraySymbol(): ArraySymbol
+    private function getStackAsArraySymbol(): ArraySymbol
     {
         /**
          * @var ArraySymbol $symbol
          */
-        $symbol = $this->getStackAndValidateSymbol();
+        $symbol = $this->getStackAsSymbol();
 
         $this->validateType(
             ArraySymbol::class,
@@ -221,12 +203,12 @@ trait OperandHelper
         return $symbol;
     }
 
-    private function getStackAndValidateStructSymbol(): StructSymbol
+    private function getStackAsStructSymbol(): StructSymbol
     {
         /**
          * @var StructSymbol $symbol
          */
-        $symbol = $this->getStackAndValidateSymbol();
+        $symbol = $this->getStackAsSymbol();
 
         $this->validateType(
             StructSymbol::class,
@@ -236,12 +218,12 @@ trait OperandHelper
         return $symbol;
     }
 
-    private function getStackndValidateStringSymbol(): StringSymbol
+    private function getStackAsStringSymbol(): StringSymbol
     {
         /**
          * @var StringSymbol $symbol
          */
-        $symbol = $this->getStackAndValidateSymbol();
+        $symbol = $this->getStackAsSymbol();
 
         $this->validateType(
             StringSymbol::class,
@@ -251,12 +233,12 @@ trait OperandHelper
         return $symbol;
     }
 
-    private function getStackAndValidateFloatSymbol(): FloatSymbol
+    private function getStackAsFloatSymbol(): FloatSymbol
     {
         /**
          * @var FloatSymbol $symbol
          */
-        $symbol = $this->getStackAndValidateSymbol();
+        $symbol = $this->getStackAsSymbol();
 
         $this->validateType(
             FloatSymbol::class,
@@ -266,12 +248,12 @@ trait OperandHelper
         return $symbol;
     }
 
-    private function getStackAndValidateOffsetSymbol(): OffsetSymbol
+    private function getStackAsOffsetSymbol(): OffsetSymbol
     {
         /**
          * @var OffsetSymbol $symbol
          */
-        $symbol = $this->getStackAndValidateSymbol();
+        $symbol = $this->getStackAsSymbol();
 
         $this->validateType(
             OffsetSymbol::class,
@@ -281,29 +263,29 @@ trait OperandHelper
         return $symbol;
     }
 
-    private function getStackAndValidateID(): ID
+    private function getStackAsID(): ID
     {
-        return $this->getStackAndValidateAny(ID::class);
+        return $this->getStackAsAny(ID::class);
     }
 
-    private function getStackAndValidateMain(): MainInterface
+    private function getStackAsMain(): MainInterface
     {
-        return $this->getStackAndValidateAny(MainInterface::class);
+        return $this->getStackAsAny(MainInterface::class);
     }
 
-    private function getStackAndValidateCallInfo(): CallInfoEntryInterface
+    private function getStackAsCallInfo(): CallInfoEntryInterface
     {
-        return $this->getStackAndValidateAny(CallInfoEntryInterface::class);
+        return $this->getStackAsAny(CallInfoEntryInterface::class);
     }
 
-    private function getStackAndValidateExecutedResult(): ExecutedResult
+    private function getStackAsExecutedResult(): ExecutedResult
     {
-        return $this->getStackAndValidateAny(ExecutedResult::class);
+        return $this->getStackAsAny(ExecutedResult::class);
     }
 
-    private function getStackAndValidateObject(): Object_
+    private function getStackAsObject(): Object_
     {
-        return $this->getStackAndValidateAny(
+        return $this->getStackAsAny(
             Object_::class
         );
     }
@@ -311,7 +293,8 @@ trait OperandHelper
     private function getStack(): OperandEntry
     {
         $operand = $this->context
-            ->vmStack()->pop();
+            ->vmStack()->pop()
+        ;
 
         $this->validateType(
             OperandEntry::class,
@@ -321,7 +304,7 @@ trait OperandHelper
         return $operand;
     }
 
-    private function getStackAndValidateAny(string $className): Object_|CallInfoEntryInterface|MainInterface|ID|ExecutedResult
+    private function getStackAsAny(string $className): Object_|CallInfoEntryInterface|MainInterface|ID|ExecutedResult
     {
         $operand = $this->getStack();
 

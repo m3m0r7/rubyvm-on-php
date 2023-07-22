@@ -23,6 +23,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
     public function int(): int
     {
         $value = $this->unsignedInt();
+
         return $value - (
             ($value & SizeOf::INT->size()) > 0
             ? SizeOf::INT->mask() + 1
@@ -33,6 +34,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
     public function long(): int
     {
         $value = $this->unsignedLong();
+
         return $value - (
             ($value & SizeOf::LONG->size()) > 0
             ? SizeOf::LONG->mask() + 1
@@ -43,6 +45,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
     public function longLong(): int|float
     {
         $value = $this->unsignedLongLong();
+
         return $value - (
             ($value & SizeOf::LONG_LONG->size()) > 0
             ? SizeOf::LONG_LONG->mask() + 1
@@ -52,7 +55,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
 
     public function double(): float
     {
-        /**
+        /*
          * FIXME: This code depend on the machine. We must fix non-depending on the machine.
          *
          * @see https://www.php.net/manual/en/function.pack.php
@@ -67,6 +70,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
     public function short(): int
     {
         $value = $this->unsignedShort();
+
         return $value - (
             ($value & SizeOf::SHORT->size()) > 0
             ? SizeOf::SHORT->mask() + 1
@@ -77,6 +81,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
     public function byte(): int
     {
         $value = $this->unsignedByte();
+
         return $value - (
             ($value & SizeOf::BYTE->size()) > 0
             ? SizeOf::BYTE->mask() + 1
@@ -138,21 +143,15 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
     private function readWithEndian(string $littleEndian, string $bigEndian, SizeOf $bytes): int|float
     {
         $read = unpack(
-            $this->endian === Endian::LITTLE_ENDIAN
+            Endian::LITTLE_ENDIAN === $this->endian
                 ? $littleEndian
                 : $bigEndian,
             $this->streamHandler->read($bytes->size()),
         );
-        if ($read === false) {
-            throw new BinaryStreamReaderException(
-                sprintf(
-                    'Cannot unpack from binary stream with %s',
-                    $this->endian === Endian::LITTLE_ENDIAN
-                        ? $littleEndian
-                        : $bigEndian,
-                ),
-            );
+        if (false === $read) {
+            throw new BinaryStreamReaderException(sprintf('Cannot unpack from binary stream with %s', Endian::LITTLE_ENDIAN === $this->endian ? $littleEndian : $bigEndian));
         }
+
         return $read[array_key_first($read)];
     }
 
@@ -164,6 +163,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
     public function dryPosTransaction(callable $callback): mixed
     {
         $currentPos = $this->pos();
+
         try {
             return $callback($this);
         } finally {
@@ -174,10 +174,12 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
     public function dryReadValue(int|SizeOf $bytesOrSize): int|string
     {
         $pos = $this->streamHandler->pos();
+
         try {
             if (is_int($bytesOrSize)) {
                 return $this->read($bytesOrSize);
             }
+
             return match ($bytesOrSize) {
                 SizeOf::BOOL, SizeOf::BYTE => $this->byte(),
                 SizeOf::CHAR => $this->char(),
@@ -209,9 +211,10 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
             $x = ~$x & ($x - 1);
             $x = ($x & 0x55555555) + ($x >> 1 & 0x55555555);
             $x = ($x & 0x33333333) + ($x >> 2 & 0x33333333);
-            $x = ($x & 0x0f0f0f0f) + ($x >> 4 & 0x0f0f0f0f);
-            $x = ($x & 0x001f001f) + ($x >> 8 & 0x001f001f);
-            $x = ($x & 0x0000003f) + ($x >> 16 & 0x0000003f);
+            $x = ($x & 0x0F0F0F0F) + ($x >> 4 & 0x0F0F0F0F);
+            $x = ($x & 0x001F001F) + ($x >> 8 & 0x001F001F);
+            $x = ($x & 0x0000003F) + ($x >> 16 & 0x0000003F);
+
             return $x;
         };
 
@@ -219,21 +222,17 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
 
         $n = ($c & 1)
             ? 1
-            : ($c == 0 ? 9 : $ntzInt32($c) + 1);
+            : (0 == $c ? 9 : $ntzInt32($c) + 1);
 
         $x = $c >> $n;
 
-        if ($x === 0x7f) {
+        if (0x7F === $x) {
             $x = 1;
         }
-        for ($i = 1; $i < $n; $i++) {
+        for ($i = 1; $i < $n; ++$i) {
             $byte = $this->dryReadValue(SizeOf::UNSIGNED_BYTE);
             if (is_string($byte)) {
-                throw new RubyVMException(
-                    sprintf(
-                        'Unexpected read a small value (read stream is expecting a byte but got a string)'
-                    ),
-                );
+                throw new RubyVMException(sprintf('Unexpected read a small value (read stream is expecting a byte but got a string)'));
             }
             $x <<= 8;
             $x |= $byte;

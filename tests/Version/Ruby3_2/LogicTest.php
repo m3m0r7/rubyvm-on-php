@@ -8,9 +8,14 @@ use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
 use RubyVM\VM\Core\Runtime\RubyVersion;
 use Tests\RubyVM\Helper\TestApplication;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class LogicTest extends TestApplication
 {
-    public function testForStatementWithLocalVariable()
+    public function testForStatementWithLocalVariable(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< _
@@ -24,10 +29,11 @@ class LogicTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble(RubyVersion::VERSION_3_2)
+        ;
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame(<<<_
+        $this->assertSame(<<<'_'
         1
         2
         3
@@ -37,7 +43,7 @@ class LogicTest extends TestApplication
         _, $rubyVMManager->stdOut->readAll());
     }
 
-    public function testForStatementWithLocalVariableAnotherSyntax()
+    public function testForStatementWithLocalVariableAnotherSyntax(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< _
@@ -49,10 +55,11 @@ class LogicTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble(RubyVersion::VERSION_3_2)
+        ;
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame(<<<_
+        $this->assertSame(<<<'_'
         1
         2
         3
@@ -62,7 +69,7 @@ class LogicTest extends TestApplication
         _, $rubyVMManager->stdOut->readAll());
     }
 
-    public function testFizzBuzz()
+    public function testFizzBuzz(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< _
@@ -82,10 +89,11 @@ class LogicTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble(RubyVersion::VERSION_3_2)
+        ;
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame(<<<_
+        $this->assertSame(<<<'_'
         1
         2
         Fizz
@@ -190,8 +198,7 @@ class LogicTest extends TestApplication
         _, $rubyVMManager->stdOut->readAll());
     }
 
-
-    public function testFibonacci()
+    public function testFibonacci(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< _
@@ -213,10 +220,11 @@ class LogicTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble(RubyVersion::VERSION_3_2)
+        ;
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame(<<<_
+        $this->assertSame(<<<'_'
         1
         1
         2
@@ -231,10 +239,10 @@ class LogicTest extends TestApplication
         _, $rubyVMManager->stdOut->readAll());
     }
 
-    public function testShowArrayInMethod()
+    public function testShowArrayInMethod(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(
-            <<< _
+            <<< '_'
             def display_array(arr)
                 puts arr
             end
@@ -245,10 +253,11 @@ class LogicTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble(RubyVersion::VERSION_3_2)
+        ;
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame(<<<_
+        $this->assertSame(<<<'_'
         1
         2
         3
@@ -256,7 +265,7 @@ class LogicTest extends TestApplication
 
         _, $rubyVMManager->stdOut->readAll());
         $rubyVMManager = $this->createRubyVMFromCode(
-            <<< _
+            <<< '_'
             def display_array(arr)
                 arr
             end
@@ -267,10 +276,11 @@ class LogicTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble(RubyVersion::VERSION_3_2)
+        ;
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame(<<<_
+        $this->assertSame(<<<'_'
         1
         2
         3

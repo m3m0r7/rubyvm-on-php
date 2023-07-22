@@ -14,7 +14,6 @@ use RubyVM\VM\Core\Runtime\Symbol\FloatSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-use RubyVM\VM\Exception\OperationProcessorException;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinOptGe implements OperationProcessorInterface
@@ -54,6 +53,7 @@ class BuiltinOptGe implements OperationProcessorInterface
         if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
             $value = $this->calculateFloatGreaterThanOrEqualsFloat($leftOperand, $rightOperand);
         }
+
         return $value;
     }
 

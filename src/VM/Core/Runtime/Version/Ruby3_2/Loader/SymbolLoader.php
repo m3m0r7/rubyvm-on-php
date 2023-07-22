@@ -16,10 +16,12 @@ class SymbolLoader implements LoaderInterface
         protected readonly Offset $offset,
     ) {
     }
+
     public function load(): SymbolInterface
     {
         // NOTE: The SymbolLoader is same at StringLoader
         return (new StringLoader($this->kernel, $this->offset))
-            ->load();
+            ->load()
+        ;
     }
 }

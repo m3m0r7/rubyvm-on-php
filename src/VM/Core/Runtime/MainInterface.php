@@ -12,6 +12,8 @@ use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 interface MainInterface
 {
     public function puts(SymbolInterface $symbol): SymbolInterface;
+
     public function def(StringSymbol $methodName, ContextInterface $context): void;
+
     public function class(NumberSymbol $flags, StringSymbol $className, ContextInterface $context): void;
 }

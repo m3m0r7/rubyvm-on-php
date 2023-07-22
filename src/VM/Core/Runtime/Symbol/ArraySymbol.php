@@ -6,9 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Symbol;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
-use RubyVM\VM\Core\Runtime\Executor\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Option;
-use Traversable;
 
 class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \IteratorAggregate
 {
@@ -32,9 +30,9 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
 
     public function each(ContextInterface $context): void
     {
-        for ($i = 0; $i < count($this->array); $i++) {
-
+        for ($i = 0; $i < count($this->array); ++$i) {
             $executor = (new Executor(
+                currentDefinition: $context->executor()->currentDefinition(),
                 kernel: $context->kernel(),
                 main: $context->self(),
                 operationProcessorEntries: $context->operationProcessorEntries(),
@@ -51,7 +49,8 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
                     Option::VM_ENV_DATA_SIZE,
                     (new NumberSymbol($this->array[$i]->number))
                         ->toObject()
-                );
+                )
+            ;
 
             $result = $executor->execute();
 
@@ -75,7 +74,7 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
         );
     }
 
-    public function getIterator(): Traversable
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->array);
     }

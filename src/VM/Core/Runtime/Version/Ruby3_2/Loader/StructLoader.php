@@ -10,7 +10,6 @@ use RubyVM\VM\Core\Runtime\Structure\Range;
 use RubyVM\VM\Core\Runtime\Symbol\LoaderInterface;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\RangeSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\StructSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\RubyVMException;
 
@@ -33,41 +32,26 @@ class StructLoader implements LoaderInterface
 
         $beginSymbol = $this->kernel
             ->findObject($range->begin)
-            ->symbol;
+            ->symbol
+        ;
 
         $endSymbol = $this->kernel
             ->findObject($range->end)
-            ->symbol;
+            ->symbol
+        ;
 
-        if (!($beginSymbol instanceof NumberSymbol)) {
-            throw new RubyVMException(
-                sprintf(
-                    'The StructLoader expects NumberSymbol at a begin property when creating a range object but actual symbol is %s',
-                    get_class($beginSymbol),
-                ),
-            );
+        if (!$beginSymbol instanceof NumberSymbol) {
+            throw new RubyVMException(sprintf('The StructLoader expects NumberSymbol at a begin property when creating a range object but actual symbol is %s', get_class($beginSymbol)));
         }
 
-        if (!($endSymbol instanceof NumberSymbol)) {
-            throw new RubyVMException(
-                sprintf(
-                    'The StructLoader expects NumberSymbol at a end property when creating a range object but actual symbol is %s',
-                    get_class($endSymbol),
-                ),
-            );
+        if (!$endSymbol instanceof NumberSymbol) {
+            throw new RubyVMException(sprintf('The StructLoader expects NumberSymbol at a end property when creating a range object but actual symbol is %s', get_class($endSymbol)));
         }
 
-        return new StructSymbol(
-            classIndex: $range->classIndex,
-            len: $range->length,
-            begin: $range->begin,
-            end: $range->end,
-            excl: $range->excl,
-            symbol: new RangeSymbol(
-                begin: $beginSymbol,
-                end: $endSymbol,
-                excludeEnd: $range->excl === 1,
-            ),
+        return new RangeSymbol(
+            begin: $beginSymbol,
+            end: $endSymbol,
+            excludeEnd: 1 === $range->excl,
         );
     }
 }

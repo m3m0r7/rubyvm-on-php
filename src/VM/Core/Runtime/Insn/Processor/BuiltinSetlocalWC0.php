@@ -6,15 +6,11 @@ namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\LocalTable;
-use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinSetlocalWC0 implements OperationProcessorInterface
@@ -44,6 +40,7 @@ class BuiltinSetlocalWC0 implements OperationProcessorInterface
     public function process(): ProcessedStatus
     {
         $this->setLocalTableFromStack(Option::RSV_TABLE_INDEX_0);
+
         return ProcessedStatus::SUCCESS;
     }
 }

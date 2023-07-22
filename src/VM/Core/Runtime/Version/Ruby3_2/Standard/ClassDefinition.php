@@ -12,6 +12,5 @@ class ClassDefinition
         public readonly int $flags,
         public readonly ContextInterface $context,
     ) {
-
     }
 }

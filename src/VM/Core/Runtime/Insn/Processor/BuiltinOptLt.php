@@ -53,6 +53,7 @@ class BuiltinOptLt implements OperationProcessorInterface
         if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
             $value = $this->calculateFloatLessThanFloat($leftOperand, $rightOperand);
         }
+
         return $value;
     }
 

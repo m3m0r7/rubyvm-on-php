@@ -15,16 +15,11 @@ trait SymbolTestable
 {
     private function test(SymbolInterface $symbol): bool
     {
-        return !!(match ($symbol::class) {
+        return (bool) (match ($symbol::class) {
             BooleanSymbol::class => $symbol->boolean,
             NumberSymbol::class => $symbol->number,
             StringSymbol::class => $symbol->string,
-            default => throw new OperationProcessorException(
-                sprintf(
-                    'The symbol type `%s` is not implemented `test` processing yet',
-                    ClassHelper::nameBy($symbol),
-                ),
-            ),
+            default => throw new OperationProcessorException(sprintf('The symbol type `%s` is not implemented `test` processing yet', ClassHelper::nameBy($symbol))),
         });
     }
 

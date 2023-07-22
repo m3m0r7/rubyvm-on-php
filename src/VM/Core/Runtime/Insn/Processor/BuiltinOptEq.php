@@ -12,9 +12,7 @@ use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Symbol\BooleanSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinOptEq implements OperationProcessorInterface
@@ -45,13 +43,13 @@ class BuiltinOptEq implements OperationProcessorInterface
         return $this->processArithmetic('==');
     }
 
-
     private function calculate(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
     {
         $value = null;
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
             $value = $this->calculateNumberEqNumber($leftOperand, $rightOperand);
         }
+
         return $value;
     }
 

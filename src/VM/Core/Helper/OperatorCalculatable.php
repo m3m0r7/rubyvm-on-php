@@ -20,21 +20,22 @@ trait OperatorCalculatable
 
     private function processArithmetic(string $expectedOperator): ProcessedStatus
     {
-
         $recv = $this->context->vmStack()->pop();
         $obj = $this->context->vmStack()->pop();
 
         $this->validateType(OperandEntry::class, $recv);
         $this->validateType(OperandEntry::class, $obj);
 
-        $callDataOperand = $this->getOperandAndValidateCallInfo();
+        $callDataOperand = $this->getOperandAsCallInfo();
+
         /**
          * @var SymbolInterface $operator
          */
         $operator = $callDataOperand->callData
             ->mid
             ->object
-            ->symbol;
+            ->symbol
+        ;
 
         /**
          * @var SymbolInterface $leftOperand
@@ -49,28 +50,13 @@ trait OperatorCalculatable
         $value = null;
         if ($operator instanceof StringSymbol) {
             if ((string) $operator !== $expectedOperator) {
-                throw new OperationProcessorException(
-                    sprintf(
-                        'The `%s` (opcode: 0x%02x) processor cannot process %s operator because string concatenating was allowed only `%s`',
-                        strtolower($this->insn->name),
-                        $this->insn->value,
-                        $operator,
-                        $expectedOperator,
-                    )
-                );
+                throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor cannot process %s operator because string concatenating was allowed only `%s`', strtolower($this->insn->name), $this->insn->value, $operator, $expectedOperator));
             }
             $value = $this->calculate($leftOperand, $rightOperand);
         }
 
-        if ($value === null) {
-            throw new OperationProcessorException(
-                sprintf(
-                    'The `%s` (opcode: 0x%02x) processor cannot process `%s` operator because it was not implemented or cannot comparison operator',
-                    strtolower($this->insn->name),
-                    $this->insn->value,
-                    $operator,
-                )
-            );
+        if (null === $value) {
+            throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor cannot process `%s` operator because it was not implemented or cannot comparison operator %s and %s', strtolower($this->insn->name), $this->insn->value, $operator, ClassHelper::nameBy($leftOperand), ClassHelper::nameBy($rightOperand)));
         }
 
         $this->context->vmStack()->push(new OperandEntry($value));

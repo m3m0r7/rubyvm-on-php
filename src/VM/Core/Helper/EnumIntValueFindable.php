@@ -10,12 +10,6 @@ trait EnumIntValueFindable
 {
     public static function of(int $value): self
     {
-        return self::cases()[$value] ?? throw new NotFoundEnumValueException(
-            sprintf(
-                'Unknown case value %s#%s',
-                self::class,
-                $value,
-            ),
-        );
+        return self::cases()[$value] ?? throw new NotFoundEnumValueException(sprintf('Unknown case value %s#%s', self::class, $value));
     }
 }

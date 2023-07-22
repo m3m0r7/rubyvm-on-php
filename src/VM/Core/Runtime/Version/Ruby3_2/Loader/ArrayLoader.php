@@ -17,20 +17,22 @@ class ArrayLoader implements LoaderInterface
         protected readonly Offset $offset,
     ) {
     }
+
     public function load(): SymbolInterface
     {
         $this->kernel->stream()->pos($this->offset->offset);
         $len = $this->kernel->stream()->smallValue();
         $array = [];
 
-        for ($i = 0; $i < $len; $i++) {
+        for ($i = 0; $i < $len; ++$i) {
             $array[] = $this->kernel
                 ->findObject(
                     $this->kernel
                         ->stream()
                         ->smallValue()
                 )
-                ->symbol;
+                ->symbol
+            ;
         }
 
         return new ArraySymbol($array);

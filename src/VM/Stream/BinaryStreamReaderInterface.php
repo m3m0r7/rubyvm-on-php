@@ -15,6 +15,7 @@ interface BinaryStreamReaderInterface
     public function long(): int;
 
     public function longLong(): int|float;
+
     public function double(): float;
 
     public function short(): int;

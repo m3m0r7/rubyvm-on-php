@@ -11,7 +11,6 @@ use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationEntries;
 use RubyVM\VM\Core\Runtime\Executor\OperationEntry;
 use RubyVM\VM\Core\Runtime\Executor\UnknownEntry;
-use RubyVM\VM\Core\Runtime\IDList;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Insn\InsnType;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
@@ -21,7 +20,6 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequenceBody;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequenceProcessorInterface;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
-use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\OffsetSymbol;
@@ -50,12 +48,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             return;
         }
 
-        throw new InstructionSequenceProcessorException(
-            sprintf(
-                'Not found instructionSequenceList#%d',
-                $this->aux->loader->index,
-            ),
-        );
+        throw new InstructionSequenceProcessorException(sprintf('Not found instructionSequenceList#%d', $this->aux->loader->index));
     }
 
     public function process(): InstructionSequenceBody
@@ -179,17 +172,17 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             iseqSize: $iseqSize,
             objectParam: new ObjectParameter(
                 objectParamFlags: new ObjectParameterFlags(
-                    hasLead:             (bool) (($paramFlags >> 0) & 1),
-                    hasOpt:              (bool) (($paramFlags >> 1) & 1),
-                    hasRest:             (bool) (($paramFlags >> 2) & 1),
-                    hasPost:             (bool) (($paramFlags >> 3) & 1),
-                    keyword:             $keyword,
-                    hasKeyword:          (bool) (($paramFlags >> 4) & 1),
-                    hasKeywordRest:      (bool) (($paramFlags >> 5) & 1),
-                    hasBlock:            (bool) (($paramFlags >> 6) & 1),
-                    ambiguousParam:      (bool) (($paramFlags >> 7) & 1),
+                    hasLead: (bool) (($paramFlags >> 0) & 1),
+                    hasOpt: (bool) (($paramFlags >> 1) & 1),
+                    hasRest: (bool) (($paramFlags >> 2) & 1),
+                    hasPost: (bool) (($paramFlags >> 3) & 1),
+                    keyword: $keyword,
+                    hasKeyword: (bool) (($paramFlags >> 4) & 1),
+                    hasKeywordRest: (bool) (($paramFlags >> 5) & 1),
+                    hasBlock: (bool) (($paramFlags >> 6) & 1),
+                    ambiguousParam: (bool) (($paramFlags >> 7) & 1),
                     acceptsNoKeywordArg: (bool) (($paramFlags >> 8) & 1),
-                    ruby2Keywords:       (bool) (($paramFlags >> 9) & 1),
+                    ruby2Keywords: (bool) (($paramFlags >> 9) & 1),
                 ),
                 size: $paramSize,
                 leadNum: $paramLeadNum,
@@ -260,7 +253,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         Ruby3_2_InstructionSequenceBody $instructionSequenceBody,
     ): OperationEntries {
         return $this->kernel->stream()->dryPosTransaction(
-            function (BinaryStreamReader $reader) use ($bytecodeOffset, $bytecodeSize, $instructionSequenceSize, $instructionSequenceBody) {
+            function (BinaryStreamReader $reader) use ($bytecodeOffset, $instructionSequenceSize, $instructionSequenceBody) {
                 $entries = new OperationEntries();
                 $operationMap = implode($this->insnOperations());
                 $callInfoEntryIndex = 0;
@@ -275,15 +268,10 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                     );
 
                     $types = $operationMap[$this->insnOperationOffsets()[$insnValue]] ?? null;
-                    if ($types === null) {
-                        throw new ExecutorExeption(
-                            sprintf(
-                                'Unknown INSN type: 0x%02x',
-                                $insn,
-                            )
-                        );
+                    if (null === $types) {
+                        throw new ExecutorExeption(sprintf('Unknown INSN type: 0x%02x', $insn));
                     }
-                    $codeIndex++;
+                    ++$codeIndex;
 
                     for ($opIndex = 0; ord($types[$opIndex] ?? "\0"); $opIndex++, $codeIndex++) {
                         $operandType = InsnType::of($types[$opIndex]);
@@ -330,12 +318,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                                 InsnType::TS_FUNCPTR,
                                 InsnType::TS_BUILTIN,
                                 InsnType::TS_CDHASH,
-                                InsnType::TS_ICVARC => throw new ExecutorExeption(
-                                    sprintf(
-                                        'The OperandType#%s is not supported',
-                                        $operandType->name,
-                                    ),
-                                ),
+                                InsnType::TS_ICVARC => throw new ExecutorExeption(sprintf('The OperandType#%s is not supported', $operandType->name)),
                                 default => new UnknownEntry(
                                     $reader->smallValue(),
                                     $types[$opIndex],
@@ -350,7 +333,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
 
                     // TODO: Implement fetching on counter (BuiltinInsn)
                     foreach ([Insn::DEFINEMETHOD->name => 1, Insn::SEND->name => 1, Insn::DEFINECLASS->name => 2] as $targetInsn => $fetching) {
-                        for ($i = 0; $i < $fetching; $i++) {
+                        for ($i = 0; $i < $fetching; ++$i) {
                             if ($insn->name === $targetInsn) {
                                 // Especially, Insn::SEND is demanded an NumberSymbol within the next sequence.
                                 $entries->append(
@@ -361,7 +344,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                                         ))->toObject(),
                                     )
                                 );
-                                $codeIndex++;
+                                ++$codeIndex;
                             }
                         }
                     }
@@ -370,7 +353,6 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                 return $entries;
             }
         );
-
     }
 
     private function loadCallInfoEntries(int $callInfoEntriesOffset, int $callInfoSize): CallInfoEntries
@@ -379,10 +361,11 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             function (BinaryStreamReader $reader) use ($callInfoEntriesOffset, $callInfoSize) {
                 $entries = new CallInfoEntries();
                 $reader->pos($callInfoEntriesOffset);
-                for ($i = 0; $i < $callInfoSize; $i++) {
+                for ($i = 0; $i < $callInfoSize; ++$i) {
                     $midIndex = $reader->smallValue();
-                    if ($midIndex === -1) {
+                    if (-1 === $midIndex) {
                         $entries->append(new CallInfoEntry());
+
                         continue;
                     }
                     $mid = $this->kernel->findId($midIndex);
@@ -393,10 +376,11 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                     $keywords = null;
                     if ($keywordLength > 0) {
                         $keywords = [];
-                        for ($j = 0; $j < $keywordLength; $j++) {
+                        for ($j = 0; $j < $keywordLength; ++$j) {
                             $keyword = $reader->smallValue();
                             $keywords[] = $this->kernel
-                                ->findObject($keyword);
+                                ->findObject($keyword)
+                            ;
                         }
                     }
 
@@ -411,6 +395,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         )
                     );
                 }
+
                 return $entries;
             }
         );
@@ -425,7 +410,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
 
                 $tableSize = $reader->smallValue();
 
-                for ($i = 0; $i < $tableSize; $i++) {
+                for ($i = 0; $i < $tableSize; ++$i) {
                     $key = $this->kernel->findId($reader->smallValue());
                     $value = $reader->smallValue();
 
@@ -443,7 +428,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
     private function loadParamOptTable(int $paramOptTableOffset, int $paramOptNum): int
     {
         return $this->kernel->stream()->dryPosTransaction(
-            function (BinaryStreamReader $reader) use ($paramOptTableOffset, $paramOptNum) {
+            function (BinaryStreamReader $reader) use ($paramOptTableOffset) {
                 $reader->pos($paramOptTableOffset);
                 // TODO: implement here
                 return -1;
@@ -458,14 +443,12 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
 
     private function loadInsnsBody(int $insnsInfoBodyOffset, int $insnsInfoSize): InsnsBodyEntries
     {
-        $entries = new InsnsBodyEntries();
-        return $entries;
+        return new InsnsBodyEntries();
     }
 
     private function loadInsnsPositions(int $insnsInfoBodyOffset, int $insnsInfoSize): InsnsPositionEntries
     {
-        $entries = new InsnsPositionEntries();
-        return $entries;
+        return new InsnsPositionEntries();
     }
 
     private function loadLocalTable(int $localTableOffset, int $localTableSize): VariableEntries
@@ -475,7 +458,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                 $entries = new VariableEntries();
                 $reader->pos($localTableOffset);
 
-                for ($i = 0; $i < $localTableSize; $i++) {
+                for ($i = 0; $i < $localTableSize; ++$i) {
                     $entries[] = new VariableEntry($this->kernel->findId($reader->unsignedLong()));
                 }
 
@@ -486,8 +469,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
 
     private function loadCatchTable(int $catchTableOffset, int $catchTableSize): CatchEntries
     {
-        $entries = new CatchEntries();
-        return $entries;
+        return new CatchEntries();
     }
 
     public function path(): string

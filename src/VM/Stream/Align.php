@@ -7,7 +7,7 @@ namespace RubyVM\VM\Stream;
 use RubyVM\VM\Exception\RubyVMException;
 
 /**
- * This class emulates some one in stdalign.h
+ * This class emulates some one in stdalign.h.
  */
 class Align
 {
@@ -25,9 +25,7 @@ class Align
         // Validate structure
         foreach ($structures as $structure) {
             if (!($structure instanceof SizeOf) && !is_int($structure)) {
-                throw new RubyVMException(
-                    'The Align::alignOf accepts processing instantiated by SizeOf or integer property'
-                );
+                throw new RubyVMException('The Align::alignOf accepts processing instantiated by SizeOf or integer property');
             }
         }
 

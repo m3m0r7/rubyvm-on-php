@@ -4,13 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Runtime\InstructionSequence\IDTable;
-use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Internal\Arithmetic;
-
 trait LocalTable
 {
     use Validatable;
@@ -18,7 +11,7 @@ trait LocalTable
 
     public function getLocalTableToStack(int $localTableIndex): void
     {
-        $index = $this->getOperandAndValidateNumberSymbol()->number;
+        $index = $this->getOperandAsNumberSymbol()->number;
         $this->context->vmStack()->push(
             new OperandEntry(
                 $this->context
@@ -31,14 +24,15 @@ trait LocalTable
 
     public function setLocalTableFromStack(int $localTableIndex): void
     {
-        $index = $this->getOperandAndValidateNumberSymbol()->number;
-        $operand = $this->getStackAndValidateObject();
+        $index = $this->getOperandAsNumberSymbol()->number;
+        $operand = $this->getStackAsObject();
 
         $this->context->environmentTableEntries()
             ->get($localTableIndex)
             ->set(
                 $index,
                 clone $operand,
-            );
+            )
+        ;
     }
 }

@@ -17,9 +17,7 @@ class FileStreamHandler implements StreamHandlerInterface
 
     public function write(string $string): void
     {
-        throw new StreamHandlerException(
-            'The FileStreamHandler does not provide writer'
-        );
+        throw new StreamHandlerException('The FileStreamHandler does not provide writer');
     }
 
     public function size(): ?int

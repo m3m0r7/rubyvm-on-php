@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
@@ -17,21 +18,22 @@ trait CallBlockHelper
     private function callBlockWithArguments(CallInfoEntryInterface $callInfo, NumberSymbol $blockIseqIndex, Object_ $blockObject, bool $isSuper, OperandEntry ...$arguments): ?Object_
     {
         if ($callInfo->callData()->flag() & (0x01 << VMCallFlagBit::VM_CALL_ARGS_BLOCKARG->value)) {
-            throw new OperationProcessorException(
-                'The callBlockWithArguments is not implemented yet'
-            );
-        } elseif ($blockIseqIndex->number > 0) {
+            throw new OperationProcessorException('The callBlockWithArguments is not implemented yet');
+        }
+        if ($blockIseqIndex->number > 0) {
             $instructionSequence = $this->context
                 ->kernel()
                 ->loadInstructionSequence(new Aux(
                     loader: new AuxLoader(
                         index: $blockIseqIndex->number,
                     ),
-                ));
+                ))
+            ;
 
             $instructionSequence->load();
 
             $executor = (new Executor(
+                currentDefinition: ClassHelper::nameBy($blockObject->symbol),
                 kernel: $this->context->kernel(),
                 main: $this->context->self(),
                 operationProcessorEntries: $this->context->operationProcessorEntries(),
@@ -50,14 +52,13 @@ trait CallBlockHelper
             if ($result instanceof SymbolInterface) {
                 return $result->toObject();
             }
+
             return null;
         }
 
         // TODO: implement a super call
         // see: https://github.com/ruby/ruby/blob/ruby_3_2/vm_args.c#L888
 
-        throw new OperationProcessorException(
-            'The callBlockWithArguments is not implemented yet'
-        );
+        throw new OperationProcessorException('The callBlockWithArguments is not implemented yet');
     }
 }

@@ -18,6 +18,7 @@ class FixedNumberLoader implements LoaderInterface
         protected readonly Offset $offset,
     ) {
     }
+
     public function load(): SymbolInterface
     {
         $this->kernel->stream()->pos($this->offset->offset);

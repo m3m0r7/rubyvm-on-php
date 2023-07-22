@@ -16,9 +16,9 @@ use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
+use RubyVM\VM\Core\Runtime\Symbol\RangeSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Internal\Arithmetic;
 use RubyVM\VM\Exception\OperationProcessorException;
 use RubyVM\VM\Stream\StreamHandlerInterface;
 
@@ -37,7 +37,7 @@ class Main implements MainInterface
     public function puts(SymbolInterface $symbol): SymbolInterface
     {
         $string = '';
-        if ($symbol instanceof ArraySymbol) {
+        if ($symbol instanceof ArraySymbol || $symbol instanceof RangeSymbol) {
             foreach ($symbol as $number) {
                 $string .= "{$number}\n";
             }
@@ -50,6 +50,7 @@ class Main implements MainInterface
         if (!str_ends_with($string, "\n")) {
             $string .= "\n";
         }
+
         $this->stdOut->write($string);
 
         // The puts returns (nil)
@@ -59,6 +60,11 @@ class Main implements MainInterface
     public function phpinfo(): void
     {
         $this->stdOut->write('PHP Version: ' . PHP_VERSION . "\n");
+    }
+
+    public function exit(): void
+    {
+        exit;
     }
 
     public function class(NumberSymbol $flags, StringSymbol $className, ContextInterface $context): void
@@ -77,21 +83,16 @@ class Main implements MainInterface
     public function __call(string $name, array $arguments): ExecutedResult
     {
         /**
-         * @var ContextInterface|null $context
+         * @var null|ContextInterface $context
          */
         $context = $this->userLandMethods[$name] ?? null;
 
-        if ($context === null) {
-            throw new OperationProcessorException(
-                sprintf(
-                    'Method not found %s#%s',
-                    ClassHelper::nameBy($this),
-                    $name,
-                ),
-            );
+        if (null === $context) {
+            throw new OperationProcessorException(sprintf('Method not found %s#%s', ClassHelper::nameBy($this), $name));
         }
 
         $executor = (new Executor(
+            currentDefinition: $name,
             kernel: $context->kernel(),
             main: $context->self(),
             operationProcessorEntries: $context->operationProcessorEntries(),
@@ -105,6 +106,7 @@ class Main implements MainInterface
         $envIndex = $this->tryToGetFirstLocalTableIndex(
             $context,
         );
+
         /**
          * @var SymbolInterface $argument
          */
@@ -114,7 +116,8 @@ class Main implements MainInterface
                 ->set(
                     $envIndex + $index,
                     $argument->toObject(),
-                );
+                )
+            ;
         }
 
         return $executor->execute();
@@ -123,13 +126,12 @@ class Main implements MainInterface
     private function tryToGetFirstLocalTableIndex(ContextInterface $context): int
     {
         $entries = $context->instructionSequence()->body()->operationEntries;
-        /**
-         * @var OperationEntry $operationEntry
-         */
-        for ($i = 0; $i < count($entries); $i++) {
-            if ($entries[$i]->insn !== Insn::GETLOCAL_WC_0) {
+        // @var OperationEntry $operationEntry
+        for ($i = 0; $i < count($entries); ++$i) {
+            if (!($entries[$i] instanceof OperationEntry) || (Insn::GETLOCAL_WC_0 !== $entries[$i]->insn && Insn::GETLOCAL_WC_1 !== $entries[$i]->insn)) {
                 continue;
             }
+
             /**
              * @var OperandEntry $operand
              */
@@ -139,6 +141,7 @@ class Main implements MainInterface
              * @var NumberSymbol $symbol
              */
             $symbol = $operand->operand->symbol;
+
             return $symbol->number;
         }
 

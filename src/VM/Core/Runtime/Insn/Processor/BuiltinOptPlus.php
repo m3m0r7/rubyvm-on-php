@@ -12,10 +12,8 @@ use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Symbol\FloatSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinOptPlus implements OperationProcessorInterface
@@ -58,6 +56,7 @@ class BuiltinOptPlus implements OperationProcessorInterface
         if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
             $value = $this->calculateFloatPlusFloat($leftOperand, $rightOperand);
         }
+
         return $value;
     }
 
@@ -74,6 +73,7 @@ class BuiltinOptPlus implements OperationProcessorInterface
             $leftOperand->number + $rightOperand->number
         ))->toObject();
     }
+
     private function calculateFloatPlusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
     {
         return (new FloatSymbol(

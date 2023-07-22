@@ -11,9 +11,7 @@ use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinOptLtlt implements OperationProcessorInterface
@@ -50,6 +48,7 @@ class BuiltinOptLtlt implements OperationProcessorInterface
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
             $value = $this->calculateNumberLeftShiftNumber($leftOperand, $rightOperand);
         }
+
         return $value;
     }
 

@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
+use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
-use RubyVM\VM\Exception\OperationProcessorException;
+use RubyVM\VM\Core\Runtime\Symbol\RangeSymbol;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinNewrange implements OperationProcessorInterface
@@ -34,12 +35,22 @@ class BuiltinNewrange implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        throw new OperationProcessorException(
-            sprintf(
-                'The `%s` (opcode: 0x%02x) processor is not implemented yet',
-                strtolower($this->insn->name),
-                $this->insn->value,
+        $flags = $this->getOperandAsNumberSymbol();
+        $high = $this->getStackAsNumberSymbol();
+        $low = $this->getStackAsNumberSymbol();
+
+        $this->context->vmStack()
+            ->push(
+                new OperandEntry(
+                    (new RangeSymbol(
+                        begin: $low,
+                        end: $high,
+                        excludeEnd: (bool) $flags,
+                    ))->toObject(),
+                ),
             )
-        );
+        ;
+
+        return ProcessedStatus::SUCCESS;
     }
 }

@@ -11,9 +11,6 @@ use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Executor\VMSpecialObjectType;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
-use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
-use RubyVM\VM\Exception\OperationProcessorException;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinPutspecialobject implements OperationProcessorInterface
@@ -41,7 +38,7 @@ class BuiltinPutspecialobject implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        $symbol = $this->getOperandAndValidateNumberSymbol();
+        $symbol = $this->getOperandAsNumberSymbol();
 
         $type = VMSpecialObjectType::of($symbol->number);
 

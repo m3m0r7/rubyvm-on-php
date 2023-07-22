@@ -13,9 +13,9 @@ class OperationEntries extends AbstractEntries
 {
     public function verify(mixed $value): bool
     {
-        return $value instanceof OperationEntry ||
-            $value instanceof OperandEntry ||
-            $value instanceof UnknownEntry;
+        return $value instanceof OperationEntry
+            || $value instanceof OperandEntry
+            || $value instanceof UnknownEntry;
     }
 
     public function __toString(): string
@@ -36,6 +36,7 @@ class OperationEntries extends AbstractEntries
                 default => 'none',
             } . '>';
         }
+
         return implode(', ', $result);
     }
 }

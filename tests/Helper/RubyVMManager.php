@@ -15,6 +15,5 @@ class RubyVMManager
         public readonly StreamHandlerInterface $stdIn,
         public readonly StreamHandlerInterface $stdErr,
     ) {
-
     }
 }

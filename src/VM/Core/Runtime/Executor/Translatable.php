@@ -27,17 +27,12 @@ trait Translatable
         if ($symbol instanceof NumberSymbol) {
             return $symbol->number;
         }
-        throw new TranslationException(
-            sprintf(
-                'The symbol type cannot translate to number (symbol: %s)',
-                get_class($symbol),
-            ),
-        );
+
+        throw new TranslationException(sprintf('The symbol type cannot translate to number (symbol: %s)', get_class($symbol)));
     }
 
     public function translateForArguments(OperandEntry ...$operands): array
     {
-
         $newSymbols = [];
         foreach ($operands as $operand) {
             /**
@@ -50,6 +45,7 @@ trait Translatable
             );
             $newSymbols[] = $object->symbol;
         }
+
         return $newSymbols;
     }
 }

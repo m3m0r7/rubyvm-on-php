@@ -36,6 +36,7 @@ class OperationProcessorContext implements ContextInterface
     {
         return $this->startTime;
     }
+
     public function elapsedTime(): float
     {
         return microtime(true) - $this->startTime;

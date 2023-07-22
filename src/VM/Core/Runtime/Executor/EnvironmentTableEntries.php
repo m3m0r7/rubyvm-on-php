@@ -18,6 +18,7 @@ class EnvironmentTableEntries extends AbstractEntries
         if (!isset($this->items[$index])) {
             $this->items[$index] = new EnvironmentTable();
         }
+
         return parent::get($index);
     }
 
@@ -37,12 +38,14 @@ class EnvironmentTableEntries extends AbstractEntries
     public function __toString(): string
     {
         $result = [];
+
         /**
          * @var EnvironmentTable $item
          */
         foreach ($this->items as $item) {
             $result[] = (string) $item;
         }
+
         return '[' . implode(', ', $result) . ']';
     }
 }

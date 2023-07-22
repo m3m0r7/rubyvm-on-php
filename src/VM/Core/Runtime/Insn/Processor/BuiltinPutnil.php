@@ -10,7 +10,6 @@ use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
-use RubyVM\VM\Exception\OperationProcessorException;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinPutnil implements OperationProcessorInterface
@@ -37,6 +36,7 @@ class BuiltinPutnil implements OperationProcessorInterface
     public function process(): ProcessedStatus
     {
         $this->context->vmStack()->push(new OperandEntry((new NilSymbol())->toObject()));
+
         return ProcessedStatus::SUCCESS;
     }
 }
