@@ -64,7 +64,6 @@ class BuiltinDefinemethod implements OperationProcessorInterface
         $executor = (new Executor(
             kernel: $this->context->kernel(),
             main: $this->context->self(),
-            operationProcessorEntries: $this->context->operationProcessorEntries(),
             instructionSequence: $instructionSequence,
             logger: $this->context->logger(),
             debugger: $this->context->debugger(),

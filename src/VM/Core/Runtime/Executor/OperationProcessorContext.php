@@ -19,7 +19,6 @@ class OperationProcessorContext implements ContextInterface
         private readonly MainInterface $main,
         private readonly VMStack $vmStack,
         private readonly ProgramCounter $pc,
-        private readonly OperationProcessorEntries $operationProcessorEntries,
         private readonly InstructionSequence $instructionSequence,
         private readonly LoggerInterface $logger,
         private EnvironmentTableEntries $environmentTableEntries,
@@ -63,7 +62,6 @@ class OperationProcessorContext implements ContextInterface
             main: clone $this->main,
             vmStack: clone $this->vmStack,
             pc: clone $this->pc,
-            operationProcessorEntries: clone $this->operationProcessorEntries,
             instructionSequence: clone $this->instructionSequence,
             logger: $this->logger, // NOTE: Do not clone because logger is shared resource
             environmentTableEntries: clone $this->environmentTableEntries,
@@ -109,11 +107,6 @@ class OperationProcessorContext implements ContextInterface
     public function kernel(): KernelInterface
     {
         return $this->kernel;
-    }
-
-    public function operationProcessorEntries(): OperationProcessorEntries
-    {
-        return $this->operationProcessorEntries;
     }
 
     public function executor(): ExecutorInterface

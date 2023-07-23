@@ -32,7 +32,6 @@ class Executor implements ExecutorInterface
     public function __construct(
         private readonly KernelInterface $kernel,
         private readonly MainInterface $main,
-        private readonly OperationProcessorEntries $operationProcessorEntries,
         private readonly InstructionSequence $instructionSequence,
         private readonly LoggerInterface $logger,
         private readonly ExecutorDebugger $debugger = new ExecutorDebugger(),
@@ -54,7 +53,6 @@ class Executor implements ExecutorInterface
             $this->main,
             $previousContext?->vmStack() ?? new VMStack(),
             new ProgramCounter(),
-            $this->operationProcessorEntries,
             $this->instructionSequence,
             $this->logger,
             $previousContext?->environmentTableEntries() ?? new EnvironmentTableEntries(),
@@ -144,7 +142,8 @@ class Executor implements ExecutorInterface
             );
 
             $processor = $this
-                ->operationProcessorEntries
+                ->kernel
+                ->operationProcessorEntries()
                 ->get($operator->insn)
             ;
 

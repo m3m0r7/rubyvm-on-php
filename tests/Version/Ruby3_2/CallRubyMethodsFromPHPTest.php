@@ -37,7 +37,6 @@ class CallRubyMethodsFromPHPTest extends TestApplication
             $executed->methods()
                 ->test(),
         );
-
     }
 
     public function testCallUserlandMethodFromPHP(): void
