@@ -11,7 +11,7 @@ use RubyVM\VM\Core\Runtime\Option;
 
 class RangeSymbol implements SymbolInterface, \ArrayAccess
 {
-    protected array $array = [];
+    public readonly array $array;
 
     public function __construct(
         public readonly NumberSymbol $begin,
@@ -20,16 +20,21 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
         public readonly int $steps = 1,
     ) {
         if ($this->begin->number > $this->end->number) {
+            $this->array = [];
+
             return;
         }
 
+        $array = [];
         foreach (range(
             $this->begin->number,
             $this->end->number - ($this->excludeEnd ? 1 : 0),
             $this->steps,
         ) as $i) {
-            $this->array[] = new NumberSymbol($i);
+            $array[] = new NumberSymbol($i);
         }
+
+        $this->array = $array;
     }
 
     public function __toString(): string
