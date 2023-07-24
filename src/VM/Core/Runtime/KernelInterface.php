@@ -31,6 +31,8 @@ interface KernelInterface
     public function findObject(int $index): Object_;
 
     public function loadInstructionSequence(Aux $aux): InstructionSequence;
+
     public function definedClassEntries(): DefinedClassEntries;
+
     public function operationProcessorEntries(): OperationProcessorEntries;
 }

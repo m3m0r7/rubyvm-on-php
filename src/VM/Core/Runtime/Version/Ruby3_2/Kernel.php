@@ -64,9 +64,8 @@ class Kernel implements KernelInterface
 
     public function __construct(
         public readonly RubyVMInterface $vm,
-        public readonly Verifier        $verifier,
-    )
-    {
+        public readonly Verifier $verifier,
+    ) {
         $this->instructionSequenceList = new Offsets();
         $this->globalObjectList = new Offsets();
         $this->instructionSequences = new InstructionSequences();
@@ -159,10 +158,11 @@ class Kernel implements KernelInterface
             $this->instructionSequenceList
                 ->append(
                     new Offset(
-                    // VALUE iseq_list;       /* [iseq0, ...] */
+                        // VALUE iseq_list;       /* [iseq0, ...] */
                         $this->stream()->unsignedLong(),
                     )
-                );
+                )
+            ;
         }
 
         $this->vm->option()->logger->info(
@@ -274,12 +274,13 @@ class Kernel implements KernelInterface
 
                     return new ObjectInfo(
                         type: SymbolType::of(($byte >> 0) & 0x1F),
-                        specialConst: (bool)($byte >> 5) & 0x01,
-                        frozen: (bool)($byte >> 6) & 0x01,
-                        internal: (bool)($byte >> 7) & 0x01,
+                        specialConst: (bool) ($byte >> 5) & 0x01,
+                        frozen: (bool) ($byte >> 6) & 0x01,
+                        internal: (bool) ($byte >> 7) & 0x01,
                     );
                 }
-            );
+            )
+        ;
 
         $this->vm->option()->logger->info(
             sprintf(
@@ -298,9 +299,10 @@ class Kernel implements KernelInterface
         $symbol = $this
             ->stream()
             ->dryPosTransaction(
-                fn() => $this->resolveLoader($info, $offset->increase())
+                fn () => $this->resolveLoader($info, $offset->increase())
                     ->load()
-            );
+            )
+        ;
 
         return $this->globalObjectTable[$index] = $symbol->toObject($offset);
     }
@@ -325,7 +327,8 @@ class Kernel implements KernelInterface
     {
         $instructionSequence = $this
             ->instructionSequences
-            ->get($aux->loader->index);
+            ->get($aux->loader->index)
+        ;
 
         if (!$instructionSequence) {
             // load all sequences
@@ -360,12 +363,14 @@ class Kernel implements KernelInterface
     public function operationProcessorEntries(): OperationProcessorEntries
     {
         static $operationProcessorEntries = new DefaultOperationProcessorEntries();
+
         return $operationProcessorEntries;
     }
 
     public function definedClassEntries(): DefinedClassEntries
     {
         static $definedClassEntries = new DefaultDefinedClassEntries();
+
         return $definedClassEntries;
     }
 }

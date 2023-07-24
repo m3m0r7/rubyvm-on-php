@@ -6,9 +6,6 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Runtime\Entry\AbstractEntries;
 use RubyVM\VM\Core\Runtime\Entry\EntryType;
-use RubyVM\VM\Core\Runtime\Insn\Insn;
-use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
-use RubyVM\VM\Exception\OperationProcessorException;
 
 class DefinedClassEntries extends AbstractEntries
 {
