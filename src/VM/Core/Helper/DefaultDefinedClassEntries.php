@@ -15,4 +15,5 @@ final class DefaultDefinedClassEntries extends DefinedClassEntries
 
         $this->set('Array', ArraySymbol::class);
     }
+
 }

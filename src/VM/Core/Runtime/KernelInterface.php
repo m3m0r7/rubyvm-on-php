@@ -33,7 +33,5 @@ interface KernelInterface
 
     public function loadInstructionSequence(Aux $aux): InstructionSequence;
 
-    public function classExtender(): ClassExtender;
-
     public function operationProcessorEntries(): OperationProcessorEntries;
 }

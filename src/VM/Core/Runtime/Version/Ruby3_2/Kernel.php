@@ -368,10 +368,9 @@ class Kernel implements KernelInterface
         return $operationProcessorEntries;
     }
 
-    public function classExtender(): ClassExtender
+    public function definedClassEntries(): DefinedClassEntries
     {
         static $definedClassEntries = new DefaultDefinedClassEntries();
-        $extender = new ClassExtender();
-        return $extender;
+        return $definedClassEntries;
     }
 }

@@ -28,7 +28,7 @@ class OperationProcessorContext implements ContextInterface
         ?float $startTime,
         private readonly bool $shouldProcessedRecords,
         private readonly bool $shouldBreakPoint,
-        private readonly ClassExtender $classExtender,
+        private readonly ?ClassExtender $classExtender = null,
         private array $traces = [],
     ) {
         $this->startTime = $startTime ?? microtime(true);
@@ -144,7 +144,7 @@ class OperationProcessorContext implements ContextInterface
         return $this->traces;
     }
 
-    public function classExtender(): ClassExtender
+    public function classExtender(): ?ClassExtender
     {
         return $this->classExtender;
     }

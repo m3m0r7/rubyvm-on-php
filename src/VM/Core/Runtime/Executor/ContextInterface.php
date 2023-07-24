@@ -48,5 +48,5 @@ interface ContextInterface
 
     public function traces(): array;
 
-    public function classExtender(): ClassExtender;
+    public function classExtender(): ?ClassExtender;
 }

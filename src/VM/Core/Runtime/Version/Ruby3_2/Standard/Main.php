@@ -70,8 +70,10 @@ class Main implements MainInterface
     public function class(NumberSymbol $flags, StringSymbol $className, ContextInterface $context): void
     {
         if ($context->kernel()->classExtender()->is((string) $className)) {
+            $methodExtender = $context->kernel()->classExtender($className->string);
 
-            var_dump($context->instructionSequence()->operations());
+            // method definition
+            $operations = $context->instructionSequence()->operations();
             return;
         }
         $this->userLandClasses[(string) $className] = new ClassDefinition(
