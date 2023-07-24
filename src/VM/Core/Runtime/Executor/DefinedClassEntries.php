@@ -9,6 +9,7 @@ use RubyVM\VM\Core\Runtime\Entry\EntryType;
 
 class DefinedClassEntries extends AbstractEntries
 {
+
     public function verify(mixed $value): bool
     {
         return class_exists($value);

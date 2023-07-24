@@ -10,6 +10,7 @@ use RubyVM\VM\Core\Runtime\Executor\DefinedClassEntries;
 use RubyVM\VM\Core\Runtime\Executor\EnvironmentTableEntries;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
+use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\ClassExtender;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
@@ -367,10 +368,10 @@ class Kernel implements KernelInterface
         return $operationProcessorEntries;
     }
 
-    public function definedClassEntries(): DefinedClassEntries
+    public function classExtender(): ClassExtender
     {
         static $definedClassEntries = new DefaultDefinedClassEntries();
-
-        return $definedClassEntries;
+        $extender = new ClassExtender();
+        return $extender;
     }
 }

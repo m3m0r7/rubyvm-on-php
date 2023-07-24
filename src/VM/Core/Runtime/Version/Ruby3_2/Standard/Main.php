@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\Standard;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Helper\LocalTableHelper;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
@@ -68,6 +69,11 @@ class Main implements MainInterface
 
     public function class(NumberSymbol $flags, StringSymbol $className, ContextInterface $context): void
     {
+        if ($context->kernel()->classExtender()->is((string) $className)) {
+
+            var_dump($context->instructionSequence()->operations());
+            return;
+        }
         $this->userLandClasses[(string) $className] = new ClassDefinition(
             $flags->number,
             $context,
@@ -100,7 +106,7 @@ class Main implements MainInterface
                 ->renewEnvironmentTableEntries(),
         ));
 
-        $envIndex = $this->calculateFirstLocalTableIndex(
+        $envIndex = LocalTableHelper::calculateFirstLocalTableIndex(
             $context,
             $arguments,
         );
@@ -119,46 +125,5 @@ class Main implements MainInterface
         }
 
         return $executor->execute();
-    }
-
-    private function calculateFirstLocalTableIndex(ContextInterface $context, array $arguments = []): int
-    {
-        // FIXME: Is the logic correctly? Here is temporarily implementation.
-
-        $size = 0;
-        $ignoredIndexes = [];
-
-        $entries = $context->instructionSequence()->body()->operationEntries;
-
-        $min = null;
-        for ($i = 0; $i < count($entries); ++$i) {
-            /**
-             * @var OperationEntry $operationEntry
-             */
-            $operationEntry = $entries[$i];
-            if (!$entries[$i] instanceof OperationEntry) {
-                continue;
-            }
-            if ($operationEntry->insn === Insn::SETLOCAL_WC_0 || $operationEntry->insn === Insn::SETLOCAL_WC_1) {
-                ++$i;
-                $number = $entries[$i]->operand->symbol->number;
-                $ignoredIndexes[] = $number;
-            } elseif ($operationEntry->insn === Insn::GETLOCAL_WC_0 || $operationEntry->insn === Insn::GETLOCAL_WC_1) {
-                ++$i;
-                $number = $entries[$i]->operand->symbol->number;
-                if (in_array($number, $ignoredIndexes, true)) {
-                    continue;
-                }
-                if ($min === null || $min > $number) {
-                    $min = $number;
-                }
-            }
-        }
-
-        if ($min !== null) {
-            return $min;
-        }
-
-        return Option::VM_ENV_DATA_SIZE + $size;
     }
 }

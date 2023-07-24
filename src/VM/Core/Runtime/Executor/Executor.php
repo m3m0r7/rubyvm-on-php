@@ -6,6 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\ClassExtender;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
@@ -63,6 +64,7 @@ class Executor implements ExecutorInterface
             $previousContext?->startTime() ?? null,
             $this->shouldProcessedRecords ?? $previousContext?->shouldProcessedRecords() ?? false,
             $this->shouldBreakPoint ?? $previousContext?->shouldBreakPoint() ?? false,
+            $previousContext?->classExtender() ?? $this->kernel->classExtender() ?? new ClassExtender(),
             $previousContext?->traces() ?? [],
         );
     }
