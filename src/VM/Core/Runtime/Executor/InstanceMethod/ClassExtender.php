@@ -20,7 +20,23 @@ class ClassExtender
 
     public function is(string $class): bool
     {
-        return $this->extendedClasses->has($class);
+        foreach ($this->extendedClasses as $name => $entry) {
+            if ($class === $name) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function hasByBindClass(string $class): bool
+    {
+        var_dump($class, $this->extendedClasses);
+        foreach ($this->extendedClasses as $entry) {
+            if ($class === $entry) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function get(string $name): MethodExtender

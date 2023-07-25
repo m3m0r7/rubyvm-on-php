@@ -6,6 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\ClassExtender;
+use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\MethodExtender;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\MainInterface;
@@ -48,5 +49,6 @@ interface ContextInterface
 
     public function traces(): array;
 
-    public function classExtender(): ?ClassExtender;
+    public function methodExtender(): ?MethodExtender;
+    public function setMethodExtender(MethodExtender $methodExtender): self;
 }

@@ -63,6 +63,8 @@ class Kernel implements KernelInterface
 
     protected array $globalObjectTable = [];
 
+    protected readonly ClassExtender $classExtender;
+
     public function __construct(
         public readonly RubyVMInterface $vm,
         public readonly Verifier $verifier,
@@ -70,6 +72,7 @@ class Kernel implements KernelInterface
         $this->instructionSequenceList = new Offsets();
         $this->globalObjectList = new Offsets();
         $this->instructionSequences = new InstructionSequences();
+        $this->classExtender = new ClassExtender();
     }
 
     public function process(): ExecutorInterface
@@ -89,6 +92,10 @@ class Kernel implements KernelInterface
         $instructionSequence = $this->loadInstructionSequence($aux);
 
         $environmentTableEntries = new EnvironmentTableEntries();
+
+        foreach ($this->definedClassEntries() as $name => $bindClass) {
+            $this->classExtender->extend($name, $bindClass);
+        }
 
         $executor = new Executor(
             $this,
@@ -368,9 +375,15 @@ class Kernel implements KernelInterface
         return $operationProcessorEntries;
     }
 
+    public function classExtender(): ClassExtender
+    {
+        return $this->classExtender;
+    }
+
     public function definedClassEntries(): DefinedClassEntries
     {
         static $definedClassEntries = new DefaultDefinedClassEntries();
+
         return $definedClassEntries;
     }
 }

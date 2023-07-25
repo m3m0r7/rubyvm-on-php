@@ -20,6 +20,11 @@ class MethodExtender
         $this->extendedMethodEntries = new ExtendedMethodEntries();
     }
 
+    public function classExtender(): ClassExtender
+    {
+        return $this->classExtender;
+    }
+
     public function call(string $name, array $arguments): ExecutedResult
     {
         $extendedMethod = $this

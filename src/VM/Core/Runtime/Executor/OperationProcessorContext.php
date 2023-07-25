@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor;
 
 use Psr\Log\LoggerInterface;
-use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\ClassExtender;
+use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\MethodExtender;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\MainInterface;
@@ -28,7 +28,7 @@ class OperationProcessorContext implements ContextInterface
         ?float $startTime,
         private readonly bool $shouldProcessedRecords,
         private readonly bool $shouldBreakPoint,
-        private readonly ?ClassExtender $classExtender = null,
+        private ?MethodExtender $methodExtender = null,
         private array $traces = [],
     ) {
         $this->startTime = $startTime ?? microtime(true);
@@ -72,7 +72,7 @@ class OperationProcessorContext implements ContextInterface
             startTime: $this->startTime,
             shouldProcessedRecords: $this->shouldProcessedRecords,
             shouldBreakPoint: $this->shouldBreakPoint,
-            classExtender: $this->classExtender,
+            methodExtender: $this->methodExtender,
             traces: $this->traces,
         );
     }
@@ -144,8 +144,14 @@ class OperationProcessorContext implements ContextInterface
         return $this->traces;
     }
 
-    public function classExtender(): ?ClassExtender
+    public function methodExtender(): ?MethodExtender
     {
-        return $this->classExtender;
+        return $this->methodExtender;
+    }
+
+    public function setMethodExtender(MethodExtender $methodExtender): self
+    {
+        $this->methodExtender = $methodExtender;
+        return $this;
     }
 }

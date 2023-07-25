@@ -64,7 +64,7 @@ class Executor implements ExecutorInterface
             $previousContext?->startTime() ?? null,
             $this->shouldProcessedRecords ?? $previousContext?->shouldProcessedRecords() ?? false,
             $this->shouldBreakPoint ?? $previousContext?->shouldBreakPoint() ?? false,
-            $previousContext?->classExtender() ?? $this->kernel->classExtender() ?? new ClassExtender(),
+            $previousContext?->methodExtender(),
             $previousContext?->traces() ?? [],
         );
     }

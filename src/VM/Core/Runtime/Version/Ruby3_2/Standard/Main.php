@@ -9,6 +9,7 @@ use RubyVM\VM\Core\Helper\LocalTableHelper;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
+use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\MethodExtender;
 use RubyVM\VM\Core\Runtime\Executor\OperationEntry;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\MainInterface;
@@ -70,10 +71,25 @@ class Main implements MainInterface
     public function class(NumberSymbol $flags, StringSymbol $className, ContextInterface $context): void
     {
         if ($context->kernel()->classExtender()->is((string) $className)) {
-            $methodExtender = $context->kernel()->classExtender($className->string);
+            $methodExtender = $context->kernel()->classExtender()->get((string) $className);
 
-            // method definition
-            $operations = $context->instructionSequence()->operations();
+            $executor = new Executor(
+                kernel: $context->kernel(),
+                main: $context->self(),
+                instructionSequence: $context->instructionSequence(),
+                logger: $context->logger(),
+                debugger: $context->debugger(),
+                previousContext: $context,
+            );
+
+            $executor->context()->setMethodExtender($methodExtender);
+
+            $result = $executor->execute();
+
+            if ($result->throwed) {
+                throw $result->throwed;
+            }
+
             return;
         }
         $this->userLandClasses[(string) $className] = new ClassDefinition(
@@ -84,13 +100,20 @@ class Main implements MainInterface
 
     public function def(StringSymbol $methodName, ContextInterface $context): void
     {
+        if ($context->methodExtender()) {
+            $context->methodExtender()->extend(
+                (string) $methodName,
+                $context,
+            );
+            return;
+        }
         $this->userLandMethods[(string) $methodName] = $context;
     }
 
     public function __call(string $name, array $arguments): ExecutedResult
     {
         /**
-         * @var null|ContextInterface $context
+         * @var null|ContextInterface|MethodExtender $context
          */
         $context = $this->userLandMethods[$name] ?? null;
 

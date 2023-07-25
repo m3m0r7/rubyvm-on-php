@@ -74,10 +74,22 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             ->operand
         ;
 
-        /**
-         * @var null|ExecutedResult|SymbolInterface $result
-         */
-        $result = $targetSymbol->{(string) $symbol}(...$this->translateForArguments(...$arguments));
+        if ($this->context->methodExtender()?->classExtender()?->hasByBindClass(get_class($targetSymbol->symbol))) {
+            /**
+             * @var null|ExecutedResult|SymbolInterface $result
+             */
+            $result = $this->context
+                ->methodExtender()
+                ->call(
+                    (string) $symbol,
+                    $this->translateForArguments(...$arguments),
+                );
+        } else {
+            /**
+             * @var null|ExecutedResult|SymbolInterface $result
+             */
+            $result = $targetSymbol->{(string)$symbol}(...$this->translateForArguments(...$arguments));
+        }
         if ($result instanceof Object_) {
             $this->context->vmStack()
                 ->push(new OperandEntry($result))
