@@ -5,30 +5,28 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor;
 
 use Psr\Log\LoggerInterface;
-use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\MethodExtender;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
-use RubyVM\VM\Core\Runtime\MainInterface;
+use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
 
 class OperationProcessorContext implements ContextInterface
 {
     private float $startTime = 0.0;
 
     public function __construct(
-        private readonly KernelInterface $kernel,
-        private readonly ExecutorInterface $executor,
-        private readonly MainInterface $main,
-        private readonly VMStack $vmStack,
-        private readonly ProgramCounter $pc,
-        private readonly InstructionSequence $instructionSequence,
-        private readonly LoggerInterface $logger,
-        private EnvironmentTableEntries $environmentTableEntries,
-        private readonly ExecutorDebugger $debugger,
-        private readonly int $depth,
-        ?float $startTime,
-        private readonly bool $shouldProcessedRecords,
-        private readonly bool $shouldBreakPoint,
-        private ?MethodExtender $methodExtender = null,
+        private readonly KernelInterface                  $kernel,
+        private readonly ExecutorInterface                $executor,
+        private readonly RubyClassImplementationInterface $classImplementation,
+        private readonly VMStack                          $vmStack,
+        private readonly ProgramCounter                   $pc,
+        private readonly InstructionSequence              $instructionSequence,
+        private readonly LoggerInterface                  $logger,
+        private EnvironmentTableEntries                   $environmentTableEntries,
+        private readonly ExecutorDebugger                 $debugger,
+        private readonly int                              $depth,
+        ?float                                            $startTime,
+        private readonly bool                             $shouldProcessedRecords,
+        private readonly bool                             $shouldBreakPoint,
         private array $traces = [],
     ) {
         $this->startTime = $startTime ?? microtime(true);
@@ -61,7 +59,7 @@ class OperationProcessorContext implements ContextInterface
         return new self(
             kernel: clone $this->kernel,
             executor: clone $this->executor,
-            main: clone $this->main,
+            classImplementation: clone $this->classImplementation,
             vmStack: clone $this->vmStack,
             pc: clone $this->pc,
             instructionSequence: clone $this->instructionSequence,
@@ -72,14 +70,13 @@ class OperationProcessorContext implements ContextInterface
             startTime: $this->startTime,
             shouldProcessedRecords: $this->shouldProcessedRecords,
             shouldBreakPoint: $this->shouldBreakPoint,
-            methodExtender: $this->methodExtender,
             traces: $this->traces,
         );
     }
 
-    public function self(): MainInterface
+    public function self(): RubyClassImplementationInterface
     {
-        return $this->main;
+        return $this->classImplementation;
     }
 
     public function vmStack(): VMStack
@@ -142,16 +139,5 @@ class OperationProcessorContext implements ContextInterface
     public function traces(): array
     {
         return $this->traces;
-    }
-
-    public function methodExtender(): ?MethodExtender
-    {
-        return $this->methodExtender;
-    }
-
-    public function setMethodExtender(MethodExtender $methodExtender): self
-    {
-        $this->methodExtender = $methodExtender;
-        return $this;
     }
 }

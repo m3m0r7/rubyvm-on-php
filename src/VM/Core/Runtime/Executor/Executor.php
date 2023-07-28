@@ -10,7 +10,7 @@ use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\ClassExtender;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
-use RubyVM\VM\Core\Runtime\MainInterface;
+use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\Symbol\VoidSymbol;
 use RubyVM\VM\Exception\ExecutorExeption;
@@ -31,12 +31,12 @@ class Executor implements ExecutorInterface
     protected ContextInterface $context;
 
     public function __construct(
-        private readonly KernelInterface $kernel,
-        private readonly MainInterface $main,
-        private readonly InstructionSequence $instructionSequence,
-        private readonly LoggerInterface $logger,
-        private readonly ExecutorDebugger $debugger = new ExecutorDebugger(),
-        private readonly ?ContextInterface $previousContext = null
+        private readonly KernelInterface                  $kernel,
+        private readonly RubyClassImplementationInterface $classImplementation,
+        private readonly InstructionSequence              $instructionSequence,
+        private readonly LoggerInterface                  $logger,
+        private readonly ExecutorDebugger                 $debugger = new ExecutorDebugger(),
+        private readonly ?ContextInterface                $previousContext = null
     ) {
         $this->context = $this->createContext($this->previousContext);
     }
@@ -51,7 +51,7 @@ class Executor implements ExecutorInterface
         return new OperationProcessorContext(
             $this->kernel,
             $this,
-            $this->main,
+            $this->classImplementation,
             $previousContext?->vmStack() ?? new VMStack(),
             new ProgramCounter(),
             $this->instructionSequence,
@@ -64,7 +64,6 @@ class Executor implements ExecutorInterface
             $previousContext?->startTime() ?? null,
             $this->shouldProcessedRecords ?? $previousContext?->shouldProcessedRecords() ?? false,
             $this->shouldBreakPoint ?? $previousContext?->shouldBreakPoint() ?? false,
-            $previousContext?->methodExtender(),
             $previousContext?->traces() ?? [],
         );
     }

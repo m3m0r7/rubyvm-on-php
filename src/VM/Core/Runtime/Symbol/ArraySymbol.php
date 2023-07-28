@@ -34,7 +34,7 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
         for ($i = 0; $i < count($this->array); ++$i) {
             $executor = (new Executor(
                 kernel: $context->kernel(),
-                main: $context->self(),
+                classImplementation: $context->self(),
                 instructionSequence: $context->instructionSequence(),
                 logger: $context->logger(),
                 debugger: $context->debugger(),

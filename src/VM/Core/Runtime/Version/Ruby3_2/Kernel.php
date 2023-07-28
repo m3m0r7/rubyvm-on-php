@@ -10,7 +10,7 @@ use RubyVM\VM\Core\Runtime\Executor\DefinedClassEntries;
 use RubyVM\VM\Core\Runtime\Executor\EnvironmentTableEntries;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
-use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\ClassExtender;
+use RubyVM\VM\Core\Runtime\Executor\IOContext;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
@@ -19,6 +19,8 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequences;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
 use RubyVM\VM\Core\Runtime\Offset\Offsets;
+use RubyVM\VM\Core\Runtime\RubyClassAggregationImplementationInterface;
+use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
 use RubyVM\VM\Core\Runtime\RubyVersion;
 use RubyVM\VM\Core\Runtime\RubyVMInterface;
 use RubyVM\VM\Core\Runtime\Symbol\ID;
@@ -60,10 +62,9 @@ class Kernel implements KernelInterface
     public readonly Offsets $instructionSequenceList;
     public readonly Offsets $globalObjectList;
     protected readonly InstructionSequences $instructionSequences;
+    protected readonly IOContext $IOContext;
 
     protected array $globalObjectTable = [];
-
-    protected readonly ClassExtender $classExtender;
 
     public function __construct(
         public readonly RubyVMInterface $vm,
@@ -72,7 +73,11 @@ class Kernel implements KernelInterface
         $this->instructionSequenceList = new Offsets();
         $this->globalObjectList = new Offsets();
         $this->instructionSequences = new InstructionSequences();
-        $this->classExtender = new ClassExtender();
+        $this->IOContext = new IOContext(
+            $this->vm->option()->stdOut ?? new StreamHandler(STDOUT),
+            $this->vm->option()->stdIn ?? new StreamHandler(STDIN),
+            $this->vm->option()->stdErr ?? new StreamHandler(STDERR),
+        );
     }
 
     public function process(): ExecutorInterface
@@ -93,17 +98,10 @@ class Kernel implements KernelInterface
 
         $environmentTableEntries = new EnvironmentTableEntries();
 
-        foreach ($this->definedClassEntries() as $name => $bindClass) {
-            $this->classExtender->extend($name, $bindClass);
-        }
 
         $executor = new Executor(
             $this,
-            new Main(
-                $this->vm->option()->stdOut ?? new StreamHandler(STDOUT),
-                $this->vm->option()->stdIn ?? new StreamHandler(STDIN),
-                $this->vm->option()->stdErr ?? new StreamHandler(STDERR),
-            ),
+            new Main($this, new DefaultDefinedClassEntries()),
             $instructionSequence,
             $this->vm->option()->logger,
         );
@@ -375,15 +373,8 @@ class Kernel implements KernelInterface
         return $operationProcessorEntries;
     }
 
-    public function classExtender(): ClassExtender
+    public function IOContext(): IOContext
     {
-        return $this->classExtender;
-    }
-
-    public function definedClassEntries(): DefinedClassEntries
-    {
-        static $definedClassEntries = new DefaultDefinedClassEntries();
-
-        return $definedClassEntries;
+        return $this->IOContext;
     }
 }

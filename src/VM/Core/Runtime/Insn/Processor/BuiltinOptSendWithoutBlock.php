@@ -12,7 +12,7 @@ use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Translatable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
-use RubyVM\VM\Core\Runtime\MainInterface;
+use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
@@ -68,28 +68,17 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         );
 
         /**
-         * @var MainInterface|Object_ $targetSymbol
+         * @var RubyClassImplementationInterface|Object_ $targetSymbol
          */
         $targetSymbol = $this->getStack()
             ->operand
         ;
 
-        if ($this->context->methodExtender()?->classExtender()?->hasByBindClass(get_class($targetSymbol->symbol))) {
-            /**
-             * @var null|ExecutedResult|SymbolInterface $result
-             */
-            $result = $this->context
-                ->methodExtender()
-                ->call(
-                    (string) $symbol,
-                    $this->translateForArguments(...$arguments),
-                );
-        } else {
-            /**
-             * @var null|ExecutedResult|SymbolInterface $result
-             */
-            $result = $targetSymbol->{(string)$symbol}(...$this->translateForArguments(...$arguments));
-        }
+        $definedClass = $this->context->self()->getDefinedClass($targetSymbol);
+        /**
+         * @var null|ExecutedResult|SymbolInterface $result
+         */
+        $result = $targetSymbol->{(string)$symbol}(...$this->translateForArguments(...$arguments));
         if ($result instanceof Object_) {
             $this->context->vmStack()
                 ->push(new OperandEntry($result))
