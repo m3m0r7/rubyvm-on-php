@@ -6,7 +6,6 @@ namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2;
 
 use RubyVM\VM\Core\Helper\DefaultDefinedClassEntries;
 use RubyVM\VM\Core\Helper\DefaultOperationProcessorEntries;
-use RubyVM\VM\Core\Runtime\Executor\DefinedClassEntries;
 use RubyVM\VM\Core\Runtime\Executor\EnvironmentTableEntries;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
@@ -19,8 +18,6 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequences;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
 use RubyVM\VM\Core\Runtime\Offset\Offsets;
-use RubyVM\VM\Core\Runtime\RubyClassAggregationImplementationInterface;
-use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
 use RubyVM\VM\Core\Runtime\RubyVersion;
 use RubyVM\VM\Core\Runtime\RubyVMInterface;
 use RubyVM\VM\Core\Runtime\Symbol\ID;
@@ -97,7 +94,6 @@ class Kernel implements KernelInterface
         $instructionSequence = $this->loadInstructionSequence($aux);
 
         $environmentTableEntries = new EnvironmentTableEntries();
-
 
         $executor = new Executor(
             $this,

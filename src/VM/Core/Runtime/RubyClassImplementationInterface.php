@@ -8,6 +8,7 @@ use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
+use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 
 interface RubyClassImplementationInterface
 {
@@ -15,5 +16,5 @@ interface RubyClassImplementationInterface
 
     public function class(NumberSymbol $flags, StringSymbol $className, ContextInterface $context): void;
 
-    public function __call(string $name, array $arguments): ExecutedResult;
+    public function __call(string $name, array $arguments): ExecutedResult|SymbolInterface;
 }

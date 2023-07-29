@@ -14,19 +14,19 @@ class OperationProcessorContext implements ContextInterface
     private float $startTime = 0.0;
 
     public function __construct(
-        private readonly KernelInterface                  $kernel,
-        private readonly ExecutorInterface                $executor,
+        private readonly KernelInterface $kernel,
+        private readonly ExecutorInterface $executor,
         private readonly RubyClassImplementationInterface $classImplementation,
-        private readonly VMStack                          $vmStack,
-        private readonly ProgramCounter                   $pc,
-        private readonly InstructionSequence              $instructionSequence,
-        private readonly LoggerInterface                  $logger,
-        private EnvironmentTableEntries                   $environmentTableEntries,
-        private readonly ExecutorDebugger                 $debugger,
-        private readonly int                              $depth,
-        ?float                                            $startTime,
-        private readonly bool                             $shouldProcessedRecords,
-        private readonly bool                             $shouldBreakPoint,
+        private readonly VMStack $vmStack,
+        private readonly ProgramCounter $pc,
+        private readonly InstructionSequence $instructionSequence,
+        private readonly LoggerInterface $logger,
+        private EnvironmentTableEntries $environmentTableEntries,
+        private readonly ExecutorDebugger $debugger,
+        private readonly int $depth,
+        ?float $startTime,
+        private readonly bool $shouldProcessedRecords,
+        private readonly bool $shouldBreakPoint,
         private array $traces = [],
     ) {
         $this->startTime = $startTime ?? microtime(true);

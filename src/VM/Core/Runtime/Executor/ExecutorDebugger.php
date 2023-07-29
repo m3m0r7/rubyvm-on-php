@@ -127,7 +127,7 @@ class ExecutorDebugger
             }
 
             /**
-             * @var RubyClassImplementationInterface|OperandEntry $class
+             * @var OperandEntry|RubyClassImplementationInterface $class
              */
             $class = $vmStack->pop();
 

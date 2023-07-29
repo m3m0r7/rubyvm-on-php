@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime;
 
-use RubyVM\VM\Core\Runtime\Executor\DefinedClassEntries;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
-use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\ClassExtender;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Executor\IOContext;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;

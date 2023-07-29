@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Runtime\Entry\AbstractEntries;
 use RubyVM\VM\Core\Runtime\Entry\EntryType;
-use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\ExtendedClassEntry;
+use RubyVM\VM\Core\Runtime\ExtendedClassEntry;
 
 class DefinedClassEntries extends AbstractEntries
 {

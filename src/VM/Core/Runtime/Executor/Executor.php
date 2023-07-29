@@ -6,7 +6,6 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\ClassExtender;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
@@ -31,12 +30,12 @@ class Executor implements ExecutorInterface
     protected ContextInterface $context;
 
     public function __construct(
-        private readonly KernelInterface                  $kernel,
+        private readonly KernelInterface $kernel,
         private readonly RubyClassImplementationInterface $classImplementation,
-        private readonly InstructionSequence              $instructionSequence,
-        private readonly LoggerInterface                  $logger,
-        private readonly ExecutorDebugger                 $debugger = new ExecutorDebugger(),
-        private readonly ?ContextInterface                $previousContext = null
+        private readonly InstructionSequence $instructionSequence,
+        private readonly LoggerInterface $logger,
+        private readonly ExecutorDebugger $debugger = new ExecutorDebugger(),
+        private readonly ?ContextInterface $previousContext = null
     ) {
         $this->context = $this->createContext($this->previousContext);
     }

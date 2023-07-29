@@ -68,17 +68,20 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         );
 
         /**
-         * @var RubyClassImplementationInterface|Object_ $targetSymbol
+         * @var Object_|RubyClassImplementationInterface $targetSymbol
          */
         $targetSymbol = $this->getStack()
             ->operand
         ;
 
-        $definedClass = $this->context->self()->getDefinedClass($targetSymbol);
         /**
          * @var null|ExecutedResult|SymbolInterface $result
          */
-        $result = $targetSymbol->{(string)$symbol}(...$this->translateForArguments(...$arguments));
+        $result = $this->context
+            ->self()
+            ->getDefinedClassOrSelf($targetSymbol)
+            ->{(string) $symbol}(...$this->translateForArguments(...$arguments))
+        ;
         if ($result instanceof Object_) {
             $this->context->vmStack()
                 ->push(new OperandEntry($result))

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor;
 
 use Psr\Log\LoggerInterface;
-use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\ClassExtender;
-use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\MethodExtender;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
