@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime;
 
-use RubyVM\VM\Core\Runtime\Executor\DefinedClassEntries;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
-use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\ClassExtender;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorEntries;
+use RubyVM\VM\Core\Runtime\Executor\IOContext;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\Symbol\ID;
@@ -33,7 +32,15 @@ interface KernelInterface
 
     public function loadInstructionSequence(Aux $aux): InstructionSequence;
 
-    public function classExtender(): ClassExtender;
-
     public function operationProcessorEntries(): OperationProcessorEntries;
+
+    public function IOContext(): IOContext;
+
+    public function extraData(): string;
+
+    public function rubyPlatform(): string;
+
+    public function minorVersion(): int;
+
+    public function majorVersion(): int;
 }

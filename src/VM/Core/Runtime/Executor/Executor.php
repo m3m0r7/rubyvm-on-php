@@ -6,11 +6,10 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\ClassExtender;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
-use RubyVM\VM\Core\Runtime\MainInterface;
+use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\Symbol\VoidSymbol;
 use RubyVM\VM\Exception\ExecutorExeption;
@@ -19,20 +18,20 @@ use RubyVM\VM\Exception\ExecutorUnknownException;
 
 class Executor implements ExecutorInterface
 {
+    use BreakpointExecutable;
+
     private const RSV_LOCAL_TABLE_0 = 0;
     private const RSV_LOCAL_TABLE_1 = 1;
     private const RSV_LOCAL_TABLE_2 = 2;
 
     protected array $operations = [];
-
-    protected ?bool $shouldBreakPoint = null;
     protected ?bool $shouldProcessedRecords = null;
 
     protected ContextInterface $context;
 
     public function __construct(
         private readonly KernelInterface $kernel,
-        private readonly MainInterface $main,
+        private readonly RubyClassImplementationInterface $classImplementation,
         private readonly InstructionSequence $instructionSequence,
         private readonly LoggerInterface $logger,
         private readonly ExecutorDebugger $debugger = new ExecutorDebugger(),
@@ -51,7 +50,7 @@ class Executor implements ExecutorInterface
         return new OperationProcessorContext(
             $this->kernel,
             $this,
-            $this->main,
+            $this->classImplementation,
             $previousContext?->vmStack() ?? new VMStack(),
             new ProgramCounter(),
             $this->instructionSequence,
@@ -64,7 +63,6 @@ class Executor implements ExecutorInterface
             $previousContext?->startTime() ?? null,
             $this->shouldProcessedRecords ?? $previousContext?->shouldProcessedRecords() ?? false,
             $this->shouldBreakPoint ?? $previousContext?->shouldBreakPoint() ?? false,
-            $previousContext?->classExtender() ?? $this->kernel->classExtender() ?? new ClassExtender(),
             $previousContext?->traces() ?? [],
         );
     }
@@ -279,55 +277,6 @@ class Executor implements ExecutorInterface
             throwed: null,
             debugger: $this->debugger,
         );
-    }
-
-    public function enableBreakpoint(bool $enabled = true): self
-    {
-        $this->shouldBreakPoint = $enabled;
-
-        // Renew context
-        $this->context = $this->createContext($this->context);
-
-        return $this;
-    }
-
-    private function processBreakPoint(Insn $insn, ContextInterface $previousContext, ContextInterface $nextContext): void
-    {
-        printf('Enter to next step (y/n/q): ');
-        $entered = fread(STDIN, 1024);
-        $command = strtolower(trim($entered));
-        if ('' === $command || 'y' === $command) {
-            $this->debugger->showExecutedOperations();
-            printf(
-                "Current INSN: %s(0x%02x)\n",
-                strtolower($insn->name),
-                $insn->value,
-            );
-            printf(
-                "Previous Stacks: %s#%d\n",
-                (string) $previousContext->vmStack(),
-                spl_object_id($previousContext->vmStack()),
-            );
-            printf(
-                "Previous Local Tables: %s\n",
-                (string) $previousContext->environmentTableEntries(),
-            );
-            printf(
-                "Current Stacks: %s#%d\n",
-                (string) $nextContext->vmStack(),
-                spl_object_id($nextContext->vmStack()),
-            );
-            printf(
-                "Current Local Tables: %s\n",
-                (string) $nextContext->environmentTableEntries(),
-            );
-        }
-        printf("\n");
-        if ('exit' === $command || 'quit' === $command || 'q' === $command) {
-            echo "Finished executor, Goodbye ✋\n";
-
-            exit(0);
-        }
     }
 
     public function enableProcessedRecords(bool $enabled = true): ExecutorInterface

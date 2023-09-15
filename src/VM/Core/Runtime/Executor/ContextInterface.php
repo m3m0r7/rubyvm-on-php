@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor;
 
 use Psr\Log\LoggerInterface;
-use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\ClassExtender;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
-use RubyVM\VM\Core\Runtime\MainInterface;
+use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
 
 interface ContextInterface
 {
     public function kernel(): KernelInterface;
 
-    public function self(): MainInterface;
+    public function self(): RubyClassImplementationInterface;
 
     public function vmStack(): VMStack;
 
@@ -47,6 +46,4 @@ interface ContextInterface
     public function appendTrace(string ...$definitions): self;
 
     public function traces(): array;
-
-    public function classExtender(): ClassExtender;
 }

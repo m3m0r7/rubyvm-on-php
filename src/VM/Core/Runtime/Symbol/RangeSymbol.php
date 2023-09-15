@@ -47,7 +47,7 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
         foreach ($this->array as $number) {
             $executor = (new Executor(
                 kernel: $context->kernel(),
-                main: $context->self(),
+                classImplementation: $context->self(),
                 instructionSequence: $context->instructionSequence(),
                 logger: $context->logger(),
                 debugger: $context->debugger(),

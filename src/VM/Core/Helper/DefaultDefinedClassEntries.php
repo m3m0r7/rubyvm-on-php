@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Helper;
 
 use RubyVM\VM\Core\Runtime\Executor\DefinedClassEntries;
+use RubyVM\VM\Core\Runtime\ExtendedClassEntry;
 use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
 
 final class DefaultDefinedClassEntries extends DefinedClassEntries
@@ -13,6 +14,6 @@ final class DefaultDefinedClassEntries extends DefinedClassEntries
     {
         parent::__construct($items);
 
-        $this->set('Array', ArraySymbol::class);
+        $this->set('Array', new ExtendedClassEntry(ArraySymbol::class));
     }
 }

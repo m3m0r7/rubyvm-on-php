@@ -14,7 +14,7 @@ use RubyVM\VM\Stream\StreamHandler;
  */
 class TestApplication extends TestCase
 {
-    protected function createRubyVMFromCode(string $code, string $binaryPath = 'ruby'): RubyVMManager
+    protected function createRubyVMFromCode(string $code, string $extraData = '', string $binaryPath = 'ruby'): RubyVMManager
     {
         $handle = tmpfile();
         fwrite($handle, $code);
@@ -24,7 +24,7 @@ class TestApplication extends TestCase
         fwrite(
             $compilerHandle,
             <<<_
-        puts RubyVM::InstructionSequence.compile_file("{$uri}").to_binary
+        puts RubyVM::InstructionSequence.compile_file("{$uri}").to_binary("{$extraData}")
         _
         );
         $compilerRubyUri = stream_get_meta_data($compilerHandle)['uri'];

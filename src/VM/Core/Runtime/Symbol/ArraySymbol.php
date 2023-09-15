@@ -8,9 +8,12 @@ use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Option;
+use RubyVM\VM\Core\Runtime\RubyClassExtendable;
 
 class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \IteratorAggregate
 {
+    use RubyClassExtendable;
+
     public function __construct(
         public array $array,
     ) {
@@ -24,9 +27,13 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
         );
     }
 
-    public function new(): self
+    public function new(self|array $values = null): self
     {
-        return new self([]);
+        return new self(
+            $values instanceof self
+                ? $values->array
+                : ($values ?? []),
+        );
     }
 
     public function each(ContextInterface $context): void
@@ -34,7 +41,7 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
         for ($i = 0; $i < count($this->array); ++$i) {
             $executor = (new Executor(
                 kernel: $context->kernel(),
-                main: $context->self(),
+                classImplementation: $context->self(),
                 instructionSequence: $context->instructionSequence(),
                 logger: $context->logger(),
                 debugger: $context->debugger(),

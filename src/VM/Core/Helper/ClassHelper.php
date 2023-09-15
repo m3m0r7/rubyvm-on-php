@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Helper;
 
+use RubyVM\VM\Core\Runtime\ExtendedClassEntry;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 
 class ClassHelper
@@ -16,7 +17,10 @@ class ClassHelper
         if (Object_::class === get_class($obj)) {
             return 'Object';
         }
-        $classNamePath = explode('\\', get_class($obj));
+        if (ExtendedClassEntry::class === get_class($obj)) {
+            $obj = $obj->className;
+        }
+        $classNamePath = explode('\\', is_object($obj) ? get_class($obj) : $obj);
 
         return $classNamePath[array_key_last($classNamePath)];
     }

@@ -6,11 +6,10 @@ namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2;
 
 use RubyVM\VM\Core\Helper\DefaultDefinedClassEntries;
 use RubyVM\VM\Core\Helper\DefaultOperationProcessorEntries;
-use RubyVM\VM\Core\Runtime\Executor\DefinedClassEntries;
 use RubyVM\VM\Core\Runtime\Executor\EnvironmentTableEntries;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
-use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\ClassExtender;
+use RubyVM\VM\Core\Runtime\Executor\IOContext;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
@@ -60,8 +59,13 @@ class Kernel implements KernelInterface
     public readonly Offsets $instructionSequenceList;
     public readonly Offsets $globalObjectList;
     protected readonly InstructionSequences $instructionSequences;
+    protected readonly IOContext $IOContext;
 
     protected array $globalObjectTable = [];
+
+    public readonly string $rubyPlatform;
+
+    public readonly string $extraData;
 
     public function __construct(
         public readonly RubyVMInterface $vm,
@@ -70,6 +74,11 @@ class Kernel implements KernelInterface
         $this->instructionSequenceList = new Offsets();
         $this->globalObjectList = new Offsets();
         $this->instructionSequences = new InstructionSequences();
+        $this->IOContext = new IOContext(
+            $this->vm->option()->stdOut ?? new StreamHandler(STDOUT),
+            $this->vm->option()->stdIn ?? new StreamHandler(STDIN),
+            $this->vm->option()->stdErr ?? new StreamHandler(STDERR),
+        );
     }
 
     public function process(): ExecutorInterface
@@ -92,11 +101,7 @@ class Kernel implements KernelInterface
 
         $executor = new Executor(
             $this,
-            new Main(
-                $this->vm->option()->stdOut ?? new StreamHandler(STDOUT),
-                $this->vm->option()->stdIn ?? new StreamHandler(STDIN),
-                $this->vm->option()->stdErr ?? new StreamHandler(STDERR),
-            ),
+            new Main($this, new DefaultDefinedClassEntries()),
             $instructionSequence,
             $this->vm->option()->logger,
         );
@@ -127,6 +132,7 @@ class Kernel implements KernelInterface
         $this->globalObjectListSize = $this->stream()->unsignedLong();
         $this->instructionSequenceListOffset = $this->stream()->unsignedLong();
         $this->globalObjectListOffset = $this->stream()->unsignedLong();
+        $this->rubyPlatform = $this->stream()->string();
 
         $this->vm->option()->logger->info(
             sprintf('Loaded an instruction sequence header (%d bytes)', $this->stream()->pos() - $pos),
@@ -134,6 +140,7 @@ class Kernel implements KernelInterface
 
         $this->setupInstructionSequenceList();
         $this->setupGlobalObjectList();
+        $this->setupExtraData();
 
         $this->verifier->verify(
             new VerificationHeader($this),
@@ -324,6 +331,14 @@ class Kernel implements KernelInterface
         };
     }
 
+    private function setupExtraData(): void
+    {
+        $this->stream()->dryPosTransaction(function () {
+            $this->stream()->pos($this->size);
+            $this->extraData = $this->stream()->read($this->extraSize);
+        });
+    }
+
     public function loadInstructionSequence(Aux $aux): InstructionSequence
     {
         $instructionSequence = $this
@@ -368,10 +383,28 @@ class Kernel implements KernelInterface
         return $operationProcessorEntries;
     }
 
-    public function classExtender(): ClassExtender
+    public function IOContext(): IOContext
     {
-        static $definedClassEntries = new DefaultDefinedClassEntries();
-        $extender = new ClassExtender();
-        return $extender;
+        return $this->IOContext;
+    }
+
+    public function rubyPlatform(): string
+    {
+        return $this->rubyPlatform;
+    }
+
+    public function minorVersion(): int
+    {
+        return $this->minorVersion;
+    }
+
+    public function majorVersion(): int
+    {
+        return $this->majorVersion;
+    }
+
+    public function extraData(): string
+    {
+        return $this->extraData;
     }
 }

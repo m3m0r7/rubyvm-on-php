@@ -239,4 +239,15 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
 
         return $x;
     }
+
+    public function string(): string
+    {
+        $string = '';
+
+        do {
+            $string .= $char = $this->streamHandler->read(1);
+        } while ($char !== "\x00" && !$this->streamHandler->isTerminated());
+
+        return rtrim($string, "\x00");
+    }
 }

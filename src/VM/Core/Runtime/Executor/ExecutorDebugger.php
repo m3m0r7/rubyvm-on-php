@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
-use RubyVM\VM\Core\Runtime\MainInterface;
+use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use Symfony\Component\Console\Helper\Table;
@@ -60,7 +60,7 @@ class ExecutorDebugger
                 'PC',
                 'CALLEE',
                 'INSN',
-                'PREVIOUS STACKS',
+                'CURRENT STACKS',
                 'LOCAL TABLES',
             ]
         );
@@ -127,7 +127,7 @@ class ExecutorDebugger
             }
 
             /**
-             * @var MainInterface|OperandEntry $class
+             * @var OperandEntry|RubyClassImplementationInterface $class
              */
             $class = $vmStack->pop();
 
