@@ -118,8 +118,7 @@ $executor->debugger()->showExecutedOperations();
 The RubyVM on PHP is providing breakpoint. The breakpoint is available to confirm to process a sequence step by step.
 Which collect previous stacks, registered local tables and so on. this is required debugging this project.
 
-```
-
+```php
 // Disassemble instruction sequence binary formatted and get executor
 $executor = $rubyVM->disassemble(
     useVersion: \RubyVM\VM\Core\Runtime\RubyVersion::VERSION_3_2,
