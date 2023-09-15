@@ -82,7 +82,7 @@ The RubyVM on PHP is provided an executor debugger that can display processed an
 
 ```
 +-----------------+------------------------------------------------+--------+------------------------------------------------------------------------+-------------------------+----------+
-| PROGRAM COUNTER | INSN                                           | OPCODE | PREVIOUS STACKS                                                        | REGISTERED LOCAL TABLES | MEMORY   |
+| PROGRAM COUNTER | INSN                                           | OPCODE | CURRENT STACKS                                                         | REGISTERED LOCAL TABLES | MEMORY   |
 +-----------------+------------------------------------------------+--------+------------------------------------------------------------------------+-------------------------+----------+
 | 0               | putself                                        | 0x12   | [total: 0]                                                             | []                      | 61.49 KB |
 | 1               | putstring                                      | 0x15   | [total: 1, OperandEntry<Main>]                                         | []                      | 40.66 KB |

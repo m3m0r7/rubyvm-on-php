@@ -60,7 +60,7 @@ class ExecutorDebugger
                 'PC',
                 'CALLEE',
                 'INSN',
-                'PREVIOUS STACKS',
+                'CURRENT STACKS',
                 'LOCAL TABLES',
             ]
         );
