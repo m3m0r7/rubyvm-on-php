@@ -11,8 +11,14 @@ use RubyVM\VM\Core\Runtime\Option;
 
 final class LocalTableHelper
 {
+
+    /**
+     * @see https://github.com/ruby/ruby/blob/ruby_3_2/yjit/src/codegen.rs#L1482
+     * @see https://github.com/ruby/ruby/blob/ruby_3_2/yjit/src/codegen.rs#L1584
+     */
     public static function calculateFirstLocalTableIndex(ContextInterface $context, array $arguments = []): int
     {
+        // TODO: I will rewrite here
         // FIXME: Is the logic correctly? Here is temporarily implementation.
 
         $size = 0;

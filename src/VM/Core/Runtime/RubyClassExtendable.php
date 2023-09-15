@@ -17,8 +17,8 @@ use RubyVM\VM\Exception\OperationProcessorException;
 
 trait RubyClassExtendable
 {
-    protected array $userLandClasses = [];
-    protected array $userLandMethods = [];
+    protected static array $userLandClasses = [];
+    protected static array $userLandMethods = [];
 
     protected ?ExtendedClassEntry $extendedClassEntry = null;
 
@@ -31,12 +31,12 @@ trait RubyClassExtendable
 
     public function class(NumberSymbol $flags, StringSymbol $className, ContextInterface $context): void
     {
-        if (!isset($this->userLandClasses[(string) $className])) {
-            $this->userLandClasses[(string) $className] = new ExtendedClassEntry((string) $className);
+        if (!isset(static::$userLandClasses[(string) $className])) {
+            static::$userLandClasses[(string) $className] = new ExtendedClassEntry((string) $className);
         }
         $executor = new Executor(
             kernel: $context->kernel(),
-            classImplementation: $this->userLandClasses[(string) $className],
+            classImplementation: static::$userLandClasses[(string) $className],
             instructionSequence: $context->instructionSequence(),
             logger: $context->logger(),
             debugger: $context->debugger(),
@@ -52,7 +52,7 @@ trait RubyClassExtendable
 
     public function def(StringSymbol $methodName, ContextInterface $context): void
     {
-        $this->userLandMethods[(string) $methodName] = $context;
+        static::$userLandMethods[(string) $methodName] = $context;
     }
 
     public function getDefinedClassOrSelf(RubyClassImplementationInterface|Object_ $class): RubyClassImplementationInterface|Object_|SymbolInterface
@@ -64,7 +64,7 @@ trait RubyClassExtendable
         /**
          * @var ExtendedClassEntry $userLandClass
          */
-        foreach ($this->userLandClasses as $userLandClass) {
+        foreach (static::$userLandClasses as $userLandClass) {
             if ($userLandClass->isBound(get_class($class->symbol))) {
                 return $class->symbol->extendClassEntry($userLandClass);
             }
@@ -75,17 +75,17 @@ trait RubyClassExtendable
 
     public function classes(): array
     {
-        return array_keys($this->userLandClasses);
+        return array_keys(static::$userLandClasses);
     }
 
     public function methods(): array
     {
-        return array_keys($this->userLandMethods);
+        return array_keys(static::$userLandMethods);
     }
 
     public function hasMethod(string $name): bool
     {
-        return in_array($name, $this->methods(), true);
+        return in_array($name, $this->methods(), true) || ($this->extendedClassEntry && $this->extendedClassEntry->hasMethod($name));
     }
 
     public function __call(string $name, array $arguments): ExecutedResult|SymbolInterface
@@ -97,7 +97,7 @@ trait RubyClassExtendable
         /**
          * @var null|ContextInterface $context
          */
-        $context = $this->userLandMethods[$name] ?? null;
+        $context = static::$userLandMethods[$name] ?? null;
 
         if (null === $context) {
             throw new OperationProcessorException(sprintf('Method not found %s#%s', ClassHelper::nameBy($this), $name));

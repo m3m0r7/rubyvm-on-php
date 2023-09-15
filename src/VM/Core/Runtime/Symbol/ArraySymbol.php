@@ -9,8 +9,9 @@ use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\RubyClassExtendable;
+use RubyVM\VM\Core\Runtime\RubyClassExtendableInterface;
 
-class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \IteratorAggregate
+class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \IteratorAggregate, RubyClassExtendableInterface
 {
     use RubyClassExtendable;
 
@@ -22,8 +23,11 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
     public function __toString(): string
     {
         return sprintf(
-            '[%d]',
-            count($this->array)
+            '[%s]',
+            implode(', ', array_map(
+                fn ($value) => (string) $value,
+                $this->array,
+            ))
         );
     }
 

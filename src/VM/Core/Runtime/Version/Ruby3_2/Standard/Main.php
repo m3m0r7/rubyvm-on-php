@@ -23,7 +23,7 @@ class Main implements MainInterface, RubyClassImplementationInterface
         protected readonly DefinedClassEntries $definedClassEntries,
     ) {
         foreach ($this->definedClassEntries as $className => $definedClassEntry) {
-            $this->userLandClasses[$className] = $definedClassEntry;
+            static::$userLandClasses[$className] = $definedClassEntry;
         }
     }
 

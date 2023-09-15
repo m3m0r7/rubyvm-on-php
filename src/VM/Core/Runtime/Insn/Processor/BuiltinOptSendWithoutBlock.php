@@ -7,17 +7,18 @@ namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Translatable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
+use RubyVM\VM\Core\Runtime\RubyClassExtendableInterface;
 use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
-use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
 {
@@ -74,14 +75,28 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             ->operand
         ;
 
+        $targetClass = $this->context
+            ->self()
+            ->getDefinedClassOrSelf($targetSymbol);
+
         /**
          * @var null|ExecutedResult|SymbolInterface $result
          */
-        $result = $this->context
-            ->self()
-            ->getDefinedClassOrSelf($targetSymbol)
+        $result = $targetClass
             ->{(string) $symbol}(...$this->translateForArguments(...$arguments))
         ;
+
+        // Here is a special method calls
+        // TODO: will refactor here
+        if ((string) $symbol === 'new') {
+            if (!($targetClass instanceof RubyClassExtendableInterface)) {
+                throw new OperationProcessorException('The callee class is invalid (not instantiated by the RubyClassExtendableInterface)');
+            }
+            if ($targetClass->hasMethod('initialize')) {
+                $targetClass->initialize(...$this->translateForArguments(...$arguments));
+            }
+        }
+
         if ($result instanceof Object_) {
             $this->context->vmStack()
                 ->push(new OperandEntry($result))
