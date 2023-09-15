@@ -28,7 +28,11 @@ class StringStreamHandler implements StreamHandlerInterface
 
     public function size(): ?int
     {
-        // Add EOF byte
         return strlen($this->string);
+    }
+
+    public function isTerminated(): bool
+    {
+        return feof($this->handle);
     }
 }

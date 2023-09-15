@@ -13,4 +13,6 @@ interface StreamHandlerInterface
     public function write(string $string): void;
 
     public function size(): ?int;
+
+    public function isTerminated(): bool;
 }

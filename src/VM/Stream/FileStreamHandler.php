@@ -24,4 +24,9 @@ class FileStreamHandler implements StreamHandlerInterface
     {
         return filesize($this->path);
     }
+
+    public function isTerminated(): bool
+    {
+        return feof($this->handle);
+    }
 }

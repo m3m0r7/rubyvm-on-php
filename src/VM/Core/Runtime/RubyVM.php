@@ -48,26 +48,9 @@ class RubyVM implements RubyVMInterface
             sprintf('Start to disassemble an instruction sequence'),
         );
 
-        $selectedVersion = null;
-        // @var Runtime|null $kernel
-        if (null === $useVersion) {
-            $runtime = $this->registeredRuntimes[$selectedVersion = array_key_first($this->registeredRuntimes)] ?? null;
-        } else {
-            $runtime = $this->registeredRuntimes[$selectedVersion = $useVersion->value] ?? null;
-        }
+        $runtime = $this->runtime($useVersion);
 
-        if (null === $runtime) {
-            throw new RubyVMException('The RubyVM is not registered a kernel - You should call RubyVM::register method before calling the disassemble method');
-        }
-
-        $this->option->logger->info(
-            sprintf('Selected Ruby %s version kernel', $selectedVersion),
-        );
-
-        $executor = $runtime
-            ->kernel
-            ->setup()
-            ->process()
+        $executor = $runtime->kernel()->setup()->process()
         ;
 
         $this->option->logger->info(
@@ -89,6 +72,28 @@ class RubyVM implements RubyVMInterface
         );
 
         return $executor;
+    }
+
+    public function runtime(RubyVersion $useVersion = null): Runtime
+    {
+        $selectedVersion = null;
+
+        // @var Runtime|null $kernel
+        if (null === $useVersion) {
+            $runtime = $this->registeredRuntimes[$selectedVersion = array_key_first($this->registeredRuntimes)] ?? null;
+        } else {
+            $runtime = $this->registeredRuntimes[$selectedVersion = $useVersion->value] ?? null;
+        }
+
+        if (null === $runtime) {
+            throw new RubyVMException('The RubyVM is not registered a kernel - You should call RubyVM::register method before calling the disassemble method');
+        }
+
+        $this->option->logger->info(
+            sprintf('Selected Ruby %s version kernel', $selectedVersion),
+        );
+
+        return $runtime;
     }
 
     public function option(): Option

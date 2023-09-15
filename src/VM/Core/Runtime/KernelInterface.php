@@ -35,4 +35,12 @@ interface KernelInterface
     public function operationProcessorEntries(): OperationProcessorEntries;
 
     public function IOContext(): IOContext;
+
+    public function extraData(): string;
+
+    public function rubyPlatform(): string;
+
+    public function minorVersion(): int;
+
+    public function majorVersion(): int;
 }

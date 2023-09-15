@@ -63,6 +63,10 @@ class Kernel implements KernelInterface
 
     protected array $globalObjectTable = [];
 
+    public readonly string $rubyPlatform;
+
+    public readonly string $extraData;
+
     public function __construct(
         public readonly RubyVMInterface $vm,
         public readonly Verifier $verifier,
@@ -128,6 +132,7 @@ class Kernel implements KernelInterface
         $this->globalObjectListSize = $this->stream()->unsignedLong();
         $this->instructionSequenceListOffset = $this->stream()->unsignedLong();
         $this->globalObjectListOffset = $this->stream()->unsignedLong();
+        $this->rubyPlatform = $this->stream()->string();
 
         $this->vm->option()->logger->info(
             sprintf('Loaded an instruction sequence header (%d bytes)', $this->stream()->pos() - $pos),
@@ -135,6 +140,7 @@ class Kernel implements KernelInterface
 
         $this->setupInstructionSequenceList();
         $this->setupGlobalObjectList();
+        $this->setupExtraData();
 
         $this->verifier->verify(
             new VerificationHeader($this),
@@ -325,6 +331,14 @@ class Kernel implements KernelInterface
         };
     }
 
+    private function setupExtraData(): void
+    {
+        $this->stream()->dryPosTransaction(function () {
+            $this->stream()->pos($this->size);
+            $this->extraData = $this->stream()->read($this->extraSize);
+        });
+    }
+
     public function loadInstructionSequence(Aux $aux): InstructionSequence
     {
         $instructionSequence = $this
@@ -372,5 +386,25 @@ class Kernel implements KernelInterface
     public function IOContext(): IOContext
     {
         return $this->IOContext;
+    }
+
+    public function rubyPlatform(): string
+    {
+        return $this->rubyPlatform;
+    }
+
+    public function minorVersion(): int
+    {
+        return $this->minorVersion;
+    }
+
+    public function majorVersion(): int
+    {
+        return $this->majorVersion;
+    }
+
+    public function extraData(): string
+    {
+        return $this->extraData;
     }
 }

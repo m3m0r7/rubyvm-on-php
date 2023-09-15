@@ -56,7 +56,7 @@ class VerificationHeader implements VerificationInterface
         }
 
         // NOTE: Append an EOF byte when comparing
-        if ($size !== ($this->kernel->size + 1)) {
+        if ($size !== ($this->kernel->size + $this->kernel->extraSize + 1)) {
             throw new VerificationException(sprintf('The stream size is invalid (expected: %d, actual: %d)', $this->kernel->size, $size));
         }
     }
