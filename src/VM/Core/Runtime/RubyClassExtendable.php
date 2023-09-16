@@ -8,12 +8,14 @@ use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Helper\LocalTableHelper;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
+use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
+use RubyVM\VM\Exception\RubyVMException;
 
 trait RubyClassExtendable
 {
@@ -45,8 +47,8 @@ trait RubyClassExtendable
 
         $result = $executor->execute();
 
-        if ($result->throwed) {
-            throw $result->throwed;
+        if ($result->threw) {
+            throw $result->threw;
         }
     }
 
@@ -133,6 +135,15 @@ trait RubyClassExtendable
             ;
         }
 
-        return $executor->execute();
+        $executed = $executor->execute();
+
+        if ($executed->executedStatus !== ExecutedStatus::SUCCESS) {
+            if (ExecutedStatus::THREW_EXCEPTION) {
+                throw $executed->threw;
+            }
+            throw new RubyVMException('An exception occurred by some reason then RubyVM executor returned incorrect status');
+        }
+
+        return $executed;
     }
 }

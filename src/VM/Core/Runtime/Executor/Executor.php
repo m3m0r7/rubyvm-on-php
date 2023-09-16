@@ -15,6 +15,7 @@ use RubyVM\VM\Core\Runtime\Symbol\VoidSymbol;
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\ExecutorFailedException;
 use RubyVM\VM\Exception\ExecutorUnknownException;
+use RubyVM\VM\Exception\RubyVMException;
 
 class Executor implements ExecutorInterface
 {
@@ -76,15 +77,15 @@ class Executor implements ExecutorInterface
                 executor: $this,
                 executedStatus: $result->executedStatus,
                 returnValue: $result->returnValue,
-                throwed: null,
+                threw: null,
                 debugger: $this->debugger,
             );
-        } catch (\Throwable $e) {
+        } catch (RubyVMException $e) {
             return new ExecutedResult(
                 executor: $this,
-                executedStatus: ExecutedStatus::IN_COMPLETED,
+                executedStatus: ExecutedStatus::THREW_EXCEPTION,
                 returnValue: null,
-                throwed: $e,
+                threw: $e,
                 debugger: $this->debugger,
             );
         }
@@ -265,7 +266,7 @@ class Executor implements ExecutorInterface
                     ->pop()
                     ->operand
                     ->symbol,
-                throwed: null,
+                threw: null,
                 debugger: $this->debugger,
             );
         }
@@ -274,7 +275,7 @@ class Executor implements ExecutorInterface
             executor: $this,
             executedStatus: ExecutedStatus::SUCCESS,
             returnValue: new VoidSymbol(),
-            throwed: null,
+            threw: null,
             debugger: $this->debugger,
         );
     }

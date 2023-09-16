@@ -111,8 +111,8 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         }
 
         if ($result instanceof ExecutedResult) {
-            if ($result->throwed) {
-                throw $result->throwed;
+            if ($result->threw) {
+                throw $result->threw;
             }
             if (null !== $result->returnValue) {
                 $this->context->vmStack()

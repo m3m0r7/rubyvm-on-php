@@ -14,7 +14,7 @@ class ExecutedResult
         public readonly ExecutorInterface $executor,
         public readonly ExecutedStatus $executedStatus,
         public readonly ?SymbolInterface $returnValue = null,
-        public readonly ?\Throwable $throwed = null,
+        public readonly ?\Throwable $threw = null,
         private readonly ?ExecutorDebugger $debugger = null,
     ) {
     }

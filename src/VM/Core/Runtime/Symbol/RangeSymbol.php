@@ -70,8 +70,8 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
             $result = $executor->execute();
 
             // An occurred exception to be throwing
-            if ($result->throwed) {
-                throw $result->throwed;
+            if ($result->threw) {
+                throw $result->threw;
             }
         }
 

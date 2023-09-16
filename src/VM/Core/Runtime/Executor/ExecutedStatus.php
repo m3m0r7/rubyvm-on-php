@@ -12,5 +12,5 @@ enum ExecutedStatus
 
     case UNKNOWN;
 
-    case IN_COMPLETED;
+    case THREW_EXCEPTION;
 }

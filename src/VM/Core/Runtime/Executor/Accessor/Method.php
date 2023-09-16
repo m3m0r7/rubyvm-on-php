@@ -26,8 +26,8 @@ class Method implements AccessorInterface
                 $arguments,
             ),
         );
-        if ($executedResult->throwed) {
-            throw $executedResult->throwed;
+        if ($executedResult->threw) {
+            throw $executedResult->threw;
         }
 
         return Translator::RubyToPHP($executedResult->returnValue);
