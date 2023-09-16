@@ -43,27 +43,27 @@ class BuiltinOptMult implements OperationProcessorInterface
         return $this->processArithmetic('*');
     }
 
-    private function calculate(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
+    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
     {
         $value = null;
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
-            $value = $this->calculateNumberMultiplyNumber($leftOperand, $rightOperand);
+            $value = $this->computeNumberMultiplyNumber($leftOperand, $rightOperand);
         }
         if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
-            $value = $this->calculateFloatMultiplyFloat($leftOperand, $rightOperand);
+            $value = $this->computeFloatMultiplyFloat($leftOperand, $rightOperand);
         }
 
         return $value;
     }
 
-    private function calculateNumberMultiplyNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
+    private function computeNumberMultiplyNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new NumberSymbol(
             $leftOperand->number * $rightOperand->number
         ))->toObject();
     }
 
-    private function calculateFloatMultiplyFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
+    private function computeFloatMultiplyFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
     {
         return (new FloatSymbol(
             $leftOperand->number * $rightOperand->number

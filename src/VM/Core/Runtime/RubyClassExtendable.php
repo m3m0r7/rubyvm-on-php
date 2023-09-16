@@ -113,19 +113,15 @@ trait RubyClassExtendable
                 ->renewEnvironmentTableEntries(),
         ));
 
-        $envIndex = LocalTableHelper::calculateFirstLocalTableIndex(
-            $context,
-            $arguments,
-        );
-
-        /**
-         * @var SymbolInterface $argument
-         */
-        foreach ($arguments as $index => $argument) {
+        for ($localIndex = 0, $i = count($arguments) - 1; $i >= 0; $i--, $localIndex++) {
+            /**
+             * @var SymbolInterface $argument
+             */
+            $argument = $arguments[$i];
             $executor->context()->environmentTableEntries()
-                ->get(Option::RSV_TABLE_INDEX_0)
+                ->get(0)
                 ->set(
-                    $envIndex + $index,
+                    $localIndex,
                     $argument->toObject(),
                 )
             ;

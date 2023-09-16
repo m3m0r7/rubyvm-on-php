@@ -45,47 +45,47 @@ class BuiltinOptPlus implements OperationProcessorInterface
         return $this->processArithmetic('+');
     }
 
-    private function calculate(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
+    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
     {
         $value = null;
         if ($leftOperand instanceof StringSymbol && $rightOperand instanceof StringSymbol) {
-            $value = $this->calculateStringPlusString($leftOperand, $rightOperand);
+            $value = $this->computeStringPlusString($leftOperand, $rightOperand);
         }
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
-            $value = $this->calculateNumberPlusNumber($leftOperand, $rightOperand);
+            $value = $this->computeNumberPlusNumber($leftOperand, $rightOperand);
         }
         if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
-            $value = $this->calculateFloatPlusFloat($leftOperand, $rightOperand);
+            $value = $this->computeFloatPlusFloat($leftOperand, $rightOperand);
         }
         if ($leftOperand instanceof ArraySymbol && $rightOperand instanceof ArraySymbol) {
-            $value = $this->calculateArrayPlusArray($leftOperand, $rightOperand);
+            $value = $this->computeArrayPlusArray($leftOperand, $rightOperand);
         }
 
         return $value;
     }
 
-    private function calculateStringPlusString(StringSymbol $leftOperand, StringSymbol $rightOperand): Object_
+    private function computeStringPlusString(StringSymbol $leftOperand, StringSymbol $rightOperand): Object_
     {
         return (new StringSymbol(
             $leftOperand . $rightOperand
         ))->toObject();
     }
 
-    private function calculateNumberPlusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
+    private function computeNumberPlusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new NumberSymbol(
             $leftOperand->number + $rightOperand->number
         ))->toObject();
     }
 
-    private function calculateFloatPlusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
+    private function computeFloatPlusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
     {
         return (new FloatSymbol(
             $leftOperand->number + $rightOperand->number
         ))->toObject();
     }
 
-    private function calculateArrayPlusArray(ArraySymbol $leftOperand, ArraySymbol $rightOperand): Object_
+    private function computeArrayPlusArray(ArraySymbol $leftOperand, ArraySymbol $rightOperand): Object_
     {
         return (new ArraySymbol(
             [

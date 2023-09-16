@@ -44,27 +44,27 @@ class BuiltinOptGe implements OperationProcessorInterface
         return $this->processArithmetic('>=');
     }
 
-    private function calculate(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
+    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
     {
         $value = null;
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
-            $value = $this->calculateNumberGreaterThanOrEqualsNumber($leftOperand, $rightOperand);
+            $value = $this->computeNumberGreaterThanOrEqualsNumber($leftOperand, $rightOperand);
         }
         if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
-            $value = $this->calculateFloatGreaterThanOrEqualsFloat($leftOperand, $rightOperand);
+            $value = $this->computeFloatGreaterThanOrEqualsFloat($leftOperand, $rightOperand);
         }
 
         return $value;
     }
 
-    private function calculateNumberGreaterThanOrEqualsNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
+    private function computeNumberGreaterThanOrEqualsNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new BooleanSymbol(
             $leftOperand->number >= $rightOperand->number
         ))->toObject();
     }
 
-    private function calculateFloatGreaterThanOrEqualsFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
+    private function computeFloatGreaterThanOrEqualsFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
     {
         return (new BooleanSymbol(
             $leftOperand->number >= $rightOperand->number

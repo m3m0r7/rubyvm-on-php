@@ -72,4 +72,9 @@ class InstructionSequenceBody implements InstructionSequenceBodyInterface
     {
         return $this->parentISeq;
     }
+
+    public function localTableSize(): int
+    {
+        return $this->localTableSize;
+    }
 }

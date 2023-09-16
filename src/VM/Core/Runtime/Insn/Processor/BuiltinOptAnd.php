@@ -42,17 +42,17 @@ class BuiltinOptAnd implements OperationProcessorInterface
         return $this->processArithmetic('&');
     }
 
-    private function calculate(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
+    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
     {
         $value = null;
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
-            $value = $this->calculateNumberAndNumber($leftOperand, $rightOperand);
+            $value = $this->computeNumberAndNumber($leftOperand, $rightOperand);
         }
 
         return $value;
     }
 
-    private function calculateNumberAndNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
+    private function computeNumberAndNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new NumberSymbol(
             $leftOperand->number & $rightOperand->number

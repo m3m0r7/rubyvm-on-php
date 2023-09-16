@@ -60,12 +60,12 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         $offset = $this->kernel->instructionSequenceList[$this->aux->loader->index];
         $this->kernel->stream()->pos($offset->offset);
 
-        $calculateFromBodyOffset = fn (int $x) => $offset->offset - $x;
+        $computeFromBodyOffset = fn (int $x) => $offset->offset - $x;
 
         $type = $this->kernel->stream()->smallValue();
         $iseqSize = $this->kernel->stream()->smallValue();
 
-        $bytecodeOffset = $calculateFromBodyOffset($this->kernel->stream()->smallValue());
+        $bytecodeOffset = $computeFromBodyOffset($this->kernel->stream()->smallValue());
         $bytecodeSize = $this->kernel->stream()->smallValue();
 
         $paramFlags = $this->kernel->stream()->smallValue();
@@ -76,7 +76,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         $paramPostStart = $this->kernel->stream()->smallValue();
         $paramPostNum = $this->kernel->stream()->smallValue();
         $paramBlockStart = $this->kernel->stream()->smallValue();
-        $paramOptTableOffset = $calculateFromBodyOffset($this->kernel->stream()->smallValue());
+        $paramOptTableOffset = $computeFromBodyOffset($this->kernel->stream()->smallValue());
         $paramKeywordOffset = $this->kernel->stream()->smallValue();
         $locationPathObjIndex = $this->kernel->stream()->smallValue();
         $locationBaseLabelIndex = $this->kernel->stream()->smallValue();
@@ -87,17 +87,17 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         $locationCodeLocationBegPosColumn = $this->kernel->stream()->smallValue();
         $locationCodeLocationEndPosLineNo = $this->kernel->stream()->smallValue();
         $locationCodeLocationEndPosColumn = $this->kernel->stream()->smallValue();
-        $insnsInfoBodyOffset = $calculateFromBodyOffset($this->kernel->stream()->smallValue());
-        $insnsInfoPositionsOffset = $calculateFromBodyOffset($this->kernel->stream()->smallValue());
+        $insnsInfoBodyOffset = $computeFromBodyOffset($this->kernel->stream()->smallValue());
+        $insnsInfoPositionsOffset = $computeFromBodyOffset($this->kernel->stream()->smallValue());
         $insnsInfoSize = $this->kernel->stream()->smallValue();
-        $localTableOffset = $calculateFromBodyOffset($this->kernel->stream()->smallValue());
+        $localTableOffset = $computeFromBodyOffset($this->kernel->stream()->smallValue());
         $catchTableSize = $this->kernel->stream()->smallValue();
-        $catchTableOffset = $calculateFromBodyOffset($this->kernel->stream()->smallValue());
+        $catchTableOffset = $computeFromBodyOffset($this->kernel->stream()->smallValue());
         $parentISeqIndex = $this->kernel->stream()->smallValue();
         $localISeqIndex = $this->kernel->stream()->smallValue();
         $mandatoryOnlyIseqIndex = $this->kernel->stream()->smallValue();
-        $ciEntriesOffset = $calculateFromBodyOffset($v = $this->kernel->stream()->smallValue());
-        $outerVariablesOffset = $calculateFromBodyOffset($this->kernel->stream()->smallValue());
+        $ciEntriesOffset = $computeFromBodyOffset($v = $this->kernel->stream()->smallValue());
+        $outerVariablesOffset = $computeFromBodyOffset($this->kernel->stream()->smallValue());
         $variableFlipCount = $this->kernel->stream()->smallValue();
         $localTableSize = $this->kernel->stream()->smallValue();
 

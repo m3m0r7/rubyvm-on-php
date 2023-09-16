@@ -52,7 +52,7 @@ trait OperatorCalculatable
             if ((string) $operator !== $expectedOperator) {
                 throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor cannot process %s operator because string concatenating was allowed only `%s`', strtolower($this->insn->name), $this->insn->value, $operator, $expectedOperator));
             }
-            $value = $this->calculate($leftOperand, $rightOperand);
+            $value = $this->compute($leftOperand, $rightOperand);
         }
 
         if (null === $value) {
@@ -64,5 +64,5 @@ trait OperatorCalculatable
         return ProcessedStatus::SUCCESS;
     }
 
-    abstract private function calculate(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_;
+    abstract private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_;
 }
