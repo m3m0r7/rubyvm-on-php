@@ -113,15 +113,21 @@ trait RubyClassExtendable
                 ->renewEnvironmentTableEntries(),
         ));
 
+        $localTableSize = $executor->context()->instructionSequence()->body()->data->localTableSize();
+
         for ($localIndex = 0, $i = count($arguments) - 1; $i >= 0; $i--, $localIndex++) {
             /**
              * @var SymbolInterface $argument
              */
             $argument = $arguments[$i];
-            $executor->context()->environmentTableEntries()
+            $executor->context()
+                ->environmentTableEntries()
                 ->get(0)
                 ->set(
-                    $localIndex,
+                    LocalTableHelper::computeLocalTableIndex(
+                        $localTableSize,
+                        Option::VM_ENV_DATA_SIZE + $localTableSize - $localIndex - 1,
+                    ),
                     $argument->toObject(),
                 )
             ;

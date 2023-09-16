@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Runtime\Option;
+use RubyVM\VM\Core\Helper\LocalTableHelper;
 
 trait LocalTable
 {
@@ -18,8 +18,18 @@ trait LocalTable
             new OperandEntry(
                 $this->context
                     ->environmentTableEntries()
-                    ->get($level)
-                    ->get($this->computeLocalTableIndex($slotIndex, $level)),
+                    ->get(0)
+                    ->get(
+                        LocalTableHelper::computeLocalTableIndex(
+                            $this->context
+                                ->instructionSequence()
+                                ->body()
+                                ->data
+                                ->localTableSize(),
+                            $slotIndex,
+                            $level,
+                        ),
+                    ),
             ),
         );
     }
@@ -30,30 +40,19 @@ trait LocalTable
         $operand = $this->getStackAsObject();
 
         $this->context->environmentTableEntries()
-            ->get($level)
+            ->get(0)
             ->set(
-                $this->computeLocalTableIndex($slotIndex, $level),
+                LocalTableHelper::computeLocalTableIndex(
+                    $this->context
+                        ->instructionSequence()
+                        ->body()
+                        ->data
+                        ->localTableSize(),
+                    $slotIndex,
+                    $level,
+                ),
                 clone $operand,
             )
         ;
-    }
-
-    /**
-     * @see https://github.com/ruby/ruby/blob/ruby_3_2/yjit/src/codegen.rs#L1482
-     */
-    private function computeLocalTableIndex(int $slotIndex, int $level = 0): int
-    {
-        $localTableSize = $this->context
-            ->instructionSequence()
-            ->body()
-            ->data
-            ->localTableSize();
-
-        $op = $slotIndex - Option::VM_ENV_DATA_SIZE;
-        $localTableIndex = $localTableSize - $op - 1;
-        if ($level > 0) {
-            var_dump($slotIndex, $localTableIndex, $localTableIndex + ($level * 4));
-        }
-        return $localTableIndex + ($level * 4);
     }
 }
