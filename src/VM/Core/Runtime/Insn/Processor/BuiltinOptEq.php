@@ -43,17 +43,17 @@ class BuiltinOptEq implements OperationProcessorInterface
         return $this->processArithmetic('==');
     }
 
-    private function calculate(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
+    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
     {
         $value = null;
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
-            $value = $this->calculateNumberEqNumber($leftOperand, $rightOperand);
+            $value = $this->computeNumberEqNumber($leftOperand, $rightOperand);
         }
 
         return $value;
     }
 
-    private function calculateNumberEqNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
+    private function computeNumberEqNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new BooleanSymbol(
             $leftOperand->number == $rightOperand->number,

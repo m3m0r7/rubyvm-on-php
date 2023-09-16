@@ -43,27 +43,27 @@ class BuiltinOptDiv implements OperationProcessorInterface
         return $this->processArithmetic('/');
     }
 
-    private function calculate(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
+    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
     {
         $value = null;
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
-            $value = $this->calculateNumberDivideNumber($leftOperand, $rightOperand);
+            $value = $this->computeNumberDivideNumber($leftOperand, $rightOperand);
         }
         if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
-            $value = $this->calculateFloatDivideFloat($leftOperand, $rightOperand);
+            $value = $this->computeFloatDivideFloat($leftOperand, $rightOperand);
         }
 
         return $value;
     }
 
-    private function calculateNumberDivideNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
+    private function computeNumberDivideNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new NumberSymbol(
             (int) ($leftOperand->number / $rightOperand->number)
         ))->toObject();
     }
 
-    private function calculateFloatDivideFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
+    private function computeFloatDivideFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
     {
         return (new FloatSymbol(
             $leftOperand->number / $rightOperand->number

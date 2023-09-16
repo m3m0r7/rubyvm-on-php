@@ -42,17 +42,17 @@ class BuiltinOptOr implements OperationProcessorInterface
         return $this->processArithmetic('|');
     }
 
-    private function calculate(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
+    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
     {
         $value = null;
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
-            $value = $this->calculateNumberOrNumber($leftOperand, $rightOperand);
+            $value = $this->computeNumberOrNumber($leftOperand, $rightOperand);
         }
 
         return $value;
     }
 
-    private function calculateNumberOrNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
+    private function computeNumberOrNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new NumberSymbol(
             $leftOperand->number | $rightOperand->number

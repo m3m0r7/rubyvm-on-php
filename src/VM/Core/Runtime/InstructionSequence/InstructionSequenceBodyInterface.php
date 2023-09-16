@@ -14,6 +14,8 @@ interface InstructionSequenceBodyInterface
 
     public function inlineCacheSize(): int;
 
+    public function localTableSize(): int;
+
     public function compileData(): InstructionSequenceCompileData;
 
     public function parentInstructionSequence(): ?InstructionSequenceInterface;

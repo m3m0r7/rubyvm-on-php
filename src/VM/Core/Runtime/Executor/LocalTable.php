@@ -4,49 +4,55 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use RubyVM\VM\Core\Helper\LocalTableHelper;
+
 trait LocalTable
 {
     use Validatable;
     use OperandHelper;
 
-    public function getLocalTableToStack(int $localTableIndex): void
+    public function getLocalTableToStack(int $level): void
     {
-        $index = $this->getOperandAsNumberSymbol()->number;
+        $slotIndex = $this->getOperandAsNumberSymbol()->number;
         $this->context->vmStack()->push(
             new OperandEntry(
                 $this->context
                     ->environmentTableEntries()
                     ->get(0)
-                    ->get($this->calculateLocalTableLevel($index, $localTableIndex)),
+                    ->get(
+                        LocalTableHelper::computeLocalTableIndex(
+                            $this->context
+                                ->instructionSequence()
+                                ->body()
+                                ->data
+                                ->localTableSize(),
+                            $slotIndex,
+                            $level,
+                        ),
+                    ),
             ),
         );
     }
 
-    public function setLocalTableFromStack(int $localTableIndex): void
+    public function setLocalTableFromStack(int $level): void
     {
-        $index = $this->getOperandAsNumberSymbol()->number;
+        $slotIndex = $this->getOperandAsNumberSymbol()->number;
         $operand = $this->getStackAsObject();
 
         $this->context->environmentTableEntries()
             ->get(0)
             ->set(
-                $this->calculateLocalTableLevel($index, $localTableIndex),
+                LocalTableHelper::computeLocalTableIndex(
+                    $this->context
+                        ->instructionSequence()
+                        ->body()
+                        ->data
+                        ->localTableSize(),
+                    $slotIndex,
+                    $level,
+                ),
                 clone $operand,
             )
         ;
-    }
-
-    private function calculateLocalTableLevel(int $index, int $level): int
-    {
-        //        if ($level === 0) {
-        //            return $index;
-        //        }
-        //        $newIndex = $index;
-        //        for ($i = 0; $i < $level; $i++) {
-        //            // cf. vm_get_ep/vm_env_write
-        //            $newIndex = $newIndex & ~0x03;
-        //        }
-        //        return $index - $newIndex;
-        return $index;
     }
 }

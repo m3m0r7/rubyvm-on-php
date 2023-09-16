@@ -44,27 +44,27 @@ class BuiltinOptLe implements OperationProcessorInterface
         return $this->processArithmetic('<=');
     }
 
-    private function calculate(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
+    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
     {
         $value = null;
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
-            $value = $this->calculateNumberLessThanOrEqualsNumber($leftOperand, $rightOperand);
+            $value = $this->computeNumberLessThanOrEqualsNumber($leftOperand, $rightOperand);
         }
         if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
-            $value = $this->calculateFloatLessThanOrEqualsFloat($leftOperand, $rightOperand);
+            $value = $this->computeFloatLessThanOrEqualsFloat($leftOperand, $rightOperand);
         }
 
         return $value;
     }
 
-    private function calculateNumberLessThanOrEqualsNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
+    private function computeNumberLessThanOrEqualsNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new BooleanSymbol(
             $leftOperand->number <= $rightOperand->number
         ))->toObject();
     }
 
-    private function calculateFloatLessThanOrEqualsFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
+    private function computeFloatLessThanOrEqualsFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
     {
         return (new BooleanSymbol(
             $leftOperand->number <= $rightOperand->number

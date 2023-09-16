@@ -42,17 +42,17 @@ class BuiltinOptMod implements OperationProcessorInterface
         return $this->processArithmetic('%');
     }
 
-    private function calculate(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
+    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
     {
         $value = null;
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
-            $value = $this->calculateNumberModNumber($leftOperand, $rightOperand);
+            $value = $this->computeNumberModNumber($leftOperand, $rightOperand);
         }
 
         return $value;
     }
 
-    private function calculateNumberModNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
+    private function computeNumberModNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new NumberSymbol(
             $leftOperand->number % $rightOperand->number

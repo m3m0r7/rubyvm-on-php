@@ -43,27 +43,27 @@ class BuiltinOptMinus implements OperationProcessorInterface
         return $this->processArithmetic('-');
     }
 
-    private function calculate(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
+    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
     {
         $value = null;
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
-            $value = $this->calculateNumberMinusNumber($leftOperand, $rightOperand);
+            $value = $this->computeNumberMinusNumber($leftOperand, $rightOperand);
         }
         if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
-            $value = $this->calculateFloatMinusFloat($leftOperand, $rightOperand);
+            $value = $this->computeFloatMinusFloat($leftOperand, $rightOperand);
         }
 
         return $value;
     }
 
-    private function calculateNumberMinusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
+    private function computeNumberMinusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new NumberSymbol(
             $leftOperand->number - $rightOperand->number
         ))->toObject();
     }
 
-    private function calculateFloatMinusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
+    private function computeFloatMinusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
     {
         return (new FloatSymbol(
             $leftOperand->number - $rightOperand->number

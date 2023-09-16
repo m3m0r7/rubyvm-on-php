@@ -44,27 +44,27 @@ class BuiltinOptLt implements OperationProcessorInterface
         return $this->processArithmetic('<');
     }
 
-    private function calculate(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
+    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
     {
         $value = null;
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
-            $value = $this->calculateNumberLessThanNumber($leftOperand, $rightOperand);
+            $value = $this->computeNumberLessThanNumber($leftOperand, $rightOperand);
         }
         if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
-            $value = $this->calculateFloatLessThanFloat($leftOperand, $rightOperand);
+            $value = $this->computeFloatLessThanFloat($leftOperand, $rightOperand);
         }
 
         return $value;
     }
 
-    private function calculateNumberLessThanNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
+    private function computeNumberLessThanNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new BooleanSymbol(
             $leftOperand->number < $rightOperand->number
         ))->toObject();
     }
 
-    private function calculateFloatLessThanFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
+    private function computeFloatLessThanFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
     {
         return (new BooleanSymbol(
             $leftOperand->number < $rightOperand->number
