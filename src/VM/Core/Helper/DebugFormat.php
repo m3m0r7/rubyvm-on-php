@@ -16,7 +16,7 @@ trait DebugFormat
 
         $result = [];
         foreach ($targetItems as $index => $item) {
-            $result[] = ClassHelper::nameBy($item) . '<' . match ($item::class) {
+            $result[] = match ($item::class) {
                 SymbolInterface::class => (string) $item,
                 OperandEntry::class => (string) match (($item->operand)::class) {
                     Object_::class => ClassHelper::nameBy($item->operand->symbol) . "({$item->operand->symbol})",
@@ -24,7 +24,7 @@ trait DebugFormat
                 },
                 Object_::class => ClassHelper::nameBy($item->symbol) . "({$item->symbol})",
                 default => 'unknown',
-            } . "#{$index}>";
+            } . "#{$index}";
         }
 
         return rtrim(

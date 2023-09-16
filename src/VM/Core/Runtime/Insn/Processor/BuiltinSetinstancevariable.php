@@ -8,6 +8,7 @@ use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
@@ -34,6 +35,17 @@ class BuiltinSetinstancevariable implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor is not implemented yet', strtolower($this->insn->name), $this->insn->value));
+        $instanceVar = $this->getOperandAsID();
+
+        /**
+         * @var RubyClassInterface $targetObject
+         */
+        $targetObject = $this->getStackAsObject()->symbol;
+        $targetObject->setInstanceVariable($instanceVar, $this->getStackAsObject());
+
+        // Dummy pop
+        $this->getStack();
+
+        return ProcessedStatus::SUCCESS;
     }
 }
