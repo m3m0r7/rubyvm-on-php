@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime;
 
-class ExtendedClassEntry implements RubyClassImplementationInterface
+class ExtendedClassEntry implements RubyClassInterface
 {
     use RubyClassExtendable;
 

@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Executor\Accessor;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
-use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
 use RubyVM\VM\Core\Runtime\Symbol\BooleanSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\FloatSymbol;
@@ -53,7 +53,7 @@ readonly class Translator
         });
     }
 
-    public static function RubyToPHP(Object_|SymbolInterface|RubyClassImplementationInterface|array $objectOrClass): mixed
+    public static function RubyToPHP(Object_|SymbolInterface|RubyClassInterface|array $objectOrClass): mixed
     {
         if (is_array($objectOrClass)) {
             return array_map(

@@ -7,13 +7,13 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
-use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
 
 interface ContextInterface
 {
     public function kernel(): KernelInterface;
 
-    public function self(): RubyClassImplementationInterface;
+    public function self(): RubyClassInterface;
 
     public function vmStack(): VMStack;
 

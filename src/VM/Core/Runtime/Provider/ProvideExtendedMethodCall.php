@@ -36,7 +36,7 @@ trait ProvideExtendedMethodCall
 
         $executor = (new Executor(
             kernel: $context->kernel(),
-            classImplementation: $context->self(),
+            rubyClass: $context->self(),
             instructionSequence: $context->instructionSequence(),
             logger: $context->logger(),
             debugger: $context->debugger(),

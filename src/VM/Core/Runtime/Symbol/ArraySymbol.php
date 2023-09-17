@@ -45,7 +45,7 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
         for ($i = 0; $i < count($this->array); ++$i) {
             $executor = (new Executor(
                 kernel: $context->kernel(),
-                classImplementation: $context->self(),
+                rubyClass: $context->self(),
                 instructionSequence: $context->instructionSequence(),
                 logger: $context->logger(),
                 debugger: $context->debugger(),

@@ -51,7 +51,7 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
         foreach ($this->array as $index => $number) {
             $executor = (new Executor(
                 kernel: $context->kernel(),
-                classImplementation: $context->self(),
+                rubyClass: $context->self(),
                 instructionSequence: $context->instructionSequence(),
                 logger: $context->logger(),
                 debugger: $context->debugger(),

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Symbol;
 
 use RubyVM\VM\Core\Runtime\Encoding;
-use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\ShouldBeRubyClass;
 
-class StringSymbol implements SymbolInterface, RubyClassImplementationInterface
+class StringSymbol implements SymbolInterface, RubyClassInterface
 {
     use ShouldBeRubyClass;
 

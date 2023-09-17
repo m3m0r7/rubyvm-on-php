@@ -15,7 +15,7 @@ use RubyVM\VM\Core\Runtime\Executor\Translatable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\RubyClassExtendableInterface;
-use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\SpecialMethod\SpecialMethodInterface;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
@@ -74,7 +74,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         );
 
         /**
-         * @var Object_|RubyClassImplementationInterface $targetSymbol
+         * @var Object_|RubyClassInterface $targetSymbol
          */
         $targetSymbol = $this->getStack()
             ->operand
@@ -88,7 +88,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         $result = null;
 
         // TODO: will refactor here
-        if ($targetClass instanceof RubyClassImplementationInterface && $targetClass->hasMethod('injectVMContext')) {
+        if ($targetClass instanceof RubyClassInterface && $targetClass->hasMethod('injectVMContext')) {
             $targetClass->injectVMContext($this->context->kernel());
         }
 
@@ -103,13 +103,13 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
              * @var SpecialMethodInterface $calleeSpecialMethodName
              */
             $calleeSpecialMethodName = static::$specialMethodCallerEntries
-                ->get($lookupSpecialMethodName);
+                ->get($lookupSpecialMethodName)
+            ;
 
             $result = $calleeSpecialMethodName->process(
                 $targetClass,
                 ...$this->translateForArguments(...$arguments),
             );
-
         } else {
             /**
              * @var null|ExecutedResult|SymbolInterface $result

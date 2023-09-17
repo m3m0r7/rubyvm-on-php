@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Symbol;
 
-use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\ShouldBeRubyClass;
 
-class NumberSymbol implements SymbolInterface, RubyClassImplementationInterface
+class NumberSymbol implements SymbolInterface, RubyClassInterface
 {
     use ShouldBeRubyClass;
 

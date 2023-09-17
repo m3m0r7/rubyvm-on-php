@@ -16,14 +16,12 @@ class SpecialMethodCallerEntries extends AbstractEntries
         parent::__construct($items);
 
         $this->set('new', new Initialize());
-
     }
 
     public function verify(mixed $value): bool
     {
         return $value instanceof SpecialMethodInterface;
     }
-
 
     protected function entryType(): EntryType
     {

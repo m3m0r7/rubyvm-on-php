@@ -7,7 +7,7 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
-use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
 
 class OperationProcessorContext implements ContextInterface
 {
@@ -16,7 +16,7 @@ class OperationProcessorContext implements ContextInterface
     public function __construct(
         private readonly KernelInterface $kernel,
         private readonly ExecutorInterface $executor,
-        private readonly RubyClassImplementationInterface $classImplementation,
+        private readonly RubyClassInterface $rubyClass,
         private readonly VMStack $vmStack,
         private readonly ProgramCounter $pc,
         private readonly InstructionSequence $instructionSequence,
@@ -59,7 +59,7 @@ class OperationProcessorContext implements ContextInterface
         return new self(
             kernel: clone $this->kernel,
             executor: clone $this->executor,
-            classImplementation: clone $this->classImplementation,
+            rubyClass: clone $this->rubyClass,
             vmStack: clone $this->vmStack,
             pc: clone $this->pc,
             instructionSequence: clone $this->instructionSequence,
@@ -74,9 +74,9 @@ class OperationProcessorContext implements ContextInterface
         );
     }
 
-    public function self(): RubyClassImplementationInterface
+    public function self(): RubyClassInterface
     {
-        return $this->classImplementation;
+        return $this->rubyClass;
     }
 
     public function vmStack(): VMStack
