@@ -132,9 +132,9 @@ $executed = $executor->execute();
 $executed->methods()->callFromPHP();
 ```
 
-You will get to output `Hello World from Ruby!`
+You will get to output `Hello World from Ruby!`.
 In addition case, maybe you want to pass arguments. of course, it is available on.
-First time, modify previous code as below.
+First time, to modify previous code as below.
 
 ```ruby
 def callFromPHP(text)
@@ -142,7 +142,7 @@ def callFromPHP(text)
 end
 ```
 
-Second time, modify PHP code `$executed->methods()->callFromPHP()` as following:
+Second time, to modify PHP code `$executed->methods()->callFromPHP()` as following:
 
 
 ```php
