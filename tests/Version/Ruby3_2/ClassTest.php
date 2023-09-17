@@ -74,4 +74,43 @@ class ClassTest extends TestApplication
 
         _, $rubyVMManager->stdOut->readAll());
     }
+
+    public function testInstanceVariable(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            class Array
+              def foo(arr1, arr2)
+                @arr1 = arr1
+                @arr2 = arr2
+                self
+              end
+              def test
+                puts @arr1
+                puts @arr2
+              end
+            end
+
+            Array.new.foo([5, 4, 3, 2, 1], [10, 100, 1000]).test
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2)
+        ;
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<< '_'
+        5
+        4
+        3
+        2
+        1
+        10
+        100
+        1000
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
 }

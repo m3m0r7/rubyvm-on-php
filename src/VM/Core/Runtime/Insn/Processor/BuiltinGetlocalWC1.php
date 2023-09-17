@@ -37,7 +37,8 @@ class BuiltinGetlocalWC1 implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        $this->getLocalTableToStack(Option::RSV_TABLE_INDEX_1);
+        $slotIndex = $this->getOperandAsNumberSymbol()->number;
+        $this->getLocalTableToStack($slotIndex, Option::RSV_TABLE_INDEX_1);
 
         return ProcessedStatus::SUCCESS;
     }

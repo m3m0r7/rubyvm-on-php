@@ -10,8 +10,10 @@ use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
+use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Standard\Main;
 use RubyVM\VM\Exception\OperationProcessorException;
 use RubyVM\VM\Exception\RubyVMException;
 
@@ -41,6 +43,15 @@ trait ProvideExtendedMethodCall
             previousContext: $context
                 ->renewEnvironmentTableEntries(),
         ));
+
+        // TODO: is this needed?
+        if (!$context->self() instanceof Main) {
+            $executor->context()->vmStack()->push(
+                new OperandEntry(
+                    $context->self(),
+                ),
+            );
+        }
 
         $localTableSize = $executor->context()->instructionSequence()->body()->data->localTableSize();
 

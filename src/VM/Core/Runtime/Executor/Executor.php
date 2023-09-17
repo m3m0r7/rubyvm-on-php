@@ -9,8 +9,8 @@ use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
-use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
 use RubyVM\VM\Core\Runtime\Option;
+use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
 use RubyVM\VM\Core\Runtime\Symbol\VoidSymbol;
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\ExecutorFailedException;
@@ -264,8 +264,7 @@ class Executor implements ExecutorInterface
                 returnValue: $this->context
                     ->vmStack()
                     ->pop()
-                    ->operand
-                    ->symbol,
+                    ->operand,
                 threw: null,
                 debugger: $this->debugger,
             );
@@ -274,7 +273,8 @@ class Executor implements ExecutorInterface
         return new ExecutedResult(
             executor: $this,
             executedStatus: ExecutedStatus::SUCCESS,
-            returnValue: new VoidSymbol(),
+            returnValue: (new VoidSymbol())
+                ->toObject(),
             threw: null,
             debugger: $this->debugger,
         );

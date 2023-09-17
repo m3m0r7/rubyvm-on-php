@@ -11,9 +11,8 @@ trait LocalTable
     use Validatable;
     use OperandHelper;
 
-    public function getLocalTableToStack(int $level): void
+    public function getLocalTableToStack(int $slotIndex, int $level): void
     {
-        $slotIndex = $this->getOperandAsNumberSymbol()->number;
         $this->context->vmStack()->push(
             new OperandEntry(
                 $this->context
@@ -34,9 +33,8 @@ trait LocalTable
         );
     }
 
-    public function setLocalTableFromStack(int $level): void
+    public function setLocalTableFromStack(int $slotIndex, int $level): void
     {
-        $slotIndex = $this->getOperandAsNumberSymbol()->number;
         $operand = $this->getStackAsObject();
 
         $this->context->environmentTableEntries()

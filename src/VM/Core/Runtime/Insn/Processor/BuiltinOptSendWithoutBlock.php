@@ -131,7 +131,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             }
             if (null !== $result->returnValue) {
                 $this->context->vmStack()
-                    ->push(new OperandEntry($result->returnValue->toObject()))
+                    ->push(new OperandEntry($result->returnValue))
                 ;
             }
 

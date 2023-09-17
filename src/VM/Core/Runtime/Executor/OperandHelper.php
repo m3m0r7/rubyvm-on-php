@@ -12,7 +12,6 @@ use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\OffsetSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\StructSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 
 /**
@@ -203,21 +202,6 @@ trait OperandHelper
         return $symbol;
     }
 
-    private function getStackAsStructSymbol(): StructSymbol
-    {
-        /**
-         * @var StructSymbol $symbol
-         */
-        $symbol = $this->getStackAsSymbol();
-
-        $this->validateType(
-            StructSymbol::class,
-            $symbol,
-        );
-
-        return $symbol;
-    }
-
     private function getStackAsStringSymbol(): StringSymbol
     {
         /**
@@ -268,7 +252,7 @@ trait OperandHelper
         return $this->getStackAsAny(ID::class);
     }
 
-    private function getStackAsMain(): RubyClassImplementationInterface
+    private function getStackAsClass(): RubyClassImplementationInterface
     {
         return $this->getStackAsAny(RubyClassImplementationInterface::class);
     }
