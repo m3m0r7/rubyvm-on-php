@@ -6,10 +6,14 @@ namespace RubyVM\VM\Core\Runtime\Provider;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
+use RubyVM\VM\Core\Runtime\Symbol\BooleanSymbol;
+use RubyVM\VM\Core\Runtime\Symbol\FloatSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
+use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\RangeSymbol;
+use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\RubyVMException;
 
@@ -67,5 +71,14 @@ trait ProvideBasicClassMethods
     public function exit(int $code = 0): void
     {
         exit($code);
+    }
+
+    public function inspect(): SymbolInterface
+    {
+        $string = (string) $this;
+        if ($this instanceof StringSymbol) {
+            $string = '"' . $string . '"';
+        }
+        return new StringSymbol($string);
     }
 }

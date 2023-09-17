@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
 use RubyVM\VM\Core\Runtime\Symbol\FloatSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\ID;
@@ -110,9 +110,9 @@ trait OperandHelper
         return $this->getOperandAsAny(ID::class);
     }
 
-    private function getOperandAsMain(): RubyClassImplementationInterface
+    private function getOperandAsMain(): RubyClassInterface
     {
-        return $this->getOperandAsAny(RubyClassImplementationInterface::class);
+        return $this->getOperandAsAny(RubyClassInterface::class);
     }
 
     private function getOperandAsCallInfo(): CallInfoEntryInterface
@@ -151,7 +151,7 @@ trait OperandHelper
         return $operand;
     }
 
-    private function getOperandAsAny(string $className): Object_|CallInfoEntryInterface|RubyClassImplementationInterface|ID|ExecutedResult
+    private function getOperandAsAny(string $className): Object_|CallInfoEntryInterface|RubyClassInterface|ID|ExecutedResult
     {
         $operand = $this->getOperand();
 
@@ -252,9 +252,9 @@ trait OperandHelper
         return $this->getStackAsAny(ID::class);
     }
 
-    private function getStackAsClass(): RubyClassImplementationInterface
+    private function getStackAsClass(): RubyClassInterface
     {
-        return $this->getStackAsAny(RubyClassImplementationInterface::class);
+        return $this->getStackAsAny(RubyClassInterface::class);
     }
 
     private function getStackAsCallInfo(): CallInfoEntryInterface
@@ -288,7 +288,7 @@ trait OperandHelper
         return $operand;
     }
 
-    private function getStackAsAny(string $className): Object_|CallInfoEntryInterface|RubyClassImplementationInterface|ID|ExecutedResult
+    private function getStackAsAny(string $className): Object_|CallInfoEntryInterface|RubyClassInterface|ID|ExecutedResult
     {
         $operand = $this->getStack();
 

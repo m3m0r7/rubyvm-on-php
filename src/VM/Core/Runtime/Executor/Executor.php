@@ -10,7 +10,7 @@ use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Symbol\VoidSymbol;
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\ExecutorFailedException;
@@ -32,7 +32,7 @@ class Executor implements ExecutorInterface
 
     public function __construct(
         private readonly KernelInterface $kernel,
-        private readonly RubyClassImplementationInterface $classImplementation,
+        private readonly RubyClassInterface $rubyClass,
         private readonly InstructionSequence $instructionSequence,
         private readonly LoggerInterface $logger,
         private readonly ExecutorDebugger $debugger = new ExecutorDebugger(),
@@ -51,7 +51,7 @@ class Executor implements ExecutorInterface
         return new OperationProcessorContext(
             $this->kernel,
             $this,
-            $this->classImplementation,
+            $this->rubyClass,
             $previousContext?->vmStack() ?? new VMStack(),
             new ProgramCounter(),
             $this->instructionSequence,

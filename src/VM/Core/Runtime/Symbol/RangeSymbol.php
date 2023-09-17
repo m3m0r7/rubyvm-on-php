@@ -9,9 +9,12 @@ use RubyVM\VM\Core\Helper\LocalTableHelper;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Option;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\ShouldBeRubyClass;
 
-class RangeSymbol implements SymbolInterface, \ArrayAccess
+class RangeSymbol implements SymbolInterface, \ArrayAccess, RubyClassInterface
 {
+    use ShouldBeRubyClass;
     private array $array;
 
     public function __construct(
@@ -40,7 +43,7 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
 
     public function __toString(): string
     {
-        return "[{$this->begin->number}..{$this->end->number}]";
+        return "{$this->begin->number}" . ($this->excludeEnd ? '...' : '..') . "{$this->end->number}";
     }
 
     public function each(OperationProcessorContext $context): SymbolInterface
@@ -51,7 +54,7 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
         foreach ($this->array as $index => $number) {
             $executor = (new Executor(
                 kernel: $context->kernel(),
-                classImplementation: $context->self(),
+                rubyClass: $context->self(),
                 instructionSequence: $context->instructionSequence(),
                 logger: $context->logger(),
                 debugger: $context->debugger(),

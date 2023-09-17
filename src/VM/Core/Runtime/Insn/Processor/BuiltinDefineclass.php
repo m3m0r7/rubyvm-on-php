@@ -59,7 +59,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
 
         $executor = (new Executor(
             kernel: $this->context->kernel(),
-            classImplementation: $this->context->self(),
+            rubyClass: $this->context->self(),
             instructionSequence: $instructionSequence,
             logger: $this->context->logger(),
             debugger: $this->context->debugger(),

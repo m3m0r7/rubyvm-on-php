@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Symbol;
 
-class FloatSymbol implements SymbolInterface
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\ShouldBeRubyClass;
+
+class FloatSymbol implements SymbolInterface, RubyClassInterface
 {
+    use ShouldBeRubyClass;
+
     public function __construct(
         public readonly float $number,
     ) {

@@ -7,7 +7,7 @@ namespace RubyVM\VM\Core\Runtime\Provider;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\ExtendedClassEntry;
-use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
@@ -15,9 +15,9 @@ use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 
 trait ProvideClassExtendableMethods
 {
-    public function getDefinedClassOrSelf(RubyClassImplementationInterface|Object_ $class): RubyClassImplementationInterface|Object_|SymbolInterface
+    public function getDefinedClassOrSelf(RubyClassInterface|Object_ $class): RubyClassInterface|Object_|SymbolInterface
     {
-        if ($class instanceof RubyClassImplementationInterface) {
+        if ($class instanceof RubyClassInterface) {
             return $class;
         }
 
@@ -62,7 +62,7 @@ trait ProvideClassExtendableMethods
         }
         $executor = new Executor(
             kernel: $context->kernel(),
-            classImplementation: static::$userLandClasses[(string) $className],
+            rubyClass: static::$userLandClasses[(string) $className],
             instructionSequence: $context->instructionSequence(),
             logger: $context->logger(),
             debugger: $context->debugger(),

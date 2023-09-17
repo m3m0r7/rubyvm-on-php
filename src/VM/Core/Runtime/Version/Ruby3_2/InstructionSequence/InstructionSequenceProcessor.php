@@ -338,23 +338,16 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                     // NOTE: In this statement, change next operand to be instruction sequence number.
                     // however originally RubyVM is not needed here because it is implemented by using only integer types but RubyVM on PHP is written in the OOP.
                     // So RubyVM on PHP needs explicitly changing operand.
-
-                    // TODO: Implement fetching on counter (BuiltinInsn)
-                    foreach ([Insn::DEFINEMETHOD->name => 1, Insn::SEND->name => 1, Insn::DEFINECLASS->name => 2, Insn::SETINSTANCEVARIABLE->name => 1, Insn::GETINSTANCEVARIABLE->name => 1] as $targetInsn => $fetching) {
-                        for ($i = 0; $i < $fetching; ++$i) {
-                            if ($insn->name === $targetInsn) {
-                                // Especially, Insn::SEND is demanded an NumberSymbol within the next sequence.
-                                $entries->append(
-                                    new OperandEntry(
-                                        operand: (new NumberSymbol(
-                                            number: $reader->smallValue(),
-                                            isFixed: true,
-                                        ))->toObject(),
-                                    )
-                                );
-                                ++$codeIndex;
-                            }
-                        }
+                    for ($i = 0; $i < ($insn->operandSize() - 1); ++$i) {
+                        $entries->append(
+                            new OperandEntry(
+                                operand: (new NumberSymbol(
+                                    number: $reader->smallValue(),
+                                    isFixed: true,
+                                ))->toObject(),
+                            )
+                        );
+                        ++$codeIndex;
                     }
                 }
 
