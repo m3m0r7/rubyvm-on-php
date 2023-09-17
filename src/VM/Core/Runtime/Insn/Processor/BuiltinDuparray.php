@@ -35,7 +35,7 @@ class BuiltinDuparray implements OperationProcessorInterface
     {
     }
 
-    public function process(): ProcessedStatus
+    public function process(mixed ...$arguments): ProcessedStatus
     {
         $this->context->vmStack()->push(new OperandEntry(
             $this->getOperandAsArraySymbol()

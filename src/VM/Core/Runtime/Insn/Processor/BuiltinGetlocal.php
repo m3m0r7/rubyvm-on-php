@@ -34,7 +34,7 @@ class BuiltinGetlocal implements OperationProcessorInterface
     {
     }
 
-    public function process(): ProcessedStatus
+    public function process(mixed ...$arguments): ProcessedStatus
     {
         $slotIndex = $this->getOperandAsNumberSymbol()->number;
         $level = $this->getOperandAsNumberSymbol()->number;

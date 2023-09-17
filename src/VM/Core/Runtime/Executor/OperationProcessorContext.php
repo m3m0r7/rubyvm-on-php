@@ -32,6 +32,11 @@ class OperationProcessorContext implements ContextInterface
         $this->startTime = $startTime ?? microtime(true);
     }
 
+    public function __debugInfo(): array
+    {
+        return [];
+    }
+
     public function renewEnvironmentTable(): self
     {
         $this->environmentTable = new EnvironmentTable();

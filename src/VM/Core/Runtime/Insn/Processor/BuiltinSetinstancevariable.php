@@ -32,7 +32,7 @@ class BuiltinSetinstancevariable implements OperationProcessorInterface
     {
     }
 
-    public function process(): ProcessedStatus
+    public function process(mixed ...$arguments): ProcessedStatus
     {
         $instanceVar = $this->getOperandAsID();
 

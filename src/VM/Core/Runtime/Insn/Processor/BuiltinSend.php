@@ -39,7 +39,7 @@ class BuiltinSend implements OperationProcessorInterface
     {
     }
 
-    public function process(): ProcessedStatus
+    public function process(mixed ...$arguments): ProcessedStatus
     {
         $callInfo = $this->getOperandAsCallInfo();
 
@@ -48,7 +48,7 @@ class BuiltinSend implements OperationProcessorInterface
             $arguments[] = $this->context->vmStack()->pop();
         }
 
-        $blockObject = $this->getStackAsObject();
+        $blockObject = $this->getStack()->operand;
 
         $this->validateType(
             OperandEntry::class,

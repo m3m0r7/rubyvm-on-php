@@ -24,6 +24,11 @@ class ExecutorDebugger
         $this->currentMemoryUsage = memory_get_usage(false);
     }
 
+    public function __debugInfo(): array
+    {
+        return [];
+    }
+
     public function bindContext(ContextInterface $context): void
     {
         $this->context = $context;

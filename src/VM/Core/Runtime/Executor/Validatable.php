@@ -17,7 +17,7 @@ trait Validatable
                 continue;
             }
 
-            throw new OperationProcessorException(sprintf('The %s caught unknown operand %s but this validator expects %s', $this->insn->name, get_class($operandData), $expectClassName));
+            throw new OperationProcessorException(sprintf('The INSN(%s) caught unknown operand %s but this validator expects %s', strtolower($this->insn->name), get_class($operandData), $expectClassName));
         }
     }
 }

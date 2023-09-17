@@ -11,6 +11,7 @@ use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Standard\Main;
@@ -53,6 +54,12 @@ trait ProvideExtendedMethodCall
             );
         }
 
+        // Validate first value is context?
+        $calleeContexts = [];
+        if (isset($arguments[0]) && $arguments[0] instanceof OperationProcessorContext) {
+            $calleeContexts = [array_shift($arguments)];
+        }
+
         $localTableSize = $executor->context()->instructionSequence()->body()->data->localTableSize();
 
         for ($localIndex = 0, $i = count($arguments) - 1; $i >= 0; $i--, $localIndex++) {
@@ -72,7 +79,7 @@ trait ProvideExtendedMethodCall
             ;
         }
 
-        $executed = $executor->execute();
+        $executed = $executor->execute(...$calleeContexts);
 
         if ($executed->executedStatus !== ExecutedStatus::SUCCESS) {
             if (ExecutedStatus::THREW_EXCEPTION) {

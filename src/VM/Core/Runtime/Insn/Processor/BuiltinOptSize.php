@@ -36,7 +36,7 @@ class BuiltinOptSize implements OperationProcessorInterface
     {
     }
 
-    public function process(): ProcessedStatus
+    public function process(mixed ...$arguments): ProcessedStatus
     {
         // No used
         $this->getOperand();

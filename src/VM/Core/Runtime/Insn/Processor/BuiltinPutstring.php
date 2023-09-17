@@ -31,7 +31,7 @@ class BuiltinPutstring implements OperationProcessorInterface
     {
     }
 
-    public function process(): ProcessedStatus
+    public function process(mixed ...$arguments): ProcessedStatus
     {
         $newPos = $this->context->programCounter()->increase();
         $this->context

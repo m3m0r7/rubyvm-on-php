@@ -39,7 +39,7 @@ class BuiltinOptGe implements OperationProcessorInterface
     {
     }
 
-    public function process(): ProcessedStatus
+    public function process(mixed ...$arguments): ProcessedStatus
     {
         return $this->processArithmetic('>=');
     }

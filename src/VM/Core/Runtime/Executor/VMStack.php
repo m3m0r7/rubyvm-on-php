@@ -40,18 +40,22 @@ class VMStack implements \Countable
         );
     }
 
-    public function dup(): void
+    public function dup(): self
     {
         $object = $this->pop();
         $this->push($object, clone $object);
+
+        return $this;
     }
 
-    public function push(OperandEntry $entry, OperandEntry ...$otherEntries): void
+    public function push(OperandEntry $entry, OperandEntry ...$otherEntries): self
     {
         array_push(
             $this->items,
             $entry,
             ...$otherEntries,
         );
+
+        return $this;
     }
 }

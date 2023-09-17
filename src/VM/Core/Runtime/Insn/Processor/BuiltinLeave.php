@@ -31,7 +31,7 @@ class BuiltinLeave implements OperationProcessorInterface
     {
     }
 
-    public function process(): ProcessedStatus
+    public function process(mixed ...$arguments): ProcessedStatus
     {
         return ProcessedStatus::FINISH;
     }

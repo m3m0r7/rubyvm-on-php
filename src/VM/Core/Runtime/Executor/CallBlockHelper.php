@@ -6,6 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
@@ -14,48 +15,58 @@ use RubyVM\VM\Exception\OperationProcessorException;
 
 trait CallBlockHelper
 {
-    private function callBlockWithArguments(CallInfoEntryInterface $callInfo, NumberSymbol $blockIseqIndex, Object_ $blockObject, bool $isSuper, OperandEntry ...$arguments): ?Object_
+    private function callBlockWithArguments(CallInfoEntryInterface $callInfo, NumberSymbol $blockIseqIndex, Object_|RubyClassInterface $blockObject, bool $isSuper, OperandEntry ...$arguments): ?Object_
     {
         if ($callInfo->callData()->flag() & (0x01 << VMCallFlagBit::VM_CALL_ARGS_BLOCKARG->value)) {
             throw new OperationProcessorException('The callBlockWithArguments is not implemented yet');
         }
-        if ($blockIseqIndex->number > 0) {
-            $instructionSequence = $this->context
-                ->kernel()
-                ->loadInstructionSequence(new Aux(
-                    loader: new AuxLoader(
-                        index: $blockIseqIndex->number,
-                    ),
-                ))
-            ;
+        if ($blockIseqIndex->number === 0) {
+            // TODO: implement a super call
+            // see: https://github.com/ruby/ruby/blob/ruby_3_2/vm_args.c#L888
 
-            $instructionSequence->load();
-
-            $executor = (new Executor(
-                kernel: $this->context->kernel(),
-                rubyClass: $this->context->self(),
-                instructionSequence: $instructionSequence,
-                logger: $this->context->logger(),
-                debugger: $this->context->debugger(),
-                previousContext: $this->context,
-            ));
-
-            $result = $blockObject->symbol->{(string) $callInfo->callData()->mid()->object->symbol}(
-                $executor->context(),
-                ...$this->translateForArguments(
-                    ...$arguments
+            throw new OperationProcessorException('The callBlockWithArguments is not implemented yet');
+        }
+        $instructionSequence = $this->context
+            ->kernel()
+            ->loadInstructionSequence(new Aux(
+                loader: new AuxLoader(
+                    index: $blockIseqIndex->number,
                 ),
-            );
-            if ($result instanceof SymbolInterface) {
-                return $result->toObject();
-            }
+            ))
+        ;
 
-            return null;
+        $instructionSequence->load();
+
+        $executor = (new Executor(
+            kernel: $this->context->kernel(),
+            rubyClass: $this->context->self(),
+            instructionSequence: $instructionSequence,
+            logger: $this->context->logger(),
+            debugger: $this->context->debugger(),
+            previousContext: $this->context,
+        ));
+
+        $result = null;
+        $callee = null;
+        $arguments = $this->translateForArguments(
+            ...$arguments
+        );
+
+        if ($blockObject instanceof Object_) {
+            $callee = $blockObject->symbol;
+        } else {
+            $callee = $blockObject;
         }
 
-        // TODO: implement a super call
-        // see: https://github.com/ruby/ruby/blob/ruby_3_2/vm_args.c#L888
+        $result = $callee->{(string) $callInfo->callData()->mid()->object->symbol}(
+            $executor->context(),
+            ...$arguments,
+        );
 
-        throw new OperationProcessorException('The callBlockWithArguments is not implemented yet');
+        if ($result instanceof SymbolInterface) {
+            return $result->toObject();
+        }
+
+        return null;
     }
 }

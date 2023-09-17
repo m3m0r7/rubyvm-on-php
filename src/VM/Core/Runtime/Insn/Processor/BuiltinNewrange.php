@@ -33,7 +33,7 @@ class BuiltinNewrange implements OperationProcessorInterface
     {
     }
 
-    public function process(): ProcessedStatus
+    public function process(mixed ...$arguments): ProcessedStatus
     {
         $flags = $this->getOperandAsNumberSymbol();
         $high = $this->getStackAsNumberSymbol();

@@ -14,5 +14,5 @@ interface OperationProcessorInterface
 
     public function after(): void;
 
-    public function process(): ProcessedStatus;
+    public function process(mixed ...$arguments): ProcessedStatus;
 }

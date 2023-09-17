@@ -33,7 +33,7 @@ class BuiltinNewarray implements OperationProcessorInterface
     {
     }
 
-    public function process(): ProcessedStatus
+    public function process(mixed ...$arguments): ProcessedStatus
     {
         $entries = [];
         $num = $this->getOperandAsNumberSymbol();

@@ -36,7 +36,7 @@ class BuiltinPutspecialobject implements OperationProcessorInterface
     {
     }
 
-    public function process(): ProcessedStatus
+    public function process(mixed ...$arguments): ProcessedStatus
     {
         $symbol = $this->getOperandAsNumberSymbol();
 

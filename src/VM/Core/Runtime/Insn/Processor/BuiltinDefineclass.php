@@ -38,7 +38,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
     {
     }
 
-    public function process(): ProcessedStatus
+    public function process(mixed ...$arguments): ProcessedStatus
     {
         /**
          * @var StringSymbol $className

@@ -49,7 +49,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
     {
     }
 
-    public function process(): ProcessedStatus
+    public function process(mixed ...$arguments): ProcessedStatus
     {
         $callInfo = $this->getOperandAsCallInfo();
 
@@ -90,6 +90,8 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         // TODO: will refactor here
         if ($targetClass instanceof RubyClassInterface && $targetClass->hasMethod('injectVMContext')) {
             $targetClass->injectVMContext($this->context->kernel());
+        } elseif ($targetClass instanceof Object_ && method_exists($targetClass->symbol, 'injectVMContext')) {
+            $targetClass->symbol->injectVMContext($this->context->kernel());
         }
 
         // Here is a special method calls

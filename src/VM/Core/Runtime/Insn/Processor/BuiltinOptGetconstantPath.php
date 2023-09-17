@@ -32,7 +32,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
     {
     }
 
-    public function process(): ProcessedStatus
+    public function process(mixed ...$arguments): ProcessedStatus
     {
         $operand = $this->getOperandAsID();
         $this->context->vmStack()->push(new OperandEntry($operand->object));
