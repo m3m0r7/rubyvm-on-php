@@ -82,6 +82,7 @@ trait ProvideBasicClassMethods
             NumberSymbol::class => (string) $this->number,
             BooleanSymbol::class => $this->boolean ? 'true' : 'false',
             NilSymbol::class => 'nil',
+            RangeSymbol::class => "{$this->begin->number}" . ($this->excludeEnd ? '...' : '..') . "{$this->end->number}",
             default => throw new RubyVMException(
                 sprintf(
                     'Cannot inspect receiver object %s',

@@ -117,4 +117,22 @@ class InspectionTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("nil\n", $rubyVMManager->stdOut->readAll());
     }
+
+    public function testCallInspectionOnRange(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            puts (1..5).inspect
+            puts (1...5).inspect
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2)
+        ;
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame("1..5\n1...5\n", $rubyVMManager->stdOut->readAll());
+    }
 }
