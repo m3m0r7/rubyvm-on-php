@@ -8,6 +8,11 @@ trait ProvidePHPClassMethods
 {
     public function phpinfo(): void
     {
-        $this->kernel->IOContext()->stdOut->write('PHP Version: ' . PHP_VERSION . "\n");
+        ob_start();
+        phpinfo(INFO_ALL);
+        $info = ob_get_clean();
+        $this->kernel->IOContext()->stdOut->write($info);
     }
+
+
 }
