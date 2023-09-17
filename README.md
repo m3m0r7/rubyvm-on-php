@@ -129,7 +129,7 @@ $executed = $executor->execute();
 
 // Call Ruby method as below code.
 // In this case, you did define method name is `callFromPHP`.
-$executed->methods()->callFromPHP();
+$executed->context()->callFromPHP();
 ```
 
 You will get to output `Hello World from Ruby!`.
@@ -142,11 +142,11 @@ def callFromPHP(text)
 end
 ```
 
-Second time, to modify PHP code `$executed->methods()->callFromPHP()` as following:
+Second time, to modify PHP code `$executed->context()->callFromPHP()` as following:
 
 
 ```php
-$executed->methods()->callFromPHP('Hello World! Here is passed an argument from PHP!')
+$executed->context()->callFromPHP('Hello World! Here is passed an argument from PHP!')
 ```
 
 You will get to output `Hello World! Here is passed an argument from PHP`.

@@ -34,7 +34,7 @@ class CallRubyMethodsFromPHPTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executed->executedStatus);
         $this->assertSame(
             65535,
-            $executed->methods()
+            $executed->context()
                 ->test(),
         );
     }
@@ -81,7 +81,7 @@ class CallRubyMethodsFromPHPTest extends TestApplication
                 1024,
                 2048,
             ],
-            $executed->methods()
+            $executed->context()
                 ->quicksort([-8, 1, 2048, 512, 64, 256, 1024, -32]),
         );
     }

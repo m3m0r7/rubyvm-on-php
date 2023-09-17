@@ -6,9 +6,9 @@ namespace RubyVM\VM\Core\Runtime\Executor\Accessor;
 
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 
-class Method implements AccessorInterface
+readonly class ContextAccessor implements ContextAccessorInterface
 {
-    public function __construct(protected readonly ExecutedResult $executedResult)
+    public function __construct(protected ExecutedResult $executedResult)
     {
     }
 
