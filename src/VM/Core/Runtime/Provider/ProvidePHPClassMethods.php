@@ -13,6 +13,4 @@ trait ProvidePHPClassMethods
         $info = ob_get_clean();
         $this->kernel->IOContext()->stdOut->write($info);
     }
-
-
 }

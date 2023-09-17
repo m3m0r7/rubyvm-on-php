@@ -65,8 +65,7 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
             $localTableSize = $executor->context()->instructionSequence()->body()->data->localTableSize();
 
             $executor->context()
-                ->environmentTableEntries()
-                ->get(Option::RSV_TABLE_INDEX_0)
+                ->environmentTable()
                 ->set(
                     LocalTableHelper::computeLocalTableIndex(
                         $localTableSize,

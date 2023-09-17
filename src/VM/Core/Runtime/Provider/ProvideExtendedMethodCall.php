@@ -41,7 +41,7 @@ trait ProvideExtendedMethodCall
             logger: $context->logger(),
             debugger: $context->debugger(),
             previousContext: $context
-                ->renewEnvironmentTableEntries(),
+                ->renewEnvironmentTable(),
         ));
 
         // TODO: is this needed?
@@ -61,8 +61,7 @@ trait ProvideExtendedMethodCall
              */
             $argument = $arguments[$i];
             $executor->context()
-                ->environmentTableEntries()
-                ->get(0)
+                ->environmentTable()
                 ->set(
                     LocalTableHelper::computeLocalTableIndex(
                         $localTableSize,

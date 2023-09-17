@@ -21,7 +21,7 @@ class OperationProcessorContext implements ContextInterface
         private readonly ProgramCounter $pc,
         private readonly InstructionSequence $instructionSequence,
         private readonly LoggerInterface $logger,
-        private EnvironmentTableEntries $environmentTableEntries,
+        private EnvironmentTable $environmentTable,
         private readonly ExecutorDebugger $debugger,
         private readonly int $depth,
         ?float $startTime,
@@ -32,9 +32,9 @@ class OperationProcessorContext implements ContextInterface
         $this->startTime = $startTime ?? microtime(true);
     }
 
-    public function renewEnvironmentTableEntries(): self
+    public function renewEnvironmentTable(): self
     {
-        $this->environmentTableEntries = new EnvironmentTableEntries();
+        $this->environmentTable = new EnvironmentTable();
 
         return $this;
     }
@@ -64,7 +64,7 @@ class OperationProcessorContext implements ContextInterface
             pc: clone $this->pc,
             instructionSequence: clone $this->instructionSequence,
             logger: $this->logger, // NOTE: Do not clone because logger is shared resource
-            environmentTableEntries: clone $this->environmentTableEntries,
+            environmentTable: clone $this->environmentTable,
             debugger: $this->debugger, // NOTE: Do not clone because logger is shared resource
             depth: $this->depth,
             startTime: $this->startTime,
@@ -99,9 +99,9 @@ class OperationProcessorContext implements ContextInterface
         return $this->instructionSequence;
     }
 
-    public function environmentTableEntries(): EnvironmentTableEntries
+    public function environmentTable(): EnvironmentTable
     {
-        return $this->environmentTableEntries;
+        return $this->environmentTable;
     }
 
     public function kernel(): KernelInterface

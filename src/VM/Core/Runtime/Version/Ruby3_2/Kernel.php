@@ -6,7 +6,6 @@ namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2;
 
 use RubyVM\VM\Core\Helper\DefaultDefinedClassEntries;
 use RubyVM\VM\Core\Helper\DefaultOperationProcessorEntries;
-use RubyVM\VM\Core\Runtime\Executor\EnvironmentTableEntries;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\Executor\IOContext;
@@ -96,8 +95,6 @@ class Kernel implements KernelInterface
          * @var null|InstructionSequence $instructionSequence
          */
         $instructionSequence = $this->loadInstructionSequence($aux);
-
-        $environmentTableEntries = new EnvironmentTableEntries();
 
         $main = new Main();
         $main->injectVMContext(

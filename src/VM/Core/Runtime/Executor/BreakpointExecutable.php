@@ -39,7 +39,7 @@ trait BreakpointExecutable
             );
             printf(
                 "Previous Local Tables: %s\n",
-                (string) $previousContext->environmentTableEntries(),
+                (string) $previousContext->environmentTable(),
             );
             printf(
                 "Current Stacks: %s#%d\n",
@@ -48,7 +48,7 @@ trait BreakpointExecutable
             );
             printf(
                 "Current Local Tables: %s\n",
-                (string) $nextContext->environmentTableEntries(),
+                (string) $nextContext->environmentTable(),
             );
         }
         printf("\n");
