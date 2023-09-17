@@ -50,8 +50,7 @@ class RubyVM implements RubyVMInterface
 
         $runtime = $this->runtime($useVersion);
 
-        $executor = $runtime->kernel()->setup()->process()
-        ;
+        $executor = $runtime->kernel()->setup()->process();
 
         $this->option->logger->info(
             sprintf('Complete to disassemble an instruction sequence'),

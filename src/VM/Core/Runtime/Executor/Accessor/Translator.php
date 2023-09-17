@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Accessor;
 
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
+use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
 use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
 use RubyVM\VM\Core\Runtime\Symbol\BooleanSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\FloatSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
+use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\RangeSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\TranslationException;
 
-class Translator
+readonly class Translator
 {
     public static function PHPToRuby(mixed $elements): self
     {
@@ -49,23 +51,40 @@ class Translator
         });
     }
 
-    public static function RubyToPHP(SymbolInterface $symbol): mixed
+    public static function RubyToPHP(Object_|SymbolInterface|RubyClassImplementationInterface|array $objectOrClass): mixed
     {
-        return match ($symbol::class) {
-            StringSymbol::class => $symbol->string,
-            BooleanSymbol::class => $symbol->boolean,
-            RangeSymbol::class,
-            ArraySymbol::class => array_map(
-                fn (SymbolInterface $element) => static::RubyToPHP($element),
-                $symbol->array,
-            ),
-            FloatSymbol::class,
-            NumberSymbol::class => $symbol->number,
-            default => throw new TranslationException('The type is not implemented yet'),
-        };
+        if (is_array($objectOrClass)) {
+            return array_map(
+                fn ($element) => static::RubyToPHP($element),
+                $objectOrClass,
+            );
+        }
+
+        if ($objectOrClass instanceof Object_ || $objectOrClass instanceof SymbolInterface) {
+            if ($objectOrClass instanceof Object_) {
+                $symbol = $objectOrClass->symbol;
+            } else {
+                $symbol = $objectOrClass;
+            }
+
+            return match ($symbol::class) {
+                StringSymbol::class => $symbol->string,
+                BooleanSymbol::class => $symbol->boolean,
+                RangeSymbol::class,
+                ArraySymbol::class => array_map(
+                    fn (SymbolInterface $element) => static::RubyToPHP($element),
+                    $symbol->array,
+                ),
+                FloatSymbol::class,
+                NumberSymbol::class => $symbol->number,
+                default => throw new TranslationException('The type is not implemented yet'),
+            };
+        }
+
+        return $objectOrClass;
     }
 
-    public function __construct(public readonly SymbolInterface $symbol)
+    public function __construct(public SymbolInterface $symbol)
     {
     }
 

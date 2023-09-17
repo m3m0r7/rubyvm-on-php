@@ -25,7 +25,7 @@ class YARBStructureTest extends TestApplication
         $this->assertSame('arm64-darwin22', $rubyVMManager->rubyVM->runtime()->rubyPlatform());
     }
 
-    public function testExtraData()
+    public function testExtraData(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< '_'

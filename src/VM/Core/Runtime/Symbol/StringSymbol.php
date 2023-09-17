@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Symbol;
 
 use RubyVM\VM\Core\Runtime\Encoding;
+use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
+use RubyVM\VM\Core\Runtime\ShouldBeRubyClass;
 
-class StringSymbol implements SymbolInterface
+class StringSymbol implements SymbolInterface, RubyClassImplementationInterface
 {
+    use ShouldBeRubyClass;
+
     public function __construct(
         public readonly string $string,
         public readonly Encoding $encoding = Encoding::RUBY_ENCINDEX_UTF_8,

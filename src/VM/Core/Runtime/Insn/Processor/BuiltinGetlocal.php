@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
+use RubyVM\VM\Core\Runtime\Executor\LocalTable;
+use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
-use RubyVM\VM\Exception\OperationProcessorException;
-use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinGetlocal implements OperationProcessorInterface
 {
+    use LocalTable;
     use OperandHelper;
+
     private Insn $insn;
 
     private ContextInterface $context;
@@ -34,6 +36,11 @@ class BuiltinGetlocal implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor is not implemented yet', strtolower($this->insn->name), $this->insn->value));
+        $slotIndex = $this->getOperandAsNumberSymbol()->number;
+        $level = $this->getOperandAsNumberSymbol()->number;
+
+        $this->getLocalTableToStack($slotIndex, $level);
+
+        return ProcessedStatus::SUCCESS;
     }
 }

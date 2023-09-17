@@ -52,6 +52,11 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         throw new InstructionSequenceProcessorException(sprintf('Not found instructionSequenceList#%d', $this->aux->loader->index));
     }
 
+    public function __debugInfo(): array
+    {
+        return [];
+    }
+
     public function process(): InstructionSequenceBody
     {
         /**
@@ -335,7 +340,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                     // So RubyVM on PHP needs explicitly changing operand.
 
                     // TODO: Implement fetching on counter (BuiltinInsn)
-                    foreach ([Insn::DEFINEMETHOD->name => 1, Insn::SEND->name => 1, Insn::DEFINECLASS->name => 2] as $targetInsn => $fetching) {
+                    foreach ([Insn::DEFINEMETHOD->name => 1, Insn::SEND->name => 1, Insn::DEFINECLASS->name => 2, Insn::SETINSTANCEVARIABLE->name => 1, Insn::GETINSTANCEVARIABLE->name => 1] as $targetInsn => $fetching) {
                         for ($i = 0; $i < $fetching; ++$i) {
                             if ($insn->name === $targetInsn) {
                                 // Especially, Insn::SEND is demanded an NumberSymbol within the next sequence.

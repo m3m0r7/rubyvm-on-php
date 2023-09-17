@@ -16,7 +16,6 @@ class Runtime implements RuntimeInterface
     ) {
     }
 
-
     public function rubyVersion(): string
     {
         return sprintf(
@@ -44,7 +43,8 @@ class Runtime implements RuntimeInterface
 
         $this
             ->kernel
-            ->setup();
+            ->setup()
+        ;
 
         $this->done = true;
     }
