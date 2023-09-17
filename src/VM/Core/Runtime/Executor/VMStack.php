@@ -26,7 +26,7 @@ class VMStack implements \Countable
     public function pop(): OperandEntry
     {
         $item = array_pop($this->items);
-        if (null === $item) {
+        if ($item === null) {
             throw new VMStackException('The VMStack is empty');
         }
 

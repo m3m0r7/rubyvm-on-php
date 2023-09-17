@@ -129,7 +129,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             return ProcessedStatus::SUCCESS;
         }
 
-        if (null === $result) {
+        if ($result === null) {
             // This is same at UNDEFINED on originally RubyVM
             return ProcessedStatus::SUCCESS;
         }
@@ -138,7 +138,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             if ($result->threw) {
                 throw $result->threw;
             }
-            if (null !== $result->returnValue) {
+            if ($result->returnValue !== null) {
                 $this->context->vmStack()
                     ->push(new OperandEntry($result->returnValue))
                 ;

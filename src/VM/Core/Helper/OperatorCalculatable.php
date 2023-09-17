@@ -55,7 +55,7 @@ trait OperatorCalculatable
             $value = $this->compute($leftOperand, $rightOperand);
         }
 
-        if (null === $value) {
+        if ($value === null) {
             throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor cannot process `%s` operator because it was not implemented or cannot comparison operator %s and %s', strtolower($this->insn->name), $this->insn->value, $operator, ClassHelper::nameBy($leftOperand), ClassHelper::nameBy($rightOperand)));
         }
 

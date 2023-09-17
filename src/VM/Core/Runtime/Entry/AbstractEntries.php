@@ -29,7 +29,7 @@ abstract class AbstractEntries implements EntriesInterface
     public function verifyOffset(mixed $key): bool
     {
         if (EntryType::HASH === $this->entryType()) {
-            if (null === $key) {
+            if ($key === null) {
                 return false;
             }
 

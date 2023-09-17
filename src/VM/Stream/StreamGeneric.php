@@ -32,7 +32,7 @@ trait StreamGeneric
 
     public function pos(int $newPos = null, int $whence = SEEK_SET): int
     {
-        if (null === $newPos) {
+        if ($newPos === null) {
             return ftell($this->handle);
         }
 

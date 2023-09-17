@@ -65,7 +65,7 @@ class BuiltinSend implements OperationProcessorInterface
             ...$arguments,
         );
 
-        if (null !== $result) {
+        if ($result !== null) {
             $this->context->vmStack()->push(new OperandEntry($result));
         }
 

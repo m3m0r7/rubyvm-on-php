@@ -51,7 +51,7 @@ class VerificationHeader implements VerificationInterface
     private function verifyFileSize(): void
     {
         $size = $this->kernel->stream()->size();
-        if (null === $size) {
+        if ($size === null) {
             throw new VerificationException('The stream size is invalid (size: null)');
         }
 

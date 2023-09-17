@@ -26,7 +26,7 @@ trait ProvideExtendedMethodCall
          */
         $context = static::$userLandMethods[$name] ?? null;
 
-        if (null === $context) {
+        if ($context === null) {
             throw new OperationProcessorException(sprintf('Method not found %s#%s', ClassHelper::nameBy($this), $name));
         }
 

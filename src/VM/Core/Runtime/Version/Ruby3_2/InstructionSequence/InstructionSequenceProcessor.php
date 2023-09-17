@@ -273,7 +273,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                     );
 
                     $types = $operationMap[$this->insnOperationOffsets()[$insnValue]] ?? null;
-                    if (null === $types) {
+                    if ($types === null) {
                         throw new ExecutorExeption(sprintf('Unknown INSN type: 0x%02x', $insn));
                     }
                     ++$codeIndex;

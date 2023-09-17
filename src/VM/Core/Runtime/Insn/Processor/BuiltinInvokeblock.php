@@ -72,7 +72,7 @@ class BuiltinInvokeblock implements OperationProcessorInterface
         if ($executed->threw) {
             throw $executed->threw;
         }
-        if (null !== $executed->returnValue) {
+        if ($executed->returnValue !== null) {
             $this->context->vmStack()
                 ->push(new OperandEntry($executed->returnValue))
             ;
