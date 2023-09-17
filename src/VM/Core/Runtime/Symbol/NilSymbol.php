@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Symbol;
 
-class NilSymbol implements SymbolInterface
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\ShouldBeRubyClass;
+
+class NilSymbol implements SymbolInterface, RubyClassInterface
 {
+    use ShouldBeRubyClass;
+
     public function __construct()
     {
     }

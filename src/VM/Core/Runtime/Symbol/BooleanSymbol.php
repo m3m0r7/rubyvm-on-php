@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Symbol;
 
-class BooleanSymbol implements SymbolInterface
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\ShouldBeRubyClass;
+
+class BooleanSymbol implements SymbolInterface, RubyClassInterface
 {
+    use ShouldBeRubyClass;
+
     public function __construct(
         public readonly bool $boolean,
     ) {
