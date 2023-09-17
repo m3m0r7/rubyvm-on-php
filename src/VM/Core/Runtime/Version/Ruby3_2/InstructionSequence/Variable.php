@@ -11,6 +11,5 @@ class Variable implements VariableInterfce
     public function __construct(
         public readonly int $flipCount,
         public readonly mixed $scriptLines,
-    ) {
-    }
+    ) {}
 }

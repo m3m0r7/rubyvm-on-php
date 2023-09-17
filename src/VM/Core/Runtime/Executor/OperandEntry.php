@@ -13,8 +13,7 @@ class OperandEntry
 {
     public function __construct(
         public Object_|CallInfoEntryInterface|RubyClassInterface|ID|ExecutedResult|IDList $operand
-    ) {
-    }
+    ) {}
 
     public function __clone()
     {

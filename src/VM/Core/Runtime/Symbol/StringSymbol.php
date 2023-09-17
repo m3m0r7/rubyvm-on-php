@@ -15,8 +15,7 @@ class StringSymbol implements SymbolInterface, RubyClassInterface
     public function __construct(
         public readonly string $string,
         public readonly Encoding $encoding = Encoding::RUBY_ENCINDEX_UTF_8,
-    ) {
-    }
+    ) {}
 
     public function __toString(): string
     {

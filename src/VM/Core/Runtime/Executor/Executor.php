@@ -68,10 +68,10 @@ class Executor implements ExecutorInterface
         );
     }
 
-    public function execute(): ExecutedResult
+    public function execute(...$arguments): ExecutedResult
     {
         try {
-            $result = $this->_execute();
+            $result = $this->_execute(...$arguments);
 
             return new ExecutedResult(
                 executor: $this,
@@ -91,7 +91,7 @@ class Executor implements ExecutorInterface
         }
     }
 
-    private function _execute(): ExecutedResult
+    private function _execute(...$arguments): ExecutedResult
     {
         $this->debugger->bindContext($this->context);
 
@@ -194,7 +194,7 @@ class Executor implements ExecutorInterface
                 );
             }
 
-            $status = $processor->process();
+            $status = $processor->process(...$arguments);
 
             $this->logger->info(
                 sprintf(

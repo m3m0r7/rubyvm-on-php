@@ -10,6 +10,5 @@ class OperationEntry
 {
     public function __construct(
         public readonly Insn $insn,
-    ) {
-    }
+    ) {}
 }

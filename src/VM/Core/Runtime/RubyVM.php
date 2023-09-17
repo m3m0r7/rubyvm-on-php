@@ -13,9 +13,7 @@ class RubyVM implements RubyVMInterface
 {
     protected array $registeredRuntimes = [];
 
-    public function __construct(public readonly Option $option)
-    {
-    }
+    public function __construct(public readonly Option $option) {}
 
     /**
      * @param class-string<KernelInterface> $kernelClass
@@ -78,13 +76,13 @@ class RubyVM implements RubyVMInterface
         $selectedVersion = null;
 
         // @var Runtime|null $kernel
-        if (null === $useVersion) {
+        if ($useVersion === null) {
             $runtime = $this->registeredRuntimes[$selectedVersion = array_key_first($this->registeredRuntimes)] ?? null;
         } else {
             $runtime = $this->registeredRuntimes[$selectedVersion = $useVersion->value] ?? null;
         }
 
-        if (null === $runtime) {
+        if ($runtime === null) {
             throw new RubyVMException('The RubyVM is not registered a kernel - You should call RubyVM::register method before calling the disassemble method');
         }
 

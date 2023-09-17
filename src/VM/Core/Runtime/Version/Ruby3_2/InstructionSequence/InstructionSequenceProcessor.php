@@ -273,7 +273,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                     );
 
                     $types = $operationMap[$this->insnOperationOffsets()[$insnValue]] ?? null;
-                    if (null === $types) {
+                    if ($types === null) {
                         throw new ExecutorExeption(sprintf('Unknown INSN type: 0x%02x', $insn));
                     }
                     ++$codeIndex;
@@ -431,6 +431,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         return $this->kernel->stream()->dryPosTransaction(
             function (BinaryStreamReader $reader) use ($paramOptTableOffset) {
                 $reader->pos($paramOptTableOffset);
+
                 // TODO: implement here
                 return -1;
             },

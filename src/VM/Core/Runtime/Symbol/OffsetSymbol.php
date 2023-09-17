@@ -8,8 +8,7 @@ class OffsetSymbol implements SymbolInterface
 {
     public function __construct(
         public readonly int $offset,
-    ) {
-    }
+    ) {}
 
     public function __toString(): string
     {

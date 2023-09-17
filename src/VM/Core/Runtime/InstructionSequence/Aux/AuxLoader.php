@@ -9,6 +9,5 @@ class AuxLoader
     public function __construct(
         public readonly int $index,
         public readonly ?int $obj = null,
-    ) {
-    }
+    ) {}
 }

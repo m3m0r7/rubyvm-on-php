@@ -14,8 +14,7 @@ class InstructionSequence implements InstructionSequenceInterface
     public function __construct(
         public readonly Aux $aux,
         private readonly InstructionSequenceProcessorInterface $processor,
-    ) {
-    }
+    ) {}
 
     public function load(): void
     {

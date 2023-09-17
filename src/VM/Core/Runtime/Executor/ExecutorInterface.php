@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 interface ExecutorInterface
 {
-    public function execute(): ExecutedResult;
+    public function execute(...$arguments): ExecutedResult;
 
     public function enableBreakpoint(bool $enabled = true): self;
 

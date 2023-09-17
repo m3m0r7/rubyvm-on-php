@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
+use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\CallBlockHelper;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
@@ -31,15 +33,11 @@ class BuiltinSend implements OperationProcessorInterface
         $this->context = $context;
     }
 
-    public function before(): void
-    {
-    }
+    public function before(): void {}
 
-    public function after(): void
-    {
-    }
+    public function after(): void {}
 
-    public function process(): ProcessedStatus
+    public function process(SymbolInterface|ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
         $callInfo = $this->getOperandAsCallInfo();
 
@@ -48,7 +46,7 @@ class BuiltinSend implements OperationProcessorInterface
             $arguments[] = $this->context->vmStack()->pop();
         }
 
-        $blockObject = $this->getStackAsObject();
+        $blockObject = $this->getStack()->operand;
 
         $this->validateType(
             OperandEntry::class,
@@ -65,7 +63,7 @@ class BuiltinSend implements OperationProcessorInterface
             ...$arguments,
         );
 
-        if (null !== $result) {
+        if ($result !== null) {
             $this->context->vmStack()->push(new OperandEntry($result));
         }
 

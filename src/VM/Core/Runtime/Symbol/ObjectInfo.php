@@ -11,8 +11,7 @@ class ObjectInfo
         public readonly int $specialConst,
         public readonly int $frozen,
         public readonly int $internal,
-    ) {
-    }
+    ) {}
 
     public static function none(): self
     {

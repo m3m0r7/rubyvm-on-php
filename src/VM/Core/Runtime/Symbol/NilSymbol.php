@@ -11,9 +11,7 @@ class NilSymbol implements SymbolInterface, RubyClassInterface
 {
     use ShouldBeRubyClass;
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function __toString(): string
     {

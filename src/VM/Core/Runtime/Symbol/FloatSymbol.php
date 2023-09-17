@@ -13,8 +13,7 @@ class FloatSymbol implements SymbolInterface, RubyClassInterface
 
     public function __construct(
         public readonly float $number,
-    ) {
-    }
+    ) {}
 
     public function __toString(): string
     {

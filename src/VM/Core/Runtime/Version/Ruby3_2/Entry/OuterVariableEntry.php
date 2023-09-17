@@ -11,6 +11,5 @@ class OuterVariableEntry
     public function __construct(
         public readonly ID $key,
         protected readonly int $value,
-    ) {
-    }
+    ) {}
 }

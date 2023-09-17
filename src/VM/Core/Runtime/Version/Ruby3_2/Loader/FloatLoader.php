@@ -16,8 +16,7 @@ class FloatLoader implements LoaderInterface
     public function __construct(
         protected readonly KernelInterface $kernel,
         protected readonly Offset $offset,
-    ) {
-    }
+    ) {}
 
     public function load(): SymbolInterface
     {

@@ -8,8 +8,7 @@ class CallInfoEntry implements CallInfoEntryInterface
 {
     public function __construct(
         public readonly ?CallDataInterface $callData = null,
-    ) {
-    }
+    ) {}
 
     public function callData(): ?CallDataInterface
     {

@@ -12,6 +12,5 @@ class Location implements LocationInterface
         public readonly int $firstLineNo,
         public readonly int $nodeId,
         public readonly CodeLocation $codeLocation,
-    ) {
-    }
+    ) {}
 }

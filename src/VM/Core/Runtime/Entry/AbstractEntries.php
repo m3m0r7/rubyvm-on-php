@@ -8,9 +8,7 @@ use RubyVM\VM\Exception\EntryException;
 
 abstract class AbstractEntries implements EntriesInterface
 {
-    public function __construct(public array $items = [])
-    {
-    }
+    public function __construct(public array $items = []) {}
 
     public function __clone(): void
     {
@@ -29,7 +27,7 @@ abstract class AbstractEntries implements EntriesInterface
     public function verifyOffset(mixed $key): bool
     {
         if (EntryType::HASH === $this->entryType()) {
-            if (null === $key) {
+            if ($key === null) {
                 return false;
             }
 

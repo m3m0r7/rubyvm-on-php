@@ -14,8 +14,7 @@ class NumberSymbol implements SymbolInterface, RubyClassInterface
     public function __construct(
         public readonly int $number,
         public readonly bool $isFixed = false,
-    ) {
-    }
+    ) {}
 
     public function __toString(): string
     {

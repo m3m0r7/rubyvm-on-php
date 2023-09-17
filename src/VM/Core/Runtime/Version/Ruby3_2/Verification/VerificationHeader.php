@@ -12,9 +12,7 @@ use RubyVM\VM\Stream\SizeOf;
 
 class VerificationHeader implements VerificationInterface
 {
-    public function __construct(protected readonly Kernel $kernel)
-    {
-    }
+    public function __construct(protected readonly Kernel $kernel) {}
 
     private function verifyMagicByte(): void
     {
@@ -51,7 +49,7 @@ class VerificationHeader implements VerificationInterface
     private function verifyFileSize(): void
     {
         $size = $this->kernel->stream()->size();
-        if (null === $size) {
+        if ($size === null) {
             throw new VerificationException('The stream size is invalid (size: null)');
         }
 
@@ -61,9 +59,7 @@ class VerificationHeader implements VerificationInterface
         }
     }
 
-    private function verifyExtraSize(): void
-    {
-    }
+    private function verifyExtraSize(): void {}
 
     private function verifyInstructionSequenceListSize(): void
     {

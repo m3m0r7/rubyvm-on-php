@@ -11,6 +11,5 @@ class InstructionSequenceBody
     public function __construct(
         public readonly InstructionSequenceBodyInterface $data,
         public readonly OperationEntries $operationEntries,
-    ) {
-    }
+    ) {}
 }

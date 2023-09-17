@@ -17,8 +17,7 @@ readonly class ExecutedResult
         public Object_|RubyClassInterface|null $returnValue = null,
         public ?\Throwable $threw = null,
         private ?ExecutorDebugger $debugger = null,
-    ) {
-    }
+    ) {}
 
     public function context(): ContextAccessorInterface
     {

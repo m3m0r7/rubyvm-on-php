@@ -11,8 +11,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
     public function __construct(
         public readonly StreamHandlerInterface $streamHandler,
         protected Endian $endian = Endian::LITTLE_ENDIAN
-    ) {
-    }
+    ) {}
 
     public function char(): string
     {

@@ -559,4 +559,61 @@ class SyntaxTest extends TestApplication
 
         _, $rubyVMManager->stdOut->readAll());
     }
+
+    public function testCallBlock(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            def block_def
+              yield "Hello World", "!"
+            end
+
+            block_def do | text1, text2 |
+              puts text1 + text2
+            end
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2)
+        ;
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<'_'
+        Hello World!
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
+
+    public function testCallDuplicatedBlock(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            def block_def
+              yield "Hello World", "!"
+            end
+
+            block_def do | text1, text2 |
+              puts text1 + text2
+            end
+
+            block_def do | text1, text2 |
+              puts text1 + text2
+            end
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2)
+        ;
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<'_'
+        Hello World!
+        Hello World!
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
 }

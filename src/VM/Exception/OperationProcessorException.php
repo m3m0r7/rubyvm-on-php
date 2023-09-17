@@ -4,6 +4,4 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Exception;
 
-class OperationProcessorException extends RubyVMException
-{
-}
+class OperationProcessorException extends RubyVMException {}

@@ -13,8 +13,7 @@ class Runtime implements RuntimeInterface
     public function __construct(
         public readonly KernelInterface $kernel,
         public readonly Verifier $verifier,
-    ) {
-    }
+    ) {}
 
     public function rubyVersion(): string
     {

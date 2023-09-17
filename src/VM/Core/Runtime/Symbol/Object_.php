@@ -38,7 +38,7 @@ class Object_
              */
             $entry = $defaultMethodEntries[$name] ?? null;
 
-            if (null === $entry) {
+            if ($entry === null) {
                 // Call a method if method exists on a symbol
                 if (method_exists($this->symbol, $name)) {
                     $result = $this->symbol->{$name}(...$arguments);

@@ -11,6 +11,5 @@ class ClassDefinition
     public function __construct(
         public readonly int $flags,
         public readonly ContextInterface $context,
-    ) {
-    }
+    ) {}
 }

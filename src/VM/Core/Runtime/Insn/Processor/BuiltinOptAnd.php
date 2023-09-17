@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
+use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Helper\OperatorCalculatable;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
@@ -11,7 +13,6 @@ use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinOptAnd implements OperationProcessorInterface
@@ -29,15 +30,11 @@ class BuiltinOptAnd implements OperationProcessorInterface
         $this->context = $context;
     }
 
-    public function before(): void
-    {
-    }
+    public function before(): void {}
 
-    public function after(): void
-    {
-    }
+    public function after(): void {}
 
-    public function process(): ProcessedStatus
+    public function process(SymbolInterface|ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
         return $this->processArithmetic('&');
     }
