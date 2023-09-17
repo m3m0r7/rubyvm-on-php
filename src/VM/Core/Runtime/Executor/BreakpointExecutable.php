@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Runtime\Entry\AbstractEntries;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 
 trait BreakpointExecutable
@@ -59,5 +58,4 @@ trait BreakpointExecutable
             exit(0);
         }
     }
-
 }

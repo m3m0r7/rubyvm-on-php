@@ -28,7 +28,6 @@ class StreamHandler implements StreamHandlerInterface
         return null;
     }
 
-
     public function isTerminated(): bool
     {
         return feof($this->handle);

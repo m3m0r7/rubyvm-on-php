@@ -77,24 +77,39 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
 
         $targetClass = $this->context
             ->self()
-            ->getDefinedClassOrSelf($targetSymbol);
-
-        /**
-         * @var null|ExecutedResult|SymbolInterface $result
-         */
-        $result = $targetClass
-            ->{(string) $symbol}(...$this->translateForArguments(...$arguments))
+            ->getDefinedClassOrSelf($targetSymbol)
         ;
+
+        $result = null;
+        $calledAny = false;
+
+        // TODO: will refactor here
+        if ($targetClass instanceof RubyClassImplementationInterface && $targetClass->hasMethod('injectVMContext')) {
+            $targetClass->injectVMContext($this->context->kernel());
+        }
 
         // Here is a special method calls
         // TODO: will refactor here
         if ((string) $symbol === 'new') {
-            if (!($targetClass instanceof RubyClassExtendableInterface)) {
+            if (!$targetClass instanceof RubyClassExtendableInterface) {
                 throw new OperationProcessorException('The callee class is invalid (not instantiated by the RubyClassExtendableInterface)');
             }
             if ($targetClass->hasMethod('initialize')) {
                 $targetClass->initialize(...$this->translateForArguments(...$arguments));
+
+                // return forcibly target class
+                $result = $targetClass;
+                $calledAny = true;
             }
+        }
+
+        if (!$calledAny) {
+            /**
+             * @var null|ExecutedResult|SymbolInterface $result
+             */
+            $result = $targetClass
+                ->{(string) $symbol}(...$this->translateForArguments(...$arguments))
+            ;
         }
 
         if ($result instanceof Object_) {

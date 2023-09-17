@@ -99,9 +99,14 @@ class Kernel implements KernelInterface
 
         $environmentTableEntries = new EnvironmentTableEntries();
 
+        $main = new Main();
+        $main->injectVMContext(
+            $this,
+            new DefaultDefinedClassEntries(),
+        );
         $executor = new Executor(
             $this,
-            new Main($this, new DefaultDefinedClassEntries()),
+            $main,
             $instructionSequence,
             $this->vm->option()->logger,
         );
@@ -109,6 +114,11 @@ class Kernel implements KernelInterface
         $executor->context()->appendTrace('<main>');
 
         return $executor;
+    }
+
+    public function __debugInfo(): array
+    {
+        return [];
     }
 
     /**
@@ -333,7 +343,7 @@ class Kernel implements KernelInterface
 
     private function setupExtraData(): void
     {
-        $this->stream()->dryPosTransaction(function () {
+        $this->stream()->dryPosTransaction(function (): void {
             $this->stream()->pos($this->size);
             $this->extraData = $this->stream()->read($this->extraSize);
         });

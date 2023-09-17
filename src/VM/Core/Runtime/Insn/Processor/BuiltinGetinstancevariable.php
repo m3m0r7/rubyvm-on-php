@@ -11,7 +11,6 @@ use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\ExtendedClassEntry;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\RubyClassExtendableInterface;
-use RubyVM\VM\Exception\OperationProcessorException;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinGetinstancevariable implements OperationProcessorInterface
@@ -40,7 +39,7 @@ class BuiltinGetinstancevariable implements OperationProcessorInterface
         $instanceVar = $this->getOperandAsID();
 
         /**
-         * @var $targetObject RubyClassExtendableInterface
+         * @var RubyClassExtendableInterface $targetObject
          */
         $targetObject = $this->getStackAsAny(ExtendedClassEntry::class);
 

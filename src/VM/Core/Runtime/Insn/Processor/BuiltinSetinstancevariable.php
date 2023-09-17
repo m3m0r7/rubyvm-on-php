@@ -9,7 +9,6 @@ use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\RubyClassInterface;
-use RubyVM\VM\Exception\OperationProcessorException;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 
 class BuiltinSetinstancevariable implements OperationProcessorInterface
@@ -44,7 +43,7 @@ class BuiltinSetinstancevariable implements OperationProcessorInterface
         $targetObject->setInstanceVariable($instanceVar, $this->getStackAsObject());
 
         // Dummy pop
-        $this->getStack();
+        //        $this->getStack();
 
         return ProcessedStatus::SUCCESS;
     }

@@ -52,6 +52,11 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         throw new InstructionSequenceProcessorException(sprintf('Not found instructionSequenceList#%d', $this->aux->loader->index));
     }
 
+    public function __debugInfo(): array
+    {
+        return [];
+    }
+
     public function process(): InstructionSequenceBody
     {
         /**

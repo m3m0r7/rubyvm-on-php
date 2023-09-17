@@ -14,6 +14,7 @@ use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 interface RubyClassInterface
 {
     public function setInstanceVariable(ID $id, Object_ $object): void;
+
     public function getInstanceVariable(ID $id): Object_;
 
     public function getDefinedClassOrSelf(RubyClassImplementationInterface|Object_ $class): RubyClassImplementationInterface|Object_|SymbolInterface;
@@ -23,6 +24,8 @@ interface RubyClassInterface
     public function methods(): array;
 
     public function hasMethod(string $name): bool;
+
     public function class(NumberSymbol $flags, StringSymbol $className, ContextInterface $context): void;
+
     public function def(StringSymbol $methodName, ContextInterface $context): void;
 }

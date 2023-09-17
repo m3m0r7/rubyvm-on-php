@@ -28,6 +28,7 @@ class EnvironmentTable extends AbstractEntries
                 ),
             );
         }
+
         return parent::get($index);
     }
 }

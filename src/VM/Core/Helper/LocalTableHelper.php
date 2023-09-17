@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Helper;
 
-use RubyVM\VM\Core\Runtime\Option;
-
 class LocalTableHelper
 {
     /**
@@ -13,8 +11,6 @@ class LocalTableHelper
      */
     public static function computeLocalTableIndex(int $localTableSize, int $slotIndex, int $level = 0): int
     {
-        // $op = $slotIndex - Option::VM_ENV_DATA_SIZE;
-        // $localTableIndex = $localTableSize - $op - 1;
         return $slotIndex;
     }
 }
