@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Accessor;
 
+use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
 use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
 use RubyVM\VM\Core\Runtime\Symbol\BooleanSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\FloatSymbol;
+use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\RangeSymbol;
@@ -77,7 +79,13 @@ readonly class Translator
                 ),
                 FloatSymbol::class,
                 NumberSymbol::class => $symbol->number,
-                default => throw new TranslationException('The type is not implemented yet'),
+                NilSymbol::class => null,
+                default => throw new TranslationException(
+                    sprintf(
+                        'The type is not implemented yet (%s)',
+                        ClassHelper::nameBy($symbol),
+                    ),
+                ),
             };
         }
 

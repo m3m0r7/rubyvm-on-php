@@ -75,6 +75,82 @@ $executor->execute();
 
 4. Run `php HelloWorld.php` and you will get outputted `HelloWorld!` from RubyVM.
 
+## Call defined ruby method on PHP
+
+1. Create ruby code as below:
+
+```
+def callFromPHP
+  puts "Hello World from Ruby!"
+end
+```
+
+And then, save file as `test.rb`
+
+2. Compile to YARV as below:
+
+```
+$ ruby -e "puts RubyVM::InstructionSequence.compile_file('test.rb').to_binary" > test.yarv
+```
+
+3. Call ruby method on PHP as below:
+```php
+<?php
+require __DIR__ . '/vendor/autoload.php';
+
+// Instantiate RubyVM class
+$rubyVM = new \RubyVM\VM\Core\Runtime\RubyVM(
+    new \RubyVM\VM\Core\Runtime\Option(
+        reader: new \RubyVM\VM\Stream\BinaryStreamReader(
+            streamHandler: new \RubyVM\VM\Stream\FileStreamHandler(
+                // Specify to want you to load YARV file
+                __DIR__ . '/test.yarv',
+            ),
+        ),
+
+        // Choose Logger
+        logger: new \Psr\Log\NullLogger(),
+    ),
+);
+
+// Register kernel its each of Ruby Versions
+$rubyVM->register(
+    rubyVersion: \RubyVM\VM\Core\Runtime\RubyVersion::VERSION_3_2,
+    kernelClass: \RubyVM\VM\Core\Runtime\Version\Ruby3_2\Kernel::class,
+);
+
+// Disassemble instruction sequence binary formatted and get executor
+$executor = $rubyVM->disassemble(
+    useVersion: \RubyVM\VM\Core\Runtime\RubyVersion::VERSION_3_2,
+);
+
+// Execute disassembled instruction sequence
+$executed = $executor->execute();
+
+// Call Ruby method as below code.
+// In this case, you did define method name is `callFromPHP`.
+$executed->methods()->callFromPHP();
+```
+
+You will get to output `Hello World from Ruby!`
+In addition case, maybe you want to pass arguments. of course, it is available on.
+First time, modify previous code as below.
+
+```ruby
+def callFromPHP(text)
+  puts text
+end
+```
+
+Second time, modify PHP code `$executed->methods()->callFromPHP()` as following:
+
+
+```php
+$executed->methods()->callFromPHP('Hello World! Here is passed an argument from PHP!')
+```
+
+You will get to output `Hello World! Here is passed an argument from PHP`.
+
 ## Use an executor debugger
 
 The RubyVM on PHP is provided an executor debugger that can display processed an INSN and anymore into a table as following:
