@@ -5,25 +5,22 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Helper\LocalTableHelper;
+use RubyVM\VM\Core\Runtime\Executor\CallBlockHelper;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
-use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
-use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
-use RubyVM\VM\Core\Runtime\Executor\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Translatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
-use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinInvokeblock implements OperationProcessorInterface
 {
     use Translatable;
     use OperandHelper;
+    use CallBlockHelper;
+
     private Insn $insn;
 
     private ContextInterface $context;
@@ -44,7 +41,7 @@ class BuiltinInvokeblock implements OperationProcessorInterface
 
     public function process(mixed ...$arguments): ProcessedStatus
     {
-        if (!isset($arguments[0]) || !$arguments[0] instanceof OperationProcessorContext) {
+        if (!isset($arguments[0]) || !$arguments[0] instanceof ContextInterface) {
             throw new OperationProcessorException(
                 sprintf(
                     'The invokeblock did not get an operation processor context (actual: %s)',
@@ -56,7 +53,7 @@ class BuiltinInvokeblock implements OperationProcessorInterface
         }
 
         // This is an operation processor context including instruction sequence context
-        $processor = $arguments[0];
+        $processorContext = $arguments[0];
 
         $operand = $this->getOperandAsCallInfo();
         $arguments = [];
@@ -65,67 +62,31 @@ class BuiltinInvokeblock implements OperationProcessorInterface
             $arguments[] = $this->getStackAsSymbol();
         }
 
-        $executor = (new Executor(
-            kernel: $processor->kernel(),
-            rubyClass: $processor->self(),
-            instructionSequence: $processor->instructionSequence(),
-            logger: $processor->logger(),
-            debugger: $processor->debugger(),
-            previousContext: $processor
-                ->renewEnvironmentTable(),
-        ));
+        $executed = $this
+            ->callSimpleMethod(
+                $processorContext,
+                ...$arguments,
+            )
+        ;
 
-        $localTableSize = $executor->context()->instructionSequence()->body()->data->localTableSize();
-
-        for ($localIndex = 0, $i = count($arguments) - 1; $i >= 0; $i--, $localIndex++) {
-            /**
-             * @var SymbolInterface $argument
-             */
-            $argument = $arguments[$i];
-            $executor->context()
-                ->environmentTable()
-                ->set(
-                    LocalTableHelper::computeLocalTableIndex(
-                        $localTableSize,
-                        Option::VM_ENV_DATA_SIZE + $localTableSize - $localIndex - 1,
-                    ),
-                    $argument->toObject(),
-                )
-            ;
+        if ($executed->threw) {
+            throw $executed->threw;
         }
-
-        $result = $executor->context()->executor()->execute();
-
-        if (null === $result) {
-            // This is same at UNDEFINED on originally RubyVM
-            return ProcessedStatus::SUCCESS;
-        }
-
-        if ($result instanceof ExecutedResult) {
-            if ($result->threw) {
-                throw $result->threw;
-            }
-            if (null !== $result->returnValue) {
-                $this->context->vmStack()
-                    ->push(new OperandEntry($result->returnValue))
-                    // TODO: is this correctly?
-                    ->dup()
-                ;
-            }
-
-            return ProcessedStatus::SUCCESS;
-        }
-
-        if ($result instanceof SymbolInterface) {
+        if (null !== $executed->returnValue) {
             $this->context->vmStack()
-                ->push(new OperandEntry($result->toObject()))
-                // TODO: is this correctly?
-                ->dup()
+                ->push(new OperandEntry($executed->returnValue))
             ;
+        }
 
+        if ($executed->returnValue === null) {
             return ProcessedStatus::SUCCESS;
         }
 
-        throw new OperationProcessorException('Unreachable here because the invokeblock is not properly implementation');
+        if ($executed !== null) {
+            // TODO: is this correctly?
+            $this->context->vmStack()->dup();
+        }
+
+        return ProcessedStatus::SUCCESS;
     }
 }
