@@ -25,6 +25,5 @@ class Option
         public readonly ?StreamHandlerInterface $stdOut = null,
         public readonly ?StreamHandlerInterface $stdIn = null,
         public readonly ?StreamHandlerInterface $stdErr = null,
-    ) {
-    }
+    ) {}
 }

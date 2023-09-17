@@ -13,9 +13,7 @@ class RubyVM implements RubyVMInterface
 {
     protected array $registeredRuntimes = [];
 
-    public function __construct(public readonly Option $option)
-    {
-    }
+    public function __construct(public readonly Option $option) {}
 
     /**
      * @param class-string<KernelInterface> $kernelClass

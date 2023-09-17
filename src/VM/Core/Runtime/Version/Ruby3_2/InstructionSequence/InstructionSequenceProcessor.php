@@ -431,6 +431,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         return $this->kernel->stream()->dryPosTransaction(
             function (BinaryStreamReader $reader) use ($paramOptTableOffset) {
                 $reader->pos($paramOptTableOffset);
+
                 // TODO: implement here
                 return -1;
             },

@@ -8,9 +8,7 @@ use RubyVM\VM\Exception\EntryException;
 
 abstract class AbstractEntries implements EntriesInterface
 {
-    public function __construct(public array $items = [])
-    {
-    }
+    public function __construct(public array $items = []) {}
 
     public function __clone(): void
     {

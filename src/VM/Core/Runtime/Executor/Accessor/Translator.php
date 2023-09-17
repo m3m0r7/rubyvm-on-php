@@ -92,9 +92,7 @@ readonly class Translator
         return $objectOrClass;
     }
 
-    public function __construct(public SymbolInterface $symbol)
-    {
-    }
+    public function __construct(public SymbolInterface $symbol) {}
 
     public function toOperand(): OperandEntry
     {

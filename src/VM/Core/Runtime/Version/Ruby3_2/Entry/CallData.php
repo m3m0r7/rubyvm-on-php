@@ -14,8 +14,7 @@ class CallData implements CallDataInterface
         public readonly int $flag,
         public readonly int $argc,
         public readonly ?array $keywords,
-    ) {
-    }
+    ) {}
 
     public function flag(): int
     {

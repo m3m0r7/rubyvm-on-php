@@ -12,6 +12,5 @@ class Insns implements InsnsInterface
         public readonly int $size,
         public readonly mixed $body,
         public readonly mixed $positions,
-    ) {
-    }
+    ) {}
 }

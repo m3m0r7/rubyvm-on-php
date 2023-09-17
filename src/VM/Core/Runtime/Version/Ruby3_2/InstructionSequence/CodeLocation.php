@@ -11,6 +11,5 @@ class CodeLocation implements CodeLocationInterface
     public function __construct(
         public readonly CodePosition $begin,
         public readonly CodePosition $end,
-    ) {
-    }
+    ) {}
 }

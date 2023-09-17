@@ -8,9 +8,7 @@ use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 
 readonly class ContextAccessor implements ContextAccessorInterface
 {
-    public function __construct(protected ExecutedResult $executedResult)
-    {
-    }
+    public function __construct(protected ExecutedResult $executedResult) {}
 
     public function __call(string $name, array $arguments): mixed
     {

@@ -10,6 +10,5 @@ class VariableEntry
 {
     public function __construct(
         public readonly ID $id
-    ) {
-    }
+    ) {}
 }

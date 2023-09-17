@@ -17,8 +17,7 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
 
     public function __construct(
         public array $array,
-    ) {
-    }
+    ) {}
 
     public function __toString(): string
     {

@@ -21,6 +21,5 @@ class ObjectParameterFlags implements ObjectParameterFlagsInterface
         public readonly bool $ambiguousParam,
         public readonly bool $acceptsNoKeywordArg,
         public readonly bool $ruby2Keywords,
-    ) {
-    }
+    ) {}
 }

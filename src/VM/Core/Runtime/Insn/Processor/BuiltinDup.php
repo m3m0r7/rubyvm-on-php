@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
+use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
@@ -23,15 +25,11 @@ class BuiltinDup implements OperationProcessorInterface
         $this->context = $context;
     }
 
-    public function before(): void
-    {
-    }
+    public function before(): void {}
 
-    public function after(): void
-    {
-    }
+    public function after(): void {}
 
-    public function process(mixed ...$arguments): ProcessedStatus
+    public function process(SymbolInterface|ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
         $this->context->vmStack()->dup();
 

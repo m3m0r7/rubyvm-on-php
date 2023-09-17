@@ -9,6 +9,5 @@ class UnknownEntry
     public function __construct(
         public readonly mixed $data,
         public readonly string $type,
-    ) {
-    }
+    ) {}
 }

@@ -11,6 +11,5 @@ class CodePosition implements CodePositionInterface
     public function __construct(
         public readonly int $lineNumber,
         public readonly int $column,
-    ) {
-    }
+    ) {}
 }

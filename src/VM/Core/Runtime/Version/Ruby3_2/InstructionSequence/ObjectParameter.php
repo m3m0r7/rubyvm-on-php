@@ -18,6 +18,5 @@ class ObjectParameter implements ObjectParameterInterface
         public readonly int $postNum,
         public readonly int $blockStart,
         public readonly mixed $optTable,
-    ) {
-    }
+    ) {}
 }

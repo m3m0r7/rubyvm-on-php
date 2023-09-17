@@ -4,6 +4,4 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Exception;
 
-class LocalTableException extends RubyVMException
-{
-}
+class LocalTableException extends RubyVMException {}
