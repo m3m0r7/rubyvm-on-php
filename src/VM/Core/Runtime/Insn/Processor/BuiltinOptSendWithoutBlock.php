@@ -10,11 +10,13 @@ use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
+use RubyVM\VM\Core\Runtime\Executor\SpecialMethodCallerEntries;
 use RubyVM\VM\Core\Runtime\Executor\Translatable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\RubyClassExtendableInterface;
 use RubyVM\VM\Core\Runtime\RubyClassImplementationInterface;
+use RubyVM\VM\Core\Runtime\SpecialMethod\SpecialMethodInterface;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
@@ -29,11 +31,14 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
     private Insn $insn;
 
     private ContextInterface $context;
+    private static SpecialMethodCallerEntries $specialMethodCallerEntries;
 
     public function prepare(Insn $insn, ContextInterface $context): void
     {
         $this->insn = $insn;
         $this->context = $context;
+
+        static::$specialMethodCallerEntries ??= new SpecialMethodCallerEntries();
     }
 
     public function before(): void
@@ -81,7 +86,6 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         ;
 
         $result = null;
-        $calledAny = false;
 
         // TODO: will refactor here
         if ($targetClass instanceof RubyClassImplementationInterface && $targetClass->hasMethod('injectVMContext')) {
@@ -89,21 +93,24 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         }
 
         // Here is a special method calls
-        // TODO: will refactor here
-        if ((string) $symbol === 'new') {
+        $lookupSpecialMethodName = (string) $symbol;
+        if (static::$specialMethodCallerEntries->has($lookupSpecialMethodName)) {
             if (!$targetClass instanceof RubyClassExtendableInterface) {
                 throw new OperationProcessorException('The callee class is invalid (not instantiated by the RubyClassExtendableInterface)');
             }
-            if ($targetClass->hasMethod('initialize')) {
-                $targetClass->initialize(...$this->translateForArguments(...$arguments));
 
-                // return forcibly target class
-                $result = $targetClass;
-                $calledAny = true;
-            }
-        }
+            /**
+             * @var SpecialMethodInterface $calleeSpecialMethodName
+             */
+            $calleeSpecialMethodName = static::$specialMethodCallerEntries
+                ->get($lookupSpecialMethodName);
 
-        if (!$calledAny) {
+            $result = $calleeSpecialMethodName->process(
+                $targetClass,
+                ...$this->translateForArguments(...$arguments),
+            );
+
+        } else {
             /**
              * @var null|ExecutedResult|SymbolInterface $result
              */
