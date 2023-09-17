@@ -79,7 +79,7 @@ $executor->execute();
 
 1. Create ruby code as below:
 
-```
+```ruby
 def callFromPHP
   puts "Hello World from Ruby!"
 end
