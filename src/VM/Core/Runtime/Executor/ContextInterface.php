@@ -23,7 +23,7 @@ interface ContextInterface
 
     public function instructionSequence(): InstructionSequence;
 
-    public function environmentTableEntries(): EnvironmentTableEntries;
+    public function environmentTable(): EnvironmentTable;
 
     public function executor(): ExecutorInterface;
 
@@ -41,7 +41,7 @@ interface ContextInterface
 
     public function shouldProcessedRecords(): bool;
 
-    public function renewEnvironmentTableEntries(): self;
+    public function renewEnvironmentTable(): self;
 
     public function appendTrace(string ...$definitions): self;
 

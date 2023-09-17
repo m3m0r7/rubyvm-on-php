@@ -53,8 +53,7 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
             ));
 
             $executor->context()
-                ->environmentTableEntries()
-                ->get(Option::RSV_TABLE_INDEX_0)
+                ->environmentTable()
                 ->set(
                     Option::VM_ENV_DATA_SIZE,
                     (new NumberSymbol($this->array[$i]->number))

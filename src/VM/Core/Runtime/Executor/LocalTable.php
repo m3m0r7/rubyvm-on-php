@@ -16,8 +16,7 @@ trait LocalTable
         $this->context->vmStack()->push(
             new OperandEntry(
                 $this->context
-                    ->environmentTableEntries()
-                    ->get(0)
+                    ->environmentTable()
                     ->get(
                         LocalTableHelper::computeLocalTableIndex(
                             $this->context
@@ -37,8 +36,7 @@ trait LocalTable
     {
         $operand = $this->getStackAsObject();
 
-        $this->context->environmentTableEntries()
-            ->get(0)
+        $this->context->environmentTable()
             ->set(
                 LocalTableHelper::computeLocalTableIndex(
                     $this->context

@@ -46,7 +46,12 @@ class MethodTest extends TestApplication
         ;
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame('PHP Version: ' . PHP_VERSION . "\n", $rubyVMManager->stdOut->readAll());
+        $version = PHP_VERSION;
+        $this->assertStringStartsWith(<<<_
+        phpinfo()
+        PHP Version => {$version}
+
+        _, $rubyVMManager->stdOut->readAll());
     }
 
     public function testXOR(): void

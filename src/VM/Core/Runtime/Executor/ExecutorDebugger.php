@@ -97,7 +97,7 @@ class ExecutorDebugger
                     $insnDetails ? "({$insnDetails})" : '',
                 ),
                 (string) $context->vmStack(),
-                (string) $context->environmentTableEntries(),
+                (string) $context->environmentTable(),
             ]);
         }
 

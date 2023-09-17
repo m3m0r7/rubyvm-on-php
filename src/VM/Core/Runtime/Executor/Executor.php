@@ -56,7 +56,7 @@ class Executor implements ExecutorInterface
             new ProgramCounter(),
             $this->instructionSequence,
             $this->logger,
-            $previousContext?->environmentTableEntries() ?? new EnvironmentTableEntries(),
+            $previousContext?->environmentTable() ?? new EnvironmentTable(),
             $this->debugger,
             $previousContext
                 ? $previousContext->depth() + 1
