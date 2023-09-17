@@ -17,7 +17,7 @@ class NilSymbol implements SymbolInterface, RubyClassInterface
 
     public function __toString(): string
     {
-        return '<nil>';
+        return 'nil';
     }
 
     public function toObject(): Object_

@@ -43,7 +43,7 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, RubyClassInterface
 
     public function __toString(): string
     {
-        return "[{$this->begin->number}" . ($this->excludeEnd ? '...' : '..') . "{$this->end->number}]";
+        return "{$this->begin->number}" . ($this->excludeEnd ? '...' : '..') . "{$this->end->number}";
     }
 
     public function each(OperationProcessorContext $context): SymbolInterface

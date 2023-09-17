@@ -75,20 +75,10 @@ trait ProvideBasicClassMethods
 
     public function inspect(): SymbolInterface
     {
-        return new StringSymbol(match (get_class($this)) {
-            ArraySymbol::class => '[' . implode(', ', array_map(fn ($value) => (string) $value, $this->array)) . ']',
-            StringSymbol::class => '"' . $this->string . '"',
-            FloatSymbol::class,
-            NumberSymbol::class => (string) $this->number,
-            BooleanSymbol::class => $this->boolean ? 'true' : 'false',
-            NilSymbol::class => 'nil',
-            RangeSymbol::class => "{$this->begin->number}" . ($this->excludeEnd ? '...' : '..') . "{$this->end->number}",
-            default => throw new RubyVMException(
-                sprintf(
-                    'Cannot inspect receiver object %s',
-                    ClassHelper::nameBy($this),
-                )
-            ),
-        });
+        $string = (string) $this;
+        if ($this instanceof StringSymbol) {
+            $string = '"' . $string . '"';
+        }
+        return new StringSymbol($string);
     }
 }
