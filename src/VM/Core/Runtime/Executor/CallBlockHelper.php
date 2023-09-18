@@ -57,7 +57,7 @@ trait CallBlockHelper
         $startArguments = (Option::VM_ENV_DATA_SIZE + $localTableSize) - count($arguments);
 
         // NOTE: this var means to required parameter (non optional parameter)
-        $paramLead = $iseqBodyData->objectParam()->leadNum;
+        $paramLead = $iseqBodyData->objectParam()->leadNum();
 
         for ($localIndex = 0; $localIndex < count($arguments); ++$localIndex) {
             /**
