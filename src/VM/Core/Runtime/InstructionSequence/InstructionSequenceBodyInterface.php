@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\InstructionSequence;
 
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceCompileData;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\ObjectParameter;
-
 interface InstructionSequenceBodyInterface
 {
     public function type(): int;
@@ -17,9 +14,9 @@ interface InstructionSequenceBodyInterface
 
     public function localTableSize(): int;
 
-    public function compileData(): InstructionSequenceCompileData;
+    public function compileData(): InstructionSequenceCompileDataInterface;
 
     public function parentInstructionSequence(): ?InstructionSequenceInterface;
 
-    public function objectParam(): ObjectParameter;
+    public function objectParam(): ObjectParameterInterface;
 }
