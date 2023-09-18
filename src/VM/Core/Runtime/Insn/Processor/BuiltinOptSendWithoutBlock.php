@@ -56,8 +56,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             ->callData()
             ->mid()
             ->object
-            ->symbol
-        ;
+            ->symbol;
 
         $arguments = [];
         for ($i = 0; $i < $callInfo->callData()->argumentsCount(); ++$i) {
@@ -73,13 +72,11 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
          * @var Object_|RubyClassInterface $targetSymbol
          */
         $targetSymbol = $this->getStack()
-            ->operand
-        ;
+            ->operand;
 
         $targetClass = $this->context
             ->self()
-            ->getDefinedClassOrSelf($targetSymbol)
-        ;
+            ->getDefinedClassOrSelf($targetSymbol);
 
         $result = null;
 
@@ -101,8 +98,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
              * @var SpecialMethodInterface $calleeSpecialMethodName
              */
             $calleeSpecialMethodName = static::$specialMethodCallerEntries
-                ->get($lookupSpecialMethodName)
-            ;
+                ->get($lookupSpecialMethodName);
 
             $result = $calleeSpecialMethodName->process(
                 $targetClass,
@@ -113,14 +109,12 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
              * @var null|ExecutedResult|SymbolInterface $result
              */
             $result = $targetClass
-                ->{(string) $symbol}(...$this->translateForArguments(...$arguments))
-            ;
+                ->{(string) $symbol}(...$this->translateForArguments(...$arguments));
         }
 
         if ($result instanceof Object_) {
             $this->context->vmStack()
-                ->push(new OperandEntry($result))
-            ;
+                ->push(new OperandEntry($result));
 
             return ProcessedStatus::SUCCESS;
         }
@@ -136,16 +130,14 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             }
             if ($result->returnValue !== null) {
                 $this->context->vmStack()
-                    ->push(new OperandEntry($result->returnValue))
-                ;
+                    ->push(new OperandEntry($result->returnValue));
             }
 
             return ProcessedStatus::SUCCESS;
         }
         if ($result instanceof SymbolInterface) {
             $this->context->vmStack()
-                ->push(new OperandEntry($result->toObject()))
-            ;
+                ->push(new OperandEntry($result->toObject()));
 
             return ProcessedStatus::SUCCESS;
         }

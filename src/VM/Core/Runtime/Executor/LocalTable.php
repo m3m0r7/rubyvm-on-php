@@ -48,7 +48,6 @@ trait LocalTable
                     $level,
                 ),
                 clone $operand,
-            )
-        ;
+            );
     }
 }

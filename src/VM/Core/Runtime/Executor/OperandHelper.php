@@ -140,8 +140,7 @@ trait OperandHelper
         $operand = $this->context
             ->instructionSequence()
             ->operations()
-            ->get($this->context->programCounter()->increase())
-        ;
+            ->get($this->context->programCounter()->increase());
 
         $this->validateType(
             OperandEntry::class,
@@ -277,8 +276,7 @@ trait OperandHelper
     private function getStack(): OperandEntry
     {
         $operand = $this->context
-            ->vmStack()->pop()
-        ;
+            ->vmStack()->pop();
 
         $this->validateType(
             OperandEntry::class,

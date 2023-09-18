@@ -31,13 +31,11 @@ class StructLoader implements LoaderInterface
 
         $beginSymbol = $this->kernel
             ->findObject($range->begin)
-            ->symbol
-        ;
+            ->symbol;
 
         $endSymbol = $this->kernel
             ->findObject($range->end)
-            ->symbol
-        ;
+            ->symbol;
 
         if (!$beginSymbol instanceof NumberSymbol) {
             throw new RubyVMException(sprintf('The StructLoader expects NumberSymbol at a begin property when creating a range object but actual symbol is %s', get_class($beginSymbol)));

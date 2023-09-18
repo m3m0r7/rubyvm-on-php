@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\InstructionSequence;
 
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceCompileData;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\ObjectParameter;
 
 interface InstructionSequenceBodyInterface
 {
@@ -19,4 +20,6 @@ interface InstructionSequenceBodyInterface
     public function compileData(): InstructionSequenceCompileData;
 
     public function parentInstructionSequence(): ?InstructionSequenceInterface;
+
+    public function objectParam(): ObjectParameter;
 }

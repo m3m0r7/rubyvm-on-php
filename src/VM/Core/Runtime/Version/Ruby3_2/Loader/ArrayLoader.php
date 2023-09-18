@@ -30,8 +30,7 @@ class ArrayLoader implements LoaderInterface
                         ->stream()
                         ->smallValue()
                 )
-                ->symbol
-            ;
+                ->symbol;
         }
 
         return new ArraySymbol($array);

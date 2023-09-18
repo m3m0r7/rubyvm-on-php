@@ -61,8 +61,7 @@ class RubyVM implements RubyVMInterface
         // Verify structures
         $runtime
             ->verifier
-            ->done()
-        ;
+            ->done();
 
         $this->option->logger->info(
             sprintf('Complete to verify process'),

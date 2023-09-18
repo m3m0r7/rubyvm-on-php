@@ -70,12 +70,10 @@ class ExecutorDebugger
             ]
         );
         $table->setColumnMaxWidth(0, 3)
-            ->setColumnWidth(0, 3)
-        ;
+            ->setColumnWidth(0, 3);
 
         $table->setColumnMaxWidth(1, 30)
-            ->setColumnWidth(1, 30)
-        ;
+            ->setColumnWidth(1, 30);
 
         $table->setColumnMaxWidth(2, 30);
         $table->setColumnMaxWidth(3, 60);
@@ -123,8 +121,7 @@ class ExecutorDebugger
             $callDataOperand = $context
                 ->instructionSequence()
                 ->operations()
-                ->get($currentPos + 1)
-            ;
+                ->get($currentPos + 1);
 
             $arguments = [];
             for ($i = 0; $i < $callDataOperand->operand->callData()->argumentsCount(); ++$i) {
@@ -171,8 +168,7 @@ class ExecutorDebugger
                 ->operations()
                 ->get($currentPos + 1)
                 ->operand
-                ->symbol
-            ;
+                ->symbol;
 
             return sprintf('ref: %d', $number->number);
         }

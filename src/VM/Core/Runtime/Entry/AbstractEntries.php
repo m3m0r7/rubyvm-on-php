@@ -75,9 +75,11 @@ abstract class AbstractEntries implements EntriesInterface
         }
     }
 
-    public function set(mixed $index, mixed $value): void
+    public function set(mixed $index, mixed $value): self
     {
         $this->offsetSet($index, $value);
+
+        return $this;
     }
 
     public function has(mixed $index): bool

@@ -77,4 +77,9 @@ class InstructionSequenceBody implements InstructionSequenceBodyInterface
     {
         return $this->localTableSize;
     }
+
+    public function objectParam(): ObjectParameter
+    {
+        return $this->objectParam;
+    }
 }

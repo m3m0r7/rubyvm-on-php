@@ -62,8 +62,7 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, RubyClassInterface
             ));
 
             $executor->context()
-                ->appendTrace(ClassHelper::nameBy($this) . '#' . __FUNCTION__)
-            ;
+                ->appendTrace(ClassHelper::nameBy($this) . '#' . __FUNCTION__);
 
             $localTableSize = $executor->context()->instructionSequence()->body()->data->localTableSize();
 
@@ -75,8 +74,7 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, RubyClassInterface
                         Option::VM_ENV_DATA_SIZE + $localTableSize - 1,
                     ),
                     $number->toObject()
-                )
-            ;
+                );
 
             $result = $executor->execute();
 

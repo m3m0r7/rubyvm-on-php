@@ -34,8 +34,7 @@ trait OperatorCalculatable
         $operator = $callDataOperand->callData
             ->mid
             ->object
-            ->symbol
-        ;
+            ->symbol;
 
         /**
          * @var SymbolInterface $leftOperand

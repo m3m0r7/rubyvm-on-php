@@ -65,8 +65,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
         ));
 
         $executor->context()
-            ->appendTrace($className->string)
-        ;
+            ->appendTrace($className->string);
 
         $this->context
             ->self()
@@ -74,8 +73,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
                 $flags,
                 $className,
                 $executor->context(),
-            )
-        ;
+            );
 
         return ProcessedStatus::SUCCESS;
     }

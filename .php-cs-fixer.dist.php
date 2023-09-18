@@ -3,8 +3,7 @@
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
     ->exclude('vendor')
-    ->append([__FILE__])
-;
+    ->append([__FILE__]);
 
 return (new PhpCsFixer\Config())->setRules([
     '@PhpCsFixer' => true,
@@ -26,6 +25,6 @@ return (new PhpCsFixer\Config())->setRules([
     'binary_operator_spaces' => ['default' => 'single_space'],
     'phpdoc_trim_consecutive_blank_line_separation' => true,
     'trailing_comma_in_multiline' => true,
+    'multiline_whitespace_before_semicolons' => false,
 ])
-    ->setFinder($finder)
-;
+    ->setFinder($finder);

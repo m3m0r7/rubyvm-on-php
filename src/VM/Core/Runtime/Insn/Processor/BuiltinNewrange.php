@@ -46,8 +46,7 @@ class BuiltinNewrange implements OperationProcessorInterface
                         excludeEnd: (bool) $flags->number,
                     ))->toObject(),
                 ),
-            )
-        ;
+            );
 
         return ProcessedStatus::SUCCESS;
     }

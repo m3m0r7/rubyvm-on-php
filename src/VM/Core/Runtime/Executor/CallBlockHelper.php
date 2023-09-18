@@ -45,28 +45,42 @@ trait CallBlockHelper
             );
         }
 
-        $localTableSize = $executor->context()->instructionSequence()->body()->data->localTableSize();
+        $iseqBodyData = $executor
+            ->context()
+            ->instructionSequence()
+            ->body()
+            ->data;
 
-        for ($localIndex = 0, $i = count($arguments) - 1; $i >= 0; $i--, $localIndex++) {
+        $localTableSize = $iseqBodyData
+            ->localTableSize();
+
+        $startArguments = (Option::VM_ENV_DATA_SIZE + $localTableSize) - count($arguments);
+
+        // NOTE: this var means to required parameter (non optional parameter)
+        $paramLead = $iseqBodyData->objectParam()->leadNum;
+
+        for ($localIndex = 0; $localIndex < count($arguments); ++$localIndex) {
             /**
              * @var SymbolInterface $argument
              */
-            $argument = $arguments[$i];
+            $argument = $arguments[$localIndex];
+            $slotIndex = LocalTableHelper::computeLocalTableIndex(
+                $localTableSize,
+                $startArguments + $localIndex,
+            );
+
             $executor->context()
                 ->environmentTable()
-                ->set(
-                    LocalTableHelper::computeLocalTableIndex(
-                        $localTableSize,
-                        Option::VM_ENV_DATA_SIZE + $localTableSize - $localIndex - 1,
-                    ),
+                ->setWithLead(
+                    $slotIndex,
                     $argument->toObject(),
-                )
-            ;
+                    // NOTE: The parameter is coming by reversed
+                    $paramLead <= (count($arguments) - $localIndex),
+                );
         }
 
         return $executor
-            ->execute(...$calleeContexts)
-        ;
+            ->execute(...$calleeContexts);
     }
 
     private function callBlockWithArguments(CallInfoEntryInterface $callInfo, NumberSymbol $blockIseqIndex, Object_|RubyClassInterface $blockObject, bool $isSuper, OperandEntry ...$arguments): ?Object_
@@ -86,8 +100,7 @@ trait CallBlockHelper
                 loader: new AuxLoader(
                     index: $blockIseqIndex->number,
                 ),
-            ))
-        ;
+            ));
 
         $instructionSequence->load();
 

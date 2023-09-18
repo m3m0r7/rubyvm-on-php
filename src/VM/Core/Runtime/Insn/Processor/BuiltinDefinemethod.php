@@ -43,8 +43,7 @@ class BuiltinDefinemethod implements OperationProcessorInterface
          */
         $methodNameSymbol = $this->getOperandAsID()
             ->object
-            ->symbol
-        ;
+            ->symbol;
 
         $instructionSequence = $this->context->kernel()
             ->loadInstructionSequence(
@@ -54,8 +53,7 @@ class BuiltinDefinemethod implements OperationProcessorInterface
                             ->number,
                     ),
                 ),
-            )
-        ;
+            );
 
         $instructionSequence->load();
 
@@ -69,16 +67,14 @@ class BuiltinDefinemethod implements OperationProcessorInterface
         ));
 
         $executor->context()
-            ->appendTrace($methodNameSymbol->string)
-        ;
+            ->appendTrace($methodNameSymbol->string);
 
         $this->context
             ->self()
             ->def(
                 $methodNameSymbol,
                 $executor->context(),
-            )
-        ;
+            );
 
         return ProcessedStatus::SUCCESS;
     }

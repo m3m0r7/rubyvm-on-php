@@ -34,8 +34,7 @@ class BuiltinPutself implements OperationProcessorInterface
     {
         $this->context
             ->vmStack()
-            ->push(new OperandEntry($this->context->self()))
-        ;
+            ->push(new OperandEntry($this->context->self()));
 
         return ProcessedStatus::SUCCESS;
     }

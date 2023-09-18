@@ -27,8 +27,7 @@ class CallRubyMethodsFromPHPTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2)
-        ;
+            ->disassemble(RubyVersion::VERSION_3_2);
 
         $executed = $executor->execute();
         $this->assertSame(ExecutedStatus::SUCCESS, $executed->executedStatus);
@@ -65,8 +64,7 @@ class CallRubyMethodsFromPHPTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2)
-        ;
+            ->disassemble(RubyVersion::VERSION_3_2);
 
         $executed = $executor->execute();
         $this->assertSame(ExecutedStatus::SUCCESS, $executed->executedStatus);
