@@ -170,7 +170,7 @@ class ExecutorDebugger
                 ->operand
                 ->symbol;
 
-            return sprintf('ref: %d', $number->number);
+            return sprintf('ref: %d', $number->valueOf());
         }
 
         return null;

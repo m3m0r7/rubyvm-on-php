@@ -57,14 +57,14 @@ class BuiltinOptLt implements OperationProcessorInterface
     private function computeNumberLessThanNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new BooleanSymbol(
-            $leftOperand->number < $rightOperand->number
+            $leftOperand->valueOf() < $rightOperand->valueOf()
         ))->toObject();
     }
 
     private function computeFloatLessThanFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
     {
         return (new BooleanSymbol(
-            $leftOperand->number < $rightOperand->number
+            $leftOperand->valueOf() < $rightOperand->valueOf()
         ))->toObject();
     }
 }

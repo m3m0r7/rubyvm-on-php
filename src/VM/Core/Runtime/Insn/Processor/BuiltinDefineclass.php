@@ -48,7 +48,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
         $instructionSequence = $this->context->kernel()->loadInstructionSequence(
             aux: new Aux(
                 loader: new AuxLoader(
-                    index: $iseqNumber->number,
+                    index: $iseqNumber->valueOf(),
                 ),
             ),
         );
@@ -65,7 +65,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
         ));
 
         $executor->context()
-            ->appendTrace($className->string);
+            ->appendTrace($className->valueOf());
 
         $this->context
             ->self()

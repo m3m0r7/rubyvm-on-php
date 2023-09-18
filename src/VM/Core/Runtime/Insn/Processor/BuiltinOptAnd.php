@@ -52,7 +52,7 @@ class BuiltinOptAnd implements OperationProcessorInterface
     private function computeNumberAndNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new NumberSymbol(
-            $leftOperand->number & $rightOperand->number
+            $leftOperand->valueOf() & $rightOperand->valueOf()
         ))->toObject();
     }
 }

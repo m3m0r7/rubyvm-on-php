@@ -12,8 +12,13 @@ class BooleanSymbol implements SymbolInterface, RubyClassInterface
     use ShouldBeRubyClass;
 
     public function __construct(
-        public readonly bool $boolean,
+        private readonly bool $boolean,
     ) {}
+
+    public function valueOf(): bool
+    {
+        return $this->boolean;
+    }
 
     public function __toString(): string
     {

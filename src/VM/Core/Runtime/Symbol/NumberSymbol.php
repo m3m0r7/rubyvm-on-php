@@ -12,9 +12,14 @@ class NumberSymbol implements SymbolInterface, RubyClassInterface
     use ShouldBeRubyClass;
 
     public function __construct(
-        public readonly int $number,
-        public readonly bool $isFixed = false,
+        private readonly int $number,
+        private readonly bool $isFixed = false,
     ) {}
+
+    public function valueOf(): int
+    {
+        return $this->number;
+    }
 
     public function __toString(): string
     {

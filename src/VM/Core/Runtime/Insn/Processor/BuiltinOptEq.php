@@ -53,7 +53,7 @@ class BuiltinOptEq implements OperationProcessorInterface
     private function computeNumberEqNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new BooleanSymbol(
-            $leftOperand->number == $rightOperand->number,
+            $leftOperand->valueOf() == $rightOperand->valueOf(),
         ))->toObject();
     }
 }

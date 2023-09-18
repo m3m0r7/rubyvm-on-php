@@ -50,7 +50,7 @@ class BuiltinDefinemethod implements OperationProcessorInterface
                 aux: new Aux(
                     loader: new AuxLoader(
                         index: $this->getOperandAsNumberSymbol()
-                            ->number,
+                            ->valueOf(),
                     ),
                 ),
             );
@@ -67,7 +67,7 @@ class BuiltinDefinemethod implements OperationProcessorInterface
         ));
 
         $executor->context()
-            ->appendTrace($methodNameSymbol->string);
+            ->appendTrace($methodNameSymbol->valueOf());
 
         $this->context
             ->self()

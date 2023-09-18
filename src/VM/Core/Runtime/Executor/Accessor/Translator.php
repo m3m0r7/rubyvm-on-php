@@ -69,15 +69,15 @@ readonly class Translator
             }
 
             return match ($symbol::class) {
-                StringSymbol::class => $symbol->string,
-                BooleanSymbol::class => $symbol->boolean,
+                FloatSymbol::class,
+                NumberSymbol::class,
+                StringSymbol::class,
+                BooleanSymbol::class => $symbol->valueOf(),
                 RangeSymbol::class,
                 ArraySymbol::class => array_map(
                     fn (SymbolInterface $element) => static::RubyToPHP($element),
-                    $symbol->array,
+                    $symbol->valueOf(),
                 ),
-                FloatSymbol::class,
-                NumberSymbol::class => $symbol->number,
                 NilSymbol::class => null,
                 default => throw new TranslationException(
                     sprintf(

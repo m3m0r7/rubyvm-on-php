@@ -56,14 +56,14 @@ class BuiltinOptMult implements OperationProcessorInterface
     private function computeNumberMultiplyNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new NumberSymbol(
-            $leftOperand->number * $rightOperand->number
+            $leftOperand->valueOf() * $rightOperand->valueOf()
         ))->toObject();
     }
 
     private function computeFloatMultiplyFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
     {
         return (new FloatSymbol(
-            $leftOperand->number * $rightOperand->number
+            $leftOperand->valueOf() * $rightOperand->valueOf()
         ))->toObject();
     }
 }

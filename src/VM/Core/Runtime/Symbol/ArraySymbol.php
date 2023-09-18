@@ -16,8 +16,13 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
     use RubyClassExtendable;
 
     public function __construct(
-        public array $array,
+        private array $array,
     ) {}
+
+    public function valueOf(): array
+    {
+        return $this->array;
+    }
 
     public function __toString(): string
     {
@@ -55,7 +60,7 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
                 ->environmentTable()
                 ->set(
                     Option::VM_ENV_DATA_SIZE,
-                    (new NumberSymbol($this->array[$i]->number))
+                    (new NumberSymbol($this->array[$i]->valueOf()))
                         ->toObject()
                 );
 

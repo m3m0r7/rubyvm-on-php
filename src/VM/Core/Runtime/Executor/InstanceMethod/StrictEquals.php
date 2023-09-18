@@ -46,7 +46,7 @@ class StrictEquals implements InstanceMethodInterface
             $value,
         );
 
-        if ($numberSymbol->number === $value->number) {
+        if ($numberSymbol->valueOf() === $value->valueOf()) {
             return new BooleanSymbol(true);
         }
 

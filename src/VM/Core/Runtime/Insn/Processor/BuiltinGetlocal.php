@@ -34,8 +34,8 @@ class BuiltinGetlocal implements OperationProcessorInterface
 
     public function process(SymbolInterface|ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $slotIndex = $this->getOperandAsNumberSymbol()->number;
-        $level = $this->getOperandAsNumberSymbol()->number;
+        $slotIndex = $this->getOperandAsNumberSymbol()->valueOf();
+        $level = $this->getOperandAsNumberSymbol()->valueOf();
 
         $this->getLocalTableToStack($slotIndex, $level);
 
