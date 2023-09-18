@@ -35,7 +35,7 @@ class BuiltinGetlocalWC0 implements OperationProcessorInterface
 
     public function process(SymbolInterface|ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $slotIndex = $this->getOperandAsNumberSymbol()->number;
+        $slotIndex = $this->getOperandAsNumberSymbol()->valueOf();
         $this->getLocalTableToStack($slotIndex, Option::RSV_TABLE_INDEX_0);
 
         return ProcessedStatus::SUCCESS;

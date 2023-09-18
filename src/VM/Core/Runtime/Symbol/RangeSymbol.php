@@ -18,12 +18,12 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, RubyClassInterface
     private array $array;
 
     public function __construct(
-        public readonly NumberSymbol $begin,
-        public readonly NumberSymbol $end,
-        public readonly bool $excludeEnd,
-        public readonly int $steps = 1,
+        private readonly NumberSymbol $begin,
+        private readonly NumberSymbol $end,
+        private readonly bool $excludeEnd,
+        private readonly int $steps = 1,
     ) {
-        if ($this->begin->number > $this->end->number) {
+        if ($this->begin->valueOf() > $this->end->valueOf()) {
             $this->array = [];
 
             return;
@@ -31,8 +31,8 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, RubyClassInterface
 
         $array = [];
         foreach (range(
-            $this->begin->number,
-            $this->end->number - ($this->excludeEnd ? 1 : 0),
+            $this->begin->valueOf(),
+            $this->end->valueOf() - ($this->excludeEnd ? 1 : 0),
             $this->steps,
         ) as $i) {
             $array[] = new NumberSymbol($i);
@@ -41,9 +41,14 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, RubyClassInterface
         $this->array = $array;
     }
 
+    public function valueOf(): array
+    {
+        return $this->array;
+    }
+
     public function __toString(): string
     {
-        return "{$this->begin->number}" . ($this->excludeEnd ? '...' : '..') . "{$this->end->number}";
+        return "{$this->begin->valueOf()}" . ($this->excludeEnd ? '...' : '..') . "{$this->end->valueOf()}";
     }
 
     public function each(OperationProcessorContext $context): SymbolInterface

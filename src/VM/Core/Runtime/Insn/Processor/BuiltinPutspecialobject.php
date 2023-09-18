@@ -38,7 +38,7 @@ class BuiltinPutspecialobject implements OperationProcessorInterface
     {
         $symbol = $this->getOperandAsNumberSymbol();
 
-        $type = VMSpecialObjectType::of($symbol->number);
+        $type = VMSpecialObjectType::of($symbol->valueOf());
 
         $this->context->vmStack()->push(new OperandEntry($this->context->self()));
 

@@ -56,14 +56,14 @@ class BuiltinOptDiv implements OperationProcessorInterface
     private function computeNumberDivideNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new NumberSymbol(
-            (int) ($leftOperand->number / $rightOperand->number)
+            (int) ($leftOperand->valueOf() / $rightOperand->valueOf())
         ))->toObject();
     }
 
     private function computeFloatDivideFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
     {
         return (new FloatSymbol(
-            $leftOperand->number / $rightOperand->number
+            $leftOperand->valueOf() / $rightOperand->valueOf()
         ))->toObject();
     }
 }

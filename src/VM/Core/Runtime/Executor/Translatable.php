@@ -25,7 +25,7 @@ trait Translatable
 
         $symbol = $entry->operand->symbol;
         if ($symbol instanceof NumberSymbol) {
-            return $symbol->number;
+            return $symbol->valueOf();
         }
 
         throw new TranslationException(sprintf('The symbol type cannot translate to number (symbol: %s)', get_class($symbol)));

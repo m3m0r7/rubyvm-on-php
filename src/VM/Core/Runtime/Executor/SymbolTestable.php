@@ -16,9 +16,9 @@ trait SymbolTestable
     private function test(SymbolInterface $symbol): bool
     {
         return (bool) (match ($symbol::class) {
-            BooleanSymbol::class => $symbol->boolean,
-            NumberSymbol::class => $symbol->number,
-            StringSymbol::class => $symbol->string,
+            BooleanSymbol::class,
+            NumberSymbol::class,
+            StringSymbol::class => $symbol->valueOf(),
             default => throw new OperationProcessorException(sprintf('The symbol type `%s` is not implemented `test` processing yet', ClassHelper::nameBy($symbol))),
         });
     }

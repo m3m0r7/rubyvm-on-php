@@ -8,5 +8,7 @@ interface SymbolInterface
 {
     public function toObject(): Object_;
 
+    public function valueOf(): mixed;
+
     public function __toString(): string;
 }

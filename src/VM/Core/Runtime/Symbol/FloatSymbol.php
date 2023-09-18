@@ -12,8 +12,13 @@ class FloatSymbol implements SymbolInterface, RubyClassInterface
     use ShouldBeRubyClass;
 
     public function __construct(
-        public readonly float $number,
+        private readonly float $number,
     ) {}
+
+    public function valueOf(): float
+    {
+        return $this->number;
+    }
 
     public function __toString(): string
     {

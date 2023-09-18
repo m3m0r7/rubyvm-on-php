@@ -7,12 +7,12 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 use RubyVM\VM\Core\Helper\LocalTableHelper;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
+use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Standard\Main;
 use RubyVM\VM\Core\Runtime\VMCallFlagBit;
 use RubyVM\VM\Exception\OperationProcessorException;
 
@@ -37,7 +37,7 @@ trait CallBlockHelper
         ));
 
         // TODO: is this needed?
-        if (!$context->self() instanceof Main) {
+        if (!$context->self() instanceof MainInterface) {
             $executor->context()->vmStack()->push(
                 new OperandEntry(
                     $context->self(),
@@ -88,7 +88,7 @@ trait CallBlockHelper
         if ($callInfo->callData()->flag() & (0x01 << VMCallFlagBit::VM_CALL_ARGS_BLOCKARG->value)) {
             throw new OperationProcessorException('The callBlockWithArguments is not implemented yet');
         }
-        if ($blockIseqIndex->number === 0) {
+        if ($blockIseqIndex->valueOf() === 0) {
             // TODO: implement a super call
             // see: https://github.com/ruby/ruby/blob/ruby_3_2/vm_args.c#L888
 
@@ -98,7 +98,7 @@ trait CallBlockHelper
             ->kernel()
             ->loadInstructionSequence(new Aux(
                 loader: new AuxLoader(
-                    index: $blockIseqIndex->number,
+                    index: $blockIseqIndex->valueOf(),
                 ),
             ));
 

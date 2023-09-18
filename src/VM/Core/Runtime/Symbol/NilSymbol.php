@@ -18,6 +18,11 @@ class NilSymbol implements SymbolInterface, RubyClassInterface
         return 'nil';
     }
 
+    public function valueOf(): null
+    {
+        return null;
+    }
+
     public function toObject(): Object_
     {
         return new Object_(

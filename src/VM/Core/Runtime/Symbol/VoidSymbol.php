@@ -10,7 +10,12 @@ class VoidSymbol implements SymbolInterface
 
     public function __toString(): string
     {
-        return '<void>';
+        return 'void';
+    }
+
+    public function valueOf(): null
+    {
+        return null;
     }
 
     public function toObject(): Object_
