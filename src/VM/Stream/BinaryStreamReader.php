@@ -13,14 +13,14 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         protected Endian $endian = Endian::LITTLE_ENDIAN
     ) {}
 
-    public function char(): string
+    public function readAsChar(): string
     {
-        return chr($this->unsignedByte());
+        return chr($this->readAsUnsignedByte());
     }
 
-    public function int(): int
+    public function readAsInt(): int
     {
-        $value = $this->unsignedInt();
+        $value = $this->readAsUnsignedInt();
 
         return $value - (
             ($value & SizeOf::INT->size()) > 0
@@ -29,9 +29,9 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         );
     }
 
-    public function long(): int
+    public function readAsLong(): int
     {
-        $value = $this->unsignedLong();
+        $value = $this->readAsUnsignedLong();
 
         return $value - (
             ($value & SizeOf::LONG->size()) > 0
@@ -40,9 +40,9 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         );
     }
 
-    public function longLong(): int|float
+    public function readAsLongLong(): int|float
     {
-        $value = $this->unsignedLongLong();
+        $value = $this->readAsUnsignedLongLong();
 
         return $value - (
             ($value & SizeOf::LONG_LONG->size()) > 0
@@ -51,7 +51,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         );
     }
 
-    public function double(): float
+    public function readAsDouble(): float
     {
         /*
          * FIXME: This code depend on the machine. We must fix non-depending on the machine.
@@ -65,9 +65,9 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         );
     }
 
-    public function short(): int
+    public function readAsShort(): int
     {
-        $value = $this->unsignedShort();
+        $value = $this->readAsUnsignedShort();
 
         return $value - (
             ($value & SizeOf::SHORT->size()) > 0
@@ -76,9 +76,9 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         );
     }
 
-    public function byte(): int
+    public function readAsByte(): int
     {
-        $value = $this->unsignedByte();
+        $value = $this->readAsUnsignedByte();
 
         return $value - (
             ($value & SizeOf::BYTE->size()) > 0
@@ -87,12 +87,12 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         );
     }
 
-    public function unsignedInt(): int
+    public function readAsUnsignedInt(): int
     {
-        return $this->unsignedLong();
+        return $this->readAsUnsignedLong();
     }
 
-    public function unsignedLong(): int
+    public function readAsUnsignedLong(): int
     {
         return $this->readWithEndian(
             littleEndian: 'V',
@@ -101,7 +101,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         );
     }
 
-    public function unsignedLongLong(): int
+    public function readAsUnsignedLongLong(): int
     {
         return $this->readWithEndian(
             littleEndian: 'P',
@@ -110,7 +110,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         );
     }
 
-    public function unsignedShort(): int
+    public function readAsUnsignedShort(): int
     {
         return $this->readWithEndian(
             littleEndian: 'v',
@@ -119,7 +119,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         );
     }
 
-    public function unsignedByte(): int
+    public function readAsUnsignedByte(): int
     {
         return $this->readWithEndian(
             littleEndian: 'C',
@@ -179,17 +179,17 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
             }
 
             return match ($bytesOrSize) {
-                SizeOf::BOOL, SizeOf::BYTE => $this->byte(),
-                SizeOf::CHAR => $this->char(),
-                SizeOf::SHORT => $this->short(),
-                SizeOf::INT => $this->int(),
-                SizeOf::LONG => $this->long(),
-                SizeOf::LONG_LONG => $this->longLong(),
-                SizeOf::UNSIGNED_BYTE => $this->unsignedByte(),
-                SizeOf::UNSIGNED_SHORT => $this->unsignedShort(),
-                SizeOf::UNSIGNED_INT => $this->unsignedInt(),
-                SizeOf::UNSIGNED_LONG => $this->unsignedLong(),
-                SizeOf::UNSIGNED_LONG_LONG => $this->unsignedLongLong(),
+                SizeOf::BOOL, SizeOf::BYTE => $this->readAsByte(),
+                SizeOf::CHAR => $this->readAsChar(),
+                SizeOf::SHORT => $this->readAsShort(),
+                SizeOf::INT => $this->readAsInt(),
+                SizeOf::LONG => $this->readAsLong(),
+                SizeOf::LONG_LONG => $this->readAsLongLong(),
+                SizeOf::UNSIGNED_BYTE => $this->readAsUnsignedByte(),
+                SizeOf::UNSIGNED_SHORT => $this->readAsUnsignedShort(),
+                SizeOf::UNSIGNED_INT => $this->readAsUnsignedInt(),
+                SizeOf::UNSIGNED_LONG => $this->readAsUnsignedLong(),
+                SizeOf::UNSIGNED_LONG_LONG => $this->readAsUnsignedLongLong(),
                 default => throw new BinaryStreamReaderException('Unknown sizeof type'),
             };
         } finally {
@@ -216,7 +216,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
             return $x;
         };
 
-        $c = $this->unsignedByte();
+        $c = $this->readAsUnsignedByte();
 
         $n = ($c & 1)
             ? 1
@@ -229,7 +229,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         }
         for ($i = 1; $i < $n; ++$i) {
             $x <<= 8;
-            $x |= $this->unsignedByte();
+            $x |= $this->readAsUnsignedByte();
         }
 
         $this->pos(
@@ -239,7 +239,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         return $x;
     }
 
-    public function string(): string
+    public function readAsString(): string
     {
         $string = '';
 

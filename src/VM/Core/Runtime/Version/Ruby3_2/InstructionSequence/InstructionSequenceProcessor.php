@@ -460,7 +460,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                 $reader->pos($localTableOffset);
 
                 for ($i = 0; $i < $localTableSize; ++$i) {
-                    $entries[] = new VariableEntry($this->kernel->findId($reader->unsignedLong()));
+                    $entries[] = new VariableEntry($this->kernel->findId($reader->readAsUnsignedLong()));
                 }
 
                 return $entries;

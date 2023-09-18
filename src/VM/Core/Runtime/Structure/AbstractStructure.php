@@ -23,17 +23,17 @@ abstract class AbstractStructure implements StructureInterface
                 throw new RubyVMException('The AbstractStructure::structure accepts processing instantiated by SizeOf or integer property');
             }
             $this->structureProperties[$name] = match ($sizeOf) {
-                SizeOf::CHAR => $this->reader->char(),
+                SizeOf::CHAR => $this->readerreadAsChar(),
                 SizeOf::BYTE => $this->reader->byte(),
                 SizeOf::SHORT => $this->reader->short(),
-                SizeOf::INT => $this->reader->int(),
+                SizeOf::INT => $this->reader->readAsInt(),
                 SizeOf::LONG => $this->reader->long(),
                 SizeOf::LONG_LONG => $this->reader->longLong(),
                 SizeOf::UNSIGNED_BYTE => $this->reader->unsignedByte(),
                 SizeOf::UNSIGNED_SHORT => $this->reader->unsignedShort(),
                 SizeOf::UNSIGNED_INT => $this->reader->unsignedInt(),
-                SizeOf::UNSIGNED_LONG => $this->reader->unsignedLong(),
-                SizeOf::UNSIGNED_LONG_LONG => $this->reader->unsignedLongLong(),
+                SizeOf::UNSIGNED_LONG => $this->reader->readAsUnsignedLong(),
+                SizeOf::UNSIGNED_LONG_LONG => $this->reader->readAsUnsignedLongLong(),
                 default => $this->reader->read($sizeOf),
             };
         }

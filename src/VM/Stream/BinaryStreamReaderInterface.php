@@ -8,31 +8,31 @@ interface BinaryStreamReaderInterface
 {
     public function read(int $bytes): string;
 
-    public function char(): string;
+    public function readAsChar(): string;
 
-    public function int(): int;
+    public function readAsInt(): int;
 
-    public function long(): int;
+    public function readAsLong(): int;
 
-    public function longLong(): int|float;
+    public function readAsLongLong(): int|float;
 
-    public function double(): float;
+    public function readAsDouble(): float;
 
-    public function short(): int;
+    public function readAsShort(): int;
 
-    public function byte(): int;
+    public function readAsByte(): int;
 
-    public function unsignedInt(): int;
+    public function readAsUnsignedInt(): int;
 
-    public function unsignedLong(): int;
+    public function readAsUnsignedLong(): int;
 
-    public function unsignedLongLong(): int|float;
+    public function readAsUnsignedLongLong(): int|float;
 
-    public function unsignedShort(): int;
+    public function readAsUnsignedShort(): int;
 
-    public function unsignedByte(): int;
+    public function readAsUnsignedByte(): int;
 
-    public function string(): string;
+    public function readAsString(): string;
 
     public function dryReadValue(int|SizeOf $bytesOrSize): int|string;
 

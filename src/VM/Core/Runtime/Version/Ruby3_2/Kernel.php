@@ -131,15 +131,15 @@ class Kernel implements KernelInterface
         $pos = $this->stream()->pos();
 
         $this->magic = $this->stream()->read(4);
-        $this->majorVersion = $this->stream()->unsignedLong();
-        $this->minorVersion = $this->stream()->unsignedLong();
-        $this->size = $this->stream()->unsignedLong();
-        $this->extraSize = $this->stream()->unsignedLong();
-        $this->instructionSequenceListSize = $this->stream()->unsignedLong();
-        $this->globalObjectListSize = $this->stream()->unsignedLong();
-        $this->instructionSequenceListOffset = $this->stream()->unsignedLong();
-        $this->globalObjectListOffset = $this->stream()->unsignedLong();
-        $this->rubyPlatform = $this->stream()->string();
+        $this->majorVersion = $this->stream()->readAsUnsignedLong();
+        $this->minorVersion = $this->stream()->readAsUnsignedLong();
+        $this->size = $this->stream()->readAsUnsignedLong();
+        $this->extraSize = $this->stream()->readAsUnsignedLong();
+        $this->instructionSequenceListSize = $this->stream()->readAsUnsignedLong();
+        $this->globalObjectListSize = $this->stream()->readAsUnsignedLong();
+        $this->instructionSequenceListOffset = $this->stream()->readAsUnsignedLong();
+        $this->globalObjectListOffset = $this->stream()->readAsUnsignedLong();
+        $this->rubyPlatform = $this->stream()->readAsString();
 
         $this->vm->option()->logger->info(
             sprintf('Loaded an instruction sequence header (%d bytes)', $this->stream()->pos() - $pos),
@@ -174,7 +174,7 @@ class Kernel implements KernelInterface
                 ->append(
                     new Offset(
                         // VALUE iseq_list;       /* [iseq0, ...] */
-                        $this->stream()->unsignedLong(),
+                        $this->stream()->readAsUnsignedLong(),
                     )
                 );
         }
@@ -202,7 +202,7 @@ class Kernel implements KernelInterface
         for ($i = 0; $i < $this->globalObjectListSize; ++$i) {
             $this->globalObjectList->append(
                 new Offset(
-                    $this->stream()->unsignedLong(),
+                    $this->stream()->readAsUnsignedLong(),
                 )
             );
         }
@@ -284,7 +284,7 @@ class Kernel implements KernelInterface
             ->dryPosTransaction(
                 function (BinaryStreamReader $stream) use ($offset) {
                     $stream->pos($offset->offset);
-                    $byte = $stream->unsignedByte();
+                    $byte = $stream->readAsUnsignedByte();
 
                     return new ObjectInfo(
                         type: SymbolType::of(($byte >> 0) & 0x1F),

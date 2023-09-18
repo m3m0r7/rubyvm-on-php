@@ -25,7 +25,7 @@ class FloatLoader implements LoaderInterface
                 ->align(SizeOf::DOUBLE)
                 ->offset
         );
-        $value = $this->kernel->stream()->double();
+        $value = $this->kernel->stream()->readAsDouble();
 
         return new FloatSymbol(
             $value,
