@@ -43,8 +43,7 @@ class BuiltinBranchif implements OperationProcessorInterface
         if ($this->test($symbol)) {
             $this->context
                 ->programCounter()
-                ->increase($offsetSymbol->offset)
-            ;
+                ->increase($offsetSymbol->offset);
 
             return ProcessedStatus::JUMPED;
         }

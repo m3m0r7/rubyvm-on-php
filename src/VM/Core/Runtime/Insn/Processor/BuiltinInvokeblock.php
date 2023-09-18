@@ -64,16 +64,14 @@ class BuiltinInvokeblock implements OperationProcessorInterface
             ->callSimpleMethod(
                 $processorContext,
                 ...$arguments,
-            )
-        ;
+            );
 
         if ($executed->threw) {
             throw $executed->threw;
         }
         if ($executed->returnValue !== null) {
             $this->context->vmStack()
-                ->push(new OperandEntry($executed->returnValue))
-            ;
+                ->push(new OperandEntry($executed->returnValue));
         }
 
         if ($executed->returnValue === null) {

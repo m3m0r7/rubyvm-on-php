@@ -145,8 +145,7 @@ class Executor implements ExecutorInterface
             $processor = $this
                 ->kernel
                 ->operationProcessorEntries()
-                ->get($operator->insn)
-            ;
+                ->get($operator->insn);
 
             $this->logger->info(
                 sprintf(

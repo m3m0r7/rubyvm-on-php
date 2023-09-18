@@ -46,8 +46,7 @@ class BuiltinSetinstancevariable implements OperationProcessorInterface
             ->setInstanceVariable(
                 $instanceVar,
                 $targetObject->toObject(),
-            )
-        ;
+            );
 
         return ProcessedStatus::SUCCESS;
     }

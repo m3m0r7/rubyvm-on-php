@@ -364,7 +364,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                 $reader->pos($callInfoEntriesOffset);
                 for ($i = 0; $i < $callInfoSize; ++$i) {
                     $midIndex = $reader->smallValue();
-                    if (-1 === $midIndex) {
+                    if ($midIndex === -1) {
                         $entries->append(new CallInfoEntry());
 
                         continue;
@@ -380,8 +380,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         for ($j = 0; $j < $keywordLength; ++$j) {
                             $keyword = $reader->smallValue();
                             $keywords[] = $this->kernel
-                                ->findObject($keyword)
-                            ;
+                                ->findObject($keyword);
                         }
                     }
 

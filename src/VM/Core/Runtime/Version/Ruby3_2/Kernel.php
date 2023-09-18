@@ -176,8 +176,7 @@ class Kernel implements KernelInterface
                         // VALUE iseq_list;       /* [iseq0, ...] */
                         $this->stream()->unsignedLong(),
                     )
-                )
-            ;
+                );
         }
 
         $this->vm->option()->logger->info(
@@ -294,8 +293,7 @@ class Kernel implements KernelInterface
                         internal: (bool) ($byte >> 7) & 0x01,
                     );
                 }
-            )
-        ;
+            );
 
         $this->vm->option()->logger->info(
             sprintf(
@@ -316,8 +314,7 @@ class Kernel implements KernelInterface
             ->dryPosTransaction(
                 fn () => $this->resolveLoader($info, $offset->increase())
                     ->load()
-            )
-        ;
+            );
 
         return $this->globalObjectTable[$index] = $symbol->toObject($offset);
     }
@@ -350,8 +347,7 @@ class Kernel implements KernelInterface
     {
         $instructionSequence = $this
             ->instructionSequences
-            ->get($aux->loader->index)
-        ;
+            ->get($aux->loader->index);
 
         if (!$instructionSequence) {
             // load all sequences

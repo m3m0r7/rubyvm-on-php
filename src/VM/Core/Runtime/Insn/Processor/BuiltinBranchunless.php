@@ -43,8 +43,7 @@ class BuiltinBranchunless implements OperationProcessorInterface
         if ($this->unless($symbol)) {
             $this->context
                 ->programCounter()
-                ->increase($offsetSymbol->offset)
-            ;
+                ->increase($offsetSymbol->offset);
 
             return ProcessedStatus::JUMPED;
         }

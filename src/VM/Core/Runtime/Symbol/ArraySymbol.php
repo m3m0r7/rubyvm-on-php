@@ -57,12 +57,10 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
                     Option::VM_ENV_DATA_SIZE,
                     (new NumberSymbol($this->array[$i]->number))
                         ->toObject()
-                )
-            ;
+                );
 
             $executor->context()
-                ->appendTrace(ClassHelper::nameBy($this) . '#' . __FUNCTION__)
-            ;
+                ->appendTrace(ClassHelper::nameBy($this) . '#' . __FUNCTION__);
 
             $result = $executor->execute();
 
