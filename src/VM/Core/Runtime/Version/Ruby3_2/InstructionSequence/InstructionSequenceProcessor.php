@@ -35,7 +35,7 @@ use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\VariableEntry;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceBody as Ruby3_2_InstructionSequenceBody;
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\InstructionSequenceProcessorException;
-use RubyVM\VM\Stream\BinaryStreamReader;
+use RubyVM\VM\Stream\RubyVMBinaryStreamReader;
 
 class InstructionSequenceProcessor implements InstructionSequenceProcessorInterface
 {
@@ -257,8 +257,8 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         int $instructionSequenceSize,
         Ruby3_2_InstructionSequenceBody $instructionSequenceBody,
     ): OperationEntries {
-        return $this->kernel->stream()->dryPosTransaction(
-            function (BinaryStreamReader $reader) use ($bytecodeOffset, $instructionSequenceSize, $instructionSequenceBody) {
+        return $this->kernel->stream()->pretense(
+            function (RubyVMBinaryStreamReader $reader) use ($bytecodeOffset, $instructionSequenceSize, $instructionSequenceBody) {
                 $entries = new OperationEntries();
                 $operationMap = implode($this->insnOperations());
                 $callInfoEntryIndex = 0;
@@ -358,8 +358,8 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
 
     private function loadCallInfoEntries(int $callInfoEntriesOffset, int $callInfoSize): CallInfoEntries
     {
-        return $this->kernel->stream()->dryPosTransaction(
-            function (BinaryStreamReader $reader) use ($callInfoEntriesOffset, $callInfoSize) {
+        return $this->kernel->stream()->pretense(
+            function (RubyVMBinaryStreamReader $reader) use ($callInfoEntriesOffset, $callInfoSize) {
                 $entries = new CallInfoEntries();
                 $reader->pos($callInfoEntriesOffset);
                 for ($i = 0; $i < $callInfoSize; ++$i) {
@@ -403,8 +403,8 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
 
     private function loadOuterVariables(int $outerVariableOffset): OuterVariableEntries
     {
-        return $this->kernel->stream()->dryPosTransaction(
-            function (BinaryStreamReader $reader) use ($outerVariableOffset) {
+        return $this->kernel->stream()->pretense(
+            function (RubyVMBinaryStreamReader $reader) use ($outerVariableOffset) {
                 $entries = new OuterVariableEntries();
                 $reader->pos($outerVariableOffset);
 
@@ -427,8 +427,8 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
 
     private function loadParamOptTable(int $paramOptTableOffset, int $paramOptNum): int
     {
-        return $this->kernel->stream()->dryPosTransaction(
-            function (BinaryStreamReader $reader) use ($paramOptTableOffset) {
+        return $this->kernel->stream()->pretense(
+            function (RubyVMBinaryStreamReader $reader) use ($paramOptTableOffset) {
                 $reader->pos($paramOptTableOffset);
 
                 // TODO: implement here
@@ -454,8 +454,8 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
 
     private function loadLocalTable(int $localTableOffset, int $localTableSize): VariableEntries
     {
-        return $this->kernel->stream()->dryPosTransaction(
-            function (BinaryStreamReader $reader) use ($localTableOffset, $localTableSize) {
+        return $this->kernel->stream()->pretense(
+            function (RubyVMBinaryStreamReader $reader) use ($localTableOffset, $localTableSize) {
                 $entries = new VariableEntries();
                 $reader->pos($localTableOffset);
 

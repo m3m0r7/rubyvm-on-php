@@ -6,6 +6,10 @@ namespace RubyVM\VM\Stream;
 
 interface BinaryStreamReaderInterface
 {
+    public function streamHandler(): StreamHandlerInterface;
+
+    public function endian(): Endian;
+
     public function read(int $bytes): string;
 
     public function readAsChar(): string;
@@ -34,13 +38,7 @@ interface BinaryStreamReaderInterface
 
     public function readAsString(): string;
 
-    public function dryReadValue(int|SizeOf $bytesOrSize): int|string;
-
     public function pos(int $newPos = null): int;
 
     public function size(): ?int;
-
-    public function dryPosTransaction(callable $callback): mixed;
-
-    public function smallValue(): int;
 }

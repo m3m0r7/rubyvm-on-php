@@ -9,9 +9,19 @@ use RubyVM\VM\Exception\BinaryStreamReaderException;
 class BinaryStreamReader implements BinaryStreamReaderInterface
 {
     public function __construct(
-        public readonly StreamHandlerInterface $streamHandler,
+        protected readonly StreamHandlerInterface $streamHandler,
         protected Endian $endian = Endian::LITTLE_ENDIAN
     ) {}
+
+    public function streamHandler(): StreamHandlerInterface
+    {
+        return $this->streamHandler;
+    }
+
+    public function endian(): Endian
+    {
+        return $this->endian;
+    }
 
     public function readAsChar(): string
     {
@@ -156,87 +166,6 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
     public function size(): ?int
     {
         return $this->streamHandler->size();
-    }
-
-    public function dryPosTransaction(callable $callback): mixed
-    {
-        $currentPos = $this->pos();
-
-        try {
-            return $callback($this);
-        } finally {
-            $this->pos($currentPos);
-        }
-    }
-
-    public function dryReadValue(int|SizeOf $bytesOrSize): int|string
-    {
-        $pos = $this->streamHandler->pos();
-
-        try {
-            if (is_int($bytesOrSize)) {
-                return $this->read($bytesOrSize);
-            }
-
-            return match ($bytesOrSize) {
-                SizeOf::BOOL, SizeOf::BYTE => $this->readAsByte(),
-                SizeOf::CHAR => $this->readAsChar(),
-                SizeOf::SHORT => $this->readAsShort(),
-                SizeOf::INT => $this->readAsInt(),
-                SizeOf::LONG => $this->readAsLong(),
-                SizeOf::LONG_LONG => $this->readAsLongLong(),
-                SizeOf::UNSIGNED_BYTE => $this->readAsUnsignedByte(),
-                SizeOf::UNSIGNED_SHORT => $this->readAsUnsignedShort(),
-                SizeOf::UNSIGNED_INT => $this->readAsUnsignedInt(),
-                SizeOf::UNSIGNED_LONG => $this->readAsUnsignedLong(),
-                SizeOf::UNSIGNED_LONG_LONG => $this->readAsUnsignedLongLong(),
-                default => throw new BinaryStreamReaderException('Unknown sizeof type'),
-            };
-        } finally {
-            $this->streamHandler->pos($pos);
-        }
-    }
-
-    /**
-     * @see https://github.com/ruby/ruby/blob/2f603bc4/compile.c#L11299
-     */
-    public function smallValue(): int
-    {
-        $offset = $this->pos();
-
-        // Emulates: rb_popcount32(uint32_t x)
-        $ntzInt32 = function (int $x): int {
-            $x = ~$x & ($x - 1);
-            $x = ($x & 0x55555555) + ($x >> 1 & 0x55555555);
-            $x = ($x & 0x33333333) + ($x >> 2 & 0x33333333);
-            $x = ($x & 0x0F0F0F0F) + ($x >> 4 & 0x0F0F0F0F);
-            $x = ($x & 0x001F001F) + ($x >> 8 & 0x001F001F);
-            $x = ($x & 0x0000003F) + ($x >> 16 & 0x0000003F);
-
-            return $x;
-        };
-
-        $c = $this->readAsUnsignedByte();
-
-        $n = ($c & 1)
-            ? 1
-            : (0 == $c ? 9 : $ntzInt32($c) + 1);
-
-        $x = $c >> $n;
-
-        if (0x7F === $x) {
-            $x = 1;
-        }
-        for ($i = 1; $i < $n; ++$i) {
-            $x <<= 8;
-            $x |= $this->readAsUnsignedByte();
-        }
-
-        $this->pos(
-            $offset + $n,
-        );
-
-        return $x;
     }
 
     public function readAsString(): string

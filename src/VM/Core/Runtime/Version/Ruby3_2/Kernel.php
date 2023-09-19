@@ -42,6 +42,7 @@ use RubyVM\VM\Exception\ResolverException;
 use RubyVM\VM\Exception\RubyVMException;
 use RubyVM\VM\Stream\BinaryStreamReader;
 use RubyVM\VM\Stream\BinaryStreamReaderInterface;
+use RubyVM\VM\Stream\RubyVMBinaryStreamReader;
 use RubyVM\VM\Stream\StreamHandler;
 
 class Kernel implements KernelInterface
@@ -219,9 +220,9 @@ class Kernel implements KernelInterface
         return [RubyVersion::VERSION_3_2];
     }
 
-    public function stream(): BinaryStreamReaderInterface
+    public function stream(): RubyVMBinaryStreamReader
     {
-        return $this->vm->option()->reader;
+        return new RubyVMBinaryStreamReader($this->vm->option()->reader);
     }
 
     public function findId(int $index): ID
@@ -281,7 +282,7 @@ class Kernel implements KernelInterface
          */
         $info = $this
             ->stream()
-            ->dryPosTransaction(
+            ->pretense(
                 function (BinaryStreamReader $stream) use ($offset) {
                     $stream->pos($offset->offset);
                     $byte = $stream->readAsUnsignedByte();
@@ -311,7 +312,7 @@ class Kernel implements KernelInterface
          */
         $symbol = $this
             ->stream()
-            ->dryPosTransaction(
+            ->pretense(
                 fn () => $this->resolveLoader($info, $offset->increase())
                     ->load()
             );
@@ -337,7 +338,7 @@ class Kernel implements KernelInterface
 
     private function setupExtraData(): void
     {
-        $this->stream()->dryPosTransaction(function (): void {
+        $this->stream()->pretense(function (): void {
             $this->stream()->pos($this->size);
             $this->extraData = $this->stream()->read($this->extraSize);
         });
