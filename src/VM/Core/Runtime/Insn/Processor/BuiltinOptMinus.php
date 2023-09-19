@@ -56,14 +56,14 @@ class BuiltinOptMinus implements OperationProcessorInterface
     private function computeNumberMinusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new NumberSymbol(
-            $leftOperand->number - $rightOperand->number
+            $leftOperand->valueOf() - $rightOperand->valueOf()
         ))->toObject();
     }
 
     private function computeFloatMinusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
     {
         return (new FloatSymbol(
-            $leftOperand->number - $rightOperand->number
+            $leftOperand->valueOf() - $rightOperand->valueOf()
         ))->toObject();
     }
 }

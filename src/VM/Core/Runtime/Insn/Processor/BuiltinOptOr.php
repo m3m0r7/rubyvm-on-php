@@ -52,7 +52,7 @@ class BuiltinOptOr implements OperationProcessorInterface
     private function computeNumberOrNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new NumberSymbol(
-            $leftOperand->number | $rightOperand->number
+            $leftOperand->valueOf() | $rightOperand->valueOf()
         ))->toObject();
     }
 }

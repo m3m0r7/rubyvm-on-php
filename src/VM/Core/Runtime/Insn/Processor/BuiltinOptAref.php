@@ -42,7 +42,7 @@ class BuiltinOptAref implements OperationProcessorInterface
         /**
          * @var NumberSymbol $selectedNumber
          */
-        $selectedNumber = $obj[$recv->number];
+        $selectedNumber = $obj[$recv->valueOf()];
 
         $this->context->vmStack()->push(
             new OperandEntry(

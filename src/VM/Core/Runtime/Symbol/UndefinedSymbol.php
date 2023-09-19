@@ -10,7 +10,12 @@ class UndefinedSymbol implements SymbolInterface
 
     public function __toString(): string
     {
-        return '<undefined>';
+        return 'undefined';
+    }
+
+    public function valueOf(): null
+    {
+        return null;
     }
 
     public function toObject(): Object_

@@ -38,7 +38,7 @@ class BuiltinSetlocal implements OperationProcessorInterface
          * @var NumberSymbol $level
          */
         $level = $this->getOperandAsSymbol();
-        $this->setLocalTableFromStack($level->number);
+        $this->setLocalTableFromStack($level->valueOf());
 
         return ProcessedStatus::SUCCESS;
     }

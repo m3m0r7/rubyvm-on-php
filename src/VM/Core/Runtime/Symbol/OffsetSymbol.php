@@ -15,6 +15,11 @@ class OffsetSymbol implements SymbolInterface
         return (string) $this->offset;
     }
 
+    public function valueOf(): int
+    {
+        return $this->offset;
+    }
+
     public function toObject(): Object_
     {
         return new Object_(

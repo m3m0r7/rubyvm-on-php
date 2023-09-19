@@ -71,14 +71,14 @@ class BuiltinOptPlus implements OperationProcessorInterface
     private function computeNumberPlusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
     {
         return (new NumberSymbol(
-            $leftOperand->number + $rightOperand->number
+            $leftOperand->valueOf() + $rightOperand->valueOf()
         ))->toObject();
     }
 
     private function computeFloatPlusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
     {
         return (new FloatSymbol(
-            $leftOperand->number + $rightOperand->number
+            $leftOperand->valueOf() + $rightOperand->valueOf()
         ))->toObject();
     }
 

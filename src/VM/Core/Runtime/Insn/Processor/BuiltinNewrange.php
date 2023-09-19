@@ -43,7 +43,7 @@ class BuiltinNewrange implements OperationProcessorInterface
                     (new RangeSymbol(
                         begin: $low,
                         end: $high,
-                        excludeEnd: (bool) $flags->number,
+                        excludeEnd: (bool) $flags->valueOf(),
                     ))->toObject(),
                 ),
             );
