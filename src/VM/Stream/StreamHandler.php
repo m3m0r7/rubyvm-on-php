@@ -10,7 +10,7 @@ class StreamHandler implements StreamHandlerInterface
 {
     use StreamGeneric;
 
-    public function __construct(public readonly mixed $pipe)
+    public function __construct(public readonly mixed $pipe, private readonly ?int $size = null)
     {
         if (!is_resource($pipe)) {
             throw new StreamHandlerException('The specified parameter is not a stream');
@@ -25,11 +25,16 @@ class StreamHandler implements StreamHandlerInterface
 
     public function size(): ?int
     {
-        return null;
+        return $this->size;
     }
 
     public function isTerminated(): bool
     {
         return feof($this->handle);
+    }
+
+    public function resource(): mixed
+    {
+        return $this->handle;
     }
 }

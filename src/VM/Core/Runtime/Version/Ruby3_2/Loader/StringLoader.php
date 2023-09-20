@@ -22,9 +22,10 @@ class StringLoader implements LoaderInterface
 
     public function load(): SymbolInterface
     {
-        $this->kernel->stream()->pos($this->offset->offset);
-        $encIndex = $this->kernel->stream()->smallValue();
-        $len = $this->kernel->stream()->smallValue();
+        $reader = $this->kernel->stream()->duplication();
+        $reader->pos($this->offset->offset);
+        $encIndex = $reader->smallValue();
+        $len = $reader->smallValue();
 
         // see: https://github.com/ruby/ruby/blob/2f603bc4/compile.c#L12567
         if ($encIndex > Option::RUBY_ENCINDEX_BUILTIN_MAX) {
@@ -32,7 +33,7 @@ class StringLoader implements LoaderInterface
         }
 
         return new StringSymbol(
-            string: $this->kernel->stream()->read($len),
+            string: $reader->read($len),
             encoding: Encoding::of($encIndex),
         );
     }

@@ -15,4 +15,9 @@ interface StreamHandlerInterface
     public function size(): ?int;
 
     public function isTerminated(): bool;
+
+    /**
+     * @return resource
+     */
+    public function resource(): mixed;
 }

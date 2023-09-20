@@ -35,7 +35,6 @@ use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\VariableEntry;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceBody as Ruby3_2_InstructionSequenceBody;
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\InstructionSequenceProcessorException;
-use RubyVM\VM\Stream\RubyVMBinaryStreamReaderInterface;
 
 class InstructionSequenceProcessor implements InstructionSequenceProcessorInterface
 {
@@ -257,184 +256,175 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         int $instructionSequenceSize,
         Ruby3_2_InstructionSequenceBody $instructionSequenceBody,
     ): OperationEntries {
-        return $this->kernel->stream()->pretense(
-            function (RubyVMBinaryStreamReaderInterface $reader) use ($bytecodeOffset, $instructionSequenceSize, $instructionSequenceBody) {
-                $entries = new OperationEntries();
-                $operationMap = implode($this->insnOperations());
-                $callInfoEntryIndex = 0;
-                $reader->pos($bytecodeOffset);
+        $reader = $this->kernel->stream()->duplication();
 
-                for ($codeIndex = 0; $codeIndex < $instructionSequenceSize;) {
-                    $insn = Insn::of($insnValue = $reader->smallValue());
-                    $entries->append(
-                        new OperationEntry(
-                            insn: $insn,
-                        )
-                    );
+        $entries = new OperationEntries();
+        $operationMap = implode($this->insnOperations());
+        $callInfoEntryIndex = 0;
+        $reader->pos($bytecodeOffset);
 
-                    $types = $operationMap[$this->insnOperationOffsets()[$insnValue]] ?? null;
-                    if ($types === null) {
-                        throw new ExecutorExeption(sprintf('Unknown INSN type: 0x%02x', $insn));
-                    }
-                    ++$codeIndex;
+        for ($codeIndex = 0; $codeIndex < $instructionSequenceSize;) {
+            $insn = Insn::of($insnValue = $reader->smallValue());
+            $entries->append(
+                new OperationEntry(
+                    insn: $insn,
+                )
+            );
 
-                    for ($opIndex = 0; ord($types[$opIndex] ?? "\0"); $opIndex++, $codeIndex++) {
-                        $operandType = InsnType::of($types[$opIndex]);
-                        $entries->append(
-                            match ($operandType) {
-                                InsnType::TS_VALUE => new OperandEntry(
-                                    operand: $this->kernel
-                                        ->findObject($reader->smallValue())
-                                ),
-                                InsnType::TS_CALLDATA => new OperandEntry(
-                                    operand: $instructionSequenceBody
-                                        ->callInfoEntries[$callInfoEntryIndex++],
-                                ),
-
-                                // see: https://github.com/ruby/ruby/blob/ruby_3_2/iseq.c#L2090
-                                InsnType::TS_NUM,
-                                InsnType::TS_LINDEX => new OperandEntry(
-                                    operand: (new NumberSymbol(
-                                        $reader->smallValue(),
-                                    ))->toObject()
-                                ),
-
-                                // NOTE: here is not implemented on actually the RubyVM.
-                                // This is originally implemented by the RubyVM on PHP.
-                                InsnType::TS_OFFSET => new OperandEntry(
-                                    operand: (new OffsetSymbol(
-                                        offset: $reader->smallValue(),
-                                    ))->toObject(),
-                                ),
-
-                                InsnType::TS_IC => new OperandEntry(
-                                    $this->processInlineCache(
-                                        $reader->smallValue()
-                                    )
-                                ),
-                                InsnType::TS_ID => new OperandEntry(
-                                    $this->kernel->findId(
-                                        $reader->smallValue(),
-                                    ),
-                                ),
-
-                                // Not implemented yet
-                                InsnType::TS_VARIABLE,
-                                InsnType::TS_IVC,
-                                InsnType::TS_ISE,
-                                InsnType::TS_ISEQ,
-                                InsnType::TS_FUNCPTR,
-                                InsnType::TS_BUILTIN,
-                                InsnType::TS_CDHASH,
-                                InsnType::TS_ICVARC => throw new ExecutorExeption(sprintf('The OperandType#%s is not supported', $operandType->name)),
-                                default => new UnknownEntry(
-                                    $reader->smallValue(),
-                                    $types[$opIndex],
-                                ),
-                            },
-                        );
-                    }
-
-                    // NOTE: In this statement, change next operand to be instruction sequence number.
-                    // however originally RubyVM is not needed here because it is implemented by using only integer types but RubyVM on PHP is written in the OOP.
-                    // So RubyVM on PHP needs explicitly changing operand.
-                    for ($i = 0; $i < ($insn->operandSize() - 1); ++$i) {
-                        $entries->append(
-                            new OperandEntry(
-                                operand: (new NumberSymbol(
-                                    number: $reader->smallValue(),
-                                    isFixed: true,
-                                ))->toObject(),
-                            )
-                        );
-                        ++$codeIndex;
-                    }
-                }
-
-                return $entries;
+            $types = $operationMap[$this->insnOperationOffsets()[$insnValue]] ?? null;
+            if ($types === null) {
+                throw new ExecutorExeption(sprintf('Unknown INSN type: 0x%02x', $insn));
             }
-        );
+            ++$codeIndex;
+
+            for ($opIndex = 0; ord($types[$opIndex] ?? "\0"); $opIndex++, $codeIndex++) {
+                $operandType = InsnType::of($types[$opIndex]);
+                $entries->append(
+                    match ($operandType) {
+                        InsnType::TS_VALUE => new OperandEntry(
+                            operand: $this->kernel
+                                ->findObject($reader->smallValue())
+                        ),
+                        InsnType::TS_CALLDATA => new OperandEntry(
+                            operand: $instructionSequenceBody
+                                ->callInfoEntries[$callInfoEntryIndex++],
+                        ),
+
+                        // see: https://github.com/ruby/ruby/blob/ruby_3_2/iseq.c#L2090
+                        InsnType::TS_NUM,
+                        InsnType::TS_LINDEX => new OperandEntry(
+                            operand: (new NumberSymbol(
+                                $reader->smallValue(),
+                            ))->toObject()
+                        ),
+
+                        // NOTE: here is not implemented on actually the RubyVM.
+                        // This is originally implemented by the RubyVM on PHP.
+                        InsnType::TS_OFFSET => new OperandEntry(
+                            operand: (new OffsetSymbol(
+                                offset: $reader->smallValue(),
+                            ))->toObject(),
+                        ),
+
+                        InsnType::TS_IC => new OperandEntry(
+                            $this->processInlineCache(
+                                $reader->smallValue()
+                            )
+                        ),
+                        InsnType::TS_ID => new OperandEntry(
+                            $this->kernel->findId(
+                                $reader->smallValue(),
+                            ),
+                        ),
+
+                        // Not implemented yet
+                        InsnType::TS_VARIABLE,
+                        InsnType::TS_IVC,
+                        InsnType::TS_ISE,
+                        InsnType::TS_ISEQ,
+                        InsnType::TS_FUNCPTR,
+                        InsnType::TS_BUILTIN,
+                        InsnType::TS_CDHASH,
+                        InsnType::TS_ICVARC => throw new ExecutorExeption(sprintf('The OperandType#%s is not supported', $operandType->name)),
+                        default => new UnknownEntry(
+                            $reader->smallValue(),
+                            $types[$opIndex],
+                        ),
+                    },
+                );
+            }
+
+            // NOTE: In this statement, change next operand to be instruction sequence number.
+            // however originally RubyVM is not needed here because it is implemented by using only integer types but RubyVM on PHP is written in the OOP.
+            // So RubyVM on PHP needs explicitly changing operand.
+            for ($i = 0; $i < ($insn->operandSize() - 1); ++$i) {
+                $entries->append(
+                    new OperandEntry(
+                        operand: (new NumberSymbol(
+                            number: $reader->smallValue(),
+                            isFixed: true,
+                        ))->toObject(),
+                    )
+                );
+                ++$codeIndex;
+            }
+        }
+
+        return $entries;
     }
 
     private function loadCallInfoEntries(int $callInfoEntriesOffset, int $callInfoSize): CallInfoEntries
     {
-        return $this->kernel->stream()->pretense(
-            function (RubyVMBinaryStreamReaderInterface $reader) use ($callInfoEntriesOffset, $callInfoSize) {
-                $entries = new CallInfoEntries();
-                $reader->pos($callInfoEntriesOffset);
-                for ($i = 0; $i < $callInfoSize; ++$i) {
-                    $midIndex = $reader->smallValue();
-                    if ($midIndex === -1) {
-                        $entries->append(new CallInfoEntry());
+        $reader = $this->kernel->stream()->duplication();
 
-                        continue;
-                    }
-                    $mid = $this->kernel->findId($midIndex);
-                    $flag = $reader->smallValue();
-                    $argc = $reader->smallValue();
+        $entries = new CallInfoEntries();
+        $reader->pos($callInfoEntriesOffset);
+        for ($i = 0; $i < $callInfoSize; ++$i) {
+            $midIndex = $reader->smallValue();
+            if ($midIndex === -1) {
+                $entries->append(new CallInfoEntry());
 
-                    $keywordLength = $reader->smallValue();
-                    $keywords = null;
-                    if ($keywordLength > 0) {
-                        $keywords = [];
-                        for ($j = 0; $j < $keywordLength; ++$j) {
-                            $keyword = $reader->smallValue();
-                            $keywords[] = $this->kernel
-                                ->findObject($keyword);
-                        }
-                    }
-
-                    $entries->append(
-                        new CallInfoEntry(
-                            callData: new CallData(
-                                mid: $mid,
-                                flag: $flag,
-                                argc: $argc,
-                                keywords: $keywords,
-                            ),
-                        )
-                    );
-                }
-
-                return $entries;
+                continue;
             }
-        );
+            $mid = $this->kernel->findId($midIndex);
+            $flag = $reader->smallValue();
+            $argc = $reader->smallValue();
+
+            $keywordLength = $reader->smallValue();
+            $keywords = null;
+            if ($keywordLength > 0) {
+                $keywords = [];
+                for ($j = 0; $j < $keywordLength; ++$j) {
+                    $keyword = $reader->smallValue();
+                    $keywords[] = $this->kernel
+                        ->findObject($keyword);
+                }
+            }
+
+            $entries->append(
+                new CallInfoEntry(
+                    callData: new CallData(
+                        mid: $mid,
+                        flag: $flag,
+                        argc: $argc,
+                        keywords: $keywords,
+                    ),
+                )
+            );
+        }
+
+        return $entries;
     }
 
     private function loadOuterVariables(int $outerVariableOffset): OuterVariableEntries
     {
-        return $this->kernel->stream()->pretense(
-            function (RubyVMBinaryStreamReaderInterface $reader) use ($outerVariableOffset) {
-                $entries = new OuterVariableEntries();
-                $reader->pos($outerVariableOffset);
+        $reader = $this->kernel->stream()->duplication();
 
-                $tableSize = $reader->smallValue();
+        $entries = new OuterVariableEntries();
+        $reader->pos($outerVariableOffset);
 
-                for ($i = 0; $i < $tableSize; ++$i) {
-                    $key = $this->kernel->findId($reader->smallValue());
-                    $value = $reader->smallValue();
+        $tableSize = $reader->smallValue();
 
-                    $entries[] = new OuterVariableEntry(
-                        $key,
-                        $value,
-                    );
-                }
+        for ($i = 0; $i < $tableSize; ++$i) {
+            $key = $this->kernel->findId($reader->smallValue());
+            $value = $reader->smallValue();
 
-                return $entries;
-            },
-        );
+            $entries[] = new OuterVariableEntry(
+                $key,
+                $value,
+            );
+        }
+
+        return $entries;
     }
 
     private function loadParamOptTable(int $paramOptTableOffset, int $paramOptNum): int
     {
-        return $this->kernel->stream()->pretense(
-            function (RubyVMBinaryStreamReaderInterface $reader) use ($paramOptTableOffset) {
-                $reader->pos($paramOptTableOffset);
+        $reader = $this->kernel->stream()->duplication();
+        $reader->pos($paramOptTableOffset);
 
-                // TODO: implement here
-                return -1;
-            },
-        );
+        // TODO: implement here
+        return -1;
     }
 
     private function loadKeyword(int $paramKeywordOffset): Keyword
@@ -454,18 +444,15 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
 
     private function loadLocalTable(int $localTableOffset, int $localTableSize): VariableEntries
     {
-        return $this->kernel->stream()->pretense(
-            function (RubyVMBinaryStreamReaderInterface $reader) use ($localTableOffset, $localTableSize) {
-                $entries = new VariableEntries();
-                $reader->pos($localTableOffset);
+        $reader = $this->kernel->stream()->duplication();
+        $entries = new VariableEntries();
+        $reader->pos($localTableOffset);
 
-                for ($i = 0; $i < $localTableSize; ++$i) {
-                    $entries[] = new VariableEntry($this->kernel->findId($reader->readAsUnsignedLong()));
-                }
+        for ($i = 0; $i < $localTableSize; ++$i) {
+            $entries[] = new VariableEntry($this->kernel->findId($reader->readAsUnsignedLong()));
+        }
 
-                return $entries;
-            }
-        );
+        return $entries;
     }
 
     private function loadCatchTable(int $catchTableOffset, int $catchTableSize): CatchEntries

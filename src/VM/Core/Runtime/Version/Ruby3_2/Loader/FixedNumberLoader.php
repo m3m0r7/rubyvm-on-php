@@ -20,8 +20,9 @@ class FixedNumberLoader implements LoaderInterface
 
     public function load(): SymbolInterface
     {
-        $this->kernel->stream()->pos($this->offset->offset);
-        $value = $this->kernel->stream()->smallValue();
+        $reader = $this->kernel->stream()->duplication();
+        $reader->pos($this->offset->offset);
+        $value = $reader->smallValue();
 
         return new NumberSymbol(
             Arithmetic::fix2int($value),

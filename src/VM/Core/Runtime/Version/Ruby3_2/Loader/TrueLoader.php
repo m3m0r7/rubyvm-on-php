@@ -19,9 +19,10 @@ class TrueLoader implements LoaderInterface
 
     public function load(): SymbolInterface
     {
-        $this->kernel->stream()->pos($this->offset->offset);
+        $reader = $this->kernel->stream()->duplication();
+        $reader->pos($this->offset->offset);
 
-        $this->kernel->stream()->smallValue();
+        $reader->smallValue();
 
         return new BooleanSymbol(true);
     }

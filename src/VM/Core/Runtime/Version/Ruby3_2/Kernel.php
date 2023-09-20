@@ -23,7 +23,6 @@ use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\LoaderInterface;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
@@ -40,7 +39,6 @@ use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Standard\Main;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Verification\VerificationHeader;
 use RubyVM\VM\Exception\ResolverException;
 use RubyVM\VM\Exception\RubyVMException;
-use RubyVM\VM\Stream\BinaryStreamReader;
 use RubyVM\VM\Stream\RubyVMBinaryStreamReader;
 use RubyVM\VM\Stream\RubyVMBinaryStreamReaderInterface;
 use RubyVM\VM\Stream\StreamHandler;
@@ -279,24 +277,15 @@ class Kernel implements KernelInterface
          */
         $offset = $this->globalObjectList[$index];
 
-        /**
-         * @var ObjectInfo $info
-         */
-        $info = $this
-            ->stream()
-            ->pretense(
-                function (BinaryStreamReader $stream) use ($offset) {
-                    $stream->pos($offset->offset);
-                    $byte = $stream->readAsUnsignedByte();
-
-                    return new ObjectInfo(
-                        type: SymbolType::of(($byte >> 0) & 0x1F),
-                        specialConst: (bool) ($byte >> 5) & 0x01,
-                        frozen: (bool) ($byte >> 6) & 0x01,
-                        internal: (bool) ($byte >> 7) & 0x01,
-                    );
-                }
-            );
+        $reader = $this->stream()->duplication();
+        $reader->pos($offset->offset);
+        $byte = $reader->readAsUnsignedByte();
+        $info = new ObjectInfo(
+            type: SymbolType::of(($byte >> 0) & 0x1F),
+            specialConst: (bool) ($byte >> 5) & 0x01,
+            frozen: (bool) ($byte >> 6) & 0x01,
+            internal: (bool) ($byte >> 7) & 0x01,
+        );
 
         $this->vm->option()->logger->info(
             sprintf(
@@ -309,15 +298,8 @@ class Kernel implements KernelInterface
             ),
         );
 
-        /**
-         * @var SymbolInterface $symbol
-         */
-        $symbol = $this
-            ->stream()
-            ->pretense(
-                fn () => $this->resolveLoader($info, $offset->increase())
-                    ->load()
-            );
+        $symbol = $this->resolveLoader($info, $offset->increase())
+            ->load();
 
         return $this->globalObjectTable[$index] = $symbol->toObject($offset);
     }
@@ -340,10 +322,9 @@ class Kernel implements KernelInterface
 
     private function setupExtraData(): void
     {
-        $this->stream()->pretense(function (): void {
-            $this->stream()->pos($this->size);
-            $this->extraData = $this->stream()->read($this->extraSize);
-        });
+        $reader = $this->stream()->duplication();
+        $reader->pos($this->size);
+        $this->extraData = $reader->read($this->extraSize);
     }
 
     public function loadInstructionSequence(Aux $aux): InstructionSequence

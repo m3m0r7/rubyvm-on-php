@@ -19,8 +19,9 @@ class FalseLoader implements LoaderInterface
 
     public function load(): SymbolInterface
     {
-        $this->kernel->stream()->pos($this->offset->offset);
-        $this->kernel->stream()->smallValue();
+        $reader = $this->kernel->stream()->duplication();
+        $reader->pos($this->offset->offset);
+        $reader->smallValue();
 
         return new BooleanSymbol(false);
     }
