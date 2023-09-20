@@ -41,8 +41,8 @@ use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Verification\VerificationHeader;
 use RubyVM\VM\Exception\ResolverException;
 use RubyVM\VM\Exception\RubyVMException;
 use RubyVM\VM\Stream\BinaryStreamReader;
-use RubyVM\VM\Stream\BinaryStreamReaderInterface;
 use RubyVM\VM\Stream\RubyVMBinaryStreamReader;
+use RubyVM\VM\Stream\RubyVMBinaryStreamReaderInterface;
 use RubyVM\VM\Stream\StreamHandler;
 
 class Kernel implements KernelInterface
@@ -66,6 +66,8 @@ class Kernel implements KernelInterface
     public readonly string $rubyPlatform;
 
     public readonly string $extraData;
+
+    private RubyVMBinaryStreamReaderInterface $stream;
 
     public function __construct(
         public readonly RubyVMInterface $vm,
@@ -220,9 +222,9 @@ class Kernel implements KernelInterface
         return [RubyVersion::VERSION_3_2];
     }
 
-    public function stream(): RubyVMBinaryStreamReader
+    public function stream(): RubyVMBinaryStreamReaderInterface
     {
-        return new RubyVMBinaryStreamReader($this->vm->option()->reader);
+        return $this->stream ??= new RubyVMBinaryStreamReader($this->vm->option()->reader);
     }
 
     public function findId(int $index): ID

@@ -11,7 +11,7 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Stream\RubyVMBinaryStreamReader;
+use RubyVM\VM\Stream\RubyVMBinaryStreamReaderInterface;
 
 interface KernelInterface
 {
@@ -24,7 +24,7 @@ interface KernelInterface
      */
     public function expectedVersions(): array;
 
-    public function stream(): RubyVMBinaryStreamReader;
+    public function stream(): RubyVMBinaryStreamReaderInterface;
 
     public function findId(int $index): ID;
 

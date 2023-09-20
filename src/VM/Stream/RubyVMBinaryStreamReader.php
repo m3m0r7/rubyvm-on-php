@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Stream;
 
-use RubyVM\VM\Stream\BinaryStreamReaderHelperInterface;
+use RubyVM\VM\Stream\RubyVMBinaryStreamReaderInterface;
 
-class RubyVMBinaryStreamReader extends BinaryStreamReader implements BinaryStreamReaderHelperInterface
+class RubyVMBinaryStreamReader extends BinaryStreamReader implements RubyVMBinaryStreamReaderInterface
 {
     public function __construct(readonly BinaryStreamReaderInterface $reader)
     {
