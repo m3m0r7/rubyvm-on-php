@@ -84,9 +84,7 @@ trait ProvideClassExtendableMethods
     {
         $this->kernel
             ->userlandHeapSpace()
-            ->userlandClasses
+            ->userlandMethods
             ->set((string) $methodName, $context);
-
-        var_dump($methodName);
     }
 }
