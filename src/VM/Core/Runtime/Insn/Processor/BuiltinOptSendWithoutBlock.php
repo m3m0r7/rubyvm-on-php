@@ -80,12 +80,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
 
         $result = null;
 
-        // TODO: will refactor here
-        if ($targetClass instanceof RubyClassInterface && $targetClass->hasMethod('injectVMContext')) {
-            $targetClass->injectVMContext($this->context->kernel());
-        } elseif ($targetClass instanceof Object_ && method_exists($targetClass->symbol, 'injectVMContext')) {
-            $targetClass->symbol->injectVMContext($this->context->kernel());
-        }
+        $targetClass->injectVMContext($this->context->kernel());
 
         // Here is a special method calls
         $lookupSpecialMethodName = (string) $symbol;

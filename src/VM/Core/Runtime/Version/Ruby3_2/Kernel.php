@@ -24,6 +24,7 @@ use RubyVM\VM\Core\Runtime\Symbol\LoaderInterface;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
+use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\ArrayLoader;
@@ -66,6 +67,7 @@ class Kernel implements KernelInterface
     public readonly string $extraData;
 
     private RubyVMBinaryStreamReaderInterface $stream;
+    private UserlandHeapSpace $userlandHeapSpace;
 
     public function __construct(
         public readonly RubyVMInterface $vm,
@@ -79,6 +81,7 @@ class Kernel implements KernelInterface
             $this->vm->option()->stdIn ?? new StreamHandler(STDIN),
             $this->vm->option()->stdErr ?? new StreamHandler(STDERR),
         );
+        $this->userlandHeapSpace = new UserlandHeapSpace();
     }
 
     public function process(): ExecutorInterface
@@ -107,6 +110,7 @@ class Kernel implements KernelInterface
             $main,
             $instructionSequence,
             $this->vm->option()->logger,
+            $this->userLandHeapSpace(),
         );
 
         $executor->context()->appendTrace('<main>');
@@ -301,6 +305,10 @@ class Kernel implements KernelInterface
         $symbol = $this->resolveLoader($info, $offset->increase())
             ->load();
 
+        if (method_exists($symbol, 'injectVMContext')) {
+            $symbol->injectVMContext($this);
+        }
+
         return $this->globalObjectTable[$index] = $symbol->toObject($offset);
     }
 
@@ -393,5 +401,10 @@ class Kernel implements KernelInterface
     public function extraData(): string
     {
         return $this->extraData;
+    }
+
+    public function userlandHeapSpace(): UserlandHeapSpace
+    {
+        return $this->userlandHeapSpace;
     }
 }

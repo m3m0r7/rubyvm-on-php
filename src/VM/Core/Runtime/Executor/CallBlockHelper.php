@@ -31,6 +31,7 @@ trait CallBlockHelper
             rubyClass: $context->self(),
             instructionSequence: $context->instructionSequence(),
             logger: $context->logger(),
+            userlandHeapSpace: $context->userlandHeapSpace(),
             debugger: $context->debugger(),
             previousContext: $context
                 ->renewEnvironmentTable(),
@@ -109,6 +110,7 @@ trait CallBlockHelper
             rubyClass: $this->context->self(),
             instructionSequence: $instructionSequence,
             logger: $this->context->logger(),
+            userlandHeapSpace: $this->context->userlandHeapSpace(),
             debugger: $this->context->debugger(),
             previousContext: $this->context,
         ));

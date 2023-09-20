@@ -62,6 +62,7 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, RubyClassInterface
                 rubyClass: $context->self(),
                 instructionSequence: $context->instructionSequence(),
                 logger: $context->logger(),
+                userlandHeapSpace: $context->userlandHeapSpace(),
                 debugger: $context->debugger(),
                 previousContext: $context,
             ));

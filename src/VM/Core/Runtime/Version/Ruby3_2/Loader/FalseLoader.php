@@ -23,6 +23,7 @@ class FalseLoader implements LoaderInterface
         $reader->pos($this->offset->offset);
         $reader->smallValue();
 
-        return new BooleanSymbol(false);
+        return (new BooleanSymbol(false))
+            ->injectVMContext($this->kernel);
     }
 }

@@ -24,7 +24,7 @@ trait ProvideExtendedMethodCall
         /**
          * @var null|ContextInterface $context
          */
-        $context = static::$userLandMethods[$name] ?? null;
+        $context = $this->kernel->userlandHeapSpace()->userlandMethods[$name] ?? null;
 
         if ($context === null) {
             throw new OperationProcessorException(sprintf('Method not found %s#%s', ClassHelper::nameBy($this), $name));
