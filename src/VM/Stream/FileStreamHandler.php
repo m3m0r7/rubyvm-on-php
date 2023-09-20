@@ -29,4 +29,9 @@ class FileStreamHandler implements StreamHandlerInterface
     {
         return feof($this->handle);
     }
+
+    public function resource(): mixed
+    {
+        return $this->handle;
+    }
 }

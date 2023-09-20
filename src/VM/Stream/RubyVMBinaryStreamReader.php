@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Stream;
 
-use RubyVM\VM\Stream\RubyVMBinaryStreamReaderInterface;
-
 class RubyVMBinaryStreamReader extends BinaryStreamReader implements RubyVMBinaryStreamReaderInterface
 {
-    public function __construct(readonly BinaryStreamReaderInterface $reader)
+    use ResourceCreatable;
+
+    public function __construct(private readonly BinaryStreamReaderInterface $reader)
     {
         parent::__construct(
             $reader->streamHandler(),
@@ -16,15 +16,23 @@ class RubyVMBinaryStreamReader extends BinaryStreamReader implements RubyVMBinar
         );
     }
 
-    public function pretense(callable $callback): mixed
+    public function duplication(): self
     {
-        $currentPos = $this->pos();
-
-        try {
-            return $callback($this);
-        } finally {
-            $this->pos($currentPos);
-        }
+        return new RubyVMBinaryStreamReader(
+            new BinaryStreamReader(
+                new StreamHandler(
+                    $this->createResourceHandlerByStream(
+                        $this->reader
+                            ->streamHandler()
+                            ->resource(),
+                    ),
+                    $this->reader
+                        ->streamHandler()
+                        ->size(),
+                ),
+                $this->reader->endian(),
+            ),
+        );
     }
 
     /**

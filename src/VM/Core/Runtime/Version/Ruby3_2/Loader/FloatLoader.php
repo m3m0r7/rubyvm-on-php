@@ -20,12 +20,13 @@ class FloatLoader implements LoaderInterface
 
     public function load(): SymbolInterface
     {
-        $this->kernel->stream()->pos(
+        $reader = $this->kernel->stream()->duplication();
+        $reader->pos(
             $this->offset
                 ->align(SizeOf::DOUBLE)
                 ->offset
         );
-        $value = $this->kernel->stream()->readAsDouble();
+        $value = $reader->readAsDouble();
 
         return new FloatSymbol(
             $value,

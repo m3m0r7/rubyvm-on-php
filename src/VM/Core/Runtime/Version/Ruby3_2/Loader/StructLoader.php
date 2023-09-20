@@ -22,12 +22,13 @@ class StructLoader implements LoaderInterface
 
     public function load(): SymbolInterface
     {
-        $this->kernel->stream()->pos($this
+        $reader = $this->kernel->stream()->duplication();
+        $reader->pos($this
             ->offset
             ->align(Range::structure())
             ->offset);
 
-        $range = new Range($this->kernel->stream());
+        $range = new Range($reader);
 
         $beginSymbol = $this->kernel
             ->findObject($range->begin)

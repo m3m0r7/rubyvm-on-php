@@ -6,7 +6,10 @@ namespace RubyVM\VM\Stream;
 
 interface RubyVMBinaryStreamReaderInterface extends BinaryStreamReaderInterface
 {
-    public function pretense(callable $callback): mixed;
+    /**
+     * @return RubyVMBinaryStreamReader
+     */
+    public function duplication(): self;
 
     public function smallValue(): int;
 }

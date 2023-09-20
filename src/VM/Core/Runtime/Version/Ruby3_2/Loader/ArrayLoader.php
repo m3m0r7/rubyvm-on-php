@@ -19,15 +19,15 @@ class ArrayLoader implements LoaderInterface
 
     public function load(): SymbolInterface
     {
-        $this->kernel->stream()->pos($this->offset->offset);
-        $len = $this->kernel->stream()->smallValue();
+        $reader = $this->kernel->stream()->duplication();
+        $reader->pos($this->offset->offset);
+        $len = $reader->smallValue();
         $array = [];
 
         for ($i = 0; $i < $len; ++$i) {
             $array[] = $this->kernel
                 ->findObject(
-                    $this->kernel
-                        ->stream()
+                    $reader
                         ->smallValue()
                 )
                 ->symbol;

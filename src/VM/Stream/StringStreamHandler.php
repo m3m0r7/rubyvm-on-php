@@ -9,6 +9,7 @@ use RubyVM\VM\Exception\StreamHandlerException;
 class StringStreamHandler implements StreamHandlerInterface
 {
     use StreamGeneric;
+    use ResourceCreatable;
 
     protected readonly string $string;
 
@@ -16,7 +17,7 @@ class StringStreamHandler implements StreamHandlerInterface
     {
         // Add EOF byte
         $this->string = $string .= "\x03";
-        $this->handle = fopen('php://memory', 'r+b');
+        $this->handle = $this->createResourceHandler();
         fwrite($this->handle, $this->string);
         rewind($this->handle);
     }
@@ -34,5 +35,10 @@ class StringStreamHandler implements StreamHandlerInterface
     public function isTerminated(): bool
     {
         return feof($this->handle);
+    }
+
+    public function resource(): mixed
+    {
+        return $this->handle;
     }
 }
