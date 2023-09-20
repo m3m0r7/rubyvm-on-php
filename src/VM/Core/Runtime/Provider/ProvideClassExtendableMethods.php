@@ -24,7 +24,7 @@ trait ProvideClassExtendableMethods
         /**
          * @var ExtendedClassEntry $userLandClass
          */
-        foreach (static::$userLandClasses as $userLandClass) {
+        foreach ($this->kernel->userlandHeapSpace()->userlandClasses as $userLandClass) {
             if ($userLandClass->isBound(get_class($class->symbol))) {
                 return $class->symbol->extendClassEntry($userLandClass);
             }
@@ -35,7 +35,7 @@ trait ProvideClassExtendableMethods
 
     public function classes(): array
     {
-        return array_keys(static::$userLandClasses);
+        return array_keys($this->kernel->userlandHeapSpace()->userlandClasses->toArray());
     }
 
     public function methods(): array
@@ -46,7 +46,7 @@ trait ProvideClassExtendableMethods
                 (new \ReflectionClass($this))
                     ->getMethods(),
             ),
-            ...array_keys(static::$userLandMethods),
+            ...array_keys($this->kernel->userlandHeapSpace()->userlandMethods->toArray()),
         ];
     }
 
@@ -57,14 +57,18 @@ trait ProvideClassExtendableMethods
 
     public function class(NumberSymbol $flags, StringSymbol $className, ContextInterface $context): void
     {
-        if (!isset(static::$userLandClasses[(string) $className])) {
-            static::$userLandClasses[(string) $className] = new ExtendedClassEntry((string) $className);
+        if (!isset($this->kernel->userlandHeapSpace()->userlandClasses[(string) $className])) {
+            $this->kernel
+                ->userlandHeapSpace()
+                ->userlandClasses
+                ->set((string) $className, new ExtendedClassEntry((string) $className));
         }
         $executor = new Executor(
             kernel: $context->kernel(),
-            rubyClass: static::$userLandClasses[(string) $className],
+            rubyClass: $this->kernel->userlandHeapSpace()->userlandClasses[(string) $className],
             instructionSequence: $context->instructionSequence(),
             logger: $context->logger(),
+            userlandHeapSpace: $context->userlandHeapSpace(),
             debugger: $context->debugger(),
             previousContext: $context,
         );
@@ -78,6 +82,9 @@ trait ProvideClassExtendableMethods
 
     public function def(StringSymbol $methodName, ContextInterface $context): void
     {
-        static::$userLandMethods[(string) $methodName] = $context;
+        $this->kernel
+            ->userlandHeapSpace()
+            ->userlandMethods
+            ->set((string) $methodName, $context);
     }
 }

@@ -18,9 +18,7 @@ trait ShouldBeRubyClass
     use ProvideExtendedMethodCall;
     use ProvidePHPClassMethods;
     use ProvideInjectableVMContext;
+
     protected KernelInterface $kernel;
     protected DefinedClassEntries $definedClassEntries;
-
-    protected static array $userLandClasses = [];
-    protected static array $userLandMethods = [];
 }

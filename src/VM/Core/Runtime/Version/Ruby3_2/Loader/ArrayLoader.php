@@ -33,6 +33,7 @@ class ArrayLoader implements LoaderInterface
                 ->symbol;
         }
 
-        return new ArraySymbol($array);
+        return (new ArraySymbol($array))
+            ->injectVMContext($this->kernel);
     }
 }

@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\UserlandHeapSpaceInterface;
 
 interface ContextInterface
 {
@@ -46,4 +47,6 @@ interface ContextInterface
     public function appendTrace(string ...$definitions): self;
 
     public function traces(): array;
+
+    public function userlandHeapSpace(): UserlandHeapSpaceInterface;
 }

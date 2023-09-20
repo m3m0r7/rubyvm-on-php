@@ -16,8 +16,15 @@ trait ProvideInjectableVMContext
         $this->kernel = $kernel;
         $this->definedClassEntries = $definedClassEntries ?? new DefinedClassEntries();
 
+        if (property_exists($this, 'extendedClassEntry')) {
+            $this->extendedClassEntry?->injectVMContext($kernel, $this->definedClassEntries);
+        }
+
         foreach ($this->definedClassEntries as $className => $definedClassEntry) {
-            static::$userLandClasses[$className] = $definedClassEntry;
+            $this->kernel
+                ->userlandHeapSpace()
+                ->userlandClasses()
+                ->set($className, $definedClassEntry);
         }
 
         return $this;
