@@ -72,7 +72,6 @@ class BuiltinDefinemethod implements OperationProcessorInterface
 
         $this->context
             ->self()
-            ->injectVMContext($this->context->kernel())
             ->def(
                 $methodNameSymbol,
                 $executor->context(),

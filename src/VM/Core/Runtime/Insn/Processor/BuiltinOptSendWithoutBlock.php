@@ -71,24 +71,20 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         /**
          * @var Object_|RubyClassInterface $targetSymbol
          */
-        $targetSymbol = $this->getStack()
+        $targetClass = $targetObjectOrClass = $this->getStack()
             ->operand;
 
-        $targetClass = $this->context
-            ->self()
-            ->getDefinedClassOrSelf($targetSymbol);
+        if ($targetObjectOrClass instanceof Object_) {
+            $targetClass = $targetObjectOrClass->symbol;
+        }
+
+        $targetClass->setRuntimeContext($this->context);
 
         $result = null;
-
-        $targetClass->injectVMContext($this->context->kernel());
 
         // Here is a special method calls
         $lookupSpecialMethodName = (string) $symbol;
         if (static::$specialMethodCallerEntries->has($lookupSpecialMethodName)) {
-            if (!$targetClass instanceof RubyClassExtendableInterface) {
-                throw new OperationProcessorException('The callee class is invalid (not instantiated by the RubyClassExtendableInterface)');
-            }
-
             /**
              * @var SpecialMethodInterface $calleeSpecialMethodName
              */

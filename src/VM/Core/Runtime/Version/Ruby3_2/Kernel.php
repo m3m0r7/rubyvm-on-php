@@ -67,7 +67,6 @@ class Kernel implements KernelInterface
     public readonly string $extraData;
 
     private RubyVMBinaryStreamReaderInterface $stream;
-    private UserlandHeapSpace $userlandHeapSpace;
 
     public function __construct(
         public readonly RubyVMInterface $vm,
@@ -81,7 +80,6 @@ class Kernel implements KernelInterface
             $this->vm->option()->stdIn ?? new StreamHandler(STDIN),
             $this->vm->option()->stdErr ?? new StreamHandler(STDERR),
         );
-        $this->userlandHeapSpace = new UserlandHeapSpace();
     }
 
     public function process(): ExecutorInterface
@@ -100,17 +98,12 @@ class Kernel implements KernelInterface
          */
         $instructionSequence = $this->loadInstructionSequence($aux);
 
-        $main = new Main();
-        $main->injectVMContext(
-            $this,
-            new DefaultDefinedClassEntries(),
-        );
         $executor = new Executor(
             $this,
-            $main,
+            new Main(),
             $instructionSequence,
             $this->vm->option()->logger,
-            $this->userLandHeapSpace(),
+            new UserlandHeapSpace(),
         );
 
         $executor->context()->appendTrace('<main>');
@@ -168,7 +161,8 @@ class Kernel implements KernelInterface
      */
     private function setupInstructionSequenceList(): self
     {
-        $this->stream()->pos($this->instructionSequenceListOffset);
+        $reader = $this->stream()->duplication();
+        $reader->pos($this->instructionSequenceListOffset);
 
         $this->vm->option()->logger->info(
             sprintf('Setup an instruction sequence list (offset: %d)', $this->instructionSequenceListOffset),
@@ -179,13 +173,13 @@ class Kernel implements KernelInterface
                 ->append(
                     new Offset(
                         // VALUE iseq_list;       /* [iseq0, ...] */
-                        $this->stream()->readAsUnsignedLong(),
+                        $reader->readAsUnsignedLong(),
                     )
                 );
         }
 
         $this->vm->option()->logger->info(
-            sprintf('Loaded an instruction sequence list (size: %d)', $this->stream()->pos() - $this->instructionSequenceListOffset),
+            sprintf('Loaded an instruction sequence list (size: %d)', $reader->pos() - $this->instructionSequenceListOffset),
         );
 
         return $this;
@@ -198,7 +192,8 @@ class Kernel implements KernelInterface
      */
     private function setupGlobalObjectList(): self
     {
-        $this->stream()->pos($this->globalObjectListOffset);
+        $reader = $this->stream()->duplication();
+        $reader->pos($this->globalObjectListOffset);
 
         $this->vm->option()->logger->info(
             sprintf('Setup a global object list (offset: %d)', $this->globalObjectListOffset),
@@ -207,13 +202,13 @@ class Kernel implements KernelInterface
         for ($i = 0; $i < $this->globalObjectListSize; ++$i) {
             $this->globalObjectList->append(
                 new Offset(
-                    $this->stream()->readAsUnsignedLong(),
+                    $reader->readAsUnsignedLong(),
                 )
             );
         }
 
         $this->vm->option()->logger->info(
-            sprintf('Loaded global object list (size: %d)', $this->stream()->pos() - $this->globalObjectListOffset),
+            sprintf('Loaded global object list (size: %d)', $reader->pos() - $this->globalObjectListOffset),
         );
 
         return $this;
@@ -305,7 +300,9 @@ class Kernel implements KernelInterface
         $symbol = $this->resolveLoader($info, $offset->increase())
             ->load();
 
-        return $this->globalObjectTable[$index] = $symbol->toObject($offset);
+        $symbol->tryToSetUserlandHeapSpace(new UserlandHeapSpace());
+
+        return $this->globalObjectTable[$index] = $symbol->toObject();
     }
 
     private function resolveLoader(ObjectInfo $info, Offset $offset): LoaderInterface
@@ -397,10 +394,5 @@ class Kernel implements KernelInterface
     public function extraData(): string
     {
         return $this->extraData;
-    }
-
-    public function userlandHeapSpace(): UserlandHeapSpace
-    {
-        return $this->userlandHeapSpace;
     }
 }

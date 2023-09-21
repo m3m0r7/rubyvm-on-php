@@ -6,5 +6,5 @@ namespace RubyVM\VM\Core\Runtime\Symbol;
 
 interface LoaderInterface
 {
-    public function load();
+    public function load(): SymbolInterface;
 }

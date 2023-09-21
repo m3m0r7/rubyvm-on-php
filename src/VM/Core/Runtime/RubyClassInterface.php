@@ -6,6 +6,7 @@ namespace RubyVM\VM\Core\Runtime;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\DefinedClassEntries;
+use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
@@ -18,20 +19,13 @@ interface RubyClassInterface extends RubyClassImplementationInterface
 
     public function getInstanceVariable(ID $id): Object_;
 
-    public function getDefinedClassOrSelf(RubyClassInterface|Object_ $class): RubyClassInterface|Object_|SymbolInterface;
-
     public function classes(): array;
 
     public function methods(): array;
 
     public function hasMethod(string $name): bool;
 
-    public function class(NumberSymbol $flags, StringSymbol $className, ContextInterface $context): void;
+    public function class(NumberSymbol $flags, StringSymbol $className, Executor $executor): void;
 
     public function def(StringSymbol $methodName, ContextInterface $context): void;
-
-    public function injectVMContext(
-        KernelInterface $kernel,
-        DefinedClassEntries $definedClassEntries = null,
-    ): self;
 }

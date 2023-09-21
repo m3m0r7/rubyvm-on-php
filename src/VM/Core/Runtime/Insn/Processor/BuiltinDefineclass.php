@@ -16,6 +16,7 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
+use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 
 class BuiltinDefineclass implements OperationProcessorInterface
 {
@@ -60,7 +61,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
             rubyClass: $this->context->self(),
             instructionSequence: $instructionSequence,
             logger: $this->context->logger(),
-            userlandHeapSpace: $this->context->userlandHeapSpace(),
+            userlandHeapSpace: new UserlandHeapSpace(),
             debugger: $this->context->debugger(),
             previousContext: $this->context->renewEnvironmentTable(),
         ));
@@ -73,7 +74,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
             ->class(
                 $flags,
                 $className,
-                $executor->context(),
+                $executor,
             );
 
         return ProcessedStatus::SUCCESS;

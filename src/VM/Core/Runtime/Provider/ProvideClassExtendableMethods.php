@@ -6,36 +6,23 @@ namespace RubyVM\VM\Core\Runtime\Provider;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
-use RubyVM\VM\Core\Runtime\ExtendedClassEntry;
-use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
+use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 
 trait ProvideClassExtendableMethods
 {
-    public function getDefinedClassOrSelf(RubyClassInterface|Object_ $class): RubyClassInterface|Object_|SymbolInterface
+    protected ?UserlandHeapSpace $userlandHeapSpace = null;
+
+    public function tryToSetUserlandHeapSpace(UserlandHeapSpace $userlandHeapSpace): self
     {
-        if ($class instanceof RubyClassInterface) {
-            return $class;
-        }
-
-        /**
-         * @var ExtendedClassEntry $userLandClass
-         */
-        foreach ($this->kernel->userlandHeapSpace()->userlandClasses as $userLandClass) {
-            if ($userLandClass->isBound(get_class($class->symbol))) {
-                return $class->symbol->extendClassEntry($userLandClass);
-            }
-        }
-
-        return $class;
+        $this->userlandHeapSpace ??= $userlandHeapSpace;
+        return $this;
     }
 
     public function classes(): array
     {
-        return array_keys($this->kernel->userlandHeapSpace()->userlandClasses->toArray());
+        return array_keys($this->userlandHeapSpace->userlandClasses()->toArray());
     }
 
     public function methods(): array
@@ -46,32 +33,18 @@ trait ProvideClassExtendableMethods
                 (new \ReflectionClass($this))
                     ->getMethods(),
             ),
-            ...array_keys($this->kernel->userlandHeapSpace()->userlandMethods->toArray()),
+            ...array_keys($this->userlandHeapSpace->userlandMethods()->toArray())
         ];
     }
 
     public function hasMethod(string $name): bool
     {
-        return in_array($name, $this->methods(), true) || ($this->extendedClassEntry && $this->extendedClassEntry->hasMethod($name));
+        return in_array($name, $this->methods(), true);
     }
 
-    public function class(NumberSymbol $flags, StringSymbol $className, ContextInterface $context): void
+    public function class(NumberSymbol $flags, StringSymbol $className, Executor $executor): void
     {
-        if (!isset($this->kernel->userlandHeapSpace()->userlandClasses[(string) $className])) {
-            $this->kernel
-                ->userlandHeapSpace()
-                ->userlandClasses
-                ->set((string) $className, new ExtendedClassEntry((string) $className));
-        }
-        $executor = new Executor(
-            kernel: $context->kernel(),
-            rubyClass: $this->kernel->userlandHeapSpace()->userlandClasses[(string) $className],
-            instructionSequence: $context->instructionSequence(),
-            logger: $context->logger(),
-            userlandHeapSpace: $context->userlandHeapSpace(),
-            debugger: $context->debugger(),
-            previousContext: $context,
-        );
+        $this->userlandHeapSpace->userlandClasses()->set((string) $className, $executor->context());
 
         $result = $executor->execute();
 
@@ -82,9 +55,8 @@ trait ProvideClassExtendableMethods
 
     public function def(StringSymbol $methodName, ContextInterface $context): void
     {
-        $this->kernel
-            ->userlandHeapSpace()
-            ->userlandMethods
+        $this->userlandHeapSpace
+            ->userlandMethods()
             ->set((string) $methodName, $context);
     }
 }

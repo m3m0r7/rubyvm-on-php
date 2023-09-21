@@ -8,12 +8,13 @@ use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\Runtime\RubyClassExtendable;
-use RubyVM\VM\Core\Runtime\RubyClassExtendableInterface;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\ShouldBeRubyClass;
+use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 
-class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \IteratorAggregate, RubyClassExtendableInterface
+class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \IteratorAggregate, RubyClassInterface
 {
-    use RubyClassExtendable;
+    use ShouldBeRubyClass;
 
     public function __construct(
         private array $array,
@@ -37,11 +38,11 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
 
     public function new(self|array $values = null): self
     {
-        return new self(
+        return (new self(
             $values instanceof self
                 ? $values->array
                 : ($values ?? []),
-        );
+        ))->tryToSetUserlandHeapSpace($this->userlandHeapSpace);
     }
 
     public function each(ContextInterface $context): void
@@ -62,6 +63,8 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
                 ->set(
                     Option::VM_ENV_DATA_SIZE,
                     (new NumberSymbol($this->array[$i]->valueOf()))
+                        ->setRuntimeContext($context)
+                        ->tryToSetUserlandHeapSpace(new UserlandHeapSpace())
                         ->toObject()
                 );
 

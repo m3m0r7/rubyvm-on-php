@@ -17,14 +17,7 @@ trait ProvideExtendedMethodCall
 
     public function __call(string $name, array $arguments): ExecutedResult|SymbolInterface
     {
-        if ($this->extendedClassEntry && $this->extendedClassEntry->hasMethod($name)) {
-            return $this->extendedClassEntry->{$name}(...$arguments);
-        }
-
-        /**
-         * @var null|ContextInterface $context
-         */
-        $context = $this->kernel->userlandHeapSpace()->userlandMethods[$name] ?? null;
+        $context = $this->userlandHeapSpace->userlandMethods()->get($name);
 
         if ($context === null) {
             throw new OperationProcessorException(sprintf('Method not found %s#%s', ClassHelper::nameBy($this), $name));

@@ -41,6 +41,7 @@ class Executor implements ExecutorInterface
         private readonly ?ContextInterface $previousContext = null,
     ) {
         $this->context = $this->createContext($this->previousContext);
+        $this->rubyClass->tryToSetUserlandHeapSpace($this->userlandHeapSpace);
     }
 
     public function context(): ContextInterface

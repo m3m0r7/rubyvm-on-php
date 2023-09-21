@@ -43,7 +43,6 @@ class BuiltinNewarray implements OperationProcessorInterface
         $this->context->vmStack()->push(
             new OperandEntry(
                 (new ArraySymbol(array_values($entries)))
-                    ->injectVMContext($this->context->kernel())
                     ->toObject(),
             ),
         );
