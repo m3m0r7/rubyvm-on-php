@@ -4,13 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Symbol;
 
-use RubyVM\VM\Core\Runtime\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\ShouldBeRubyClass;
-
-class NumberSymbol implements SymbolInterface, RubyClassInterface
+class NumberSymbol implements SymbolInterface
 {
-    use ShouldBeRubyClass;
-
     public function __construct(
         private readonly int $number,
         private readonly bool $isFixed = false,

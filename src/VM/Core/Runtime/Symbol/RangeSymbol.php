@@ -9,12 +9,9 @@ use RubyVM\VM\Core\Helper\LocalTableHelper;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\Runtime\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\ShouldBeRubyClass;
 
-class RangeSymbol implements SymbolInterface, \ArrayAccess, RubyClassInterface
+class RangeSymbol implements SymbolInterface, \ArrayAccess
 {
-    use ShouldBeRubyClass;
     private array $array;
 
     public function __construct(

@@ -74,10 +74,6 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         $targetClass = $targetObjectOrClass = $this->getStack()
             ->operand;
 
-        if ($targetObjectOrClass instanceof Object_) {
-            $targetClass = $targetObjectOrClass->symbol;
-        }
-
         $targetClass->setRuntimeContext($this->context);
 
         $result = null;

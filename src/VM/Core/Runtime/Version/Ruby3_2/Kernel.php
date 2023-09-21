@@ -300,8 +300,6 @@ class Kernel implements KernelInterface
         $symbol = $this->resolveLoader($info, $offset->increase())
             ->load();
 
-        $symbol->tryToSetUserlandHeapSpace(new UserlandHeapSpace());
-
         return $this->globalObjectTable[$index] = $symbol->toObject();
     }
 
