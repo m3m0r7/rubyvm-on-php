@@ -74,9 +74,9 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
         }
     }
 
-    public function push(SymbolInterface $symbol): SymbolInterface
+    public function push(Object_ $object): SymbolInterface
     {
-        $this->array[] = $symbol;
+        $this->array[] = $object->symbol;
 
         return $this;
     }
@@ -122,5 +122,10 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
     public function count(): int
     {
         return count($this->array);
+    }
+
+    public function bindAlias(): array
+    {
+        return [];
     }
 }

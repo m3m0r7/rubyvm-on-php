@@ -11,4 +11,6 @@ interface SymbolInterface
     public function valueOf(): mixed;
 
     public function __toString(): string;
+
+    public function bindAlias(): array;
 }

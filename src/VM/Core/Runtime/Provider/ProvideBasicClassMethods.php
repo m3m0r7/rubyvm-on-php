@@ -42,8 +42,10 @@ trait ProvideBasicClassMethods
         return $this->instanceVariables[$key];
     }
 
-    public function puts(SymbolInterface $symbol): SymbolInterface
+    public function puts(Object_ $object): Object_
     {
+        $symbol = $object->symbol;
+
         $string = '';
         if ($symbol instanceof ArraySymbol || $symbol instanceof RangeSymbol) {
             foreach ($symbol as $number) {
@@ -62,7 +64,8 @@ trait ProvideBasicClassMethods
         $this->context->kernel()->IOContext()->stdOut->write($string);
 
         // The puts returns (nil)
-        return new NilSymbol();
+        return (new NilSymbol())
+            ->toObject();
     }
 
     public function exit(int $code = 0): void

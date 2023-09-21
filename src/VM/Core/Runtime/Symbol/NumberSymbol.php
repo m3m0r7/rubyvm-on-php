@@ -73,4 +73,11 @@ class NumberSymbol implements SymbolInterface
             symbol: $this,
         );
     }
+
+    public function bindAlias(): array
+    {
+        return [
+            'to_s' => 'toString',
+        ];
+    }
 }

@@ -39,4 +39,9 @@ class StringSymbol implements SymbolInterface, RubyClassInterface
             symbol: $this,
         );
     }
+
+    public function bindAlias(): array
+    {
+        return [];
+    }
 }

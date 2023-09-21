@@ -57,7 +57,7 @@ class BuiltinInvokeblock implements OperationProcessorInterface
         $arguments = [];
 
         for ($i = 0; $i < $operand->callData()->argumentsCount(); ++$i) {
-            $arguments[] = $this->getStackAsSymbol();
+            $arguments[] = $this->getStackAsObject();
         }
 
         $executed = $this

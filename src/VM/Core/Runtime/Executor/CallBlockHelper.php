@@ -18,7 +18,7 @@ use RubyVM\VM\Exception\OperationProcessorException;
 
 trait CallBlockHelper
 {
-    private function callSimpleMethod(ContextInterface $context, SymbolInterface|ContextInterface ...$arguments): ExecutedResult|null
+    private function callSimpleMethod(ContextInterface $context, Object_|ContextInterface ...$arguments): ExecutedResult|null
     {
         // Validate first value is context?
         $calleeContexts = [];
@@ -61,9 +61,6 @@ trait CallBlockHelper
         $paramLead = $iseqBodyData->objectParam()->leadNum();
 
         for ($localIndex = 0; $localIndex < count($arguments); ++$localIndex) {
-            /**
-             * @var SymbolInterface $argument
-             */
             $argument = $arguments[$localIndex];
             $slotIndex = LocalTableHelper::computeLocalTableIndex(
                 $localTableSize,
@@ -74,7 +71,7 @@ trait CallBlockHelper
                 ->environmentTable()
                 ->setWithLead(
                     $slotIndex,
-                    $argument->toObject(),
+                    $argument,
                     // NOTE: The parameter is coming by reversed
                     $paramLead <= (count($arguments) - $localIndex),
                 );
@@ -115,27 +112,13 @@ trait CallBlockHelper
             previousContext: $this->context,
         ));
 
-        $result = null;
-        $callee = null;
         $arguments = $this->translateForArguments(
             ...$arguments
         );
 
-        if ($blockObject instanceof Object_) {
-            $callee = $blockObject->symbol;
-        } else {
-            $callee = $blockObject;
-        }
-
-        $result = $callee->{(string) $callInfo->callData()->mid()->object->symbol}(
+        return $blockObject->{(string) $callInfo->callData()->mid()->object->symbol}(
             $executor->context(),
             ...$arguments,
         );
-
-        if ($result instanceof SymbolInterface) {
-            return $result->toObject();
-        }
-
-        return null;
     }
 }

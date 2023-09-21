@@ -30,4 +30,9 @@ class UndefinedSymbol implements SymbolInterface
             symbol: $this,
         );
     }
+
+    public function bindAlias(): array
+    {
+        return [];
+    }
 }

@@ -6,8 +6,10 @@ namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2;
 
 use RubyVM\VM\Core\Helper\DefaultDefinedClassEntries;
 use RubyVM\VM\Core\Helper\DefaultOperationProcessorEntries;
+use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
+use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\ToString;
 use RubyVM\VM\Core\Runtime\Executor\IOContext;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
@@ -23,6 +25,7 @@ use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\LoaderInterface;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
+use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
@@ -300,7 +303,18 @@ class Kernel implements KernelInterface
         $symbol = $this->resolveLoader($info, $offset->increase())
             ->load();
 
-        return $this->globalObjectTable[$index] = $symbol->toObject();
+        $this->globalObjectTable[$index] = $object = $symbol->toObject();
+
+        $userlandHeapSpace = new UserlandHeapSpace();
+
+        $userlandHeapSpace->userlandMethods()->set(
+            'to_s',
+            'toString',
+        );
+
+        $object->tryToSetUserlandHeapSpace($userlandHeapSpace);
+
+        return $object;
     }
 
     private function resolveLoader(ObjectInfo $info, Offset $offset): LoaderInterface

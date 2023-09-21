@@ -122,4 +122,9 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
     {
         unset($this->array[$offset]);
     }
+
+    public function bindAlias(): array
+    {
+        return [];
+    }
 }
