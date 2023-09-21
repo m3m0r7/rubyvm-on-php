@@ -305,10 +305,6 @@ class Kernel implements KernelInterface
         $symbol = $this->resolveLoader($info, $offset->increase())
             ->load();
 
-        if (method_exists($symbol, 'injectVMContext')) {
-            $symbol->injectVMContext($this);
-        }
-
         return $this->globalObjectTable[$index] = $symbol->toObject($offset);
     }
 
