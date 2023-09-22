@@ -56,7 +56,7 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
             $object = (new NumberSymbol($this->array[$i]->valueOf()))
                 ->toObject()
                 ->setRuntimeContext($context)
-                ->tryToSetUserlandHeapSpace($context->self()->userlandHeapSpace());
+                ->setUserlandHeapSpace($context->self()->userlandHeapSpace());
 
             $executor->context()
                 ->environmentTable()

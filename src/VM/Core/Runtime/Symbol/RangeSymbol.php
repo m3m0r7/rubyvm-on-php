@@ -69,7 +69,7 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
             $localTableSize = $executor->context()->instructionSequence()->body()->data->localTableSize();
             $object = $number->toObject()
                 ->setRuntimeContext($context)
-                ->tryToSetUserlandHeapSpace($context->self()->userlandHeapSpace());
+                ->setUserlandHeapSpace($context->self()->userlandHeapSpace());
 
             $executor->context()
                 ->environmentTable()

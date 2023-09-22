@@ -19,9 +19,9 @@ trait ProvideClassExtendableMethods
         return $this->userlandHeapSpace;
     }
 
-    public function tryToSetUserlandHeapSpace(?UserlandHeapSpace $userlandHeapSpace): self
+    public function setUserlandHeapSpace(?UserlandHeapSpace $userlandHeapSpace): self
     {
-        $this->userlandHeapSpace ??= $userlandHeapSpace;
+        $this->userlandHeapSpace = $userlandHeapSpace;
         return $this;
     }
 

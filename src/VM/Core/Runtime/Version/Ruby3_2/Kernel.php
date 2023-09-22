@@ -88,7 +88,7 @@ class Kernel implements KernelInterface
         );
 
         $this->main = new Main();
-        $this->main->tryToSetUserlandHeapSpace(
+        $this->main->setUserlandHeapSpace(
             new DefaultInstanceHeapSpace(),
         );
     }
@@ -312,7 +312,7 @@ class Kernel implements KernelInterface
 
         $this->globalObjectTable[$index] = $object = $symbol->toObject();
 
-        $object->tryToSetUserlandHeapSpace($this->main->userlandHeapSpace());
+        $object->setUserlandHeapSpace($this->main->userlandHeapSpace());
 
         return $object;
     }

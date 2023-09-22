@@ -107,7 +107,7 @@ trait CallBlockHelper
 
         $result = $blockObject
             ->setRuntimeContext($executor->context())
-            ->tryToSetUserlandHeapSpace($executor->context()->self()->userlandHeapSpace())
+            ->setUserlandHeapSpace($executor->context()->self()->userlandHeapSpace())
             ->{(string) $callInfo->callData()->mid()->object}(
                 $executor->context(),
                 ...$arguments,
