@@ -8,11 +8,13 @@ class UserlandHeapSpace implements UserlandHeapSpaceInterface
 {
     public readonly UserlandClassEntries $userlandClasses;
     public readonly UserlandMethodEntries $userlandMethods;
+    public readonly UserlandInstanceVariableEntries $userlandInstanceVariables;
 
     public function __construct()
     {
         $this->userlandClasses = new UserlandClassEntries();
         $this->userlandMethods = new UserlandMethodEntries();
+        $this->userlandInstanceVariables = new UserlandInstanceVariableEntries();
     }
 
     public function __debugInfo(): ?array
@@ -28,5 +30,10 @@ class UserlandHeapSpace implements UserlandHeapSpaceInterface
     public function userlandMethods(): UserlandMethodEntries
     {
         return $this->userlandMethods;
+    }
+
+    public function userlandInstanceVariables(): UserlandInstanceVariableEntries
+    {
+        return $this->userlandInstanceVariables;
     }
 }

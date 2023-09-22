@@ -45,7 +45,11 @@ class BuiltinGetinstancevariable implements OperationProcessorInterface
 
         $this->context->vmStack()->push(
             new OperandEntry(
-                $targetObject->getInstanceVariable($instanceVar),
+                $this->context
+                    ->self()
+                    ->userlandHeapSpace()
+                    ->userlandInstanceVariables()
+                    ->get($instanceVar->id()),
             ),
         );
 

@@ -15,9 +15,9 @@ use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 
 interface RubyClassInterface extends RubyClassImplementationInterface
 {
-    public function setInstanceVariable(ID $id, Object_ $object): void;
+    public function userlandHeapSpace(): UserlandHeapSpace;
 
-    public function getInstanceVariable(ID $id): Object_;
+    public function setUserlandHeapSpace(?UserlandHeapSpace $userlandHeapSpace): RubyClassInterface;
 
     public function classes(): array;
 

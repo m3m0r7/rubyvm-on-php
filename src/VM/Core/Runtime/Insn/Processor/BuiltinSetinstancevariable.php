@@ -36,18 +36,14 @@ class BuiltinSetinstancevariable implements OperationProcessorInterface
         // this is instance variable index
         $ivIndex = $this->getOperandAsNumberSymbol()->valueOf();
 
-        /**
-         * @var RubyClassInterface $targetObject
-         */
-        $targetObject = $this->getStackAsObject()->symbol;
+        $targetObject = $this->getStackAsObject();
 
         // TODO: is correctly here? we will implement iv or ivc pattern.
-        $this->context->self()
-            ->setInstanceVariable(
-                $instanceVar,
-                $targetObject->toObject(),
-            );
-
+        $this->context
+            ->self()
+            ->userlandHeapSpace()
+            ->userlandInstanceVariables()
+            ->set($instanceVar->id(), $targetObject);
         return ProcessedStatus::SUCCESS;
     }
 }

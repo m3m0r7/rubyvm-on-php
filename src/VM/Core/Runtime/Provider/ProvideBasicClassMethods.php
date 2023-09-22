@@ -16,32 +16,6 @@ use RubyVM\VM\Exception\RubyVMException;
 
 trait ProvideBasicClassMethods
 {
-    /**
-     * @var Object_[]
-     */
-    protected array $instanceVariables = [];
-
-    public function setInstanceVariable(ID $id, Object_ $object): void
-    {
-        $this->instanceVariables[(string) $id->object->symbol] = $object;
-    }
-
-    public function getInstanceVariable(ID $id): Object_
-    {
-        $key = (string) $id->object->symbol;
-        if (!isset($this->instanceVariables[$key])) {
-            throw new RubyVMException(
-                sprintf(
-                    'The ref %s is not found on %s',
-                    $key,
-                    ClassHelper::nameBy($this),
-                )
-            );
-        }
-
-        return $this->instanceVariables[$key];
-    }
-
     public function puts(Object_ $object): Object_
     {
         $symbol = $object->symbol;
