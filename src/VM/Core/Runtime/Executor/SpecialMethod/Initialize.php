@@ -7,18 +7,23 @@ namespace RubyVM\VM\Core\Runtime\Executor\SpecialMethod;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\Symbol\Object_;
+use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
+use RubyVM\VM\Exception\RubyVMException;
 
 class Initialize implements SpecialMethodInterface
 {
     public function process(RubyClassInterface $class, ContextInterface $context, mixed ...$arguments): mixed
     {
         $result = $class;
-        $class->setRuntimeContext($context)
-            ->setUserlandHeapSpace($context->self()->userlandHeapSpace());
+
+        if (!$class instanceof Object_) {
+            throw new RubyVMException('The passed class is not implemented an Object class');
+        }
 
         if ($class->hasMethod('initialize')) {
             $class->initialize(...$arguments);
-        } else {
+        } elseif ($class->hasMethod('new')) {
             $result = $class->new(...$arguments);
         }
 

@@ -6,6 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Provider;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
+use RubyVM\VM\Core\Runtime\Executor\SpecialMethodCallerEntries;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
@@ -38,7 +39,8 @@ trait ProvideClassExtendableMethods
                 (new \ReflectionClass($this))
                     ->getMethods(),
             ),
-            ...array_keys($this->userlandHeapSpace->userlandMethods()->toArray())
+            ...array_keys(SpecialMethodCallerEntries::map()),
+            ...array_keys($this->userlandHeapSpace->userlandMethods()->toArray()),
         ];
     }
 

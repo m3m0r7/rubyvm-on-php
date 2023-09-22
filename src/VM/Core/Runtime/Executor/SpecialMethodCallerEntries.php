@@ -15,7 +15,9 @@ class SpecialMethodCallerEntries extends AbstractEntries
     {
         parent::__construct($items);
 
-        $this->set('new', new Initialize());
+        foreach (static::map() as $name => $class) {
+            $this->set($name, new $class());
+        }
     }
 
     public function verify(mixed $value): bool
@@ -26,5 +28,12 @@ class SpecialMethodCallerEntries extends AbstractEntries
     protected function entryType(): EntryType
     {
         return EntryType::HASH;
+    }
+
+    public static function map(): array
+    {
+        return [
+            'new' => Initialize::class,
+        ];
     }
 }
