@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\CallBlockHelper;
@@ -37,7 +36,7 @@ class BuiltinInvokeblock implements OperationProcessorInterface
 
     public function after(): void {}
 
-    public function process(SymbolInterface|ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
+    public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
         if (!isset($arguments[0]) || !$arguments[0] instanceof ContextInterface) {
             throw new OperationProcessorException(

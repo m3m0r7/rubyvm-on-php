@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
@@ -36,7 +35,7 @@ class BuiltinDefinemethod implements OperationProcessorInterface
 
     public function after(): void {}
 
-    public function process(SymbolInterface|ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
+    public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
         /**
          * @var StringSymbol $methodNameSymbol
