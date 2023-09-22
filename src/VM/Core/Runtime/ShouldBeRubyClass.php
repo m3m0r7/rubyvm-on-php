@@ -17,9 +17,9 @@ trait ShouldBeRubyClass
     use ProvideExtendedMethodCall;
     use ProvidePHPClassMethods;
 
-    protected ContextInterface $context;
+    protected ?ContextInterface $context = null;
 
-    public function setRuntimeContext(ContextInterface $context): self
+    public function setRuntimeContext(?ContextInterface $context): self
     {
         $this->context = $context;
         return $this;

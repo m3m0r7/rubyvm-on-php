@@ -104,7 +104,7 @@ class MethodTest extends TestApplication
     {
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< '_'
-            puts 65535.to_int
+            puts 65535.to_i
             _,
         );
 

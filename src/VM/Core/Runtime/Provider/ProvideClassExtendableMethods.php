@@ -19,7 +19,7 @@ trait ProvideClassExtendableMethods
         return $this->userlandHeapSpace;
     }
 
-    public function tryToSetUserlandHeapSpace(UserlandHeapSpace $userlandHeapSpace): self
+    public function tryToSetUserlandHeapSpace(?UserlandHeapSpace $userlandHeapSpace): self
     {
         $this->userlandHeapSpace ??= $userlandHeapSpace;
         return $this;
@@ -49,7 +49,8 @@ trait ProvideClassExtendableMethods
 
     public function class(NumberSymbol $flags, StringSymbol $className, Executor $executor): void
     {
-        $this->userlandHeapSpace->userlandClasses()->set((string) $className, $executor->context());
+        // TODO: bind already added userland heap-space
+        $this->userlandHeapSpace->userlandClasses()->set((string) $className, new UserlandHeapSpace());
 
         $result = $executor->execute();
 

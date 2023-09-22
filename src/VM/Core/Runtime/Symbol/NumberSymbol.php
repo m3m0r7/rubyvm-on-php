@@ -21,24 +21,31 @@ class NumberSymbol implements SymbolInterface
         return (string) $this->number;
     }
 
-    public function xor(NumberSymbol $symbol): self
+    public function xor(Object_ $object): self
     {
         return new self(
-            $this->number ^ $symbol->number,
+            $this->number ^ $object->symbol->valueOf(),
         );
     }
 
-    public function power(NumberSymbol $symbol): self
+    public function power(Object_ $object): self
     {
         return new NumberSymbol(
-            $this->number ** $symbol->number,
+            $this->number ** $object->symbol->valueOf(),
         );
     }
 
-    public function rightShift(NumberSymbol $symbol): self
+    public function rightShift(Object_ $object): self
     {
         return new NumberSymbol(
-            $this->number >> $symbol->number,
+            $this->number >> $object->symbol->valueOf(),
+        );
+    }
+
+    public function compareStrictEquals(Object_ $object): BooleanSymbol
+    {
+        return new BooleanSymbol(
+            $this->number === $object->symbol->valueOf(),
         );
     }
 
@@ -72,12 +79,5 @@ class NumberSymbol implements SymbolInterface
             ),
             symbol: $this,
         );
-    }
-
-    public function bindAlias(): array
-    {
-        return [
-            'to_s' => 'toString',
-        ];
     }
 }

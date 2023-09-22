@@ -17,6 +17,7 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequences;
 use RubyVM\VM\Core\Runtime\KernelInterface;
+use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
 use RubyVM\VM\Core\Runtime\Offset\Offsets;
 use RubyVM\VM\Core\Runtime\RubyVersion;
@@ -29,6 +30,7 @@ use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\HeapSpace\DefaultInstanceHeapSpace;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\ArrayLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FalseLoader;
@@ -70,6 +72,7 @@ class Kernel implements KernelInterface
     public readonly string $extraData;
 
     private RubyVMBinaryStreamReaderInterface $stream;
+    private MainInterface $main;
 
     public function __construct(
         public readonly RubyVMInterface $vm,
@@ -82,6 +85,11 @@ class Kernel implements KernelInterface
             $this->vm->option()->stdOut ?? new StreamHandler(STDOUT),
             $this->vm->option()->stdIn ?? new StreamHandler(STDIN),
             $this->vm->option()->stdErr ?? new StreamHandler(STDERR),
+        );
+
+        $this->main = new Main();
+        $this->main->tryToSetUserlandHeapSpace(
+            new DefaultInstanceHeapSpace(),
         );
     }
 
@@ -103,10 +111,9 @@ class Kernel implements KernelInterface
 
         $executor = new Executor(
             $this,
-            new Main(),
+            $this->main,
             $instructionSequence,
             $this->vm->option()->logger,
-            new UserlandHeapSpace(),
         );
 
         $executor->context()->appendTrace('<main>');
@@ -305,14 +312,7 @@ class Kernel implements KernelInterface
 
         $this->globalObjectTable[$index] = $object = $symbol->toObject();
 
-        $userlandHeapSpace = new UserlandHeapSpace();
-
-        $userlandHeapSpace->userlandMethods()->set(
-            'to_s',
-            'toString',
-        );
-
-        $object->tryToSetUserlandHeapSpace($userlandHeapSpace);
+        $object->tryToSetUserlandHeapSpace($this->main->userlandHeapSpace());
 
         return $object;
     }

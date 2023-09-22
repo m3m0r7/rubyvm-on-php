@@ -49,6 +49,12 @@ class Object_ implements RubyClassInterface
             }
         }
 
+        if ($result instanceof SymbolInterface) {
+            return $result->toObject()
+                ->setRuntimeContext($this->context)
+                ->tryToSetUserlandHeapSpace($this->userlandHeapSpace);
+        }
+
         return $result;
     }
 

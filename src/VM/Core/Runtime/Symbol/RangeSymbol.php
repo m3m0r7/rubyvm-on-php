@@ -59,7 +59,6 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
                 rubyClass: $context->self(),
                 instructionSequence: $context->instructionSequence(),
                 logger: $context->logger(),
-                userlandHeapSpace: $context->userlandHeapSpace(),
                 debugger: $context->debugger(),
                 previousContext: $context,
             ));
@@ -68,6 +67,9 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
                 ->appendTrace(ClassHelper::nameBy($this) . '#' . __FUNCTION__);
 
             $localTableSize = $executor->context()->instructionSequence()->body()->data->localTableSize();
+            $object = $number->toObject()
+                ->setRuntimeContext($context)
+                ->tryToSetUserlandHeapSpace($context->self()->userlandHeapSpace());
 
             $executor->context()
                 ->environmentTable()
@@ -76,7 +78,7 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
                         $localTableSize,
                         Option::VM_ENV_DATA_SIZE + $localTableSize - 1,
                     ),
-                    $number->toObject()
+                    $object,
                 );
 
             $result = $executor->execute();
@@ -121,10 +123,5 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
     public function offsetUnset(mixed $offset): void
     {
         unset($this->array[$offset]);
-    }
-
-    public function bindAlias(): array
-    {
-        return [];
     }
 }

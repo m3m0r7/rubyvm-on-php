@@ -4,22 +4,21 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
+use RubyVM\VM\Core\Runtime\Executor\SpecialMethod\SpecialMethodInterface;
 use RubyVM\VM\Core\Runtime\Executor\SpecialMethodCallerEntries;
 use RubyVM\VM\Core\Runtime\Executor\Translatable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
-use RubyVM\VM\Core\Runtime\RubyClassExtendableInterface;
-use RubyVM\VM\Core\Runtime\SpecialMethod\SpecialMethodInterface;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
+use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
@@ -89,11 +88,12 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
 
             $result = $calleeSpecialMethodName->process(
                 $targetClass,
+                $this->context,
                 ...$this->translateForArguments(...$arguments),
             );
         } else {
             /**
-             * @var null|ExecutedResult|SymbolInterface $result
+             * @var null|ExecutedResult|Object_ $result
              */
             $result = $targetClass
                 ->{(string) $symbol}(...$this->translateForArguments(...$arguments));

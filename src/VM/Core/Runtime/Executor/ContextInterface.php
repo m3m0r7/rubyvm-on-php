@@ -47,6 +47,4 @@ interface ContextInterface
     public function appendTrace(string ...$definitions): self;
 
     public function traces(): array;
-
-    public function userlandHeapSpace(): UserlandHeapSpaceInterface;
 }

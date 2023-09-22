@@ -6,8 +6,8 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Runtime\Entry\AbstractEntries;
 use RubyVM\VM\Core\Runtime\Entry\EntryType;
-use RubyVM\VM\Core\Runtime\SpecialMethod\Initialize;
-use RubyVM\VM\Core\Runtime\SpecialMethod\SpecialMethodInterface;
+use RubyVM\VM\Core\Runtime\Executor\SpecialMethod\Initialize;
+use RubyVM\VM\Core\Runtime\Executor\SpecialMethod\SpecialMethodInterface;
 
 class SpecialMethodCallerEntries extends AbstractEntries
 {

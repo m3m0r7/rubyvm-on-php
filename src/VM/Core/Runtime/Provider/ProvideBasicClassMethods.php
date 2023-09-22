@@ -76,8 +76,11 @@ trait ProvideBasicClassMethods
     public function inspect(): SymbolInterface
     {
         $string = (string) $this;
-        if ($this instanceof StringSymbol) {
-            $string = '"' . $string . '"';
+        if ($this instanceof Object_) {
+            $string = match(($this->symbol)::class) {
+                StringSymbol::class => '"' . $string . '"',
+                default => (string) $string,
+            };
         }
 
         return new StringSymbol($string);

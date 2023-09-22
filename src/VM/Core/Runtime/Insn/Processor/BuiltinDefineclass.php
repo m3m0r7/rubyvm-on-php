@@ -39,10 +39,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
 
     public function process(SymbolInterface|ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        /**
-         * @var StringSymbol $className
-         */
-        $className = $this->getOperandAsID()->object->symbol;
+        $class = $this->getOperandAsID()->object;
         $iseqNumber = $this->getOperandAsNumberSymbol();
         $flags = $this->getOperandAsNumberSymbol();
 
@@ -58,22 +55,21 @@ class BuiltinDefineclass implements OperationProcessorInterface
 
         $executor = (new Executor(
             kernel: $this->context->kernel(),
-            rubyClass: $this->context->self(),
+            rubyClass: $class,
             instructionSequence: $instructionSequence,
             logger: $this->context->logger(),
-            userlandHeapSpace: new UserlandHeapSpace(),
             debugger: $this->context->debugger(),
             previousContext: $this->context->renewEnvironmentTable(),
         ));
 
         $executor->context()
-            ->appendTrace($className->valueOf());
+            ->appendTrace($class->symbol->valueOf());
 
         $this->context
             ->self()
             ->class(
                 $flags,
-                $className,
+                $class->symbol,
                 $executor,
             );
 

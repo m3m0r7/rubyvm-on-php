@@ -43,9 +43,4 @@ class FloatSymbol implements SymbolInterface
             symbol: $this,
         );
     }
-
-    public function bindAlias(): array
-    {
-        return [];
-    }
 }

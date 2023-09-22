@@ -19,8 +19,7 @@ readonly class ContextAccessor implements ContextAccessorInterface
          */
         $executedResult = $self->{$name}(
             ...array_map(
-                fn ($value) => Translator::PHPToRuby($value)
-                    ->symbol,
+                fn ($value) => Translator::PHPToRuby($value),
                 $arguments,
             ),
         );

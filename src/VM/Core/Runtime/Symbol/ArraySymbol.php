@@ -32,11 +32,11 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
         );
     }
 
-    public function new(self|array $values = null): self
+    public function new(Object_|array $values = null): self
     {
         return new self(
-            $values instanceof self
-                ? $values->array
+            $values instanceof Object_
+                ? $values->symbol->valueOf()
                 : ($values ?? []),
         );
     }
@@ -49,17 +49,20 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
                 rubyClass: $context->self(),
                 instructionSequence: $context->instructionSequence(),
                 logger: $context->logger(),
-                userlandHeapSpace: $context->userlandHeapSpace(),
                 debugger: $context->debugger(),
                 previousContext: $context,
             ));
+
+            $object = (new NumberSymbol($this->array[$i]->valueOf()))
+                ->toObject()
+                ->setRuntimeContext($context)
+                ->tryToSetUserlandHeapSpace($context->self()->userlandHeapSpace());
 
             $executor->context()
                 ->environmentTable()
                 ->set(
                     Option::VM_ENV_DATA_SIZE,
-                    (new NumberSymbol($this->array[$i]->valueOf()))
-                        ->toObject()
+                    $object,
                 );
 
             $executor->context()
@@ -122,10 +125,5 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
     public function count(): int
     {
         return count($this->array);
-    }
-
-    public function bindAlias(): array
-    {
-        return [];
     }
 }

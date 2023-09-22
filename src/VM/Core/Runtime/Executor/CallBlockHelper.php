@@ -31,20 +31,10 @@ trait CallBlockHelper
             rubyClass: $context->self(),
             instructionSequence: $context->instructionSequence(),
             logger: $context->logger(),
-            userlandHeapSpace: $context->userlandHeapSpace(),
             debugger: $context->debugger(),
             previousContext: $context
                 ->renewEnvironmentTable(),
         ));
-
-        // TODO: is this needed?
-        if (!$context->self() instanceof MainInterface) {
-            $executor->context()->vmStack()->push(
-                new OperandEntry(
-                    $context->self(),
-                ),
-            );
-        }
 
         $iseqBodyData = $executor
             ->context()
@@ -107,7 +97,6 @@ trait CallBlockHelper
             rubyClass: $this->context->self(),
             instructionSequence: $instructionSequence,
             logger: $this->context->logger(),
-            userlandHeapSpace: $this->context->userlandHeapSpace(),
             debugger: $this->context->debugger(),
             previousContext: $this->context,
         ));
@@ -116,9 +105,18 @@ trait CallBlockHelper
             ...$arguments
         );
 
-        return $blockObject->{(string) $callInfo->callData()->mid()->object->symbol}(
-            $executor->context(),
-            ...$arguments,
-        );
+        $result = $blockObject
+            ->setRuntimeContext($executor->context())
+            ->tryToSetUserlandHeapSpace($executor->context()->self()->userlandHeapSpace())
+            ->{(string) $callInfo->callData()->mid()->object}(
+                $executor->context(),
+                ...$arguments,
+            );
+
+        if ($result instanceof ExecutedResult) {
+            return $result->returnValue;
+        }
+
+        return $result;
     }
 }

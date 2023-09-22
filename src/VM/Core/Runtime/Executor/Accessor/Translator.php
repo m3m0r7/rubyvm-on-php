@@ -20,36 +20,36 @@ use RubyVM\VM\Exception\TranslationException;
 
 readonly class Translator
 {
-    public static function PHPToRuby(mixed $elements): self
+    public static function PHPToRuby(mixed $elements): Object_
     {
         if (is_array($elements)) {
             if (static::validateArrayIsNumber($elements)) {
-                return new self(new RangeSymbol(
+                return (new RangeSymbol(
                     new NumberSymbol((int) array_key_first($elements)),
                     new NumberSymbol((int) array_key_last($elements)),
                     false,
-                ));
+                ))->toObject();
             }
             $result = [];
             foreach ($elements as $element) {
-                $result[] = static::PHPToRuby($element)
-                    ->symbol;
+                $result[] = static::PHPToRuby($element)->symbol;
             }
 
-            return new self(new ArraySymbol($result));
+            return (new ArraySymbol($result))
+                ->toObject();
         }
 
         if (is_object($elements)) {
             throw new TranslationException('The RubyVM cannot use an object from the outside, only using scalar value');
         }
 
-        return new self(match (gettype($elements)) {
-            'integer' => (new NumberSymbol($elements)),
-            'string' => (new StringSymbol($elements)),
-            'double' => (new FloatSymbol($elements)),
-            'boolean' => (new BooleanSymbol($elements)),
+        return match (gettype($elements)) {
+            'integer' => (new NumberSymbol($elements))->toObject(),
+            'string' => (new StringSymbol($elements))->toObject(),
+            'double' => (new FloatSymbol($elements))->toObject(),
+            'boolean' => (new BooleanSymbol($elements))->toObject(),
             default => throw new TranslationException('The type is not implemented yet')
-        });
+        };
     }
 
     public static function RubyToPHP(Object_|SymbolInterface|RubyClassInterface|array $objectOrClass): mixed
@@ -91,11 +91,11 @@ readonly class Translator
         return $objectOrClass;
     }
 
-    public function __construct(public SymbolInterface $symbol) {}
+    public function __construct(public readonly Object_ $object) {}
 
     public function toOperand(): OperandEntry
     {
-        return new OperandEntry($this->symbol->toObject());
+        return new OperandEntry($this->object);
     }
 
     private static function validateArrayIsNumber(array $values): bool

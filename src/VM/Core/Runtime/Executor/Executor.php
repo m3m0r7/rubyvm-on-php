@@ -36,12 +36,10 @@ class Executor implements ExecutorInterface
         private readonly RubyClassInterface $rubyClass,
         private readonly InstructionSequence $instructionSequence,
         private readonly LoggerInterface $logger,
-        private readonly UserlandHeapSpaceInterface $userlandHeapSpace,
         private readonly ExecutorDebugger $debugger = new ExecutorDebugger(),
         private readonly ?ContextInterface $previousContext = null,
     ) {
         $this->context = $this->createContext($this->previousContext);
-        $this->rubyClass->tryToSetUserlandHeapSpace($this->userlandHeapSpace);
     }
 
     public function context(): ContextInterface
@@ -59,7 +57,6 @@ class Executor implements ExecutorInterface
             new ProgramCounter(),
             $this->instructionSequence,
             $this->logger,
-            $this->userlandHeapSpace ?? $previousContext?->userlandHeapSpace(),
             $previousContext?->environmentTable() ?? new EnvironmentTable(),
             $this->debugger,
             $previousContext
