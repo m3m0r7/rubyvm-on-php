@@ -24,7 +24,7 @@ trait OperandHelper
     private function getOperandAsSymbol(): SymbolInterface
     {
         $operand = $this->getOperandAsAny(
-            Object_::class
+            Object_::class,
         );
 
         return $operand->symbol;
@@ -127,9 +127,9 @@ trait OperandHelper
 
     private function getOperandAsObject(): Object_
     {
-        return $this->getOperandAsAny(
-            Object_::class
-        );
+        return $this->getOperandAsAny(Object_::class)
+            ->setRuntimeContext($this->context)
+            ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace());
     }
 
     private function getOperand(): OperandEntry
@@ -268,9 +268,9 @@ trait OperandHelper
 
     private function getStackAsObject(): Object_
     {
-        return $this->getStackAsAny(
-            Object_::class
-        );
+        return $this->getStackAsAny(Object_::class)
+            ->setRuntimeContext($this->context)
+            ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace());
     }
 
     private function getStack(): OperandEntry

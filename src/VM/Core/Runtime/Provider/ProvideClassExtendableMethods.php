@@ -14,7 +14,7 @@ trait ProvideClassExtendableMethods
 {
     protected ?UserlandHeapSpace $userlandHeapSpace = null;
 
-    public function userlandHeapSpace(): UserlandHeapSpace
+    public function userlandHeapSpace(): ?UserlandHeapSpace
     {
         return $this->userlandHeapSpace;
     }

@@ -13,6 +13,9 @@ class Initialize implements SpecialMethodInterface
     public function process(RubyClassInterface $class, ContextInterface $context, mixed ...$arguments): mixed
     {
         $result = $class;
+        $class->setRuntimeContext($context)
+            ->setUserlandHeapSpace($context->self()->userlandHeapSpace());
+
         if ($class->hasMethod('initialize')) {
             $class->initialize(...$arguments);
         } else {

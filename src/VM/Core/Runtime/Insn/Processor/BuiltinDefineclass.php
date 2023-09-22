@@ -65,6 +65,9 @@ class BuiltinDefineclass implements OperationProcessorInterface
                 $className,
             );
 
+        $class->setRuntimeContext($this->context)
+            ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace()->userlandClasses()->get((string) $className));
+
         $executor = (new Executor(
             kernel: $this->context->kernel(),
             rubyClass: $class,
