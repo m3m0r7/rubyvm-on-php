@@ -11,48 +11,42 @@ use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 
 class DefaultInstanceHeapSpace extends UserlandHeapSpace
 {
+    protected array $bindClassNames = [
+        'Array' => ArraySymbol::class,
+    ];
+
+    protected array $bindAliasesMethods = [
+        [[NumberSymbol::class, BooleanSymbol::class], 'to_s', 'toString'],
+        [[NumberSymbol::class, BooleanSymbol::class], '**', 'power'],
+        [[NumberSymbol::class, BooleanSymbol::class], '>>', 'rightShift'],
+        [[NumberSymbol::class, BooleanSymbol::class], '^', 'xor'],
+        [[NumberSymbol::class, BooleanSymbol::class], 'to_i', 'toInt'],
+        [[NumberSymbol::class, BooleanSymbol::class], '===', 'compareStrictEquals'],
+    ];
+
     public function __construct()
     {
         parent::__construct();
 
-        // TODO: Refactor here
+        foreach ($this->bindClassNames as $originalClassName => $bindClassName) {
+            $this->userlandClasses
+                ->alias($originalClassName, ArraySymbol::class);
+        }
 
-        $heapspace = new UserlandHeapSpace();
-        $this->userlandClasses
-            ->alias('Array', ArraySymbol::class);
+        foreach ($this->bindAliasesMethods as [$classNames]) {
+            foreach ($classNames as $className) {
+                $this->userlandClasses
+                    ->set($className, new UserlandHeapSpace());
+            }
+        }
 
-        $heapspace->userlandMethods->set(
-            'to_s',
-            'toString',
-        );
-        $heapspace->userlandMethods->set(
-            '**',
-            'power',
-        );
-        $heapspace->userlandMethods->set(
-            '>>',
-            'rightShift',
-        );
-        $heapspace->userlandMethods->set(
-            '^',
-            'xor',
-        );
-        $heapspace->userlandMethods->set(
-            'to_i',
-            'toInt',
-        );
-        $heapspace->userlandMethods->set(
-            'to_i',
-            'toInt',
-        );
-        $heapspace->userlandMethods->set(
-            '===',
-            'compareStrictEquals',
-        );
-
-        $this->userlandClasses
-            ->set(NumberSymbol::class, clone $heapspace);
-        $this->userlandClasses
-            ->set(BooleanSymbol::class, clone $heapspace);
+        foreach ($this->bindAliasesMethods as [$classNames, $originalMethodName, $bindMethodName]) {
+            foreach ($classNames as $className) {
+                $this->userlandClasses
+                    ->get($className)
+                    ->userlandMethods()
+                    ->set($originalMethodName, $bindMethodName);
+            }
+        }
     }
 }
