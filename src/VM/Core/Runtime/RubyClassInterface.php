@@ -25,7 +25,7 @@ interface RubyClassInterface extends RubyClassImplementationInterface
 
     public function hasMethod(string $name): bool;
 
-    public function class(NumberSymbol $flags, StringSymbol $className, Executor $executor): void;
+    public function class(NumberSymbol $flags, StringSymbol $className): void;
 
     public function def(StringSymbol $methodName, ContextInterface $context): void;
 }

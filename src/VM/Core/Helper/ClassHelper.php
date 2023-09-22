@@ -15,7 +15,7 @@ class ClassHelper
             return gettype($obj);
         }
         if (Object_::class === get_class($obj)) {
-            return 'Object';
+            return static::nameBy($obj->symbol);
         }
         if (ExtendedClassEntry::class === get_class($obj)) {
             $obj = $obj->className;

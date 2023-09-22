@@ -53,6 +53,18 @@ class BuiltinDefineclass implements OperationProcessorInterface
 
         $instructionSequence->load();
 
+        /**
+         * @var StringSymbol $className
+         */
+        $className = $class->symbol;
+
+        $this->context
+            ->self()
+            ->class(
+                $flags,
+                $className,
+            );
+
         $executor = (new Executor(
             kernel: $this->context->kernel(),
             rubyClass: $class,
@@ -65,18 +77,11 @@ class BuiltinDefineclass implements OperationProcessorInterface
         $executor->context()
             ->appendTrace($class->symbol->valueOf());
 
-        /**
-         * @var StringSymbol $className
-         */
-        $className = $class->symbol;
+        $result = $executor->execute();
 
-        $this->context
-            ->self()
-            ->class(
-                $flags,
-                $className,
-                $executor,
-            );
+        if ($result->threw) {
+            throw $result->threw;
+        }
 
         return ProcessedStatus::SUCCESS;
     }

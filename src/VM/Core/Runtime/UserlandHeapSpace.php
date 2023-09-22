@@ -15,6 +15,11 @@ class UserlandHeapSpace implements UserlandHeapSpaceInterface
         $this->userlandMethods = new UserlandMethodEntries();
     }
 
+    public function __debugInfo(): ?array
+    {
+        return [];
+    }
+
     public function userlandClasses(): UserlandClassEntries
     {
         return $this->userlandClasses;

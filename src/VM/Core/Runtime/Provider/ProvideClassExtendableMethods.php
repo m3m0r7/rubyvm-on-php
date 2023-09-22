@@ -47,7 +47,7 @@ trait ProvideClassExtendableMethods
         return in_array($name, $this->methods(), true);
     }
 
-    public function class(NumberSymbol $flags, StringSymbol $className, Executor $executor): void
+    public function class(NumberSymbol $flags, StringSymbol $className): void
     {
         $className = (string) $className;
 
@@ -59,17 +59,10 @@ trait ProvideClassExtendableMethods
                     ->userlandClasses
                     ->get($className) ?? new UserlandHeapSpace(),
             );
-
-        $result = $executor->execute();
-
-        if ($result->threw) {
-            throw $result->threw;
-        }
     }
 
     public function def(StringSymbol $methodName, ContextInterface $context): void
     {
-        var_dump($context->self());
         $context->self()
             ->userlandHeapSpace()
             ->userlandMethods()

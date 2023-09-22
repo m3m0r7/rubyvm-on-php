@@ -35,6 +35,18 @@ final class UserlandClassEntries extends AbstractEntries
         return $this;
     }
 
+    public function has(mixed $index): bool
+    {
+        $result = parent::has($index);
+        if ($result === true) {
+            return true;
+        }
+        if ($this->aliases->has($index)) {
+            $index = $this->aliases->has($index);
+        }
+        return parent::has($index);
+    }
+
     public function get(mixed $index): mixed
     {
         $result = parent::get($index);

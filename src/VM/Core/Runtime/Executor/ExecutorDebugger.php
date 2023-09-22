@@ -8,6 +8,7 @@ use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
+use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableSeparator;
@@ -150,6 +151,7 @@ class ExecutorDebugger
                         fn ($argument) => match ($argument::class) {
                             SymbolInterface::class => (string) $argument,
                             OperandEntry::class => (string) $argument->operand->symbol,
+                            Object_::class => (string) $argument->symbol,
                             default => '?',
                         },
                         $arguments,
