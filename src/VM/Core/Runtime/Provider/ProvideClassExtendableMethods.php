@@ -69,6 +69,7 @@ trait ProvideClassExtendableMethods
 
     public function def(StringSymbol $methodName, ContextInterface $context): void
     {
+        var_dump($context->self());
         $context->self()
             ->userlandHeapSpace()
             ->userlandMethods()

@@ -18,7 +18,8 @@ class DefaultInstanceHeapSpace extends UserlandHeapSpace
         // TODO: Refactor here
 
         $heapspace = new UserlandHeapSpace();
-        $heapspace->userlandClasses->alias('Array', ArraySymbol::class);
+        $this->userlandClasses
+            ->alias('Array', ArraySymbol::class);
 
         $heapspace->userlandMethods->set(
             'to_s',
