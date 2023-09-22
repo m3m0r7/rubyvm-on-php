@@ -63,17 +63,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
                     );
                 }
 
-                // TODO: support any symbol type
-                $class = new $aliasNameBy([]);
-                if (!($class instanceof ObjectifyInterface)) {
-                    throw new OperationProcessorException(
-                        sprintf(
-                            'The alias cannot be an object - maybe ObjectifyInterface not implemented : %s',
-                            $aliasNameBy,
-                        ),
-                    );
-                }
-                $object = $class->toObject();
+                $object = Object_::initializeByClassName($aliasNameBy);
             } else {
                 $object = (new ClassSymbol($constantNameSymbol))
                     ->toObject();

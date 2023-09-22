@@ -10,6 +10,7 @@ use RubyVM\VM\Core\Runtime\Offset\Offset;
 use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\ShouldBeRubyClass;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
+use RubyVM\VM\Exception\SymbolUnsupportedException;
 
 class Object_ implements RubyClassInterface
 {
@@ -60,6 +61,17 @@ class Object_ implements RubyClassInterface
         }
 
         return $result;
+    }
+
+    public static function initializeByClassName(string $className): Object_
+    {
+        return (new $className(match ($className) {
+            ArraySymbol::class => [],
+            StringSymbol::class => '',
+            BooleanSymbol::class => true,
+            NumberSymbol::class => 0,
+            default => throw new SymbolUnsupportedException('The symbol cannot be instance - the symbol did not support initialize'),
+        }))->toObject();
     }
 
     public function __toString(): string
