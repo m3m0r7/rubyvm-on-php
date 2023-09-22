@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
-use RubyVM\VM\Core\Runtime\ObjectifyInterface;
 use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
 use RubyVM\VM\Core\Runtime\Symbol\ClassSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
@@ -40,6 +39,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
     public function process(SymbolInterface|ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
         $operand = $this->getOperandAsID();
+
         /**
          * @var ArraySymbol $symbol
          */
@@ -86,8 +86,8 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
                 ->setUserlandHeapSpace($heapSpace);
 
             $this->context->vmStack()->push(new OperandEntry($object));
-
         }
+
         return ProcessedStatus::SUCCESS;
     }
 }

@@ -8,9 +8,7 @@ class ClassSymbol implements SymbolInterface
 {
     public function __construct(
         private StringSymbol $class,
-    )
-    {
-    }
+    ) {}
 
     public function valueOf(): string
     {

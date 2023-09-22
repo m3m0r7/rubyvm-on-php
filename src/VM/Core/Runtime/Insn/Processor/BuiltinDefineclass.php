@@ -16,7 +16,6 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
-use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 
 class BuiltinDefineclass implements OperationProcessorInterface
 {

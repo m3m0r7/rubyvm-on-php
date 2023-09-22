@@ -22,7 +22,7 @@ final class UserlandClassEntries extends AbstractEntries
     /**
      * When $value is a string, which is set an alias on PHP method/function
      * When $value is a ContextInterface, which is having native code
-     * Otherwise, set deeply entry when $value is instantiated by UserlandHeapSpaceInterface
+     * Otherwise, set deeply entry when $value is instantiated by UserlandHeapSpaceInterface.
      */
     public function verify(mixed $value): bool
     {
@@ -32,6 +32,7 @@ final class UserlandClassEntries extends AbstractEntries
     public function alias(string $name, string $to): self
     {
         $this->aliases->set($name, $to);
+
         return $this;
     }
 
@@ -49,6 +50,7 @@ final class UserlandClassEntries extends AbstractEntries
         if ($this->aliases->has($index)) {
             $index = $this->aliases->has($index);
         }
+
         return parent::has($index);
     }
 
@@ -61,6 +63,7 @@ final class UserlandClassEntries extends AbstractEntries
         if ($this->aliases->has($index)) {
             $index = $this->aliases->get($index);
         }
+
         return parent::get($index);
     }
 
@@ -74,6 +77,7 @@ final class UserlandClassEntries extends AbstractEntries
             $index = $this->aliases->get($index);
             parent::set($index, $value);
         }
+
         return $this;
     }
 

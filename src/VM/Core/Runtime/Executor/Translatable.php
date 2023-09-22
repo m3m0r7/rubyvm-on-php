@@ -35,9 +35,7 @@ trait Translatable
     {
         $arguments = [];
         foreach ($operands as $operand) {
-            /**
-             * @var Object_ $object
-             */
+            // @var Object_ $object
             $arguments[] = $object = $operand->operand;
             $this->validateType(
                 Object_::class,

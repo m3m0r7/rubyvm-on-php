@@ -7,12 +7,10 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 use RubyVM\VM\Core\Helper\LocalTableHelper;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
-use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\VMCallFlagBit;
 use RubyVM\VM\Exception\OperationProcessorException;
 
@@ -123,6 +121,7 @@ trait CallBlockHelper
             if ($result->threw) {
                 throw $result->threw;
             }
+
             return $result->returnValue;
         }
 

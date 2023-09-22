@@ -12,7 +12,7 @@ final class UserlandMethodEntries extends AbstractEntries
 {
     /**
      * When $value is a string, which is set an alias on PHP method/function
-     * When $value is a ContextInterface, which is having native code
+     * When $value is a ContextInterface, which is having native code.
      */
     public function verify(mixed $value): bool
     {

@@ -306,7 +306,7 @@ class Kernel implements KernelInterface
 
         $this->globalObjectTable[$index] = $object = $symbol->toObject();
 
-//        $object->setUserlandHeapSpace($this->main->userlandHeapSpace());
+        //        $object->setUserlandHeapSpace($this->main->userlandHeapSpace());
 
         return $object;
     }

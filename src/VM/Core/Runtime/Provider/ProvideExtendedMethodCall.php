@@ -9,7 +9,6 @@ use RubyVM\VM\Core\Runtime\Executor\CallBlockHelper;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
 
 trait ProvideExtendedMethodCall
@@ -55,6 +54,7 @@ trait ProvideExtendedMethodCall
         if ($class instanceof Object_) {
             return ($class->symbol)::class;
         }
+
         return $class::class;
     }
 }

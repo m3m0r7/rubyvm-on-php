@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Provider;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
-use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\SpecialMethodCallerEntries;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
@@ -23,6 +22,7 @@ trait ProvideClassExtendableMethods
     public function setUserlandHeapSpace(?UserlandHeapSpace $userlandHeapSpace): self
     {
         $this->userlandHeapSpace = $userlandHeapSpace;
+
         return $this;
     }
 

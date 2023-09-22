@@ -22,6 +22,7 @@ trait ShouldBeRubyClass
     public function setRuntimeContext(?ContextInterface $context): self
     {
         $this->context = $context;
+
         return $this;
     }
 }

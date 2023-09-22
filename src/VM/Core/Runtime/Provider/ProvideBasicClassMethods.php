@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Provider;
 
-use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
-use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\RangeSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-use RubyVM\VM\Exception\RubyVMException;
 
 trait ProvideBasicClassMethods
 {
@@ -51,7 +48,7 @@ trait ProvideBasicClassMethods
     {
         $string = (string) $this;
         if ($this instanceof Object_) {
-            $string = match(($this->symbol)::class) {
+            $string = match (($this->symbol)::class) {
                 StringSymbol::class => '"' . $string . '"',
                 default => (string) $string,
             };
