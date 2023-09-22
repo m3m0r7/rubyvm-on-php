@@ -67,8 +67,14 @@ trait CallBlockHelper
                 );
         }
 
-        return $executor
+        $result = $executor
             ->execute(...$calleeContexts);
+
+        if ($result->threw) {
+            throw $result->threw;
+        }
+
+        return $result;
     }
 
     private function callBlockWithArguments(CallInfoEntryInterface $callInfo, NumberSymbol $blockIseqIndex, Object_|RubyClassInterface $blockObject, bool $isSuper, OperandEntry ...$arguments): ?Object_
@@ -114,6 +120,9 @@ trait CallBlockHelper
             );
 
         if ($result instanceof ExecutedResult) {
+            if ($result->threw) {
+                throw $result->threw;
+            }
             return $result->returnValue;
         }
 
