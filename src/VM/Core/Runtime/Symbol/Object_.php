@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Symbol;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Helper\DefaultInstanceMethodEntries;
-use RubyVM\VM\Core\Runtime\Executor\InstanceMethodInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
 use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\ShouldBeRubyClass;

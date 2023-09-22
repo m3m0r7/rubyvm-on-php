@@ -340,34 +340,34 @@ class Kernel implements KernelInterface
             ->instructionSequences
             ->get($aux->loader->index);
 
-        if (!$instructionSequence) {
-            // load all sequences
-            for ($i = 0; $i < $this->instructionSequenceListSize; ++$i) {
-                $targetAux = new Aux(
-                    loader: new AuxLoader(
-                        $i,
-                    ),
-                );
-                $instructionSequence = new InstructionSequence(
+        if ($instructionSequence) {
+            return $instructionSequence;
+        }
+        
+        // load all sequences
+        for ($i = 0; $i < $this->instructionSequenceListSize; ++$i) {
+            $targetAux = new Aux(
+                loader: new AuxLoader(
+                    $i,
+                ),
+            );
+            $instructionSequence = new InstructionSequence(
+                aux: $targetAux,
+                processor: new InstructionSequenceProcessor(
+                    kernel: $this,
                     aux: $targetAux,
-                    processor: new InstructionSequenceProcessor(
-                        kernel: $this,
-                        aux: $targetAux,
-                    ),
-                );
+                ),
+            );
 
-                $instructionSequence->load();
+            $instructionSequence->load();
 
-                $this->instructionSequences->set(
-                    $targetAux->loader->index,
-                    $instructionSequence,
-                );
-            }
-
-            return $this->loadInstructionSequence($aux);
+            $this->instructionSequences->set(
+                $targetAux->loader->index,
+                $instructionSequence,
+            );
         }
 
-        return $instructionSequence;
+        return $this->loadInstructionSequence($aux);
     }
 
     public function operationProcessorEntries(): OperationProcessorEntries
