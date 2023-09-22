@@ -7,18 +7,16 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 use RubyVM\VM\Core\Helper\LocalTableHelper;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
-use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\VMCallFlagBit;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 trait CallBlockHelper
 {
-    private function callSimpleMethod(ContextInterface $context, SymbolInterface|ContextInterface ...$arguments): ExecutedResult|null
+    private function callSimpleMethod(ContextInterface $context, Object_|ContextInterface ...$arguments): ExecutedResult|null
     {
         // Validate first value is context?
         $calleeContexts = [];
@@ -31,20 +29,10 @@ trait CallBlockHelper
             rubyClass: $context->self(),
             instructionSequence: $context->instructionSequence(),
             logger: $context->logger(),
-            userlandHeapSpace: $context->userlandHeapSpace(),
             debugger: $context->debugger(),
             previousContext: $context
                 ->renewEnvironmentTable(),
         ));
-
-        // TODO: is this needed?
-        if (!$context->self() instanceof MainInterface) {
-            $executor->context()->vmStack()->push(
-                new OperandEntry(
-                    $context->self(),
-                ),
-            );
-        }
 
         $iseqBodyData = $executor
             ->context()
@@ -61,9 +49,6 @@ trait CallBlockHelper
         $paramLead = $iseqBodyData->objectParam()->leadNum();
 
         for ($localIndex = 0; $localIndex < count($arguments); ++$localIndex) {
-            /**
-             * @var SymbolInterface $argument
-             */
             $argument = $arguments[$localIndex];
             $slotIndex = LocalTableHelper::computeLocalTableIndex(
                 $localTableSize,
@@ -74,14 +59,20 @@ trait CallBlockHelper
                 ->environmentTable()
                 ->setWithLead(
                     $slotIndex,
-                    $argument->toObject(),
+                    $argument,
                     // NOTE: The parameter is coming by reversed
                     $paramLead <= (count($arguments) - $localIndex),
                 );
         }
 
-        return $executor
+        $result = $executor
             ->execute(...$calleeContexts);
+
+        if ($result->threw) {
+            throw $result->threw;
+        }
+
+        return $result;
     }
 
     private function callBlockWithArguments(CallInfoEntryInterface $callInfo, NumberSymbol $blockIseqIndex, Object_|RubyClassInterface $blockObject, bool $isSuper, OperandEntry ...$arguments): ?Object_
@@ -110,32 +101,30 @@ trait CallBlockHelper
             rubyClass: $this->context->self(),
             instructionSequence: $instructionSequence,
             logger: $this->context->logger(),
-            userlandHeapSpace: $this->context->userlandHeapSpace(),
             debugger: $this->context->debugger(),
             previousContext: $this->context,
         ));
 
-        $result = null;
-        $callee = null;
         $arguments = $this->translateForArguments(
             ...$arguments
         );
 
-        if ($blockObject instanceof Object_) {
-            $callee = $blockObject->symbol;
-        } else {
-            $callee = $blockObject;
+        $result = $blockObject
+            ->setRuntimeContext($executor->context())
+            ->setUserlandHeapSpace($executor->context()->self()->userlandHeapSpace())
+            ->{(string) $callInfo->callData()->mid()->object}(
+                $executor->context(),
+                ...$arguments,
+            );
+
+        if ($result instanceof ExecutedResult) {
+            if ($result->threw) {
+                throw $result->threw;
+            }
+
+            return $result->returnValue;
         }
 
-        $result = $callee->{(string) $callInfo->callData()->mid()->object->symbol}(
-            $executor->context(),
-            ...$arguments,
-        );
-
-        if ($result instanceof SymbolInterface) {
-            return $result->toObject();
-        }
-
-        return null;
+        return $result;
     }
 }

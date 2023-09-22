@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime;
 
-use RubyVM\VM\Core\Runtime\Executor\DefinedClassEntries;
+use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Provider\ProvideBasicClassMethods;
 use RubyVM\VM\Core\Runtime\Provider\ProvideClassExtendableMethods;
 use RubyVM\VM\Core\Runtime\Provider\ProvideExtendedMethodCall;
-use RubyVM\VM\Core\Runtime\Provider\ProvideInjectableVMContext;
 use RubyVM\VM\Core\Runtime\Provider\ProvidePHPClassMethods;
 
 trait ShouldBeRubyClass
@@ -17,8 +16,13 @@ trait ShouldBeRubyClass
     use ProvideClassExtendableMethods;
     use ProvideExtendedMethodCall;
     use ProvidePHPClassMethods;
-    use ProvideInjectableVMContext;
 
-    protected KernelInterface $kernel;
-    protected DefinedClassEntries $definedClassEntries;
+    protected ?ContextInterface $context = null;
+
+    public function setRuntimeContext(?ContextInterface $context): self
+    {
+        $this->context = $context;
+
+        return $this;
+    }
 }

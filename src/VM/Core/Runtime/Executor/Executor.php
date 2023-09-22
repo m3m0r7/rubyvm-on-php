@@ -12,7 +12,6 @@ use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Symbol\VoidSymbol;
-use RubyVM\VM\Core\Runtime\UserlandHeapSpaceInterface;
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\ExecutorFailedException;
 use RubyVM\VM\Exception\ExecutorUnknownException;
@@ -36,7 +35,6 @@ class Executor implements ExecutorInterface
         private readonly RubyClassInterface $rubyClass,
         private readonly InstructionSequence $instructionSequence,
         private readonly LoggerInterface $logger,
-        private readonly UserlandHeapSpaceInterface $userlandHeapSpace,
         private readonly ExecutorDebugger $debugger = new ExecutorDebugger(),
         private readonly ?ContextInterface $previousContext = null,
     ) {
@@ -58,7 +56,6 @@ class Executor implements ExecutorInterface
             new ProgramCounter(),
             $this->instructionSequence,
             $this->logger,
-            $this->userlandHeapSpace ?? $previousContext?->userlandHeapSpace(),
             $previousContext?->environmentTable() ?? new EnvironmentTable(),
             $this->debugger,
             $previousContext

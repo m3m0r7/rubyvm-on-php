@@ -43,6 +43,4 @@ interface KernelInterface
     public function minorVersion(): int;
 
     public function majorVersion(): int;
-
-    public function userlandHeapSpace(): UserlandHeapSpace;
 }

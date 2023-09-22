@@ -4,13 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Symbol;
 
-use RubyVM\VM\Core\Runtime\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\ShouldBeRubyClass;
-
-class NumberSymbol implements SymbolInterface, RubyClassInterface
+class NumberSymbol implements SymbolInterface
 {
-    use ShouldBeRubyClass;
-
     public function __construct(
         private readonly int $number,
         private readonly bool $isFixed = false,
@@ -26,24 +21,31 @@ class NumberSymbol implements SymbolInterface, RubyClassInterface
         return (string) $this->number;
     }
 
-    public function xor(NumberSymbol $symbol): self
+    public function xor(Object_ $object): self
     {
         return new self(
-            $this->number ^ $symbol->number,
+            $this->number ^ $object->symbol->valueOf(),
         );
     }
 
-    public function power(NumberSymbol $symbol): self
+    public function power(Object_ $object): self
     {
         return new NumberSymbol(
-            $this->number ** $symbol->number,
+            $this->number ** $object->symbol->valueOf(),
         );
     }
 
-    public function rightShift(NumberSymbol $symbol): self
+    public function rightShift(Object_ $object): self
     {
         return new NumberSymbol(
-            $this->number >> $symbol->number,
+            $this->number >> $object->symbol->valueOf(),
+        );
+    }
+
+    public function compareStrictEquals(Object_ $object): BooleanSymbol
+    {
+        return new BooleanSymbol(
+            $this->number === $object->symbol->valueOf(),
         );
     }
 

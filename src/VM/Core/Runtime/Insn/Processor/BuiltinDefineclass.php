@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
@@ -36,12 +35,9 @@ class BuiltinDefineclass implements OperationProcessorInterface
 
     public function after(): void {}
 
-    public function process(SymbolInterface|ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
+    public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        /**
-         * @var StringSymbol $className
-         */
-        $className = $this->getOperandAsID()->object->symbol;
+        $class = $this->getOperandAsID()->object;
         $iseqNumber = $this->getOperandAsNumberSymbol();
         $flags = $this->getOperandAsNumberSymbol();
 
@@ -55,26 +51,38 @@ class BuiltinDefineclass implements OperationProcessorInterface
 
         $instructionSequence->load();
 
-        $executor = (new Executor(
-            kernel: $this->context->kernel(),
-            rubyClass: $this->context->self(),
-            instructionSequence: $instructionSequence,
-            logger: $this->context->logger(),
-            userlandHeapSpace: $this->context->userlandHeapSpace(),
-            debugger: $this->context->debugger(),
-            previousContext: $this->context->renewEnvironmentTable(),
-        ));
-
-        $executor->context()
-            ->appendTrace($className->valueOf());
+        /**
+         * @var StringSymbol $className
+         */
+        $className = $class->symbol;
 
         $this->context
             ->self()
             ->class(
                 $flags,
                 $className,
-                $executor->context(),
             );
+
+        $class->setRuntimeContext($this->context)
+            ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace()->userlandClasses()->get((string) $className));
+
+        $executor = (new Executor(
+            kernel: $this->context->kernel(),
+            rubyClass: $class,
+            instructionSequence: $instructionSequence,
+            logger: $this->context->logger(),
+            debugger: $this->context->debugger(),
+            previousContext: $this->context->renewEnvironmentTable(),
+        ));
+
+        $executor->context()
+            ->appendTrace($class->symbol->valueOf());
+
+        $result = $executor->execute();
+
+        if ($result->threw) {
+            throw $result->threw;
+        }
 
         return ProcessedStatus::SUCCESS;
     }

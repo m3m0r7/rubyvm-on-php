@@ -33,19 +33,16 @@ trait Translatable
 
     public function translateForArguments(OperandEntry ...$operands): array
     {
-        $newSymbols = [];
+        $arguments = [];
         foreach ($operands as $operand) {
-            /**
-             * @var Object_ $object
-             */
-            $object = $operand->operand;
+            // @var Object_ $object
+            $arguments[] = $object = $operand->operand;
             $this->validateType(
                 Object_::class,
                 $object,
             );
-            $newSymbols[] = $object->symbol;
         }
 
-        return $newSymbols;
+        return $arguments;
     }
 }

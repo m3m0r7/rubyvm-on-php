@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2;
 
-use RubyVM\VM\Core\Helper\DefaultDefinedClassEntries;
 use RubyVM\VM\Core\Helper\DefaultOperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
@@ -15,6 +14,7 @@ use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequences;
 use RubyVM\VM\Core\Runtime\KernelInterface;
+use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
 use RubyVM\VM\Core\Runtime\Offset\Offsets;
 use RubyVM\VM\Core\Runtime\RubyVersion;
@@ -24,18 +24,17 @@ use RubyVM\VM\Core\Runtime\Symbol\LoaderInterface;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
-use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\HeapSpace\DefaultInstanceHeapSpace;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\ArrayLoader;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FalseLoader;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\BooleanLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FixedNumberLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FloatLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\NilLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StringLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StructLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\SymbolLoader;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\TrueLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Standard\Main;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Verification\VerificationHeader;
 use RubyVM\VM\Exception\ResolverException;
@@ -67,7 +66,7 @@ class Kernel implements KernelInterface
     public readonly string $extraData;
 
     private RubyVMBinaryStreamReaderInterface $stream;
-    private UserlandHeapSpace $userlandHeapSpace;
+    private MainInterface $main;
 
     public function __construct(
         public readonly RubyVMInterface $vm,
@@ -81,7 +80,11 @@ class Kernel implements KernelInterface
             $this->vm->option()->stdIn ?? new StreamHandler(STDIN),
             $this->vm->option()->stdErr ?? new StreamHandler(STDERR),
         );
-        $this->userlandHeapSpace = new UserlandHeapSpace();
+
+        $this->main = new Main();
+        $this->main->setUserlandHeapSpace(
+            new DefaultInstanceHeapSpace(),
+        );
     }
 
     public function process(): ExecutorInterface
@@ -100,17 +103,11 @@ class Kernel implements KernelInterface
          */
         $instructionSequence = $this->loadInstructionSequence($aux);
 
-        $main = new Main();
-        $main->injectVMContext(
-            $this,
-            new DefaultDefinedClassEntries(),
-        );
         $executor = new Executor(
             $this,
-            $main,
+            $this->main,
             $instructionSequence,
             $this->vm->option()->logger,
-            $this->userLandHeapSpace(),
         );
 
         $executor->context()->appendTrace('<main>');
@@ -168,7 +165,8 @@ class Kernel implements KernelInterface
      */
     private function setupInstructionSequenceList(): self
     {
-        $this->stream()->pos($this->instructionSequenceListOffset);
+        $reader = $this->stream()->duplication();
+        $reader->pos($this->instructionSequenceListOffset);
 
         $this->vm->option()->logger->info(
             sprintf('Setup an instruction sequence list (offset: %d)', $this->instructionSequenceListOffset),
@@ -179,13 +177,13 @@ class Kernel implements KernelInterface
                 ->append(
                     new Offset(
                         // VALUE iseq_list;       /* [iseq0, ...] */
-                        $this->stream()->readAsUnsignedLong(),
+                        $reader->readAsUnsignedLong(),
                     )
                 );
         }
 
         $this->vm->option()->logger->info(
-            sprintf('Loaded an instruction sequence list (size: %d)', $this->stream()->pos() - $this->instructionSequenceListOffset),
+            sprintf('Loaded an instruction sequence list (size: %d)', $reader->pos() - $this->instructionSequenceListOffset),
         );
 
         return $this;
@@ -198,7 +196,8 @@ class Kernel implements KernelInterface
      */
     private function setupGlobalObjectList(): self
     {
-        $this->stream()->pos($this->globalObjectListOffset);
+        $reader = $this->stream()->duplication();
+        $reader->pos($this->globalObjectListOffset);
 
         $this->vm->option()->logger->info(
             sprintf('Setup a global object list (offset: %d)', $this->globalObjectListOffset),
@@ -207,13 +206,13 @@ class Kernel implements KernelInterface
         for ($i = 0; $i < $this->globalObjectListSize; ++$i) {
             $this->globalObjectList->append(
                 new Offset(
-                    $this->stream()->readAsUnsignedLong(),
+                    $reader->readAsUnsignedLong(),
                 )
             );
         }
 
         $this->vm->option()->logger->info(
-            sprintf('Loaded global object list (size: %d)', $this->stream()->pos() - $this->globalObjectListOffset),
+            sprintf('Loaded global object list (size: %d)', $reader->pos() - $this->globalObjectListOffset),
         );
 
         return $this;
@@ -305,7 +304,11 @@ class Kernel implements KernelInterface
         $symbol = $this->resolveLoader($info, $offset->increase())
             ->load();
 
-        return $this->globalObjectTable[$index] = $symbol->toObject($offset);
+        $this->globalObjectTable[$index] = $object = $symbol->toObject();
+
+        //        $object->setUserlandHeapSpace($this->main->userlandHeapSpace());
+
+        return $object;
     }
 
     private function resolveLoader(ObjectInfo $info, Offset $offset): LoaderInterface
@@ -313,8 +316,8 @@ class Kernel implements KernelInterface
         return match ($info->type) {
             SymbolType::NIL => new NilLoader($this, $offset),
             SymbolType::STRUCT => new StructLoader($this, $offset),
-            SymbolType::TRUE => new TrueLoader($this, $offset),
-            SymbolType::FALSE => new FalseLoader($this, $offset),
+            SymbolType::FALSE,
+            SymbolType::TRUE => new BooleanLoader($this, $offset),
             SymbolType::FLOAT => new FloatLoader($this, $offset),
             SymbolType::FIXNUM => new FixedNumberLoader($this, $offset),
             SymbolType::SYMBOL => new SymbolLoader($this, $offset),
@@ -337,34 +340,34 @@ class Kernel implements KernelInterface
             ->instructionSequences
             ->get($aux->loader->index);
 
-        if (!$instructionSequence) {
-            // load all sequences
-            for ($i = 0; $i < $this->instructionSequenceListSize; ++$i) {
-                $targetAux = new Aux(
-                    loader: new AuxLoader(
-                        $i,
-                    ),
-                );
-                $instructionSequence = new InstructionSequence(
-                    aux: $targetAux,
-                    processor: new InstructionSequenceProcessor(
-                        kernel: $this,
-                        aux: $targetAux,
-                    ),
-                );
-
-                $instructionSequence->load();
-
-                $this->instructionSequences->set(
-                    $targetAux->loader->index,
-                    $instructionSequence,
-                );
-            }
-
-            return $this->loadInstructionSequence($aux);
+        if ($instructionSequence) {
+            return $instructionSequence;
         }
 
-        return $instructionSequence;
+        // load all sequences
+        for ($i = 0; $i < $this->instructionSequenceListSize; ++$i) {
+            $targetAux = new Aux(
+                loader: new AuxLoader(
+                    $i,
+                ),
+            );
+            $instructionSequence = new InstructionSequence(
+                aux: $targetAux,
+                processor: new InstructionSequenceProcessor(
+                    kernel: $this,
+                    aux: $targetAux,
+                ),
+            );
+
+            $instructionSequence->load();
+
+            $this->instructionSequences->set(
+                $targetAux->loader->index,
+                $instructionSequence,
+            );
+        }
+
+        return $this->loadInstructionSequence($aux);
     }
 
     public function operationProcessorEntries(): OperationProcessorEntries
@@ -397,10 +400,5 @@ class Kernel implements KernelInterface
     public function extraData(): string
     {
         return $this->extraData;
-    }
-
-    public function userlandHeapSpace(): UserlandHeapSpace
-    {
-        return $this->userlandHeapSpace;
     }
 }

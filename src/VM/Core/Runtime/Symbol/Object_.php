@@ -5,13 +5,19 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Symbol;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Helper\DefaultInstanceMethodEntries;
-use RubyVM\VM\Core\Runtime\Executor\InstanceMethodInterface;
+use RubyVM\VM\Core\Runtime\Executor\SpecialMethodCallerEntries;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\ShouldBeRubyClass;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
+use RubyVM\VM\Exception\SymbolUnsupportedException;
 
-class Object_
+class Object_ implements RubyClassInterface
 {
+    use ShouldBeRubyClass {
+        __call as private callExtendedMethod;
+    }
+
     public readonly ID $id;
 
     public function __construct(
@@ -30,41 +36,46 @@ class Object_
 
     public function __call(string $name, array $arguments)
     {
-        $defaultMethodEntries = new DefaultInstanceMethodEntries();
-
         try {
-            /**
-             * @var null|InstanceMethodInterface $entry
-             */
-            $entry = $defaultMethodEntries[$name] ?? null;
-
-            if ($entry === null) {
-                // Call a method if method exists on a symbol
-                if (method_exists($this->symbol, $name)) {
-                    $result = $this->symbol->{$name}(...$arguments);
-                } else {
-                    throw new \Error('Not found method');
-                }
+            $result = $this->callExtendedMethod($name, $arguments);
+        } catch (NotFoundInstanceMethod $e) {
+            if (method_exists($this->symbol, $name)) {
+                $result = $this->symbol->{$name}(...$arguments);
             } else {
-                $result = $entry->process($this->symbol, ...$arguments);
+                if (isset(SpecialMethodCallerEntries::map()[$name])) {
+                    // Do not throw the name is a special method in the entries
+                    $result = clone $this->symbol;
+                } else {
+                    throw new NotFoundInstanceMethod(sprintf(<<< '_'
+                        Not found instance method %s#%s. In the actually, arguments count are unmatched or anymore problems when throwing this exception.
+                        Use try-catch statement and checking a previous exception via this exception if you want to solve kindly this problems.
+                        _, /* Call to undefined method when not defined on symbol */ ClassHelper::nameBy($this->symbol), $name), $e->getCode());
+                }
             }
-        } catch (\Error $e) {
-            throw new NotFoundInstanceMethod(sprintf(<<< '_'
-                    Not found instance method %s#%s. In the actually, arguments count are unmatched or anymore problems when throwing this exception.
-                    Use try-catch statement and checking a previous exception via this exception if you want to solve kindly this problems.
-                    _, /* Call to undefined method when not defined on symbol */ ClassHelper::nameBy($this->symbol), $name, ), $e->getCode(), $e, );
         }
 
-        return new Object_(
-            new ObjectInfo(
-                type: SymbolType::findBySymbol($result),
-                specialConst: 0,
-                frozen: 1,
-                internal: 0,
-            ),
-            $result,
-            null,
-            $this->id,
-        );
+        if ($result instanceof SymbolInterface) {
+            return $result->toObject()
+                ->setRuntimeContext($this->context)
+                ->setUserlandHeapSpace($this->userlandHeapSpace);
+        }
+
+        return $result;
+    }
+
+    public static function initializeByClassName(string $className): Object_
+    {
+        return (new $className(match ($className) {
+            ArraySymbol::class => [],
+            StringSymbol::class => '',
+            BooleanSymbol::class => true,
+            NumberSymbol::class => 0,
+            default => throw new SymbolUnsupportedException('The symbol cannot be instance - the symbol did not support initialize'),
+        }))->toObject();
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->symbol;
     }
 }

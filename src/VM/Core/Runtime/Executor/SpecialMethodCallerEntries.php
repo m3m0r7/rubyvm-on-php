@@ -6,8 +6,8 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Runtime\Entry\AbstractEntries;
 use RubyVM\VM\Core\Runtime\Entry\EntryType;
-use RubyVM\VM\Core\Runtime\SpecialMethod\Initialize;
-use RubyVM\VM\Core\Runtime\SpecialMethod\SpecialMethodInterface;
+use RubyVM\VM\Core\Runtime\Executor\SpecialMethod\Initialize;
+use RubyVM\VM\Core\Runtime\Executor\SpecialMethod\SpecialMethodInterface;
 
 class SpecialMethodCallerEntries extends AbstractEntries
 {
@@ -15,7 +15,9 @@ class SpecialMethodCallerEntries extends AbstractEntries
     {
         parent::__construct($items);
 
-        $this->set('new', new Initialize());
+        foreach (static::map() as $name => $class) {
+            $this->set($name, new $class());
+        }
     }
 
     public function verify(mixed $value): bool
@@ -26,5 +28,12 @@ class SpecialMethodCallerEntries extends AbstractEntries
     protected function entryType(): EntryType
     {
         return EntryType::HASH;
+    }
+
+    public static function map(): array
+    {
+        return [
+            'new' => Initialize::class,
+        ];
     }
 }

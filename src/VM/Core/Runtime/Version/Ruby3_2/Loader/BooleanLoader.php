@@ -10,7 +10,7 @@ use RubyVM\VM\Core\Runtime\Symbol\BooleanSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\LoaderInterface;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 
-class FalseLoader implements LoaderInterface
+class BooleanLoader implements LoaderInterface
 {
     public function __construct(
         protected readonly KernelInterface $kernel,
@@ -21,9 +21,9 @@ class FalseLoader implements LoaderInterface
     {
         $reader = $this->kernel->stream()->duplication();
         $reader->pos($this->offset->offset);
-        $reader->smallValue();
 
-        return (new BooleanSymbol(false))
-            ->injectVMContext($this->kernel);
+        $which = $reader->smallValue();
+
+        return new BooleanSymbol($which !== 0);
     }
 }

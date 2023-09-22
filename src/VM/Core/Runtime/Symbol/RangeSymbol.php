@@ -9,12 +9,9 @@ use RubyVM\VM\Core\Helper\LocalTableHelper;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\Runtime\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\ShouldBeRubyClass;
 
-class RangeSymbol implements SymbolInterface, \ArrayAccess, RubyClassInterface
+class RangeSymbol implements SymbolInterface, \ArrayAccess
 {
-    use ShouldBeRubyClass;
     private array $array;
 
     public function __construct(
@@ -62,7 +59,6 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, RubyClassInterface
                 rubyClass: $context->self(),
                 instructionSequence: $context->instructionSequence(),
                 logger: $context->logger(),
-                userlandHeapSpace: $context->userlandHeapSpace(),
                 debugger: $context->debugger(),
                 previousContext: $context,
             ));
@@ -71,6 +67,9 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, RubyClassInterface
                 ->appendTrace(ClassHelper::nameBy($this) . '#' . __FUNCTION__);
 
             $localTableSize = $executor->context()->instructionSequence()->body()->data->localTableSize();
+            $object = $number->toObject()
+                ->setRuntimeContext($context)
+                ->setUserlandHeapSpace($context->self()->userlandHeapSpace());
 
             $executor->context()
                 ->environmentTable()
@@ -79,7 +78,7 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, RubyClassInterface
                         $localTableSize,
                         Option::VM_ENV_DATA_SIZE + $localTableSize - 1,
                     ),
-                    $number->toObject()
+                    $object,
                 );
 
             $result = $executor->execute();

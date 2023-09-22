@@ -8,13 +8,9 @@ use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\Runtime\RubyClassExtendable;
-use RubyVM\VM\Core\Runtime\RubyClassExtendableInterface;
 
-class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \IteratorAggregate, RubyClassExtendableInterface
+class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \IteratorAggregate
 {
-    use RubyClassExtendable;
-
     public function __construct(
         private array $array,
     ) {}
@@ -35,11 +31,11 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
         );
     }
 
-    public function new(self|array $values = null): self
+    public function new(Object_|array $values = null): self
     {
         return new self(
-            $values instanceof self
-                ? $values->array
+            $values instanceof Object_
+                ? $values->symbol->valueOf()
                 : ($values ?? []),
         );
     }
@@ -52,17 +48,20 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
                 rubyClass: $context->self(),
                 instructionSequence: $context->instructionSequence(),
                 logger: $context->logger(),
-                userlandHeapSpace: $context->userlandHeapSpace(),
                 debugger: $context->debugger(),
                 previousContext: $context,
             ));
+
+            $object = (new NumberSymbol($this->array[$i]->valueOf()))
+                ->toObject()
+                ->setRuntimeContext($context)
+                ->setUserlandHeapSpace($context->self()->userlandHeapSpace());
 
             $executor->context()
                 ->environmentTable()
                 ->set(
                     Option::VM_ENV_DATA_SIZE,
-                    (new NumberSymbol($this->array[$i]->valueOf()))
-                        ->toObject()
+                    $object,
                 );
 
             $executor->context()
@@ -77,9 +76,9 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
         }
     }
 
-    public function push(SymbolInterface $symbol): SymbolInterface
+    public function push(Object_ $object): SymbolInterface
     {
-        $this->array[] = $symbol;
+        $this->array[] = $object->symbol;
 
         return $this;
     }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Insn\Processor;
 
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
@@ -29,24 +28,21 @@ class BuiltinSetinstancevariable implements OperationProcessorInterface
 
     public function after(): void {}
 
-    public function process(SymbolInterface|ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
+    public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
         $instanceVar = $this->getOperandAsID();
 
         // this is instance variable index
         $ivIndex = $this->getOperandAsNumberSymbol()->valueOf();
 
-        /**
-         * @var RubyClassInterface $targetObject
-         */
-        $targetObject = $this->getStackAsObject()->symbol;
+        $targetObject = $this->getStackAsObject();
 
         // TODO: is correctly here? we will implement iv or ivc pattern.
-        $this->context->self()
-            ->setInstanceVariable(
-                $instanceVar,
-                $targetObject->toObject(),
-            );
+        $this->context
+            ->self()
+            ->userlandHeapSpace()
+            ->userlandInstanceVariables()
+            ->set($instanceVar->id(), $targetObject);
 
         return ProcessedStatus::SUCCESS;
     }

@@ -6,7 +6,6 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Runtime\Insn\Insn;
 use RubyVM\VM\Core\Runtime\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 
 interface OperationProcessorInterface
 {
@@ -16,5 +15,5 @@ interface OperationProcessorInterface
 
     public function after(): void;
 
-    public function process(SymbolInterface|ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus;
+    public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus;
 }

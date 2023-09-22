@@ -4,46 +4,19 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Provider;
 
-use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
-use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\RangeSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-use RubyVM\VM\Exception\RubyVMException;
 
 trait ProvideBasicClassMethods
 {
-    /**
-     * @var Object_[]
-     */
-    protected array $instanceVariables = [];
-
-    public function setInstanceVariable(ID $id, Object_ $object): void
+    public function puts(Object_ $object): Object_
     {
-        $this->instanceVariables[(string) $id->object->symbol] = $object;
-    }
+        $symbol = $object->symbol;
 
-    public function getInstanceVariable(ID $id): Object_
-    {
-        $key = (string) $id->object->symbol;
-        if (!isset($this->instanceVariables[$key])) {
-            throw new RubyVMException(
-                sprintf(
-                    'The ref %s is not found on %s',
-                    $key,
-                    ClassHelper::nameBy($this),
-                )
-            );
-        }
-
-        return $this->instanceVariables[$key];
-    }
-
-    public function puts(SymbolInterface $symbol): SymbolInterface
-    {
         $string = '';
         if ($symbol instanceof ArraySymbol || $symbol instanceof RangeSymbol) {
             foreach ($symbol as $number) {
@@ -59,10 +32,11 @@ trait ProvideBasicClassMethods
             $string .= "\n";
         }
 
-        $this->kernel->IOContext()->stdOut->write($string);
+        $this->context->kernel()->IOContext()->stdOut->write($string);
 
         // The puts returns (nil)
-        return new NilSymbol();
+        return (new NilSymbol())
+            ->toObject();
     }
 
     public function exit(int $code = 0): void
@@ -73,8 +47,11 @@ trait ProvideBasicClassMethods
     public function inspect(): SymbolInterface
     {
         $string = (string) $this;
-        if ($this instanceof StringSymbol) {
-            $string = '"' . $string . '"';
+        if ($this instanceof Object_) {
+            $string = match (($this->symbol)::class) {
+                StringSymbol::class => '"' . $string . '"',
+                default => (string) $string,
+            };
         }
 
         return new StringSymbol($string);

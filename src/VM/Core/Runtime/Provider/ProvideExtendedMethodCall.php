@@ -6,33 +6,55 @@ namespace RubyVM\VM\Core\Runtime\Provider;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\CallBlockHelper;
-use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
-use RubyVM\VM\Exception\OperationProcessorException;
+use RubyVM\VM\Core\Runtime\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\Symbol\Object_;
+use RubyVM\VM\Exception\NotFoundInstanceMethod;
 
 trait ProvideExtendedMethodCall
 {
     use CallBlockHelper;
 
-    public function __call(string $name, array $arguments): ExecutedResult|SymbolInterface
+    public function __call(string $name, array $arguments): ExecutedResult|Object_
     {
-        if ($this->extendedClassEntry && $this->extendedClassEntry->hasMethod($name)) {
-            return $this->extendedClassEntry->{$name}(...$arguments);
-        }
-
-        /**
-         * @var null|ContextInterface $context
-         */
-        $context = $this->kernel->userlandHeapSpace()->userlandMethods[$name] ?? null;
+        $context = $this->userlandHeapSpace?->userlandMethods()->get($name);
 
         if ($context === null) {
-            throw new OperationProcessorException(sprintf('Method not found %s#%s', ClassHelper::nameBy($this), $name));
+            $boundClass = $this
+                ->context
+                ->self()
+                ->userlandHeapSpace()
+                ->userlandClasses()
+                ->get(static::resolveObjectName($this));
+
+            if ($boundClass !== null) {
+                $context = $boundClass
+                    ->userlandMethods()
+                    ->get($name);
+            }
         }
 
-        return $this->callSimpleMethod(
-            $context,
-            ...$arguments,
-        );
+        if ($context === null) {
+            throw new NotFoundInstanceMethod(sprintf('Method not found %s#%s', ClassHelper::nameBy($this), $name));
+        }
+
+        if (is_string($context)) {
+            return $this->__call($context, $arguments);
+        }
+
+        return $this
+            ->callSimpleMethod(
+                $context,
+                ...$arguments,
+            );
+    }
+
+    private static function resolveObjectName(RubyClassInterface $class): string
+    {
+        if ($class instanceof Object_) {
+            return ($class->symbol)::class;
+        }
+
+        return $class::class;
     }
 }

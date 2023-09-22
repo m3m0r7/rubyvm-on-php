@@ -12,4 +12,9 @@ class ID
     {
         $this->value = spl_object_id($object);
     }
+
+    public function id(): int
+    {
+        return $this->value;
+    }
 }

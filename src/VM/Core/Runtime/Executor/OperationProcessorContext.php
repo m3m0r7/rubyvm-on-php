@@ -8,7 +8,6 @@ use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\Runtime\KernelInterface;
 use RubyVM\VM\Core\Runtime\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\UserlandHeapSpaceInterface;
 
 class OperationProcessorContext implements ContextInterface
 {
@@ -22,7 +21,6 @@ class OperationProcessorContext implements ContextInterface
         private readonly ProgramCounter $pc,
         private readonly InstructionSequence $instructionSequence,
         private readonly LoggerInterface $logger,
-        private readonly UserlandHeapSpaceInterface $userlandHeapSpace,
         private EnvironmentTable $environmentTable,
         private readonly ExecutorDebugger $debugger,
         private readonly int $depth,
@@ -71,7 +69,6 @@ class OperationProcessorContext implements ContextInterface
             pc: clone $this->pc,
             instructionSequence: clone $this->instructionSequence,
             logger: $this->logger,
-            userlandHeapSpace: $this->userlandHeapSpace, // NOTE: Do not clone because logger is shared resource
             environmentTable: clone $this->environmentTable,
             debugger: $this->debugger, // NOTE: Do not clone because logger is shared resource
             depth: $this->depth,
@@ -147,10 +144,5 @@ class OperationProcessorContext implements ContextInterface
     public function traces(): array
     {
         return $this->traces;
-    }
-
-    public function userlandHeapSpace(): UserlandHeapSpaceInterface
-    {
-        return $this->userlandHeapSpace;
     }
 }
