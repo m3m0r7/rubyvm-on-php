@@ -65,11 +65,16 @@ class BuiltinDefineclass implements OperationProcessorInterface
         $executor->context()
             ->appendTrace($class->symbol->valueOf());
 
+        /**
+         * @var StringSymbol $className
+         */
+        $className = $class->symbol;
+
         $this->context
             ->self()
             ->class(
                 $flags,
-                $class->symbol,
+                $className,
                 $executor,
             );
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\HeapSpace;
 
+use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
 use RubyVM\VM\Core\Runtime\Symbol\BooleanSymbol;
 use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
@@ -17,6 +18,8 @@ class DefaultInstanceHeapSpace extends UserlandHeapSpace
         // TODO: Refactor here
 
         $heapspace = new UserlandHeapSpace();
+        $heapspace->userlandClasses->alias('Array', ArraySymbol::class);
+
         $heapspace->userlandMethods->set(
             'to_s',
             'toString',

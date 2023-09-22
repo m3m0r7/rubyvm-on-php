@@ -49,8 +49,16 @@ trait ProvideClassExtendableMethods
 
     public function class(NumberSymbol $flags, StringSymbol $className, Executor $executor): void
     {
-        // TODO: bind already added userland heap-space
-        $this->userlandHeapSpace->userlandClasses()->set((string) $className, new UserlandHeapSpace());
+        $className = (string) $className;
+
+        $this->userlandHeapSpace
+            ->userlandClasses()
+            ->set(
+                $className,
+                $this->userlandHeapSpace
+                    ->userlandClasses
+                    ->get($className) ?? new UserlandHeapSpace(),
+            );
 
         $result = $executor->execute();
 
@@ -61,7 +69,8 @@ trait ProvideClassExtendableMethods
 
     public function def(StringSymbol $methodName, ContextInterface $context): void
     {
-        $this->userlandHeapSpace
+        $context->self()
+            ->userlandHeapSpace()
             ->userlandMethods()
             ->set((string) $methodName, $context);
     }
