@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2;
 
-use RubyVM\VM\Core\Helper\DefaultDefinedClassEntries;
 use RubyVM\VM\Core\Helper\DefaultOperationProcessorEntries;
-use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
-use RubyVM\VM\Core\Runtime\Executor\InstanceMethod\ToString;
 use RubyVM\VM\Core\Runtime\Executor\IOContext;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
@@ -26,21 +23,18 @@ use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\LoaderInterface;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\Symbol\ObjectInfo;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\Symbol\SymbolType;
-use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\HeapSpace\DefaultInstanceHeapSpace;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\ArrayLoader;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FalseLoader;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\BooleanLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FixedNumberLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FloatLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\NilLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StringLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StructLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\SymbolLoader;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\TrueLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Standard\Main;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Verification\VerificationHeader;
 use RubyVM\VM\Exception\ResolverException;
@@ -322,8 +316,8 @@ class Kernel implements KernelInterface
         return match ($info->type) {
             SymbolType::NIL => new NilLoader($this, $offset),
             SymbolType::STRUCT => new StructLoader($this, $offset),
-            SymbolType::TRUE => new TrueLoader($this, $offset),
-            SymbolType::FALSE => new FalseLoader($this, $offset),
+            SymbolType::FALSE,
+            SymbolType::TRUE => new BooleanLoader($this, $offset),
             SymbolType::FLOAT => new FloatLoader($this, $offset),
             SymbolType::FIXNUM => new FixedNumberLoader($this, $offset),
             SymbolType::SYMBOL => new SymbolLoader($this, $offset),
