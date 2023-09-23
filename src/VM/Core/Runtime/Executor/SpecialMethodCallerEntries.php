@@ -11,6 +11,10 @@ use RubyVM\VM\Core\Runtime\Executor\SpecialMethod\SpecialMethodInterface;
 
 class SpecialMethodCallerEntries extends AbstractEntries
 {
+    protected static array $bindCallers = [
+        'new' => Initialize::class,
+    ];
+
     public function __construct(public array $items = [])
     {
         parent::__construct($items);
@@ -32,8 +36,6 @@ class SpecialMethodCallerEntries extends AbstractEntries
 
     public static function map(): array
     {
-        return [
-            'new' => Initialize::class,
-        ];
+        return static::$bindCallers;
     }
 }

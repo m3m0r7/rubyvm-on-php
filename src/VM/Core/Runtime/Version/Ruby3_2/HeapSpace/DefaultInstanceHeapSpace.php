@@ -11,11 +11,11 @@ use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 
 class DefaultInstanceHeapSpace extends UserlandHeapSpace
 {
-    protected array $bindClassNames = [
+    protected static array $bindClassNames = [
         'Array' => ArraySymbol::class,
     ];
 
-    protected array $bindAliasesMethods = [
+    protected static array $bindAliasesMethods = [
         [[NumberSymbol::class, BooleanSymbol::class], 'to_s', 'toString'],
         [[NumberSymbol::class, BooleanSymbol::class], '**', 'power'],
         [[NumberSymbol::class, BooleanSymbol::class], '>>', 'rightShift'],
@@ -28,19 +28,19 @@ class DefaultInstanceHeapSpace extends UserlandHeapSpace
     {
         parent::__construct();
 
-        foreach ($this->bindClassNames as $originalClassName => $bindClassName) {
+        foreach (static::$bindClassNames as $originalClassName => $bindClassName) {
             $this->userlandClasses
                 ->alias($originalClassName, ArraySymbol::class);
         }
 
-        foreach ($this->bindAliasesMethods as [$classNames]) {
+        foreach (static::$bindAliasesMethods as [$classNames]) {
             foreach ($classNames as $className) {
                 $this->userlandClasses
                     ->set($className, new UserlandHeapSpace());
             }
         }
 
-        foreach ($this->bindAliasesMethods as [$classNames, $originalMethodName, $bindMethodName]) {
+        foreach (static::$bindAliasesMethods as [$classNames, $originalMethodName, $bindMethodName]) {
             foreach ($classNames as $className) {
                 $this->userlandClasses
                     ->get($className)
