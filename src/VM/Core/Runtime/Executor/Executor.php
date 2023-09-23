@@ -66,7 +66,7 @@ class Executor implements ExecutorInterface
         $executor = new Executor(
             $kernel,
             (new Main())->setUserlandHeapSpace(
-                new DefaultInstanceHeapSpace(),
+                $kernel->userlandHeapSpace(),
             ),
             $instructionSequence,
             $option,

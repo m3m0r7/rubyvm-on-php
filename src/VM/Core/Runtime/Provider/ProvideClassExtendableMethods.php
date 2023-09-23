@@ -7,19 +7,20 @@ namespace RubyVM\VM\Core\Runtime\Provider;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\SpecialMethodCallerEntries;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
+use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 
 trait ProvideClassExtendableMethods
 {
-    protected ?UserlandHeapSpace $userlandHeapSpace = null;
+    protected ?UserlandHeapSpaceInterface $userlandHeapSpace = null;
 
-    public function userlandHeapSpace(): ?UserlandHeapSpace
+    public function userlandHeapSpace(): ?UserlandHeapSpaceInterface
     {
         return $this->userlandHeapSpace;
     }
 
-    public function setUserlandHeapSpace(?UserlandHeapSpace $userlandHeapSpace): self
+    public function setUserlandHeapSpace(?UserlandHeapSpaceInterface $userlandHeapSpace): self
     {
         $this->userlandHeapSpace = $userlandHeapSpace;
 

@@ -8,6 +8,7 @@ use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
+use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
 use RubyVM\VM\Core\YARV\RubyVersion;
 use RubyVM\VM\Stream\RubyVMBinaryStreamReaderInterface;
 
@@ -35,4 +36,6 @@ interface KernelInterface
     public function minorVersion(): int;
 
     public function majorVersion(): int;
+
+    public function userlandHeapSpace(): UserlandHeapSpaceInterface;
 }

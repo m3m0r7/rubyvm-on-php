@@ -19,10 +19,10 @@ class UserlandHeapSpace implements UserlandHeapSpaceInterface
         $this->userlandInstanceVariables = new UserlandInstanceVariableEntries();
     }
 
-    //    public function __debugInfo(): ?array
-    //    {
-    //        return [];
-    //    }
+    public function __debugInfo(): ?array
+    {
+        return [];
+    }
 
     public function userlandClasses(): UserlandClassEntries
     {

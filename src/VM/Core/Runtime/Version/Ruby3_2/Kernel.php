@@ -9,6 +9,7 @@ use RubyVM\VM\Core\Runtime\Essential\RubyVMInterface;
 use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\HeapSpace\DefaultInstanceHeapSpace;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\ArraySymbolLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\BooleanSymbolLoader;
@@ -25,6 +26,7 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceEntries;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offsets;
+use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ObjectInfo;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolLoaderInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolType;
@@ -335,5 +337,11 @@ class Kernel implements KernelInterface
     public function extraData(): string
     {
         return $this->extraData;
+    }
+
+    public function userlandHeapSpace(): UserlandHeapSpaceInterface
+    {
+        static $userlandHeapSpace;
+        return $userlandHeapSpace ??= new DefaultInstanceHeapSpace();
     }
 }
