@@ -46,7 +46,7 @@ class BuiltinOptAref implements OperationProcessorInterface
         $this->context->vmStack()->push(
             new OperandEntry(
                 $selectedNumber
-                    ->toObject(),
+                    ->toRubyClass(),
             ),
         );
 

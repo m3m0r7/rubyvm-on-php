@@ -58,13 +58,13 @@ class BuiltinOptLt implements OperationProcessorInterface
     {
         return (new BooleanSymbol(
             $leftOperand->valueOf() < $rightOperand->valueOf()
-        ))->toObject();
+        ))->toRubyClass();
     }
 
     private function computeFloatLessThanFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClass
     {
         return (new BooleanSymbol(
             $leftOperand->valueOf() < $rightOperand->valueOf()
-        ))->toObject();
+        ))->toRubyClass();
     }
 }

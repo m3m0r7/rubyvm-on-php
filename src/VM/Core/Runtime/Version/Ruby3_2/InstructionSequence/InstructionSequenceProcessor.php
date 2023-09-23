@@ -295,7 +295,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         InsnType::TS_LINDEX => new OperandEntry(
                             operand: (new NumberSymbol(
                                 $reader->smallValue(),
-                            ))->toObject()
+                            ))->toRubyClass()
                         ),
 
                         // NOTE: here is not implemented on actually the RubyVM.
@@ -303,7 +303,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         InsnType::TS_OFFSET => new OperandEntry(
                             operand: (new OffsetSymbol(
                                 offset: $reader->smallValue(),
-                            ))->toObject(),
+                            ))->toRubyClass(),
                         ),
 
                         InsnType::TS_IC => new OperandEntry(
@@ -343,7 +343,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         operand: (new NumberSymbol(
                             number: $reader->smallValue(),
                             isFixed: true,
-                        ))->toObject(),
+                        ))->toRubyClass(),
                     )
                 );
                 ++$codeIndex;

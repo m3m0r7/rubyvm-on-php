@@ -57,13 +57,13 @@ class BuiltinOptMinus implements OperationProcessorInterface
     {
         return (new NumberSymbol(
             $leftOperand->valueOf() - $rightOperand->valueOf()
-        ))->toObject();
+        ))->toRubyClass();
     }
 
     private function computeFloatMinusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClass
     {
         return (new FloatSymbol(
             $leftOperand->valueOf() - $rightOperand->valueOf()
-        ))->toObject();
+        ))->toRubyClass();
     }
 }

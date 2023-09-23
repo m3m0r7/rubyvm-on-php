@@ -57,13 +57,13 @@ class BuiltinOptDiv implements OperationProcessorInterface
     {
         return (new NumberSymbol(
             (int) ($leftOperand->valueOf() / $rightOperand->valueOf())
-        ))->toObject();
+        ))->toRubyClass();
     }
 
     private function computeFloatDivideFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClass
     {
         return (new FloatSymbol(
             $leftOperand->valueOf() / $rightOperand->valueOf()
-        ))->toObject();
+        ))->toRubyClass();
     }
 }

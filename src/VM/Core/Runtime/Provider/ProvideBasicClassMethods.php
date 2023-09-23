@@ -36,7 +36,7 @@ trait ProvideBasicClassMethods
 
         // The puts returns (nil)
         return (new NilSymbol())
-            ->toObject();
+            ->toRubyClass();
     }
 
     public function exit(int $code = 0): void

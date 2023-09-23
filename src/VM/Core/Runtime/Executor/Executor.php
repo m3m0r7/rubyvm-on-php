@@ -274,7 +274,7 @@ class Executor implements ExecutorInterface
             executor: $this,
             executedStatus: ExecutedStatus::SUCCESS,
             returnValue: (new VoidSymbol())
-                ->toObject(),
+                ->toRubyClass(),
             threw: null,
             debugger: $this->debugger,
         );

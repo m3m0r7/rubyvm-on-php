@@ -42,7 +42,7 @@ class BuiltinNewarray implements OperationProcessorInterface
         $this->context->vmStack()->push(
             new OperandEntry(
                 (new ArraySymbol(array_values($entries)))
-                    ->toObject(),
+                    ->toRubyClass(),
             ),
         );
 

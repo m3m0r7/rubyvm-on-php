@@ -62,7 +62,7 @@ class RubyClass implements RubyClassInterface
         }
 
         if ($result instanceof SymbolInterface) {
-            return $result->toObject()
+            return $result->toRubyClass()
                 ->setRuntimeContext($this->context)
                 ->setUserlandHeapSpace($this->userlandHeapSpace);
         }
@@ -78,7 +78,7 @@ class RubyClass implements RubyClassInterface
             BooleanSymbol::class => true,
             NumberSymbol::class => 0,
             default => throw new SymbolUnsupportedException('The symbol cannot be instance - the symbol did not support initialize'),
-        }))->toObject();
+        }))->toRubyClass();
     }
 
     public function __toString(): string

@@ -45,7 +45,7 @@ class BuiltinOptSize implements OperationProcessorInterface
                 new OperandEntry(
                     (new NumberSymbol(
                         count($recv),
-                    ))->toObject()
+                    ))->toRubyClass()
                 ),
             );
 

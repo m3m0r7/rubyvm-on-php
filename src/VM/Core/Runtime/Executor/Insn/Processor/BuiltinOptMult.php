@@ -57,13 +57,13 @@ class BuiltinOptMult implements OperationProcessorInterface
     {
         return (new NumberSymbol(
             $leftOperand->valueOf() * $rightOperand->valueOf()
-        ))->toObject();
+        ))->toRubyClass();
     }
 
     private function computeFloatMultiplyFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClass
     {
         return (new FloatSymbol(
             $leftOperand->valueOf() * $rightOperand->valueOf()
-        ))->toObject();
+        ))->toRubyClass();
     }
 }

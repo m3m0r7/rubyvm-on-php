@@ -54,6 +54,6 @@ class BuiltinOptEq implements OperationProcessorInterface
     {
         return (new BooleanSymbol(
             $leftOperand->valueOf() == $rightOperand->valueOf(),
-        ))->toObject();
+        ))->toRubyClass();
     }
 }

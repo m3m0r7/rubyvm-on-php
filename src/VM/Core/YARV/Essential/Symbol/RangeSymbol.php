@@ -68,7 +68,7 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
                 ->appendTrace(ClassHelper::nameBy($this) . '#' . __FUNCTION__);
 
             $localTableSize = $executor->context()->instructionSequence()->body()->data->localTableSize();
-            $object = $number->toObject()
+            $object = $number->toRubyClass()
                 ->setRuntimeContext($context)
                 ->setUserlandHeapSpace($context->self()->userlandHeapSpace());
 

@@ -54,7 +54,7 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
             ));
 
             $object = (new NumberSymbol($this->array[$i]->valueOf()))
-                ->toObject()
+                ->toRubyClass()
                 ->setRuntimeContext($context)
                 ->setUserlandHeapSpace($context->self()->userlandHeapSpace());
 

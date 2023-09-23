@@ -304,7 +304,7 @@ class Kernel implements KernelInterface
         $symbol = $this->resolveLoader($info, $offset->increase())
             ->load();
 
-        return $this->globalObjectTable[$index] = $symbol->toObject();
+        return $this->globalObjectTable[$index] = $symbol->toRubyClass();
     }
 
     private function resolveLoader(ObjectInfo $info, Offset $offset): SymbolLoaderInterface

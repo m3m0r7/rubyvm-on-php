@@ -124,7 +124,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         }
         if ($result instanceof SymbolInterface) {
             $this->context->vmStack()
-                ->push(new OperandEntry($result->toObject()));
+                ->push(new OperandEntry($result->toRubyClass()));
 
             return ProcessedStatus::SUCCESS;
         }

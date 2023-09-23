@@ -28,7 +28,7 @@ readonly class Translator
                     new NumberSymbol((int) array_key_first($elements)),
                     new NumberSymbol((int) array_key_last($elements)),
                     false,
-                ))->toObject();
+                ))->toRubyClass();
             }
             $result = [];
             foreach ($elements as $element) {
@@ -36,7 +36,7 @@ readonly class Translator
             }
 
             return (new ArraySymbol($result))
-                ->toObject();
+                ->toRubyClass();
         }
 
         if (is_object($elements)) {
@@ -44,10 +44,10 @@ readonly class Translator
         }
 
         return match (gettype($elements)) {
-            'integer' => (new NumberSymbol($elements))->toObject(),
-            'string' => (new StringSymbol($elements))->toObject(),
-            'double' => (new FloatSymbol($elements))->toObject(),
-            'boolean' => (new BooleanSymbol($elements))->toObject(),
+            'integer' => (new NumberSymbol($elements))->toRubyClass(),
+            'string' => (new StringSymbol($elements))->toRubyClass(),
+            'double' => (new FloatSymbol($elements))->toRubyClass(),
+            'boolean' => (new BooleanSymbol($elements))->toRubyClass(),
             default => throw new TranslationException('The type is not implemented yet')
         };
     }
