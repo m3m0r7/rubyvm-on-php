@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Exception\TranslationException;
 
@@ -35,10 +35,10 @@ trait Translatable
     {
         $arguments = [];
         foreach ($operands as $operand) {
-            // @var Object_ $object
+            // @var RubyClass $object
             $arguments[] = $object = $operand->operand;
             $this->validateType(
-                Object_::class,
+                RubyClass::class,
                 $object,
             );
         }

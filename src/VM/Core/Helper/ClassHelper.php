@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Helper;
 
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 
 class ClassHelper
 {
@@ -13,7 +13,7 @@ class ClassHelper
         if (!is_object($obj)) {
             return gettype($obj);
         }
-        if (Object_::class === get_class($obj)) {
+        if (RubyClass::class === get_class($obj)) {
             return static::nameBy($obj->symbol);
         }
         $classNamePath = explode('\\', is_object($obj) ? get_class($obj) : $obj);

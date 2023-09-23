@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Criterion\Entry\AbstractEntries;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
@@ -29,7 +29,7 @@ class OperationEntries extends AbstractEntries
                     $item->insn->value
                 ),
                 OperandEntry::class => match (($item->operand)::class) {
-                    Object_::class => (string) $item->operand->symbol,
+                    RubyClass::class => (string) $item->operand->symbol,
                     SymbolInterface::class => (string) $item->operand,
                     default => ClassHelper::nameBy($item->operand),
                 },

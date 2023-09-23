@@ -8,7 +8,7 @@ use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
@@ -153,7 +153,7 @@ class ExecutorDebugger
                         fn ($argument) => match ($argument::class) {
                             SymbolInterface::class => (string) $argument,
                             OperandEntry::class => (string) $argument->operand->symbol,
-                            Object_::class => (string) $argument->symbol,
+                            RubyClass::class => (string) $argument->symbol,
                             default => '?',
                         },
                         $arguments,

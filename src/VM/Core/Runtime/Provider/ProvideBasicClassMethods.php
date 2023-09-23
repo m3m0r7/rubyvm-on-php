@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Provider;
 
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NilSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
@@ -13,7 +13,7 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
 trait ProvideBasicClassMethods
 {
-    public function puts(Object_ $object): Object_
+    public function puts(RubyClass $object): RubyClass
     {
         $symbol = $object->symbol;
 
@@ -47,7 +47,7 @@ trait ProvideBasicClassMethods
     public function inspect(): SymbolInterface
     {
         $string = (string) $this;
-        if ($this instanceof Object_) {
+        if ($this instanceof RubyClass) {
             $string = match (($this->symbol)::class) {
                 StringSymbol::class => '"' . $string . '"',
                 default => (string) $string,

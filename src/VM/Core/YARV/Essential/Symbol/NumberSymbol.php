@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 
 class NumberSymbol implements SymbolInterface
 {
@@ -23,28 +23,28 @@ class NumberSymbol implements SymbolInterface
         return (string) $this->number;
     }
 
-    public function xor(Object_ $object): self
+    public function xor(RubyClass $object): self
     {
         return new self(
             $this->number ^ $object->symbol->valueOf(),
         );
     }
 
-    public function power(Object_ $object): self
+    public function power(RubyClass $object): self
     {
         return new NumberSymbol(
             $this->number ** $object->symbol->valueOf(),
         );
     }
 
-    public function rightShift(Object_ $object): self
+    public function rightShift(RubyClass $object): self
     {
         return new NumberSymbol(
             $this->number >> $object->symbol->valueOf(),
         );
     }
 
-    public function compareStrictEquals(Object_ $object): BooleanSymbol
+    public function compareStrictEquals(RubyClass $object): BooleanSymbol
     {
         return new BooleanSymbol(
             $this->number === $object->symbol->valueOf(),
@@ -70,9 +70,9 @@ class NumberSymbol implements SymbolInterface
         );
     }
 
-    public function toObject(): Object_
+    public function toRubyClass(): RubyClass
     {
-        return new Object_(
+        return new RubyClass(
             info: new ObjectInfo(
                 type: SymbolType::FIXNUM,
                 specialConst: 0,

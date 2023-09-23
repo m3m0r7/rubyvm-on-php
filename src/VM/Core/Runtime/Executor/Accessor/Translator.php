@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Executor\Accessor;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
@@ -20,7 +20,7 @@ use RubyVM\VM\Exception\TranslationException;
 
 readonly class Translator
 {
-    public static function PHPToRuby(mixed $elements): Object_
+    public static function PHPToRuby(mixed $elements): RubyClass
     {
         if (is_array($elements)) {
             if (static::validateArrayIsNumber($elements)) {
@@ -52,7 +52,7 @@ readonly class Translator
         };
     }
 
-    public static function RubyToPHP(Object_|SymbolInterface|RubyClassInterface|array $objectOrClass): mixed
+    public static function RubyToPHP(RubyClass|SymbolInterface|RubyClassInterface|array $objectOrClass): mixed
     {
         if (is_array($objectOrClass)) {
             return array_map(
@@ -61,8 +61,8 @@ readonly class Translator
             );
         }
 
-        if ($objectOrClass instanceof Object_ || $objectOrClass instanceof SymbolInterface) {
-            if ($objectOrClass instanceof Object_) {
+        if ($objectOrClass instanceof RubyClass || $objectOrClass instanceof SymbolInterface) {
+            if ($objectOrClass instanceof RubyClass) {
                 $symbol = $objectOrClass->symbol;
             } else {
                 $symbol = $objectOrClass;
@@ -91,7 +91,7 @@ readonly class Translator
         return $objectOrClass;
     }
 
-    public function __construct(public readonly Object_ $object) {}
+    public function __construct(public readonly RubyClass $object) {}
 
     public function toOperand(): OperandEntry
     {

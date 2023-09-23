@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
@@ -59,5 +59,5 @@ trait OperatorCalculatable
         return ProcessedStatus::SUCCESS;
     }
 
-    abstract private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_;
+    abstract private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?RubyClass;
 }

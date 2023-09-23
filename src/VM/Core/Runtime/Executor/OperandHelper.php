@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
@@ -24,7 +24,7 @@ trait OperandHelper
     private function getOperandAsSymbol(): SymbolInterface
     {
         $operand = $this->getOperandAsAny(
-            Object_::class,
+            RubyClass::class,
         );
 
         return $operand->symbol;
@@ -125,9 +125,9 @@ trait OperandHelper
         return $this->getOperandAsAny(ExecutedResult::class);
     }
 
-    private function getOperandAsObject(): Object_
+    private function getOperandAsObject(): RubyClass
     {
-        return $this->getOperandAsAny(Object_::class)
+        return $this->getOperandAsAny(RubyClass::class)
             ->setRuntimeContext($this->context)
             ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace());
     }
@@ -150,7 +150,7 @@ trait OperandHelper
         return $operand;
     }
 
-    private function getOperandAsAny(string $className): Object_|CallInfoEntryInterface|RubyClassInterface|ID|ExecutedResult
+    private function getOperandAsAny(string $className): RubyClass|CallInfoEntryInterface|RubyClassInterface|ID|ExecutedResult
     {
         $operand = $this->getOperand();
 
@@ -165,7 +165,7 @@ trait OperandHelper
     private function getStackAsSymbol(): SymbolInterface
     {
         $operand = $this->getStackAsAny(
-            Object_::class
+            RubyClass::class
         );
 
         return $operand->symbol;
@@ -266,9 +266,9 @@ trait OperandHelper
         return $this->getStackAsAny(ExecutedResult::class);
     }
 
-    private function getStackAsObject(): Object_
+    private function getStackAsObject(): RubyClass
     {
-        return $this->getStackAsAny(Object_::class)
+        return $this->getStackAsAny(RubyClass::class)
             ->setRuntimeContext($this->context)
             ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace());
     }
@@ -286,7 +286,7 @@ trait OperandHelper
         return $operand;
     }
 
-    private function getStackAsAny(string $className): Object_|CallInfoEntryInterface|RubyClassInterface|ID|ExecutedResult
+    private function getStackAsAny(string $className): RubyClass|CallInfoEntryInterface|RubyClassInterface|ID|ExecutedResult
     {
         $operand = $this->getStack();
 

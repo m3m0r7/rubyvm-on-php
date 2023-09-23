@@ -7,7 +7,7 @@ namespace RubyVM\VM\Core\Runtime\Provider;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\CallBlockHelper;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
 
@@ -15,7 +15,7 @@ trait ProvideExtendedMethodCall
 {
     use CallBlockHelper;
 
-    public function __call(string $name, array $arguments): ExecutedResult|Object_
+    public function __call(string $name, array $arguments): ExecutedResult|RubyClass
     {
         $context = $this->userlandHeapSpace?->userlandMethods()->get($name);
 
@@ -51,7 +51,7 @@ trait ProvideExtendedMethodCall
 
     private static function resolveObjectName(RubyClassInterface $class): string
     {
-        if ($class instanceof Object_) {
+        if ($class instanceof RubyClass) {
             return ($class->symbol)::class;
         }
 

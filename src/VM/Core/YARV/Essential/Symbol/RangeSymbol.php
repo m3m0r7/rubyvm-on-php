@@ -8,7 +8,7 @@ use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\LocalTableHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorContext;
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\Option;
 
 class RangeSymbol implements SymbolInterface, \ArrayAccess
@@ -93,9 +93,9 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
         return new NilSymbol();
     }
 
-    public function toObject(): Object_
+    public function toRubyClass(): RubyClass
     {
-        return new Object_(
+        return new RubyClass(
             info: new ObjectInfo(
                 type: SymbolType::STRUCT,
                 specialConst: 0,

@@ -13,7 +13,7 @@ use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperationEntries;
 use RubyVM\VM\Core\Runtime\Executor\OperationEntry;
 use RubyVM\VM\Core\Runtime\Executor\UnknownEntry;
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\CallData;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\CatchEntries;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\InsnsBodyEntries;
@@ -38,7 +38,7 @@ use RubyVM\VM\Exception\InstructionSequenceProcessorException;
 
 class InstructionSequenceProcessor implements InstructionSequenceProcessorInterface
 {
-    protected Object_ $path;
+    protected RubyClass $path;
 
     public function __construct(
         private readonly KernelInterface $kernel,

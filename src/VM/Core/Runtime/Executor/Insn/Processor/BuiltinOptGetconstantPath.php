@@ -10,7 +10,7 @@ use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
@@ -67,7 +67,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
                     );
                 }
 
-                $object = Object_::initializeByClassName($className);
+                $object = RubyClass::initializeByClassName($className);
             } else {
                 $object = (new ClassSymbol($constantNameSymbol))
                     ->toObject();

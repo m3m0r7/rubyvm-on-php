@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
-use RubyVM\VM\Core\YARV\Criterion\ObjectifyInterface;
+use RubyVM\VM\Core\YARV\Essential\RubyClassifiable;
 
-interface SymbolInterface extends ObjectifyInterface
+interface SymbolInterface extends RubyClassifiable
 {
     public function valueOf(): mixed;
 

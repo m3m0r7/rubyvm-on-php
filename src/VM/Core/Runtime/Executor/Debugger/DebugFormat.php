@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Executor\Debugger;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
 trait DebugFormat
@@ -20,10 +20,10 @@ trait DebugFormat
             $result[] = match ($item::class) {
                 SymbolInterface::class => (string) $item,
                 OperandEntry::class => (string) match (($item->operand)::class) {
-                    Object_::class => ClassHelper::nameBy($item->operand->symbol) . "({$item->operand->symbol})",
+                    RubyClass::class => ClassHelper::nameBy($item->operand->symbol) . "({$item->operand->symbol})",
                     default => ClassHelper::nameBy($item->operand),
                 },
-                Object_::class => ClassHelper::nameBy($item->symbol) . "({$item->symbol})",
+                RubyClass::class => ClassHelper::nameBy($item->symbol) . "({$item->symbol})",
                 default => 'unknown',
             } . "#{$index}";
         }

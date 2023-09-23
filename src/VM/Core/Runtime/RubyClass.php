@@ -19,7 +19,7 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
 use RubyVM\VM\Exception\SymbolUnsupportedException;
 
-class Object_ implements RubyClassInterface
+class RubyClass implements RubyClassInterface
 {
     use ShouldBeRubyClass {
         __call as private callExtendedMethod;
@@ -70,7 +70,7 @@ class Object_ implements RubyClassInterface
         return $result;
     }
 
-    public static function initializeByClassName(string $className): Object_
+    public static function initializeByClassName(string $className): RubyClass
     {
         return (new $className(match ($className) {
             ArraySymbol::class => [],

@@ -10,7 +10,7 @@ use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperatorCalculatable;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
@@ -42,7 +42,7 @@ class BuiltinOptPlus implements OperationProcessorInterface
         return $this->processArithmetic('+');
     }
 
-    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
+    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?RubyClass
     {
         $value = null;
         if ($leftOperand instanceof StringSymbol && $rightOperand instanceof StringSymbol) {
@@ -61,28 +61,28 @@ class BuiltinOptPlus implements OperationProcessorInterface
         return $value;
     }
 
-    private function computeStringPlusString(StringSymbol $leftOperand, StringSymbol $rightOperand): Object_
+    private function computeStringPlusString(StringSymbol $leftOperand, StringSymbol $rightOperand): RubyClass
     {
         return (new StringSymbol(
             $leftOperand . $rightOperand
         ))->toObject();
     }
 
-    private function computeNumberPlusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
+    private function computeNumberPlusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClass
     {
         return (new NumberSymbol(
             $leftOperand->valueOf() + $rightOperand->valueOf()
         ))->toObject();
     }
 
-    private function computeFloatPlusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
+    private function computeFloatPlusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClass
     {
         return (new FloatSymbol(
             $leftOperand->valueOf() + $rightOperand->valueOf()
         ))->toObject();
     }
 
-    private function computeArrayPlusArray(ArraySymbol $leftOperand, ArraySymbol $rightOperand): Object_
+    private function computeArrayPlusArray(ArraySymbol $leftOperand, ArraySymbol $rightOperand): RubyClass
     {
         return (new ArraySymbol(
             [

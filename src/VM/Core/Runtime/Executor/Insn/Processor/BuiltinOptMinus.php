@@ -10,7 +10,7 @@ use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperatorCalculatable;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
@@ -40,7 +40,7 @@ class BuiltinOptMinus implements OperationProcessorInterface
         return $this->processArithmetic('-');
     }
 
-    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
+    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?RubyClass
     {
         $value = null;
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
@@ -53,14 +53,14 @@ class BuiltinOptMinus implements OperationProcessorInterface
         return $value;
     }
 
-    private function computeNumberMinusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
+    private function computeNumberMinusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClass
     {
         return (new NumberSymbol(
             $leftOperand->valueOf() - $rightOperand->valueOf()
         ))->toObject();
     }
 
-    private function computeFloatMinusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
+    private function computeFloatMinusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClass
     {
         return (new FloatSymbol(
             $leftOperand->valueOf() - $rightOperand->valueOf()

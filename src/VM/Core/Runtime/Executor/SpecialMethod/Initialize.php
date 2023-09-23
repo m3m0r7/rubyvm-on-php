@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Executor\SpecialMethod;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 use RubyVM\VM\Exception\RubyVMException;
 
@@ -16,7 +16,7 @@ class Initialize implements SpecialMethodInterface
     {
         $result = $class;
 
-        if (!$class instanceof Object_) {
+        if (!$class instanceof RubyClass) {
             throw new RubyVMException('The passed class is not implemented an Object class');
         }
 

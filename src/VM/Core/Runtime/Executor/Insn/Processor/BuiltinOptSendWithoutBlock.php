@@ -15,7 +15,7 @@ use RubyVM\VM\Core\Runtime\Executor\SpecialMethod\SpecialMethodInterface;
 use RubyVM\VM\Core\Runtime\Executor\SpecialMethodCallerEntries;
 use RubyVM\VM\Core\Runtime\Executor\Translatable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
@@ -68,7 +68,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         );
 
         /**
-         * @var Object_|RubyClassInterface $targetSymbol
+         * @var RubyClass|RubyClassInterface $targetSymbol
          */
         $targetClass = $targetObjectOrClass = $this->getStack()
             ->operand;
@@ -93,13 +93,13 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             );
         } else {
             /**
-             * @var null|ExecutedResult|Object_ $result
+             * @var null|ExecutedResult|RubyClass $result
              */
             $result = $targetClass
                 ->{(string) $symbol}(...$this->translateForArguments(...$arguments));
         }
 
-        if ($result instanceof Object_) {
+        if ($result instanceof RubyClass) {
             $this->context->vmStack()
                 ->push(new OperandEntry($result));
 

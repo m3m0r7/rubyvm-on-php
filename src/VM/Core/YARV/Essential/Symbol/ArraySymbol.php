@@ -7,7 +7,7 @@ namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\Option;
 
 class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \IteratorAggregate
@@ -32,10 +32,10 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
         );
     }
 
-    public function new(Object_|array $values = null): self
+    public function new(RubyClass|array $values = null): self
     {
         return new self(
-            $values instanceof Object_
+            $values instanceof RubyClass
                 ? $values->symbol->valueOf()
                 : ($values ?? []),
         );
@@ -77,16 +77,16 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
         }
     }
 
-    public function push(Object_ $object): SymbolInterface
+    public function push(RubyClass $object): SymbolInterface
     {
         $this->array[] = $object->symbol;
 
         return $this;
     }
 
-    public function toObject(): Object_
+    public function toRubyClass(): RubyClass
     {
-        return new Object_(
+        return new RubyClass(
             info: new ObjectInfo(
                 type: SymbolType::ARRAY,
                 specialConst: 0,

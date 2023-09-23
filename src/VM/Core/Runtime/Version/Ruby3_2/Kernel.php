@@ -10,7 +10,7 @@ use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\Executor\IOContext;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Main;
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\HeapSpace\DefaultInstanceHeapSpace;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
@@ -237,7 +237,7 @@ class Kernel implements KernelInterface
         return $this->findObject($index)->id;
     }
 
-    public function findObject(int $index): Object_
+    public function findObject(int $index): RubyClass
     {
         if (!isset($this->globalObjectList[$index])) {
             throw new RubyVMException(sprintf('Cannot resolve to refer index#%d in the global object list', $index));
@@ -249,7 +249,7 @@ class Kernel implements KernelInterface
 
         if (isset($this->globalObjectTable[$index])) {
             /**
-             * @var Object_ $object
+             * @var RubyClass $object
              */
             $object = $this->globalObjectTable[$index];
 

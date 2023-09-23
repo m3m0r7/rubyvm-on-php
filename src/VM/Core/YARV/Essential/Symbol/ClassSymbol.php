@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 
 class ClassSymbol implements SymbolInterface
 {
@@ -17,9 +17,9 @@ class ClassSymbol implements SymbolInterface
         return $this->class->valueOf();
     }
 
-    public function toObject(): Object_
+    public function toRubyClass(): RubyClass
     {
-        return new Object_(
+        return new RubyClass(
             info: new ObjectInfo(
                 type: SymbolType::CLASS_,
                 specialConst: 0,

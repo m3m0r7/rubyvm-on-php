@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 
 class BooleanSymbol implements SymbolInterface
 {
@@ -31,9 +31,9 @@ class BooleanSymbol implements SymbolInterface
         );
     }
 
-    public function toObject(): Object_
+    public function toRubyClass(): RubyClass
     {
-        return new Object_(
+        return new RubyClass(
             info: new ObjectInfo(
                 type: $this->boolean
                     ? SymbolType::TRUE

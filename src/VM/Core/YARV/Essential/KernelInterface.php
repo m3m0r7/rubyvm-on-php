@@ -7,7 +7,7 @@ namespace RubyVM\VM\Core\YARV\Essential;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\Executor\IOContext;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorEntries;
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ID;
@@ -29,7 +29,7 @@ interface KernelInterface
 
     public function findId(int $index): ID;
 
-    public function findObject(int $index): Object_;
+    public function findObject(int $index): RubyClass;
 
     public function loadInstructionSequence(Aux $aux): InstructionSequence;
 

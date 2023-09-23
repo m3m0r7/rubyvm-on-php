@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 
 class OffsetSymbol implements SymbolInterface
 {
@@ -22,9 +22,9 @@ class OffsetSymbol implements SymbolInterface
         return $this->offset;
     }
 
-    public function toObject(): Object_
+    public function toRubyClass(): RubyClass
     {
-        return new Object_(
+        return new RubyClass(
             info: new ObjectInfo(
                 type: SymbolType::SYMBOL,
                 specialConst: 0,

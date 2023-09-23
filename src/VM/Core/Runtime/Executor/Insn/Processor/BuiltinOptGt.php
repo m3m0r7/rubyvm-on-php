@@ -10,7 +10,7 @@ use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperatorCalculatable;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
@@ -41,7 +41,7 @@ class BuiltinOptGt implements OperationProcessorInterface
         return $this->processArithmetic('>');
     }
 
-    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?Object_
+    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?RubyClass
     {
         $value = null;
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
@@ -54,14 +54,14 @@ class BuiltinOptGt implements OperationProcessorInterface
         return $value;
     }
 
-    private function computeNumberGreaterThanOrEqualsNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): Object_
+    private function computeNumberGreaterThanOrEqualsNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClass
     {
         return (new BooleanSymbol(
             $leftOperand->valueOf() > $rightOperand->valueOf()
         ))->toObject();
     }
 
-    private function computeFloatGreaterThanOrEqualsFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): Object_
+    private function computeFloatGreaterThanOrEqualsFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClass
     {
         return (new BooleanSymbol(
             $leftOperand->valueOf() > $rightOperand->valueOf()
