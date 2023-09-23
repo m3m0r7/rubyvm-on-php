@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\YARV\Essential;
+namespace RubyVM\VM\Core\Runtime\Essential;
 
-use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
+use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;

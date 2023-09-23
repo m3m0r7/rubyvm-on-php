@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Runtime\Executor\Context\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\LocalTableHelper;
-use RubyVM\VM\Core\Runtime\Executor\OperationProcessorContext;
-use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\Option;
+use RubyVM\VM\Core\Runtime\RubyClass;
 
 class RangeSymbol implements SymbolInterface, \ArrayAccess
 {

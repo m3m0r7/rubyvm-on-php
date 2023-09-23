@@ -17,20 +17,6 @@ trait Translatable
 {
     use Validatable;
 
-    protected function translateAnEntryToInstructionSequenceNumber(OperationEntry|OperandEntry $entry): int
-    {
-        if ($entry instanceof OperationEntry) {
-            return $entry->insn->value;
-        }
-
-        $symbol = $entry->operand->symbol;
-        if ($symbol instanceof NumberSymbol) {
-            return $symbol->valueOf();
-        }
-
-        throw new TranslationException(sprintf('The symbol type cannot translate to number (symbol: %s)', get_class($symbol)));
-    }
-
     public function translateForArguments(OperandEntry ...$operands): array
     {
         $arguments = [];

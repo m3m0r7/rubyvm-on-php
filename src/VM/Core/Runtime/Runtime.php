@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime;
 
+use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
+use RubyVM\VM\Core\Runtime\Essential\RuntimeInterface;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
-use RubyVM\VM\Core\YARV\Essential\KernelInterface;
-use RubyVM\VM\Core\YARV\Essential\RuntimeInterface;
 
 class Runtime implements RuntimeInterface
 {

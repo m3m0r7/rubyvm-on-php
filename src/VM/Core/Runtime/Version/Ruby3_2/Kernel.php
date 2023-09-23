@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2;
 
+use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
+use RubyVM\VM\Core\Runtime\Essential\MainInterface;
+use RubyVM\VM\Core\Runtime\Essential\RubyVMInterface;
+use RubyVM\VM\Core\Runtime\Executor\Context\IOContext;
 use RubyVM\VM\Core\Runtime\Executor\DefaultOperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
-use RubyVM\VM\Core\Runtime\Executor\IOContext;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Main;
 use RubyVM\VM\Core\Runtime\RubyClass;
@@ -29,9 +32,6 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequences;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offsets;
-use RubyVM\VM\Core\YARV\Essential\KernelInterface;
-use RubyVM\VM\Core\YARV\Essential\MainInterface;
-use RubyVM\VM\Core\YARV\Essential\RubyVMInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ID;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ObjectInfo;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolLoaderInterface;

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Provider;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\CallBlockHelper;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\RubyClass;
-use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
 
 trait ProvideExtendedMethodCall

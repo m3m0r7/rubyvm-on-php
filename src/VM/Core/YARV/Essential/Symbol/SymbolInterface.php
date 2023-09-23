@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
-use RubyVM\VM\Core\YARV\Essential\RubyClassifiable;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassifiable;
 
 interface SymbolInterface extends RubyClassifiable
 {

@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Executor;
+namespace RubyVM\VM\Core\Runtime\Executor\Context;
 
 use Psr\Log\LoggerInterface;
+use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
+use RubyVM\VM\Core\Runtime\Executor\EnvironmentTable;
+use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
-use RubyVM\VM\Core\YARV\Essential\KernelInterface;
-use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 
 interface ContextInterface
 {

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime;
 
+use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
+use RubyVM\VM\Core\Runtime\Essential\RubyVMInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\Verification\VerificationHeaderInterface;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
-use RubyVM\VM\Core\YARV\Essential\KernelInterface;
-use RubyVM\VM\Core\YARV\Essential\RubyVMInterface;
 use RubyVM\VM\Core\YARV\RubyVersion;
 use RubyVM\VM\Exception\RubyVMException;
 

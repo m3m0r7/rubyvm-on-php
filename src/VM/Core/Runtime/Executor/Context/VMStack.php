@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Executor;
+namespace RubyVM\VM\Core\Runtime\Executor\Context;
 
 use RubyVM\VM\Core\Runtime\Executor\Debugger\DebugFormat;
+use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Exception\VMStackException;
 
 class VMStack implements \Countable

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime;
 
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Criterion\Entry\AbstractEntries;
 use RubyVM\VM\Core\YARV\Criterion\Entry\EntryType;
-use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 
 final class UserlandInstanceVariableEntries extends AbstractEntries
 {

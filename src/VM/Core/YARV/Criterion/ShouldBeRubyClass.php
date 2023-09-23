@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Criterion;
 
-use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
+use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Provider\ProvideBasicClassMethods;
 use RubyVM\VM\Core\Runtime\Provider\ProvideClassExtendableMethods;
 use RubyVM\VM\Core\Runtime\Provider\ProvideExtendedMethodCall;

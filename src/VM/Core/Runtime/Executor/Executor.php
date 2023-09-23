@@ -6,12 +6,16 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
+use RubyVM\VM\Core\Runtime\Executor\Context\OperationProcessorContext;
+use RubyVM\VM\Core\Runtime\Executor\Context\ProgramCounter;
+use RubyVM\VM\Core\Runtime\Executor\Context\VMStack;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
-use RubyVM\VM\Core\YARV\Essential\KernelInterface;
-use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\VoidSymbol;
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\ExecutorFailedException;

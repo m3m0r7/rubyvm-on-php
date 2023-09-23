@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
+
 interface ExecutorInterface
 {
     public function execute(...$arguments): ExecutedResult;

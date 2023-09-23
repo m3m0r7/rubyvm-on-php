@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence;
 
+use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Executor\CallInfoEntries;
 use RubyVM\VM\Core\Runtime\Executor\CallInfoEntry;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -29,7 +30,6 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceBody;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceProcessorInterface;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
-use RubyVM\VM\Core\YARV\Essential\KernelInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ID;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\OffsetSymbol;
