@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use RubyVM\VM\Core\Criterion\Entry\AbstractEntries;
+use RubyVM\VM\Core\Criterion\Entry\EntryType;
 use RubyVM\VM\Core\Runtime\Executor\SpecialMethod\Initialize;
 use RubyVM\VM\Core\Runtime\Executor\SpecialMethod\SpecialMethodInterface;
-use RubyVM\VM\Core\YARV\Criterion\Entry\AbstractEntries;
-use RubyVM\VM\Core\YARV\Criterion\Entry\EntryType;
 
 class SpecialMethodCallerEntries extends AbstractEntries
 {

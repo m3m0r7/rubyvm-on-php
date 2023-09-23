@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use RubyVM\VM\Core\Criterion\Entry\AbstractEntries;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\DebugFormat;
 use RubyVM\VM\Core\Runtime\RubyClass;
-use RubyVM\VM\Core\YARV\Criterion\Entry\AbstractEntries;
 use RubyVM\VM\Exception\LocalTableException;
 
 class EnvironmentTable extends AbstractEntries

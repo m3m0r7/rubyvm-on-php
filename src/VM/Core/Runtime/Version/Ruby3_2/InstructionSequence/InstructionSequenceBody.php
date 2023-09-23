@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence;
 
 use RubyVM\VM\Core\Runtime\Executor\CallInfoEntries;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\CatchEntries;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\OuterVariableEntries;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\VariableEntries;
+use RubyVM\VM\Core\YARV\Criterion\Entry\CatchEntries;
+use RubyVM\VM\Core\YARV\Criterion\Entry\OuterVariableEntries;
+use RubyVM\VM\Core\YARV\Criterion\Entry\VariableEntries;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InsnsInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceBodyInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;

@@ -208,7 +208,7 @@ use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinTraceThrow;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinTraceTopn;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinTraceToregexp;
 
-final class DefaultOperationProcessorEntries extends OperationProcessorEntries
+class DefaultOperationProcessorEntries extends OperationProcessorEntries
 {
     public function __construct(array $items = [])
     {

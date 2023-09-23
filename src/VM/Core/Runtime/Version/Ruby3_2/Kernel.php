@@ -8,7 +8,6 @@ use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Essential\MainInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyVMInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\IOContext;
-use RubyVM\VM\Core\Runtime\Executor\DefaultOperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorEntries;
@@ -42,6 +41,7 @@ use RubyVM\VM\Exception\RubyVMException;
 use RubyVM\VM\Stream\RubyVMBinaryStreamReader;
 use RubyVM\VM\Stream\RubyVMBinaryStreamReaderInterface;
 use RubyVM\VM\Stream\StreamHandler;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\OperationProcessor\OperationProcessorEntries as RubyVM3_2_OperationProcessorEntries;
 
 class Kernel implements KernelInterface
 {
@@ -366,13 +366,6 @@ class Kernel implements KernelInterface
         return $this->loadInstructionSequence($aux);
     }
 
-    public function operationProcessorEntries(): OperationProcessorEntries
-    {
-        static $operationProcessorEntries = new DefaultOperationProcessorEntries();
-
-        return $operationProcessorEntries;
-    }
-
     public function IOContext(): IOContext
     {
         return $this->IOContext;
@@ -396,5 +389,11 @@ class Kernel implements KernelInterface
     public function extraData(): string
     {
         return $this->extraData;
+    }
+
+    public function operationProcessorEntries(): OperationProcessorEntries
+    {
+        static $operationProcessorEntries;
+        return $operationProcessorEntries ??= new RubyVM3_2_OperationProcessorEntries();
     }
 }
