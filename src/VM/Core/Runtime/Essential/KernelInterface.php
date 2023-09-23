@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Essential;
 
 use RubyVM\VM\Core\Runtime\Executor\Context\IOContext;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
-use RubyVM\VM\Core\Runtime\Executor\OperationProcessorEntries;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;

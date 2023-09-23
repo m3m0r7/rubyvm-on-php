@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Debugger;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\Operation\OperandEntry;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 

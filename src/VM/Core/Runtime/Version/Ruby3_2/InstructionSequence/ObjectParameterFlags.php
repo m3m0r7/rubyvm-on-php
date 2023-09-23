@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence;
 
-use RubyVM\VM\Core\Runtime\Executor\Keyword;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Keyword;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\ObjectParameterFlagsInterface;
 
 class ObjectParameterFlags implements ObjectParameterFlagsInterface

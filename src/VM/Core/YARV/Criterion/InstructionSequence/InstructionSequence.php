@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Criterion\InstructionSequence;
 
-use RubyVM\VM\Core\Runtime\Executor\OperationEntries;
+use RubyVM\VM\Core\Runtime\Executor\Operation\OperationEntries;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 
 class InstructionSequence implements InstructionSequenceInterface

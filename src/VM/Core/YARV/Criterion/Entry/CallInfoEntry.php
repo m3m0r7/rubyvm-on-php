@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Executor;
+namespace RubyVM\VM\Core\YARV\Criterion\Entry;
+
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallDataInterface;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoEntryInterface;
 
 class CallInfoEntry implements CallInfoEntryInterface
 {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Criterion\Entry;
 
-use RubyVM\VM\Core\Runtime\Executor\CallDataInterface;
 use RubyVM\VM\Core\Runtime\ID;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallDataInterface;
 
 class CallData implements CallDataInterface
 {

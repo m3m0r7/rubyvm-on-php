@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Executor;
+namespace RubyVM\VM\Core\Runtime\Executor\Operation;
 
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinAdjuststack;
@@ -207,6 +207,7 @@ use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinTraceSwap;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinTraceThrow;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinTraceTopn;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinTraceToregexp;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
 
 class DefaultOperationProcessorEntries extends OperationProcessorEntries
 {

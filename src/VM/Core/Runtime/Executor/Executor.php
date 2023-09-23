@@ -15,6 +15,7 @@ use RubyVM\VM\Core\Runtime\Executor\Context\VMStack;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\BreakpointExecutable;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Executor\Operation\OperationEntry;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\YARV\Essential\Symbol\VoidSymbol;

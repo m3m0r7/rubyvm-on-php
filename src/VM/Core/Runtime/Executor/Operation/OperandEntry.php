@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Executor;
+namespace RubyVM\VM\Core\Runtime\Executor\Operation;
 
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\RubyClass;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoEntryInterface;
 
 class OperandEntry
 {

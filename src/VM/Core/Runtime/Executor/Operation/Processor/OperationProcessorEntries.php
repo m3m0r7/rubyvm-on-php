@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Executor;
+namespace RubyVM\VM\Core\Runtime\Executor\Operation\Processor;
 
 use RubyVM\VM\Core\Criterion\Entry\AbstractEntries;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;

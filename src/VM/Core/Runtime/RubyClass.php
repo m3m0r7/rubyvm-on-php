@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\Executor\SpecialMethodCallerEntries;
+use RubyVM\VM\Core\Runtime\Executor\Operation\SpecialMethodCallerEntries;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
 use RubyVM\VM\Core\YARV\Criterion\ShouldBeRubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;

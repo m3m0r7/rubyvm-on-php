@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Executor;
+namespace RubyVM\VM\Core\Runtime\Executor\Operation;
 
 use RubyVM\VM\Core\Criterion\Entry\AbstractEntries;
 use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Runtime\Executor\UnknownEntry;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 

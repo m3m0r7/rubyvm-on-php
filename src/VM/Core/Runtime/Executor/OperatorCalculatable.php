@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use RubyVM\VM\Core\Runtime\Executor\Operation\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;

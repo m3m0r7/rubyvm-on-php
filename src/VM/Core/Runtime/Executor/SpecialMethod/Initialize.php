@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Executor\SpecialMethod;
 
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
-use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\Operation\OperandEntry;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Exception\RubyVMException;
 
