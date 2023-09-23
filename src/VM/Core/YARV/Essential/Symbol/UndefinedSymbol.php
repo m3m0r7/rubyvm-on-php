@@ -35,7 +35,7 @@ class UndefinedSymbol implements SymbolInterface
         );
     }
 
-    public function isTestable(): bool
+    public function testValue(): bool
     {
         throw new OperationProcessorException(sprintf('The symbol type `%s` is not implemented `test` processing yet', ClassHelper::nameBy($this)));
     }

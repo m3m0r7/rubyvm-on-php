@@ -10,14 +10,12 @@ use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\Executor\SymbolTestable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 
 class BuiltinBranchif implements OperationProcessorInterface
 {
     use OperandHelper;
     use Validatable;
-    use SymbolTestable;
 
     private Insn $insn;
 
@@ -39,7 +37,7 @@ class BuiltinBranchif implements OperationProcessorInterface
 
         $symbol = $this->getStackAsSymbol();
 
-        if ($this->test($symbol)) {
+        if ($symbol->testValue()) {
             $this->context
                 ->programCounter()
                 ->increase($offsetSymbol->offset);

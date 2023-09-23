@@ -12,5 +12,5 @@ interface SymbolInterface extends RubyClassifiable
 
     public function __toString(): string;
 
-    public function isTestable(): bool;
+    public function testValue(): bool;
 }

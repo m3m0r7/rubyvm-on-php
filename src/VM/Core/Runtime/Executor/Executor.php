@@ -12,6 +12,7 @@ use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Executor\Context\ProgramCounter;
 use RubyVM\VM\Core\Runtime\Executor\Context\VMStack;
+use RubyVM\VM\Core\Runtime\Executor\Debugger\BreakpointExecutable;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Option;

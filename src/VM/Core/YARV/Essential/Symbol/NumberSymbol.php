@@ -83,8 +83,8 @@ class NumberSymbol implements SymbolInterface
         );
     }
 
-    public function isTestable(): bool
+    public function testValue(): bool
     {
-        return true;
+        return (bool) $this->valueOf();
     }
 }
