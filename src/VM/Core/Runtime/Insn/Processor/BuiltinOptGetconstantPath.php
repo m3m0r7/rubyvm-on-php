@@ -49,20 +49,25 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
          */
         foreach ($symbol->valueOf() as $constantNameSymbol) {
             $classes = $this->context->self()->userlandHeapSpace()->userlandClasses();
-            $aliasNameBy = $classes->aliasNameBy($constantNameSymbol->valueOf());
+
+            $className = $constantNameSymbol->valueOf();
+
+            if (!class_exists($className)) {
+                $className = $classes->aliasNameBy($constantNameSymbol->valueOf());
+            }
 
             // Check if already aliased class
-            if ($aliasNameBy) {
-                if (!class_exists($aliasNameBy)) {
+            if ($className) {
+                if (!class_exists($className)) {
                     throw new OperationProcessorException(
                         sprintf(
-                            'The alias was not found: %s',
-                            $aliasNameBy,
+                            'The class was not found: %s',
+                            $className,
                         ),
                     );
                 }
 
-                $object = Object_::initializeByClassName($aliasNameBy);
+                $object = Object_::initializeByClassName($className);
             } else {
                 $object = (new ClassSymbol($constantNameSymbol))
                     ->toObject();
