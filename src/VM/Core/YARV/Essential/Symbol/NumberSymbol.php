@@ -26,28 +26,28 @@ class NumberSymbol implements SymbolInterface
     public function xor(RubyClass $object): self
     {
         return new self(
-            $this->number ^ $object->symbol->valueOf(),
+            $this->valueOf() ^ $object->symbol->valueOf(),
         );
     }
 
     public function power(RubyClass $object): self
     {
         return new NumberSymbol(
-            $this->number ** $object->symbol->valueOf(),
+            $this->valueOf() ** $object->symbol->valueOf(),
         );
     }
 
     public function rightShift(RubyClass $object): self
     {
         return new NumberSymbol(
-            $this->number >> $object->symbol->valueOf(),
+            $this->valueOf() >> $object->symbol->valueOf(),
         );
     }
 
     public function compareStrictEquals(RubyClass $object): BooleanSymbol
     {
         return new BooleanSymbol(
-            $this->number === $object->symbol->valueOf(),
+            $this->valueOf() === $object->symbol->valueOf(),
         );
     }
 
@@ -59,7 +59,7 @@ class NumberSymbol implements SymbolInterface
     public function toFloat(): FloatSymbol
     {
         return new FloatSymbol(
-            (float) $this->number,
+            (float) $this->valueOf(),
         );
     }
 
