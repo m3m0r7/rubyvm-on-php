@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Criterion\InstructionSequence;
 
-use RubyVM\VM\Core\Runtime\Executor\Operation\OperationEntries;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 
 class InstructionSequence implements InstructionSequenceInterface
@@ -19,11 +18,6 @@ class InstructionSequence implements InstructionSequenceInterface
     public function load(): void
     {
         $this->body = $this->processor->process();
-    }
-
-    public function operations(): OperationEntries
-    {
-        return $this->body->operationEntries;
     }
 
     public function body(): ?InstructionSequenceBody

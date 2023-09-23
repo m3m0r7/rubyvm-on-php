@@ -10,8 +10,6 @@ interface InstructionSequenceInterface
 {
     public function body(): ?InstructionSequenceBody;
 
-    public function operations(): OperationEntries;
-
     public function load(): void;
 
     public function index(): int;

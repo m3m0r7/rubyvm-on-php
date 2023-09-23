@@ -112,7 +112,9 @@ class Executor implements ExecutorInterface
             throw new ExecutorExeption(sprintf('The executor got max time exceeded %d sec. The process is very heavy or detected an infinity loop', Option::MAX_TIME_EXCEEDED));
         }
 
-        $operations = $this->instructionSequence->operations();
+        $operations = $this->instructionSequence
+            ->body()
+            ->operationEntries;
 
         $isFinished = false;
 

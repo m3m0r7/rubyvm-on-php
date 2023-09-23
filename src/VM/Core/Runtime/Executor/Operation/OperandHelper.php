@@ -142,7 +142,8 @@ trait OperandHelper
          */
         $operand = $this->context
             ->instructionSequence()
-            ->operations()
+            ->body()
+            ->operationEntries
             ->get($this->context->programCounter()->increase());
 
         $this->validateType(

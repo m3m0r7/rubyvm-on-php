@@ -36,7 +36,8 @@ class BuiltinPutstring implements OperationProcessorInterface
             ->push(
                 $this->context
                     ->instructionSequence()
-                    ->operations()
+                    ->body()
+                    ->operationEntries
                     ->get($newPos),
             );
 
