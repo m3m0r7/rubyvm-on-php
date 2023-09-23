@@ -7,23 +7,23 @@ namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence;
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Insn\InsnType;
-use RubyVM\VM\Core\Runtime\Executor\Operation\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperationEntries;
-use RubyVM\VM\Core\Runtime\Executor\Operation\OperationEntry;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operation;
 use RubyVM\VM\Core\Runtime\Executor\UnknownEntry;
 use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceBody as Ruby3_2_InstructionSequenceBody;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CallData;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CallInfoEntries;
-use RubyVM\VM\Core\YARV\Criterion\Entry\CallInfoEntry;
+use RubyVM\VM\Core\YARV\Criterion\Entry\CallInfo;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CatchEntries;
 use RubyVM\VM\Core\YARV\Criterion\Entry\InsnsBodyEntries;
 use RubyVM\VM\Core\YARV\Criterion\Entry\InsnsPositionEntries;
 use RubyVM\VM\Core\YARV\Criterion\Entry\OuterVariableEntries;
-use RubyVM\VM\Core\YARV\Criterion\Entry\OuterVariableEntry;
+use RubyVM\VM\Core\YARV\Criterion\Entry\OuterVariable;
 use RubyVM\VM\Core\YARV\Criterion\Entry\VariableEntries;
-use RubyVM\VM\Core\YARV\Criterion\Entry\VariableEntry;
+use RubyVM\VM\Core\YARV\Criterion\Entry\Variable as VariableEntry;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
@@ -266,7 +266,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         for ($codeIndex = 0; $codeIndex < $instructionSequenceSize;) {
             $insn = Insn::of($insnValue = $reader->smallValue());
             $entries->append(
-                new OperationEntry(
+                new Operation(
                     insn: $insn,
                 )
             );
@@ -281,18 +281,18 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                 $operandType = InsnType::of($types[$opIndex]);
                 $entries->append(
                     match ($operandType) {
-                        InsnType::TS_VALUE => new OperandEntry(
+                        InsnType::TS_VALUE => new Operand(
                             operand: $this->kernel
                                 ->findObject($reader->smallValue())
                         ),
-                        InsnType::TS_CALLDATA => new OperandEntry(
+                        InsnType::TS_CALLDATA => new Operand(
                             operand: $instructionSequenceBody
                                 ->callInfoEntries[$callInfoEntryIndex++],
                         ),
 
                         // see: https://github.com/ruby/ruby/blob/ruby_3_2/iseq.c#L2090
                         InsnType::TS_NUM,
-                        InsnType::TS_LINDEX => new OperandEntry(
+                        InsnType::TS_LINDEX => new Operand(
                             operand: (new NumberSymbol(
                                 $reader->smallValue(),
                             ))->toRubyClass()
@@ -300,18 +300,18 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
 
                         // NOTE: here is not implemented on actually the RubyVM.
                         // This is originally implemented by the RubyVM on PHP.
-                        InsnType::TS_OFFSET => new OperandEntry(
+                        InsnType::TS_OFFSET => new Operand(
                             operand: (new OffsetSymbol(
                                 offset: $reader->smallValue(),
                             ))->toRubyClass(),
                         ),
 
-                        InsnType::TS_IC => new OperandEntry(
+                        InsnType::TS_IC => new Operand(
                             $this->processInlineCache(
                                 $reader->smallValue()
                             )
                         ),
-                        InsnType::TS_ID => new OperandEntry(
+                        InsnType::TS_ID => new Operand(
                             $this->kernel->findId(
                                 $reader->smallValue(),
                             ),
@@ -339,7 +339,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             // So RubyVM on PHP needs explicitly changing operand.
             for ($i = 0; $i < ($insn->operandSize() - 1); ++$i) {
                 $entries->append(
-                    new OperandEntry(
+                    new Operand(
                         operand: (new NumberSymbol(
                             number: $reader->smallValue(),
                             isFixed: true,
@@ -362,7 +362,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         for ($i = 0; $i < $callInfoSize; ++$i) {
             $midIndex = $reader->smallValue();
             if ($midIndex === -1) {
-                $entries->append(new CallInfoEntry());
+                $entries->append(new CallInfo());
 
                 continue;
             }
@@ -382,7 +382,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             }
 
             $entries->append(
-                new CallInfoEntry(
+                new CallInfo(
                     callData: new CallData(
                         mid: $mid,
                         flag: $flag,
@@ -409,7 +409,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             $key = $this->kernel->findId($reader->smallValue());
             $value = $reader->smallValue();
 
-            $entries[] = new OuterVariableEntry(
+            $entries[] = new OuterVariable(
                 $key,
                 $value,
             );

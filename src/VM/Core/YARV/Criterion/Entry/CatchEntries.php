@@ -10,6 +10,6 @@ class CatchEntries extends AbstractEntries
 {
     public function verify(mixed $value): bool
     {
-        return $value instanceof CatchEntry;
+        return $value instanceof Catch_;
     }
 }

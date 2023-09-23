@@ -15,7 +15,7 @@ use RubyVM\VM\Core\Runtime\Executor\Context\VMStack;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\BreakpointExecutable;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
-use RubyVM\VM\Core\Runtime\Executor\Operation\OperationEntry;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operation;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\YARV\Essential\Symbol\VoidSymbol;
@@ -135,11 +135,11 @@ class Executor implements ExecutorInterface
             }
 
             /**
-             * @var mixed|OperationEntry $operator
+             * @var mixed|Operation $operator
              */
             $operator = $operations[$this->context->programCounter()->pos()] ?? null;
-            if (!$operator instanceof OperationEntry) {
-                throw new ExecutorExeption(sprintf('The operator is not instantiated by OperationEntry (actual: %s) - maybe an operation code processor has bug(s) or incorrect in implementation [%s]', ClassHelper::nameBy($operator), (string) $operations));
+            if (!$operator instanceof Operation) {
+                throw new ExecutorExeption(sprintf('The operator is not instantiated by Operation (actual: %s) - maybe an operation code processor has bug(s) or incorrect in implementation [%s]', ClassHelper::nameBy($operator), (string) $operations));
             }
 
             $this->logger->info(

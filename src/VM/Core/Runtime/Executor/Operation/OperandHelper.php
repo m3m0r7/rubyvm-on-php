@@ -9,7 +9,7 @@ use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\RubyClass;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoEntryInterface;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
@@ -118,9 +118,9 @@ trait OperandHelper
         return $this->getOperandAsAny(RubyClassInterface::class);
     }
 
-    private function getOperandAsCallInfo(): CallInfoEntryInterface
+    private function getOperandAsCallInfo(): CallInfoInterface
     {
-        return $this->getOperandAsAny(CallInfoEntryInterface::class);
+        return $this->getOperandAsAny(CallInfoInterface::class);
     }
 
     private function getOperandAsExecutedResult(): ExecutedResult
@@ -135,10 +135,10 @@ trait OperandHelper
             ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace());
     }
 
-    private function getOperand(): OperandEntry
+    private function getOperand(): Operand
     {
         /**
-         * @var OperandEntry $operand
+         * @var Operand $operand
          */
         $operand = $this->context
             ->instructionSequence()
@@ -147,14 +147,14 @@ trait OperandHelper
             ->get($this->context->programCounter()->increase());
 
         $this->validateType(
-            OperandEntry::class,
+            Operand::class,
             $operand,
         );
 
         return $operand;
     }
 
-    private function getOperandAsAny(string $className): RubyClass|CallInfoEntryInterface|RubyClassInterface|ID|ExecutedResult
+    private function getOperandAsAny(string $className): RubyClass|CallInfoInterface|RubyClassInterface|ID|ExecutedResult
     {
         $operand = $this->getOperand();
 
@@ -260,9 +260,9 @@ trait OperandHelper
         return $this->getStackAsAny(RubyClassInterface::class);
     }
 
-    private function getStackAsCallInfo(): CallInfoEntryInterface
+    private function getStackAsCallInfo(): CallInfoInterface
     {
-        return $this->getStackAsAny(CallInfoEntryInterface::class);
+        return $this->getStackAsAny(CallInfoInterface::class);
     }
 
     private function getStackAsExecutedResult(): ExecutedResult
@@ -277,20 +277,20 @@ trait OperandHelper
             ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace());
     }
 
-    private function getStack(): OperandEntry
+    private function getStack(): Operand
     {
         $operand = $this->context
             ->vmStack()->pop();
 
         $this->validateType(
-            OperandEntry::class,
+            Operand::class,
             $operand,
         );
 
         return $operand;
     }
 
-    private function getStackAsAny(string $className): RubyClass|CallInfoEntryInterface|RubyClassInterface|ID|ExecutedResult
+    private function getStackAsAny(string $className): RubyClass|CallInfoInterface|RubyClassInterface|ID|ExecutedResult
     {
         $operand = $this->getStack();
 

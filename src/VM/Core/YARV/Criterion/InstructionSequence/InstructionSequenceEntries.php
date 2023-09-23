@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\YARV\Criterion\InstructionSequence;
 
 use RubyVM\VM\Core\Criterion\Entry\AbstractEntries;
 
-class InstructionSequences extends AbstractEntries
+class InstructionSequenceEntries extends AbstractEntries
 {
     public function verify(mixed $value): bool
     {

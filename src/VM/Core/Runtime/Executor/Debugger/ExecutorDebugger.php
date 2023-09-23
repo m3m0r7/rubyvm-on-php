@@ -8,7 +8,7 @@ use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
-use RubyVM\VM\Core\Runtime\Executor\Operation\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
@@ -119,7 +119,7 @@ class ExecutorDebugger
             $vmStack = clone $context->vmStack();
 
             /**
-             * @var OperandEntry $callDataOperand
+             * @var Operand $callDataOperand
              */
             $callDataOperand = $context
                 ->instructionSequence()
@@ -132,7 +132,7 @@ class ExecutorDebugger
             }
 
             /**
-             * @var OperandEntry|RubyClassInterface $class
+             * @var Operand|RubyClassInterface $class
              */
             $class = $vmStack->pop();
 
@@ -152,7 +152,7 @@ class ExecutorDebugger
                     array_map(
                         fn ($argument) => match ($argument::class) {
                             SymbolInterface::class => (string) $argument,
-                            OperandEntry::class => (string) $argument->operand->symbol,
+                            Operand::class => (string) $argument->operand->symbol,
                             RubyClass::class => (string) $argument->symbol,
                             default => '?',
                         },

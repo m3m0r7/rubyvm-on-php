@@ -8,12 +8,12 @@ use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\RubyClass;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoEntryInterface;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 
-class OperandEntry
+class Operand
 {
     public function __construct(
-        public RubyClass|CallInfoEntryInterface|RubyClassInterface|ID|ExecutedResult $operand
+        public RubyClass|CallInfoInterface|RubyClassInterface|ID|ExecutedResult $operand
     ) {}
 
     public function __clone()

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Runtime\Executor\Operation\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
@@ -21,8 +21,8 @@ trait OperatorCalculatable
         $recv = $this->context->vmStack()->pop();
         $obj = $this->context->vmStack()->pop();
 
-        $this->validateType(OperandEntry::class, $recv);
-        $this->validateType(OperandEntry::class, $obj);
+        $this->validateType(Operand::class, $recv);
+        $this->validateType(Operand::class, $obj);
 
         $callDataOperand = $this->getOperandAsCallInfo();
 
@@ -56,7 +56,7 @@ trait OperatorCalculatable
             throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor cannot process `%s` operator because it was not implemented or cannot comparison operator %s and %s', strtolower($this->insn->name), $this->insn->value, $operator, ClassHelper::nameBy($leftOperand), ClassHelper::nameBy($rightOperand)));
         }
 
-        $this->context->vmStack()->push(new OperandEntry($value));
+        $this->context->vmStack()->push(new Operand($value));
 
         return ProcessedStatus::SUCCESS;
     }

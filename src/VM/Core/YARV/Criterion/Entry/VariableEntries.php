@@ -10,6 +10,6 @@ class VariableEntries extends AbstractEntries
 {
     public function verify(mixed $value): bool
     {
-        return $value instanceof VariableEntry;
+        return $value instanceof Variable;
     }
 }

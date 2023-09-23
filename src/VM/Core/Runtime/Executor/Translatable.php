@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Runtime\Executor\Operation\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\RubyClass;
 
 /**
@@ -16,7 +16,7 @@ trait Translatable
 {
     use Validatable;
 
-    public function translateForArguments(OperandEntry ...$operands): array
+    public function translateForArguments(Operand ...$operands): array
     {
         $arguments = [];
         foreach ($operands as $operand) {

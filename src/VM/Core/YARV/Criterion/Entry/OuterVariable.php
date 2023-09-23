@@ -6,9 +6,10 @@ namespace RubyVM\VM\Core\YARV\Criterion\Entry;
 
 use RubyVM\VM\Core\Runtime\ID;
 
-class VariableEntry
+class OuterVariable
 {
     public function __construct(
-        public readonly ID $id
+        public readonly ID $key,
+        protected readonly int $value,
     ) {}
 }

@@ -10,6 +10,6 @@ class OuterVariableEntries extends AbstractEntries
 {
     public function verify(mixed $value): bool
     {
-        return $value instanceof OuterVariableEntry;
+        return $value instanceof OuterVariable;
     }
 }

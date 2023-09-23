@@ -8,7 +8,7 @@ use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
-use RubyVM\VM\Core\Runtime\Executor\Operation\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\SpecialMethodCallerEntries;
@@ -63,7 +63,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         }
 
         $this->validateType(
-            OperandEntry::class,
+            Operand::class,
             ...$arguments,
         );
 
@@ -101,7 +101,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
 
         if ($result instanceof RubyClass) {
             $this->context->vmStack()
-                ->push(new OperandEntry($result));
+                ->push(new Operand($result));
 
             return ProcessedStatus::SUCCESS;
         }
@@ -117,14 +117,14 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             }
             if ($result->returnValue !== null) {
                 $this->context->vmStack()
-                    ->push(new OperandEntry($result->returnValue));
+                    ->push(new Operand($result->returnValue));
             }
 
             return ProcessedStatus::SUCCESS;
         }
         if ($result instanceof SymbolInterface) {
             $this->context->vmStack()
-                ->push(new OperandEntry($result->toRubyClass()));
+                ->push(new Operand($result->toRubyClass()));
 
             return ProcessedStatus::SUCCESS;
         }

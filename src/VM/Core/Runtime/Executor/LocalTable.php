@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Runtime\Executor\Operation\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 
 trait LocalTable
@@ -15,7 +15,7 @@ trait LocalTable
     public function getLocalTableToStack(int $slotIndex, int $level): void
     {
         $this->context->vmStack()->push(
-            new OperandEntry(
+            new Operand(
                 $this->context
                     ->environmentTable()
                     ->get(

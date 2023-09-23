@@ -8,7 +8,7 @@ use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\CallBlockHelper;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
-use RubyVM\VM\Core\Runtime\Executor\Operation\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
@@ -48,7 +48,7 @@ class BuiltinSend implements OperationProcessorInterface
         $blockObject = $this->getStack()->operand;
 
         $this->validateType(
-            OperandEntry::class,
+            Operand::class,
             ...$arguments,
         );
 
@@ -63,7 +63,7 @@ class BuiltinSend implements OperationProcessorInterface
         );
 
         if ($result !== null) {
-            $this->context->vmStack()->push(new OperandEntry($result));
+            $this->context->vmStack()->push(new Operand($result));
         }
 
         return ProcessedStatus::SUCCESS;

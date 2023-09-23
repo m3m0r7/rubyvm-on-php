@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Context;
 
 use RubyVM\VM\Core\Runtime\Executor\Debugger\DebugFormat;
-use RubyVM\VM\Core\Runtime\Executor\Operation\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Exception\VMStackException;
 
 class VMStack implements \Countable
@@ -24,7 +24,7 @@ class VMStack implements \Countable
         return count($this->items);
     }
 
-    public function pop(): OperandEntry
+    public function pop(): Operand
     {
         $item = array_pop($this->items);
         if ($item === null) {
@@ -34,7 +34,7 @@ class VMStack implements \Countable
         return $item;
     }
 
-    public function shift(): OperandEntry
+    public function shift(): Operand
     {
         return array_shift(
             $this->items,
@@ -49,7 +49,7 @@ class VMStack implements \Countable
         return $this;
     }
 
-    public function push(OperandEntry $entry, OperandEntry ...$otherEntries): self
+    public function push(Operand $entry, Operand ...$otherEntries): self
     {
         array_push(
             $this->items,

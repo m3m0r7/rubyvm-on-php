@@ -14,8 +14,8 @@ class OperationEntries extends AbstractEntries
 {
     public function verify(mixed $value): bool
     {
-        return $value instanceof OperationEntry
-            || $value instanceof OperandEntry
+        return $value instanceof Operation
+            || $value instanceof Operand
             || $value instanceof UnknownEntry;
     }
 
@@ -24,12 +24,12 @@ class OperationEntries extends AbstractEntries
         $result = [];
         foreach ($this->items as $item) {
             $result[] = ClassHelper::nameBy($item) . '<' . match ($item::class) {
-                OperationEntry::class => sprintf(
+                Operation::class => sprintf(
                     '%s<0x%02x>',
                     strtolower($item->insn->name),
                     $item->insn->value
                 ),
-                OperandEntry::class => match (($item->operand)::class) {
+                Operand::class => match (($item->operand)::class) {
                     RubyClass::class => (string) $item->operand->symbol,
                     SymbolInterface::class => (string) $item->operand,
                     default => ClassHelper::nameBy($item->operand),

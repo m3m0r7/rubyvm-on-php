@@ -30,7 +30,7 @@ use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Verification\VerificationHeader;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequences;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceEntries;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offsets;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ObjectInfo;
@@ -56,7 +56,7 @@ class Kernel implements KernelInterface
     public readonly int $globalObjectListOffset;
     public readonly Offsets $instructionSequenceList;
     public readonly Offsets $globalObjectList;
-    protected readonly InstructionSequences $instructionSequences;
+    protected readonly InstructionSequenceEntries $instructionSequences;
     protected readonly IOContext $IOContext;
 
     protected array $globalObjectTable = [];
@@ -74,7 +74,7 @@ class Kernel implements KernelInterface
     ) {
         $this->instructionSequenceList = new Offsets();
         $this->globalObjectList = new Offsets();
-        $this->instructionSequences = new InstructionSequences();
+        $this->instructionSequences = new InstructionSequenceEntries();
         $this->IOContext = new IOContext(
             $this->vm->option()->stdOut ?? new StreamHandler(STDOUT),
             $this->vm->option()->stdIn ?? new StreamHandler(STDIN),
@@ -394,6 +394,7 @@ class Kernel implements KernelInterface
     public function operationProcessorEntries(): OperationProcessorEntries
     {
         static $operationProcessorEntries;
+
         return $operationProcessorEntries ??= new RubyVM3_2_OperationProcessorEntries();
     }
 }

@@ -6,13 +6,13 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
-use RubyVM\VM\Core\Runtime\Executor\Operation\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\VMCallFlagBit;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoEntryInterface;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Exception\OperationProcessorException;
 
@@ -77,7 +77,7 @@ trait CallBlockHelper
         return $result;
     }
 
-    private function callBlockWithArguments(CallInfoEntryInterface $callInfo, NumberSymbol $blockIseqIndex, RubyClass|RubyClassInterface $blockObject, bool $isSuper, OperandEntry ...$arguments): ?RubyClass
+    private function callBlockWithArguments(CallInfoInterface $callInfo, NumberSymbol $blockIseqIndex, RubyClass|RubyClassInterface $blockObject, bool $isSuper, Operand ...$arguments): ?RubyClass
     {
         if ($callInfo->callData()->flag() & (0x01 << VMCallFlagBit::VM_CALL_ARGS_BLOCKARG->value)) {
             throw new OperationProcessorException('The callBlockWithArguments is not implemented yet');

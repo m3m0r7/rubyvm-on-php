@@ -7,7 +7,7 @@ namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
-use RubyVM\VM\Core\Runtime\Executor\Operation\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
@@ -39,7 +39,7 @@ class BuiltinPutspecialobject implements OperationProcessorInterface
 
         $type = VMSpecialObjectType::of($symbol->valueOf());
 
-        $this->context->vmStack()->push(new OperandEntry($this->context->self()));
+        $this->context->vmStack()->push(new Operand($this->context->self()));
 
         return ProcessedStatus::SUCCESS;
     }

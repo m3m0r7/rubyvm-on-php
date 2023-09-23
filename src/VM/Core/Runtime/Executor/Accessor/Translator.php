@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Executor\Accessor;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\Executor\Operation\OperandEntry;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
@@ -93,9 +93,9 @@ readonly class Translator
 
     public function __construct(public readonly RubyClass $object) {}
 
-    public function toOperand(): OperandEntry
+    public function toOperand(): Operand
     {
-        return new OperandEntry($this->object);
+        return new Operand($this->object);
     }
 
     private static function validateArrayIsNumber(array $values): bool

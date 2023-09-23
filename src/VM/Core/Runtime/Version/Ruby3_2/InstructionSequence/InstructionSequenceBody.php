@@ -13,7 +13,7 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceBodyInt
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\LocationInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\ObjectParameterInterface;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\VariableInterfce;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\VariableInterface;
 
 class InstructionSequenceBody implements InstructionSequenceBodyInterface
 {
@@ -27,7 +27,7 @@ class InstructionSequenceBody implements InstructionSequenceBodyInterface
         public readonly int $localTableSize,
         public readonly int $ciSize,
         public readonly InsnsInterface $insns,
-        public readonly VariableInterfce $variable,
+        public readonly VariableInterface $variable,
         public readonly LocationInterface $location,
         public readonly int $catchExceptP,
         public readonly int $builtinInlineP,
