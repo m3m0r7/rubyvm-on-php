@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\RubyClass;
@@ -26,23 +28,12 @@ trait OperatorCalculatable
 
         $callDataOperand = $this->getOperandAsCallInfo();
 
-        /**
-         * @var SymbolInterface $operator
-         */
         $operator = $callDataOperand->callData
             ->mid
-            ->object
-            ->symbol;
+            ->object;
 
-        /**
-         * @var SymbolInterface $leftOperand
-         */
-        $leftOperand = $obj->operand->symbol;
-
-        /**
-         * @var SymbolInterface $rightOperand
-         */
-        $rightOperand = $recv->operand->symbol;
+        $leftOperand = $obj->operand->entity->symbol();
+        $rightOperand = $recv->operand->entity->symbol();
 
         $value = null;
         if ($operator instanceof StringSymbol) {
@@ -61,5 +52,5 @@ trait OperatorCalculatable
         return ProcessedStatus::SUCCESS;
     }
 
-    abstract private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?RubyClass;
+    abstract private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?RubyClassInterface;
 }

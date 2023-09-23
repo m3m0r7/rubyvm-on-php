@@ -35,7 +35,7 @@ class BuiltinGetinstancevariable implements OperationProcessorInterface
         $instanceVar = $this->getOperandAsID();
 
         // this is instance variable index
-        $ivIndex = $this->getOperandAsNumberSymbol()->valueOf();
+        $ivIndex = $this->getOperandAsNumber()->valueOf();
 
         /**
          * @var RubyClassImplementationInterface $targetObject

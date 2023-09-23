@@ -52,7 +52,7 @@ trait ProvideExtendedMethodCall
     private static function resolveObjectName(RubyClassInterface $class): string
     {
         if ($class instanceof RubyClass) {
-            return ($class->symbol)::class;
+            return ($class->entity)::class;
         }
 
         return $class::class;

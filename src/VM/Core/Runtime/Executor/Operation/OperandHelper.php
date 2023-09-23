@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Operation;
 
+use RubyVM\VM\Core\Runtime\Entity\Array_;
+use RubyVM\VM\Core\Runtime\Entity\Float_;
+use RubyVM\VM\Core\Runtime\Entity\Number;
+use RubyVM\VM\Core\Runtime\Entity\Offset;
+use RubyVM\VM\Core\Runtime\Entity\String_;
+use RubyVM\VM\Core\Runtime\Essential\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
-use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\OffsetSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
 /**
  * This trait helps an IDE.
@@ -24,88 +24,88 @@ trait OperandHelper
 {
     use Validatable;
 
-    private function getOperandAsSymbol(): SymbolInterface
+    private function getOperandAsEntity(): EntityInterface
     {
         $operand = $this->getOperandAsAny(
             RubyClass::class,
         );
 
-        return $operand->symbol;
+        return $operand->entity;
     }
 
-    private function getOperandAsNumberSymbol(): NumberSymbol
+    private function getOperandAsNumber(): Number
     {
         /**
-         * @var NumberSymbol $symbol
+         * @var Number $number
          */
-        $symbol = $this->getOperandAsSymbol();
+        $number = $this->getOperandAsEntity();
 
         $this->validateType(
-            NumberSymbol::class,
-            $symbol,
+            Number::class,
+            $number,
         );
 
-        return $symbol;
+        return $number;
     }
 
-    private function getOperandAsStringSymbol(): StringSymbol
+    private function getOperandAsString(): String_
     {
         /**
-         * @var StringSymbol $symbol
+         * @var String_ $entity
          */
-        $symbol = $this->getOperandAsSymbol();
+        $entity = $this->getOperandAsEntity();
 
         $this->validateType(
-            StringSymbol::class,
-            $symbol,
+            String_::class,
+            $entity,
         );
 
-        return $symbol;
+        return $entity;
     }
 
-    private function getOperandAsFloatSymbol(): FloatSymbol
+    private function getOperandAsFloat(): Float_
     {
         /**
-         * @var FloatSymbol $symbol
+         * @var Float_ $entity
          */
-        $symbol = $this->getOperandAsSymbol();
+        $entity = $this->getOperandAsEntity();
 
         $this->validateType(
-            FloatSymbol::class,
-            $symbol,
+            Float_::class,
+            $entity,
         );
 
-        return $symbol;
+        return $entity;
     }
 
-    private function getOperandAsOffsetSymbol(): OffsetSymbol
+    private function getOperandAsOffset(): Offset
     {
         /**
-         * @var OffsetSymbol $symbol
+         * @var Offset $entity
          */
-        $symbol = $this->getOperandAsSymbol();
+        $entity = $this->getOperandAsEntity();
 
         $this->validateType(
-            OffsetSymbol::class,
-            $symbol,
+            Offset::class,
+            $entity,
         );
 
-        return $symbol;
+        return $entity;
     }
 
-    private function getOperandAsArraySymbol(): ArraySymbol
+    private function getOperandAsArray(): Array_
     {
         /**
-         * @var ArraySymbol $symbol
+         * @var Array_ $entity
          */
-        $symbol = $this->getOperandAsSymbol();
+        $entity = $this->getOperandAsEntity();
 
         $this->validateType(
-            ArraySymbol::class,
-            $symbol,
+            Array_::class,
+            $entity,
         );
 
-        return $symbol;
+        return $entity;
     }
 
     private function getOperandAsID(): ID
@@ -128,9 +128,9 @@ trait OperandHelper
         return $this->getOperandAsAny(ExecutedResult::class);
     }
 
-    private function getOperandAsObject(): RubyClass
+    private function getOperandAsObject(): RubyClassInterface
     {
-        return $this->getOperandAsAny(RubyClass::class)
+        return $this->getOperandAsAny(RubyClassInterface::class)
             ->setRuntimeContext($this->context)
             ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace());
     }
@@ -154,7 +154,7 @@ trait OperandHelper
         return $operand;
     }
 
-    private function getOperandAsAny(string $className): RubyClass|CallInfoInterface|RubyClassInterface|ID|ExecutedResult
+    private function getOperandAsAny(string $className): CallInfoInterface|RubyClassInterface|ID|ExecutedResult
     {
         $operand = $this->getOperand();
 
@@ -166,88 +166,88 @@ trait OperandHelper
         return $operand->operand;
     }
 
-    private function getStackAsSymbol(): SymbolInterface
+    private function getStackAsEntity(): EntityInterface
     {
-        $operand = $this->getStackAsAny(
+        $stack = $this->getStackAsAny(
             RubyClass::class
         );
 
-        return $operand->symbol;
+        return $stack->entity;
     }
 
-    private function getStackAsNumberSymbol(): NumberSymbol
+    private function getStackAsNumber(): Number
     {
         /**
-         * @var NumberSymbol $symbol
+         * @var Number $entity
          */
-        $symbol = $this->getStackAsSymbol();
+        $entity = $this->getStackAsEntity();
 
         $this->validateType(
-            NumberSymbol::class,
-            $symbol,
+            Number::class,
+            $entity,
         );
 
-        return $symbol;
+        return $entity;
     }
 
-    private function getStackAsArraySymbol(): ArraySymbol
+    private function getStackAsArray(): Array_
     {
         /**
-         * @var ArraySymbol $symbol
+         * @var Array_ $entity
          */
-        $symbol = $this->getStackAsSymbol();
+        $entity = $this->getStackAsEntity();
 
         $this->validateType(
-            ArraySymbol::class,
-            $symbol,
+            Array_::class,
+            $entity,
         );
 
-        return $symbol;
+        return $entity;
     }
 
-    private function getStackAsStringSymbol(): StringSymbol
+    private function getStackAsString(): String_
     {
         /**
-         * @var StringSymbol $symbol
+         * @var String_ $entity
          */
-        $symbol = $this->getStackAsSymbol();
+        $entity = $this->getStackAsEntity();
 
         $this->validateType(
-            StringSymbol::class,
-            $symbol,
+            String_::class,
+            $entity,
         );
 
-        return $symbol;
+        return $entity;
     }
 
-    private function getStackAsFloatSymbol(): FloatSymbol
+    private function getStackAsFloat(): Float_
     {
         /**
-         * @var FloatSymbol $symbol
+         * @var Float_ $entity
          */
-        $symbol = $this->getStackAsSymbol();
+        $entity = $this->getStackAsEntity();
 
         $this->validateType(
-            FloatSymbol::class,
-            $symbol,
+            Float_::class,
+            $entity,
         );
 
-        return $symbol;
+        return $entity;
     }
 
-    private function getStackAsOffsetSymbol(): OffsetSymbol
+    private function getStackAsOffsetSymbol(): Offset
     {
         /**
-         * @var OffsetSymbol $symbol
+         * @var Offset $entity
          */
-        $symbol = $this->getStackAsSymbol();
+        $entity = $this->getStackAsEntity();
 
         $this->validateType(
-            OffsetSymbol::class,
-            $symbol,
+            Offset::class,
+            $entity,
         );
 
-        return $symbol;
+        return $entity;
     }
 
     private function getStackAsID(): ID
@@ -270,9 +270,9 @@ trait OperandHelper
         return $this->getStackAsAny(ExecutedResult::class);
     }
 
-    private function getStackAsObject(): RubyClass
+    private function getStackAsObject(): RubyClassInterface
     {
-        return $this->getStackAsAny(RubyClass::class)
+        return $this->getStackAsAny(RubyClassInterface::class)
             ->setRuntimeContext($this->context)
             ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace());
     }
@@ -290,7 +290,7 @@ trait OperandHelper
         return $operand;
     }
 
-    private function getStackAsAny(string $className): RubyClass|CallInfoInterface|RubyClassInterface|ID|ExecutedResult
+    private function getStackAsAny(string $className): CallInfoInterface|RubyClassInterface|ID|ExecutedResult
     {
         $operand = $this->getStack();
 

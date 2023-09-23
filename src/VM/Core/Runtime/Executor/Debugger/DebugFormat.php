@@ -20,10 +20,10 @@ trait DebugFormat
             $result[] = match ($item::class) {
                 SymbolInterface::class => (string) $item,
                 Operand::class => (string) match (($item->operand)::class) {
-                    RubyClass::class => ClassHelper::nameBy($item->operand->symbol) . "({$item->operand->symbol})",
+                    RubyClass::class => ClassHelper::nameBy($item->operand->entity) . "({$item->operand->entity})",
                     default => ClassHelper::nameBy($item->operand),
                 },
-                RubyClass::class => ClassHelper::nameBy($item->symbol) . "({$item->symbol})",
+                RubyClass::class => ClassHelper::nameBy($item->entity) . "({$item->entity})",
                 default => 'unknown',
             } . "#{$index}";
         }

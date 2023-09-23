@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
+use RubyVM\VM\Core\Runtime\Entity\Array_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -33,15 +34,15 @@ class BuiltinNewarray implements OperationProcessorInterface
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
         $entries = [];
-        $num = $this->getOperandAsNumberSymbol();
+        $num = $this->getOperandAsNumber();
 
         for ($i = $num->valueOf() - 1; $i >= 0; --$i) {
-            $entries[$i] = $this->getStackAsNumberSymbol();
+            $entries[$i] = ($this->getStackAsNumber())->symbol();
         }
 
         $this->context->vmStack()->push(
             new Operand(
-                (new ArraySymbol(array_values($entries)))
+                (new Array_(new ArraySymbol(array_values($entries))))
                     ->toRubyClass(),
             ),
         );

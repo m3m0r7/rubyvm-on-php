@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Provider;
 
-use RubyVM\VM\Core\Runtime\RubyClass;
+use RubyVM\VM\Core\Runtime\Entity\Nil;
+use RubyVM\VM\Core\Runtime\Entity\String_;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NilSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
 trait ProvideBasicClassMethods
 {
-    public function puts(RubyClass $object): RubyClass
+    public function puts(RubyClassInterface $object): RubyClassInterface
     {
-        $symbol = $object->symbol;
+        $symbol = $object->entity->symbol();
 
         $string = '';
         if ($symbol instanceof ArraySymbol || $symbol instanceof RangeSymbol) {
@@ -35,7 +36,7 @@ trait ProvideBasicClassMethods
         $this->context->IOContext()->stdOut->write($string);
 
         // The puts returns (nil)
-        return (new NilSymbol())
+        return (new Nil(new NilSymbol()))
             ->toRubyClass();
     }
 
@@ -44,16 +45,14 @@ trait ProvideBasicClassMethods
         exit($code);
     }
 
-    public function inspect(): SymbolInterface
+    public function inspect(): RubyClassInterface
     {
-        $string = (string) $this;
-        if ($this instanceof RubyClass) {
-            $string = match (($this->symbol)::class) {
-                StringSymbol::class => '"' . $string . '"',
-                default => (string) $string,
-            };
-        }
+        $string = match (($this->entity->symbol())::class) {
+            StringSymbol::class => '"' . ((string) $this) . '"',
+            default => (string) $this,
+        };
 
-        return new StringSymbol($string);
+        return (new String_(new StringSymbol($string)))
+            ->toRubyClass();
     }
 }

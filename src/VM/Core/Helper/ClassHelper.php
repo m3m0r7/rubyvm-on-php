@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Helper;
 
+use RubyVM\VM\Core\Runtime\Essential\EntityInterface;
 use RubyVM\VM\Core\Runtime\RubyClass;
 
 class ClassHelper
@@ -14,11 +15,14 @@ class ClassHelper
             return gettype($obj);
         }
         if (RubyClass::class === get_class($obj)) {
-            return static::nameBy($obj->symbol);
+            return static::nameBy($obj->entity);
         }
         $classNamePath = explode('\\', is_object($obj) ? get_class($obj) : $obj);
-
-        return $classNamePath[array_key_last($classNamePath)];
+        $name = $classNamePath[array_key_last($classNamePath)];
+        if ($obj instanceof EntityInterface) {
+            $name = rtrim($name, '_');
+        }
+        return $name;
     }
 
     public static function idBy(object $obj): string

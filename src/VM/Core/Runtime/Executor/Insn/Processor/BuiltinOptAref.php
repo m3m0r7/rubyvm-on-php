@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
+use RubyVM\VM\Core\Runtime\Entity\Number;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -35,17 +36,17 @@ class BuiltinOptAref implements OperationProcessorInterface
         // No used (This operand is only array always; which calls [] in the ruby and refs array symbol)
         $this->getOperand();
 
-        $recv = $this->getStackAsNumberSymbol();
-        $obj = $this->getStackAsSymbol();
+        $recv = $this->getStackAsNumber();
+        $obj = $this->getStackAsEntity();
 
         /**
          * @var NumberSymbol $selectedNumber
          */
-        $selectedNumber = $obj[$recv->valueOf()];
+        $selectedNumber = $obj->symbol()[$recv->valueOf()];
 
         $this->context->vmStack()->push(
             new Operand(
-                $selectedNumber
+                (new Number($selectedNumber))
                     ->toRubyClass(),
             ),
         );

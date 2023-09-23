@@ -61,7 +61,7 @@ $rubyVM = new \RubyVM\VM\Core\Runtime\RubyVM(
 // Register kernel its each of Ruby Versions
 $rubyVM->register(
     rubyVersion: \RubyVM\VM\Core\YARV\RubyVersion::VERSION_3_2,
-    kernelClass: \RubyVM\VM\Core\Runtime\Version\Ruby3_2\Kernel::class,
+    kernelClass: \RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Kernel::class,
 );
 
 // Disassemble instruction sequence binary formatted and get executor
@@ -116,7 +116,7 @@ $rubyVM = new \RubyVM\VM\Core\Runtime\RubyVM(
 // Register kernel its each of Ruby Versions
 $rubyVM->register(
     rubyVersion: \RubyVM\VM\Core\YARV\RubyVersion::VERSION_3_2,
-    kernelClass: \RubyVM\VM\Core\Runtime\Version\Ruby3_2\Kernel::class,
+    kernelClass: \RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Kernel::class,
 );
 
 // Disassemble instruction sequence binary formatted and get executor

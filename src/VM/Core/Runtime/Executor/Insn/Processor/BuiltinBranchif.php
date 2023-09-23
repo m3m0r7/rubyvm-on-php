@@ -33,14 +33,14 @@ class BuiltinBranchif implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $offsetSymbol = $this->getOperandAsOffsetSymbol();
+        $offset = $this->getOperandAsOffset();
 
-        $symbol = $this->getStackAsSymbol();
+        $entity = $this->getStackAsEntity();
 
-        if ($symbol->testValue()) {
+        if ($entity->testValue()) {
             $this->context
                 ->programCounter()
-                ->increase($offsetSymbol->offset);
+                ->increase($offset->valueOf());
 
             return ProcessedStatus::JUMPED;
         }

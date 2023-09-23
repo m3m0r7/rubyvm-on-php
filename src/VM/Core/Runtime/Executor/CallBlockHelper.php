@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use RubyVM\VM\Core\Runtime\Entity\Number;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
@@ -77,7 +78,7 @@ trait CallBlockHelper
         return $result;
     }
 
-    private function callBlockWithArguments(CallInfoInterface $callInfo, NumberSymbol $blockIseqIndex, RubyClass|RubyClassInterface $blockObject, bool $isSuper, Operand ...$arguments): ?RubyClass
+    private function callBlockWithArguments(CallInfoInterface $callInfo, Number $blockIseqIndex, RubyClass|RubyClassInterface $blockObject, bool $isSuper, Operand ...$arguments): ?RubyClass
     {
         if ($callInfo->callData()->flag() & (0x01 << VMCallFlagBit::VM_CALL_ARGS_BLOCKARG->value)) {
             throw new OperationProcessorException('The callBlockWithArguments is not implemented yet');

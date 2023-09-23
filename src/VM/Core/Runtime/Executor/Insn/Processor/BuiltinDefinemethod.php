@@ -41,14 +41,13 @@ class BuiltinDefinemethod implements OperationProcessorInterface
          * @var StringSymbol $methodNameSymbol
          */
         $methodNameSymbol = $this->getOperandAsID()
-            ->object
-            ->symbol;
+            ->object;
 
         $instructionSequence = $this->context->kernel()
             ->loadInstructionSequence(
                 aux: new Aux(
                     loader: new AuxLoader(
-                        index: $this->getOperandAsNumberSymbol()
+                        index: $this->getOperandAsNumber()
                             ->valueOf(),
                     ),
                 ),

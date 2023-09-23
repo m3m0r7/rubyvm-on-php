@@ -52,7 +52,7 @@ class BuiltinSend implements OperationProcessorInterface
             ...$arguments,
         );
 
-        $blockIseqNumber = $this->getOperandAsNumberSymbol();
+        $blockIseqNumber = $this->getOperandAsNumber();
 
         $result = $this->callBlockWithArguments(
             $callInfo,

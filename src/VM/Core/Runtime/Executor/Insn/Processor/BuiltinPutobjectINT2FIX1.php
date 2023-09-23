@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
+use RubyVM\VM\Core\Runtime\Entity\Number;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -34,7 +35,7 @@ class BuiltinPutobjectINT2FIX1 implements OperationProcessorInterface
     {
         $this->context->vmStack()->push(
             new Operand(
-                (new NumberSymbol(1))
+                (new Number(new NumberSymbol(1)))
                     ->toRubyClass()
             ),
         );

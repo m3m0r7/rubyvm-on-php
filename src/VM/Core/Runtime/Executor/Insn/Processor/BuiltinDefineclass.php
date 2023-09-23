@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
+use RubyVM\VM\Core\Runtime\Entity\EntityHelper;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
@@ -14,6 +15,7 @@ use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
+use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 
 class BuiltinDefineclass implements OperationProcessorInterface
@@ -37,33 +39,41 @@ class BuiltinDefineclass implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $class = $this->getOperandAsID()->object;
-        $iseqNumber = $this->getOperandAsNumberSymbol();
-        $flags = $this->getOperandAsNumberSymbol();
+        $class = EntityHelper::createEntityBySymbol($this->getOperandAsID()->object)
+            ->toRubyClass();
+        $iseqNumber = $this->getOperandAsNumber();
+        $flags = $this->getOperandAsNumber();
 
-        $instructionSequence = $this->context->kernel()->loadInstructionSequence(
-            aux: new Aux(
-                loader: new AuxLoader(
-                    index: $iseqNumber->valueOf(),
+        $instructionSequence = $this->context->kernel()
+            ->loadInstructionSequence(
+                aux: new Aux(
+                    loader: new AuxLoader(
+                        index: $iseqNumber->valueOf(),
+                    ),
                 ),
-            ),
-        );
+            );
 
         $instructionSequence->load();
 
         /**
          * @var StringSymbol $className
          */
-        $className = $class->symbol;
+        $className = $class->entity->symbol();
+
+        /**
+         * @var NumberSymbol $flagNumber
+         */
+        $flagNumber = $flags->symbol();
 
         $this->context
             ->self()
             ->class(
-                $flags,
+                $flagNumber,
                 $className,
             );
 
-        $class->setRuntimeContext($this->context)
+        $class
+            ->setRuntimeContext($this->context)
             ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace()->userlandClasses()->get((string) $className));
 
         $executor = (new Executor(
@@ -76,7 +86,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
         ));
 
         $executor->context()
-            ->appendTrace($class->symbol->valueOf());
+            ->appendTrace($class->entity->valueOf());
 
         $result = $executor->execute();
 

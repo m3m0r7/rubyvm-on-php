@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
+use RubyVM\VM\Core\Runtime\Entity\Array_;
+use RubyVM\VM\Core\Runtime\Entity\Float_;
+use RubyVM\VM\Core\Runtime\Entity\Number;
+use RubyVM\VM\Core\Runtime\Entity\String_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -61,34 +65,34 @@ class BuiltinOptPlus implements OperationProcessorInterface
         return $value;
     }
 
-    private function computeStringPlusString(StringSymbol $leftOperand, StringSymbol $rightOperand): RubyClass
+    private function computeStringPlusString(StringSymbol $leftOperand, StringSymbol $rightOperand): RubyClassInterface
     {
-        return (new StringSymbol(
+        return (new String_(new StringSymbol(
             $leftOperand . $rightOperand
-        ))->toRubyClass();
+        )))->toRubyClass();
     }
 
-    private function computeNumberPlusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClass
+    private function computeNumberPlusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
     {
-        return (new NumberSymbol(
+        return (new Number(new NumberSymbol(
             $leftOperand->valueOf() + $rightOperand->valueOf()
-        ))->toRubyClass();
+        )))->toRubyClass();
     }
 
-    private function computeFloatPlusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClass
+    private function computeFloatPlusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClassInterface
     {
-        return (new FloatSymbol(
+        return (new Float_(new FloatSymbol(
             $leftOperand->valueOf() + $rightOperand->valueOf()
-        ))->toRubyClass();
+        )))->toRubyClass();
     }
 
-    private function computeArrayPlusArray(ArraySymbol $leftOperand, ArraySymbol $rightOperand): RubyClass
+    private function computeArrayPlusArray(ArraySymbol $leftOperand, ArraySymbol $rightOperand): RubyClassInterface
     {
-        return (new ArraySymbol(
+        return (new Array_(new ArraySymbol(
             [
                 ...$leftOperand,
                 ...$rightOperand,
             ],
-        ))->toRubyClass();
+        )))->toRubyClass();
     }
 }

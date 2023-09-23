@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Debugger;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Runtime\Essential\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\RubyClass;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableSeparator;
@@ -146,15 +146,14 @@ class ExecutorDebugger
                     ->operand
                     ->callData()
                     ->mid()
-                    ->object
-                    ->symbol,
+                    ->object,
                 implode(
                     ', ',
                     array_map(
                         fn ($argument) => match ($argument::class) {
                             SymbolInterface::class => (string) $argument,
-                            Operand::class => (string) $argument->operand->symbol,
-                            RubyClass::class => (string) $argument->symbol,
+                            Operand::class => (string) $argument->operand->entity,
+                            RubyClass::class => (string) $argument->entity->entity,
                             default => '?',
                         },
                         $arguments,
@@ -166,14 +165,15 @@ class ExecutorDebugger
             $currentPos = $context->programCounter()->pos();
 
             /**
-             * @var NumberSymbol $number
+             * @var EntityInterface $number
              */
             $number = $context
                 ->instructionSequence()
-                ->operations()
+                ->body()
+                ->operationEntries
                 ->get($currentPos + 1)
                 ->operand
-                ->symbol;
+                ->entity;
 
             return sprintf('ref: %d', $number->valueOf());
         }

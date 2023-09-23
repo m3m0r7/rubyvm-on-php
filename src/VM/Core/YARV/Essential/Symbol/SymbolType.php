@@ -77,6 +77,14 @@ enum SymbolType
     public static function findBySymbol(SymbolInterface $symbol): self
     {
         return match ($symbol) {
+            ArraySymbol::class => self::ARRAY,
+            FloatSymbol::class => self::FLOAT,
+            RangeSymbol::class => self::STRUCT,
+            UndefinedSymbol::class => self::UNDEF,
+            NilSymbol::class => self::NIL,
+            ClassSymbol::class => self::CLASS_,
+            OffsetSymbol::class,
+            VoidSymbol::class => self::SYMBOL,
             NumberSymbol::class => self::FIXNUM,
             StringSymbol::class => self::STRING,
             default => self::NONE,

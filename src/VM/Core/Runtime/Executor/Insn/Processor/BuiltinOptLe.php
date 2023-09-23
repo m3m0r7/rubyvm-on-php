@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
+use RubyVM\VM\Core\Runtime\Entity\Boolean;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -54,17 +55,17 @@ class BuiltinOptLe implements OperationProcessorInterface
         return $value;
     }
 
-    private function computeNumberLessThanOrEqualsNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClass
+    private function computeNumberLessThanOrEqualsNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
     {
-        return (new BooleanSymbol(
+        return (new Boolean(new BooleanSymbol(
             $leftOperand->valueOf() <= $rightOperand->valueOf()
-        ))->toRubyClass();
+        )))->toRubyClass();
     }
 
-    private function computeFloatLessThanOrEqualsFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClass
+    private function computeFloatLessThanOrEqualsFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClassInterface
     {
-        return (new BooleanSymbol(
+        return (new Boolean(new BooleanSymbol(
             $leftOperand->valueOf() <= $rightOperand->valueOf()
-        ))->toRubyClass();
+        )))->toRubyClass();
     }
 }

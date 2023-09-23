@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Runtime\Entity\Void_;
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
@@ -18,7 +19,6 @@ use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operation;
 use RubyVM\VM\Core\Runtime\Main;
 use RubyVM\VM\Core\Runtime\OptionInterface;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\HeapSpace\DefaultInstanceHeapSpace;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
@@ -310,7 +310,7 @@ class Executor implements ExecutorInterface
         return new ExecutedResult(
             executor: $this,
             executedStatus: ExecutedStatus::SUCCESS,
-            returnValue: (new VoidSymbol())
+            returnValue: (new Void_(new VoidSymbol()))
                 ->toRubyClass(),
             threw: null,
             debugger: $this->debugger,

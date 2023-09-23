@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
+use RubyVM\VM\Core\Runtime\Entity\Number;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -49,10 +50,10 @@ class BuiltinOptAnd implements OperationProcessorInterface
         return $value;
     }
 
-    private function computeNumberAndNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClass
+    private function computeNumberAndNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
     {
-        return (new NumberSymbol(
+        return (new Number(new NumberSymbol(
             $leftOperand->valueOf() & $rightOperand->valueOf()
-        ))->toRubyClass();
+        )))->toRubyClass();
     }
 }

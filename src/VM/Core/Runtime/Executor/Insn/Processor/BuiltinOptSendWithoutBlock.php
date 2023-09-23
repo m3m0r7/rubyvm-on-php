@@ -18,7 +18,6 @@ use RubyVM\VM\Core\Runtime\Executor\Translatable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
@@ -54,8 +53,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         $symbol = $callInfo
             ->callData()
             ->mid()
-            ->object
-            ->symbol;
+            ->object;
 
         $arguments = [];
         for ($i = 0; $i < $callInfo->callData()->argumentsCount(); ++$i) {
@@ -93,13 +91,13 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             );
         } else {
             /**
-             * @var null|ExecutedResult|RubyClass $result
+             * @var null|ExecutedResult|RubyClassInterface $result
              */
             $result = $targetClass
                 ->{(string) $symbol}(...$this->translateForArguments(...$arguments));
         }
 
-        if ($result instanceof RubyClass) {
+        if ($result instanceof RubyClassInterface) {
             $this->context->vmStack()
                 ->push(new Operand($result));
 
@@ -119,12 +117,6 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
                 $this->context->vmStack()
                     ->push(new Operand($result->returnValue));
             }
-
-            return ProcessedStatus::SUCCESS;
-        }
-        if ($result instanceof SymbolInterface) {
-            $this->context->vmStack()
-                ->push(new Operand($result->toRubyClass()));
 
             return ProcessedStatus::SUCCESS;
         }
