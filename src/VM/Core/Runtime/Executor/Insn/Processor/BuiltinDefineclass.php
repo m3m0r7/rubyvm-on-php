@@ -70,7 +70,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
             kernel: $this->context->kernel(),
             rubyClass: $class,
             instructionSequence: $instructionSequence,
-            logger: $this->context->logger(),
+            option: $this->context->option(),
             debugger: $this->context->debugger(),
             previousContext: $this->context->renewEnvironmentTable(),
         ));

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Essential;
 
-use RubyVM\VM\Core\Runtime\Executor\Context\IOContext;
-use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\RubyClass;
@@ -17,8 +15,6 @@ use RubyVM\VM\Stream\RubyVMBinaryStreamReaderInterface;
 interface KernelInterface
 {
     public function setup(): KernelInterface;
-
-    public function process(): ExecutorInterface;
 
     /**
      * @return RubyVersion[]
@@ -34,8 +30,6 @@ interface KernelInterface
     public function loadInstructionSequence(Aux $aux): InstructionSequence;
 
     public function operationProcessorEntries(): OperationProcessorEntries;
-
-    public function IOContext(): IOContext;
 
     public function extraData(): string;
 

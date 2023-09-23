@@ -6,9 +6,10 @@ namespace RubyVM\VM\Core\Runtime;
 
 use Psr\Log\LoggerInterface;
 use RubyVM\VM\Stream\BinaryStreamReaderInterface;
+use RubyVM\VM\Stream\StreamHandler;
 use RubyVM\VM\Stream\StreamHandlerInterface;
 
-class Option
+class Option implements OptionInterface
 {
     public const DETECT_INFINITY_LOOP = 3;
     public const MAX_TIME_EXCEEDED = 5;
@@ -19,11 +20,38 @@ class Option
 
     public const VM_ENV_DATA_SIZE = 3;
 
+    public const DEFAULT_ENTRYPOINT_AUX_INDEX = 0;
+
     public function __construct(
         public readonly BinaryStreamReaderInterface $reader,
         public readonly LoggerInterface $logger,
-        public readonly ?StreamHandlerInterface $stdOut = null,
-        public readonly ?StreamHandlerInterface $stdIn = null,
-        public readonly ?StreamHandlerInterface $stdErr = null,
+        private ?StreamHandlerInterface $stdOut = null,
+        private ?StreamHandlerInterface $stdIn = null,
+        private ?StreamHandlerInterface $stdErr = null,
     ) {}
+
+    public function entryPointIndex(): int
+    {
+        return static::DEFAULT_ENTRYPOINT_AUX_INDEX;
+    }
+
+    public function logger(): LoggerInterface
+    {
+        return $this->logger;
+    }
+
+    public function stdOut(): StreamHandlerInterface
+    {
+        return $this->stdOut ??= new StreamHandler(STDOUT);
+    }
+
+    public function stdIn(): StreamHandlerInterface
+    {
+        return $this->stdIn ??= new StreamHandler(STDIN);
+    }
+
+    public function stdErr(): StreamHandlerInterface
+    {
+        return $this->stdErr ??= new StreamHandler(STDERR);
+    }
 }

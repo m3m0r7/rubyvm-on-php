@@ -6,6 +6,7 @@ namespace RubyVM\VM\Core\Runtime;
 
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyVMInterface;
+use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\Verification\VerificationHeaderInterface;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
@@ -46,15 +47,15 @@ class RubyVM implements RubyVMInterface
     public function disassemble(RubyVersion $useVersion = null): ExecutorInterface
     {
         $this->option->logger->info(
-            sprintf('Start to disassemble an instruction sequence'),
+            sprintf('Start to disassemble instruction sequences'),
         );
 
         $runtime = $this->runtime($useVersion);
 
-        $executor = $runtime->kernel()->setup()->process();
+        $kernel = $runtime->kernel()->setup();
 
         $this->option->logger->info(
-            sprintf('Complete to disassemble an instruction sequence'),
+            sprintf('Complete to disassemble instruction sequences'),
         );
 
         $this->option->logger->info(
@@ -70,7 +71,10 @@ class RubyVM implements RubyVMInterface
             sprintf('Complete to verify process'),
         );
 
-        return $executor;
+        return Executor::createEntryPoint(
+            $kernel,
+            $this->option,
+        );
     }
 
     public function runtime(RubyVersion $useVersion = null): Runtime

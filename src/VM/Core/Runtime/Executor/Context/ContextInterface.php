@@ -10,6 +10,7 @@ use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
 use RubyVM\VM\Core\Runtime\Executor\EnvironmentTable;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
+use RubyVM\VM\Core\Runtime\OptionInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
 
 interface ContextInterface
@@ -49,4 +50,8 @@ interface ContextInterface
     public function appendTrace(string ...$definitions): self;
 
     public function traces(): array;
+
+    public function IOContext(): IOContext;
+
+    public function option(): OptionInterface;
 }

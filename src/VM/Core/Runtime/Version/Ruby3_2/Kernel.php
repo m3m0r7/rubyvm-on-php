@@ -5,17 +5,11 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2;
 
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
-use RubyVM\VM\Core\Runtime\Essential\MainInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyVMInterface;
-use RubyVM\VM\Core\Runtime\Executor\Context\IOContext;
-use RubyVM\VM\Core\Runtime\Executor\Executor;
-use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\ID;
-use RubyVM\VM\Core\Runtime\Main;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\HeapSpace\DefaultInstanceHeapSpace;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\ArraySymbolLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\BooleanSymbolLoader;
@@ -41,7 +35,6 @@ use RubyVM\VM\Exception\ResolverException;
 use RubyVM\VM\Exception\RubyVMException;
 use RubyVM\VM\Stream\RubyVMBinaryStreamReader;
 use RubyVM\VM\Stream\RubyVMBinaryStreamReaderInterface;
-use RubyVM\VM\Stream\StreamHandler;
 
 class Kernel implements KernelInterface
 {
@@ -57,7 +50,6 @@ class Kernel implements KernelInterface
     public readonly Offsets $instructionSequenceList;
     public readonly Offsets $globalObjectList;
     protected readonly InstructionSequenceEntries $instructionSequences;
-    protected readonly IOContext $IOContext;
 
     protected array $globalObjectTable = [];
 
@@ -66,7 +58,6 @@ class Kernel implements KernelInterface
     public readonly string $extraData;
 
     private RubyVMBinaryStreamReaderInterface $stream;
-    private MainInterface $main;
 
     public function __construct(
         public readonly RubyVMInterface $vm,
@@ -75,44 +66,6 @@ class Kernel implements KernelInterface
         $this->instructionSequenceList = new Offsets();
         $this->globalObjectList = new Offsets();
         $this->instructionSequences = new InstructionSequenceEntries();
-        $this->IOContext = new IOContext(
-            $this->vm->option()->stdOut ?? new StreamHandler(STDOUT),
-            $this->vm->option()->stdIn ?? new StreamHandler(STDIN),
-            $this->vm->option()->stdErr ?? new StreamHandler(STDERR),
-        );
-
-        $this->main = new Main();
-        $this->main->setUserlandHeapSpace(
-            new DefaultInstanceHeapSpace(),
-        );
-    }
-
-    public function process(): ExecutorInterface
-    {
-        if (!isset($this->vm)) {
-            throw new RubyVMException('The RubyVM is not set');
-        }
-        $aux = new Aux(
-            loader: new AuxLoader(
-                index: 0,
-            ),
-        );
-
-        /**
-         * @var null|InstructionSequence $instructionSequence
-         */
-        $instructionSequence = $this->loadInstructionSequence($aux);
-
-        $executor = new Executor(
-            $this,
-            $this->main,
-            $instructionSequence,
-            $this->vm->option()->logger,
-        );
-
-        $executor->context()->appendTrace('<main>');
-
-        return $executor;
     }
 
     public function __debugInfo(): array
@@ -364,11 +317,6 @@ class Kernel implements KernelInterface
         }
 
         return $this->loadInstructionSequence($aux);
-    }
-
-    public function IOContext(): IOContext
-    {
-        return $this->IOContext;
     }
 
     public function rubyPlatform(): string

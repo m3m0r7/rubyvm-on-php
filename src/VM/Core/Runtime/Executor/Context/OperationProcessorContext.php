@@ -10,6 +10,7 @@ use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
 use RubyVM\VM\Core\Runtime\Executor\EnvironmentTable;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
+use RubyVM\VM\Core\Runtime\OptionInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
 
 class OperationProcessorContext implements ContextInterface
@@ -23,7 +24,8 @@ class OperationProcessorContext implements ContextInterface
         private readonly VMStack $vmStack,
         private readonly ProgramCounter $pc,
         private readonly InstructionSequence $instructionSequence,
-        private readonly LoggerInterface $logger,
+        private readonly OptionInterface $option,
+        private readonly IOContext $IOContext,
         private EnvironmentTable $environmentTable,
         private readonly ExecutorDebugger $debugger,
         private readonly int $depth,
@@ -71,7 +73,8 @@ class OperationProcessorContext implements ContextInterface
             vmStack: clone $this->vmStack,
             pc: clone $this->pc,
             instructionSequence: clone $this->instructionSequence,
-            logger: $this->logger,
+            option: $this->option,
+            IOContext: $this->IOContext,
             environmentTable: clone $this->environmentTable,
             debugger: $this->debugger, // NOTE: Do not clone because logger is shared resource
             depth: $this->depth,
@@ -99,7 +102,12 @@ class OperationProcessorContext implements ContextInterface
 
     public function logger(): LoggerInterface
     {
-        return $this->logger;
+        return $this->option->logger;
+    }
+
+    public function option(): OptionInterface
+    {
+        return $this->option;
     }
 
     public function instructionSequence(): InstructionSequence
@@ -147,5 +155,10 @@ class OperationProcessorContext implements ContextInterface
     public function traces(): array
     {
         return $this->traces;
+    }
+
+    public function IOContext(): IOContext
+    {
+        return $this->IOContext;
     }
 }

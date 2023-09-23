@@ -30,7 +30,7 @@ trait CallBlockHelper
             kernel: $context->kernel(),
             rubyClass: $context->self(),
             instructionSequence: $context->instructionSequence(),
-            logger: $context->logger(),
+            option: $context->option(),
             debugger: $context->debugger(),
             previousContext: $context
                 ->renewEnvironmentTable(),
@@ -102,7 +102,7 @@ trait CallBlockHelper
             kernel: $this->context->kernel(),
             rubyClass: $this->context->self(),
             instructionSequence: $instructionSequence,
-            logger: $this->context->logger(),
+            option: $this->context->option(),
             debugger: $this->context->debugger(),
             previousContext: $this->context,
         ));

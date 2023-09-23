@@ -32,7 +32,7 @@ trait ProvideBasicClassMethods
             $string .= "\n";
         }
 
-        $this->context->kernel()->IOContext()->stdOut->write($string);
+        $this->context->IOContext()->stdOut->write($string);
 
         // The puts returns (nil)
         return (new NilSymbol())

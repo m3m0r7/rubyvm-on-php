@@ -49,7 +49,7 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
                 kernel: $context->kernel(),
                 rubyClass: $context->self(),
                 instructionSequence: $context->instructionSequence(),
-                logger: $context->logger(),
+                option: $context->option(),
                 debugger: $context->debugger(),
                 previousContext: $context,
             ));

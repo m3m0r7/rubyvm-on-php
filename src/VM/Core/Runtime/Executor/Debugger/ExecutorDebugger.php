@@ -123,7 +123,8 @@ class ExecutorDebugger
              */
             $callDataOperand = $context
                 ->instructionSequence()
-                ->operations()
+                ->body()
+                ->operationEntries
                 ->get($currentPos + 1);
 
             $arguments = [];
