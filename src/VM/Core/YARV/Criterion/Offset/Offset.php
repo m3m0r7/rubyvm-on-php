@@ -28,9 +28,7 @@ class Offset
     public function align(SizeOf|array|int $size): Offset
     {
         if (is_array($size)) {
-            $alignedSize = Align::alignOf($size);
-
-            return $this->align($alignedSize);
+            return $this->align(Align::alignOf($size));
         }
 
         if ($size instanceof SizeOf) {

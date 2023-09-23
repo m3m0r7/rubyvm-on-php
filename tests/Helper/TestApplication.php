@@ -36,7 +36,7 @@ class TestApplication extends TestCase
         $stdIn = new StreamHandler(fopen('php://memory', 'w+'));
         $stdErr = new StreamHandler(fopen('php://memory', 'w+'));
 
-        $rubyVM = new \RubyVM\VM\Core\YARV\RubyVM(
+        $rubyVM = new \RubyVM\VM\Core\Runtime\RubyVM(
             new \RubyVM\VM\Core\Runtime\Option(
                 reader: new \RubyVM\VM\Stream\BinaryStreamReader(
                     streamHandler: new \RubyVM\VM\Stream\StringStreamHandler(

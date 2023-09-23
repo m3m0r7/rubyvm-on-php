@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\HeapSpace;
 
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\ArraySymbol;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\BooleanSymbol;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\NumberSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 
 class DefaultInstanceHeapSpace extends UserlandHeapSpace
 {

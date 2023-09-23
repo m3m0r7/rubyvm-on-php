@@ -7,7 +7,7 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Object_;
 use RubyVM\VM\Core\YARV\Criterion\Entry\AbstractEntries;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\SymbolInterface;
+use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
 class OperationEntries extends AbstractEntries
 {

@@ -10,8 +10,8 @@ use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\NumberSymbol;
+use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 
 class BuiltinPutobjectINT2FIX1 implements OperationProcessorInterface
 {

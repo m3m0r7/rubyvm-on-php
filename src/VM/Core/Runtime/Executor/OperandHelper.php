@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Runtime\Object_;
-use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\ArraySymbol;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\FloatSymbol;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\ID;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\NumberSymbol;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\OffsetSymbol;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\StringSymbol;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\SymbolInterface;
+use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\ID;
+use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\OffsetSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
 /**
  * This trait helps an IDE.

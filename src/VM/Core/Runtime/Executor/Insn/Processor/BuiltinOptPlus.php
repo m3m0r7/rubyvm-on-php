@@ -11,12 +11,12 @@ use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperatorCalculatable;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Object_;
-use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\ArraySymbol;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\FloatSymbol;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\NumberSymbol;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\StringSymbol;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\SymbolInterface;
+use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
 class BuiltinOptPlus implements OperationProcessorInterface
 {

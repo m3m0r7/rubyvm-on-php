@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry;
 
 use RubyVM\VM\Core\Runtime\Executor\CallDataInterface;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\ID;
+use RubyVM\VM\Core\YARV\Essential\Symbol\ID;
 
 class CallData implements CallDataInterface
 {

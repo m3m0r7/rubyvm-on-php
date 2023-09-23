@@ -8,7 +8,7 @@ use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\CallBlockHelper;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Object_;
-use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
 
 trait ProvideExtendedMethodCall

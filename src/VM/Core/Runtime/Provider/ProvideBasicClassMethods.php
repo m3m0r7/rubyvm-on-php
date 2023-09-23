@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Provider;
 
 use RubyVM\VM\Core\Runtime\Object_;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\ArraySymbol;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\NilSymbol;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\RangeSymbol;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\StringSymbol;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\SymbolInterface;
+use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\NilSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
 trait ProvideBasicClassMethods
 {

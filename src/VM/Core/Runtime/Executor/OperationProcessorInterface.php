@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
-use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 
 interface OperationProcessorInterface
 {

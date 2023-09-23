@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\RubyVM\Helper;
 
-use RubyVM\VM\Core\YARV\RubyVM;
+use RubyVM\VM\Core\Runtime\RubyVM;
 use RubyVM\VM\Stream\StreamHandlerInterface;
 
 class RubyVMManager

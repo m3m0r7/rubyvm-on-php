@@ -11,7 +11,7 @@ use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
-use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 
 class BuiltinDuparray implements OperationProcessorInterface
 {

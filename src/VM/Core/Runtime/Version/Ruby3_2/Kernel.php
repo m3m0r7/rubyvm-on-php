@@ -4,38 +4,38 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2;
 
+use RubyVM\VM\Core\Runtime\Executor\DefaultOperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\Executor\IOContext;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorEntries;
+use RubyVM\VM\Core\Runtime\Main;
 use RubyVM\VM\Core\Runtime\Object_;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\HeapSpace\DefaultInstanceHeapSpace;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\ArrayLoader;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\BooleanLoader;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FixedNumberLoader;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FloatLoader;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\NilLoader;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StringLoader;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StructLoader;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\SymbolLoader;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\ArraySymbolLoader;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\BooleanSymbolLoader;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FixedNumberSymbolLoader;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\FloatSymbolLoader;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\NilSymbolLoader;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StringSymbolLoader;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StructSymbolLoader;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\SymbolSymbolLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Verification\VerificationHeader;
-use RubyVM\VM\Core\YARV\Criterion\DefaultOperationProcessorEntries;
-use RubyVM\VM\Core\YARV\Criterion\Essential\KernelInterface;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Main;
-use RubyVM\VM\Core\YARV\Criterion\Essential\MainInterface;
-use RubyVM\VM\Core\YARV\Criterion\Essential\RubyVMInterface;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\ID;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\LoaderInterface;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\ObjectInfo;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\SymbolType;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequences;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offsets;
+use RubyVM\VM\Core\YARV\Essential\KernelInterface;
+use RubyVM\VM\Core\YARV\Essential\MainInterface;
+use RubyVM\VM\Core\YARV\Essential\RubyVMInterface;
+use RubyVM\VM\Core\YARV\Essential\Symbol\ID;
+use RubyVM\VM\Core\YARV\Essential\Symbol\ObjectInfo;
+use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolLoaderInterface;
+use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolType;
 use RubyVM\VM\Core\YARV\RubyVersion;
 use RubyVM\VM\Exception\ResolverException;
 use RubyVM\VM\Exception\RubyVMException;
@@ -307,18 +307,18 @@ class Kernel implements KernelInterface
         return $this->globalObjectTable[$index] = $symbol->toObject();
     }
 
-    private function resolveLoader(ObjectInfo $info, Offset $offset): LoaderInterface
+    private function resolveLoader(ObjectInfo $info, Offset $offset): SymbolLoaderInterface
     {
         return match ($info->type) {
-            SymbolType::NIL => new NilLoader($this, $offset),
-            SymbolType::STRUCT => new StructLoader($this, $offset),
+            SymbolType::NIL => new NilSymbolLoader($this, $offset),
+            SymbolType::STRUCT => new StructSymbolLoader($this, $offset),
             SymbolType::FALSE,
-            SymbolType::TRUE => new BooleanLoader($this, $offset),
-            SymbolType::FLOAT => new FloatLoader($this, $offset),
-            SymbolType::FIXNUM => new FixedNumberLoader($this, $offset),
-            SymbolType::SYMBOL => new SymbolLoader($this, $offset),
-            SymbolType::STRING => new StringLoader($this, $offset),
-            SymbolType::ARRAY => new ArrayLoader($this, $offset),
+            SymbolType::TRUE => new BooleanSymbolLoader($this, $offset),
+            SymbolType::FLOAT => new FloatSymbolLoader($this, $offset),
+            SymbolType::FIXNUM => new FixedNumberSymbolLoader($this, $offset),
+            SymbolType::SYMBOL => new SymbolSymbolLoader($this, $offset),
+            SymbolType::STRING => new StringSymbolLoader($this, $offset),
+            SymbolType::ARRAY => new ArraySymbolLoader($this, $offset),
             default => throw new ResolverException("Cannot resolve a symbol: {$info->type->name} - maybe the symbol type is not supported yet"),
         };
     }

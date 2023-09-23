@@ -16,9 +16,9 @@ use RubyVM\VM\Core\Runtime\Executor\SpecialMethodCallerEntries;
 use RubyVM\VM\Core\Runtime\Executor\Translatable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\Runtime\Object_;
-use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\StringSymbol;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\SymbolInterface;
+use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinOptSendWithoutBlock implements OperationProcessorInterface

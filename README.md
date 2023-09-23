@@ -44,7 +44,7 @@ $ ruby HelloWorld.rb > HelloWorld.yarv
 require __DIR__ . '/vendor/autoload.php';
 
 // Instantiate RubyVM class
-$rubyVM = new \RubyVM\VM\Core\YARV\RubyVM(
+$rubyVM = new \RubyVM\VM\Core\Runtime\RubyVM(
     new \RubyVM\VM\Core\Runtime\Option(
         reader: new \RubyVM\VM\Stream\BinaryStreamReader(
             streamHandler: new \RubyVM\VM\Stream\FileStreamHandler(
@@ -99,7 +99,7 @@ $ ruby -e "puts RubyVM::InstructionSequence.compile_file('test.rb').to_binary" >
 require __DIR__ . '/vendor/autoload.php';
 
 // Instantiate RubyVM class
-$rubyVM = new \RubyVM\VM\Core\YARV\RubyVM(
+$rubyVM = new \RubyVM\VM\Core\Runtime\RubyVM(
     new \RubyVM\VM\Core\Runtime\Option(
         reader: new \RubyVM\VM\Stream\BinaryStreamReader(
             streamHandler: new \RubyVM\VM\Stream\FileStreamHandler(

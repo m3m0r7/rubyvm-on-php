@@ -13,7 +13,7 @@ use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Translatable;
-use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Essential\RubyClassInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinInvokeblock implements OperationProcessorInterface

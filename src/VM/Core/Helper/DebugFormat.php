@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Helper;
 
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Object_;
-use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\SymbolInterface;
+use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
 trait DebugFormat
 {
