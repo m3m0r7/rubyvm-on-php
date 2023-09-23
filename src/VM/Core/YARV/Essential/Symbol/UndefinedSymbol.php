@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
+use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\RubyClass;
+use RubyVM\VM\Exception\OperationProcessorException;
 
 class UndefinedSymbol implements SymbolInterface
 {
@@ -31,5 +33,10 @@ class UndefinedSymbol implements SymbolInterface
             ),
             symbol: $this,
         );
+    }
+
+    public function isTestable(): bool
+    {
+        throw new OperationProcessorException(sprintf('The symbol type `%s` is not implemented `test` processing yet', ClassHelper::nameBy($this)));
     }
 }

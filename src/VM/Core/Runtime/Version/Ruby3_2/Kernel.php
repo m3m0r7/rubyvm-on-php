@@ -11,6 +11,7 @@ use RubyVM\VM\Core\Runtime\Executor\Context\IOContext;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorEntries;
+use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\Main;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
@@ -24,6 +25,7 @@ use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\NilSymbolLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StringSymbolLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StructSymbolLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\SymbolSymbolLoader;
+use RubyVM\VM\Core\Runtime\Version\Ruby3_2\OperationProcessor\OperationProcessorEntries as RubyVM3_2_OperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Verification\VerificationHeader;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
@@ -31,7 +33,6 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequences;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offsets;
-use RubyVM\VM\Core\YARV\Essential\Symbol\ID;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ObjectInfo;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolLoaderInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolType;
@@ -41,7 +42,6 @@ use RubyVM\VM\Exception\RubyVMException;
 use RubyVM\VM\Stream\RubyVMBinaryStreamReader;
 use RubyVM\VM\Stream\RubyVMBinaryStreamReaderInterface;
 use RubyVM\VM\Stream\StreamHandler;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\OperationProcessor\OperationProcessorEntries as RubyVM3_2_OperationProcessorEntries;
 
 class Kernel implements KernelInterface
 {

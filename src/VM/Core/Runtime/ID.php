@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\YARV\Essential\Symbol;
-
-use RubyVM\VM\Core\Runtime\RubyClass;
+namespace RubyVM\VM\Core\Runtime;
 
 class ID
 {

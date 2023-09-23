@@ -9,6 +9,7 @@ use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\RubyClass;
+use RubyVM\VM\Exception\OperationProcessorException;
 
 class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \IteratorAggregate
 {
@@ -125,5 +126,10 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
     public function count(): int
     {
         return count($this->array);
+    }
+
+    public function isTestable(): bool
+    {
+        throw new OperationProcessorException(sprintf('The symbol type `%s` is not implemented `test` processing yet', ClassHelper::nameBy($this)));
     }
 }

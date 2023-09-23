@@ -11,4 +11,6 @@ interface SymbolInterface extends RubyClassifiable
     public function valueOf(): mixed;
 
     public function __toString(): string;
+
+    public function isTestable(): bool;
 }

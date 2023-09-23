@@ -36,4 +36,9 @@ class StringSymbol implements SymbolInterface
             symbol: $this,
         );
     }
+
+    public function isTestable(): bool
+    {
+        return true;
+    }
 }

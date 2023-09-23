@@ -10,6 +10,7 @@ use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\LocalTableHelper;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\RubyClass;
+use RubyVM\VM\Exception\OperationProcessorException;
 
 class RangeSymbol implements SymbolInterface, \ArrayAccess
 {
@@ -124,5 +125,10 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess
     public function offsetUnset(mixed $offset): void
     {
         unset($this->array[$offset]);
+    }
+
+    public function isTestable(): bool
+    {
+        throw new OperationProcessorException(sprintf('The symbol type `%s` is not implemented `test` processing yet', ClassHelper::nameBy($this)));
     }
 }
