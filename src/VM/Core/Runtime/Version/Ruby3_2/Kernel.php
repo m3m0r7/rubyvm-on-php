@@ -6,7 +6,6 @@ namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2;
 
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyVMInterface;
-use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
@@ -19,7 +18,6 @@ use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\NilSymbolLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StringSymbolLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StructSymbolLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\SymbolSymbolLoader;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Operation\Processor\OperationProcessorEntries as RubyVM3_2_OperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Verification\VerificationHeader;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
@@ -337,12 +335,5 @@ class Kernel implements KernelInterface
     public function extraData(): string
     {
         return $this->extraData;
-    }
-
-    public function operationProcessorEntries(): OperationProcessorEntries
-    {
-        static $operationProcessorEntries;
-
-        return $operationProcessorEntries ??= new RubyVM3_2_OperationProcessorEntries();
     }
 }

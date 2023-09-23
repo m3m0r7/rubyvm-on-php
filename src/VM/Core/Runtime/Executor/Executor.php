@@ -181,7 +181,7 @@ class Executor implements ExecutorInterface
             );
 
             $processor = $this
-                ->kernel
+                ->option
                 ->operationProcessorEntries()
                 ->get($operator->insn);
 

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime;
 
 use Psr\Log\LoggerInterface;
+use RubyVM\VM\Core\Runtime\Executor\Operation\DefaultOperationProcessorEntries;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
 use RubyVM\VM\Stream\BinaryStreamReaderInterface;
 use RubyVM\VM\Stream\StreamHandler;
 use RubyVM\VM\Stream\StreamHandlerInterface;
@@ -28,6 +30,7 @@ class Option implements OptionInterface
         private ?StreamHandlerInterface $stdOut = null,
         private ?StreamHandlerInterface $stdIn = null,
         private ?StreamHandlerInterface $stdErr = null,
+        private ?OperationProcessorEntries $operationProcessorEntries = null,
     ) {}
 
     public function entryPointIndex(): int
@@ -53,5 +56,10 @@ class Option implements OptionInterface
     public function stdErr(): StreamHandlerInterface
     {
         return $this->stdErr ??= new StreamHandler(STDERR);
+    }
+
+    public function operationProcessorEntries(): OperationProcessorEntries
+    {
+        return $this->operationProcessorEntries ??= new DefaultOperationProcessorEntries();
     }
 }

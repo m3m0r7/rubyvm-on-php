@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime;
 
 use Psr\Log\LoggerInterface;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
 use RubyVM\VM\Stream\StreamHandlerInterface;
 
 interface OptionInterface
@@ -18,4 +19,6 @@ interface OptionInterface
     public function stdIn(): StreamHandlerInterface;
 
     public function stdErr(): StreamHandlerInterface;
+
+    public function operationProcessorEntries(): OperationProcessorEntries;
 }
