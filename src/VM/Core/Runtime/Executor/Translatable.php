@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
+use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Exception\TranslationException;
 
 /**

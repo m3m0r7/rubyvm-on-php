@@ -10,12 +10,12 @@ use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
-use RubyVM\VM\Core\Runtime\Symbol\ClassSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
+use RubyVM\VM\Core\Runtime\Object_;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\ArraySymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\ClassSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinOptGetconstantPath implements OperationProcessorInterface

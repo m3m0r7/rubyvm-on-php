@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime;
 
-use RubyVM\VM\Core\Runtime\Entry\AbstractEntries;
-use RubyVM\VM\Core\Runtime\Entry\EntryType;
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\AliasEntries;
+use RubyVM\VM\Core\YARV\Criterion\Entry\AbstractEntries;
+use RubyVM\VM\Core\YARV\Criterion\Entry\EntryType;
 use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
 
 final class UserlandClassEntries extends AbstractEntries

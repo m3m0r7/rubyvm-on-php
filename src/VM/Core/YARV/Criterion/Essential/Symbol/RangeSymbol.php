@@ -2,18 +2,42 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Symbol;
+namespace RubyVM\VM\Core\YARV\Criterion\Essential\Symbol;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
+use RubyVM\VM\Core\Runtime\Executor\LocalTableHelper;
+use RubyVM\VM\Core\Runtime\Executor\OperationProcessorContext;
+use RubyVM\VM\Core\Runtime\Object_;
 use RubyVM\VM\Core\Runtime\Option;
 
-class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \IteratorAggregate
+class RangeSymbol implements SymbolInterface, \ArrayAccess
 {
+    private array $array;
+
     public function __construct(
-        private array $array,
-    ) {}
+        private readonly NumberSymbol $begin,
+        private readonly NumberSymbol $end,
+        private readonly bool $excludeEnd,
+        private readonly int $steps = 1,
+    ) {
+        if ($this->begin->valueOf() > $this->end->valueOf()) {
+            $this->array = [];
+
+            return;
+        }
+
+        $array = [];
+        foreach (range(
+            $this->begin->valueOf(),
+            $this->end->valueOf() - ($this->excludeEnd ? 1 : 0),
+            $this->steps,
+        ) as $i) {
+            $array[] = new NumberSymbol($i);
+        }
+
+        $this->array = $array;
+    }
 
     public function valueOf(): array
     {
@@ -22,27 +46,15 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
 
     public function __toString(): string
     {
-        return sprintf(
-            '[%s]',
-            implode(', ', array_map(
-                fn ($value) => (string) $value,
-                $this->array,
-            ))
-        );
+        return "{$this->begin->valueOf()}" . ($this->excludeEnd ? '...' : '..') . "{$this->end->valueOf()}";
     }
 
-    public function new(Object_|array $values = null): self
+    public function each(OperationProcessorContext $context): SymbolInterface
     {
-        return new self(
-            $values instanceof Object_
-                ? $values->symbol->valueOf()
-                : ($values ?? []),
-        );
-    }
-
-    public function each(ContextInterface $context): void
-    {
-        for ($i = 0; $i < count($this->array); ++$i) {
+        /**
+         * @var NumberSymbol $number
+         */
+        foreach ($this->array as $index => $number) {
             $executor = (new Executor(
                 kernel: $context->kernel(),
                 rubyClass: $context->self(),
@@ -52,20 +64,23 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
                 previousContext: $context,
             ));
 
-            $object = (new NumberSymbol($this->array[$i]->valueOf()))
-                ->toObject()
+            $executor->context()
+                ->appendTrace(ClassHelper::nameBy($this) . '#' . __FUNCTION__);
+
+            $localTableSize = $executor->context()->instructionSequence()->body()->data->localTableSize();
+            $object = $number->toObject()
                 ->setRuntimeContext($context)
                 ->setUserlandHeapSpace($context->self()->userlandHeapSpace());
 
             $executor->context()
                 ->environmentTable()
                 ->set(
-                    Option::VM_ENV_DATA_SIZE,
+                    LocalTableHelper::computeLocalTableIndex(
+                        $localTableSize,
+                        Option::VM_ENV_DATA_SIZE + $localTableSize - 1,
+                    ),
                     $object,
                 );
-
-            $executor->context()
-                ->appendTrace(ClassHelper::nameBy($this) . '#' . __FUNCTION__);
 
             $result = $executor->execute();
 
@@ -74,31 +89,21 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
                 throw $result->threw;
             }
         }
-    }
 
-    public function push(Object_ $object): SymbolInterface
-    {
-        $this->array[] = $object->symbol;
-
-        return $this;
+        return new NilSymbol();
     }
 
     public function toObject(): Object_
     {
         return new Object_(
             info: new ObjectInfo(
-                type: SymbolType::ARRAY,
+                type: SymbolType::STRUCT,
                 specialConst: 0,
                 frozen: 1,
                 internal: 0,
             ),
-            symbol: clone $this,
+            symbol: $this,
         );
-    }
-
-    public function getIterator(): \Traversable
-    {
-        return new \ArrayIterator($this->array);
     }
 
     public function offsetExists(mixed $offset): bool
@@ -119,10 +124,5 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
     public function offsetUnset(mixed $offset): void
     {
         unset($this->array[$offset]);
-    }
-
-    public function count(): int
-    {
-        return count($this->array);
     }
 }

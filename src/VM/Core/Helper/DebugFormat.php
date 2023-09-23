@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Helper;
 
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
+use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\SymbolInterface;
 
 trait DebugFormat
 {

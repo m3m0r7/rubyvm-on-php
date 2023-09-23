@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Offset;
+namespace RubyVM\VM\Core\YARV\Criterion\Offset;
 
-use RubyVM\VM\Core\Runtime\Entry\AbstractEntries;
+use RubyVM\VM\Core\YARV\Criterion\Entry\AbstractEntries;
 
 class Offsets extends AbstractEntries
 {

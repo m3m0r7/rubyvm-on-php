@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Runtime\Symbol\ID;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
+use RubyVM\VM\Core\Runtime\Object_;
 use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\ID;
 
 class OperandEntry
 {

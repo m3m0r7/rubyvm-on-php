@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime;
+namespace RubyVM\VM\Core\YARV\Criterion\Essential;
 
 use RubyVM\VM\Core\Helper\EnumIntValueFindable;
 

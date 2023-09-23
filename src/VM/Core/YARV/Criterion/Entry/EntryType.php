@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Entry;
+namespace RubyVM\VM\Core\YARV\Criterion\Entry;
 
 enum EntryType
 {

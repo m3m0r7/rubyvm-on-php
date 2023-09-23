@@ -10,8 +10,8 @@ use RubyVM\VM\Core\Runtime\Executor\LocalTable;
 use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\NumberSymbol;
 
 class BuiltinSetlocal implements OperationProcessorInterface
 {

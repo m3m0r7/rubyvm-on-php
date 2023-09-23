@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Provider;
 
-use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
-use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\RangeSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
+use RubyVM\VM\Core\Runtime\Object_;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\ArraySymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\NilSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\RangeSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\StringSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\SymbolInterface;
 
 trait ProvideBasicClassMethods
 {

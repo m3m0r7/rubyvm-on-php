@@ -10,12 +10,12 @@ use RubyVM\VM\Core\Runtime\Executor\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperatorCalculatable;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\Symbol\BooleanSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\FloatSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
+use RubyVM\VM\Core\Runtime\Object_;
 use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\BooleanSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\FloatSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\NumberSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\SymbolInterface;
 
 class BuiltinOptGe implements OperationProcessorInterface
 {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Runtime\Entry\AbstractEntries;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
+use RubyVM\VM\Core\YARV\Criterion\Entry\AbstractEntries;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 class OperationProcessorEntries extends AbstractEntries

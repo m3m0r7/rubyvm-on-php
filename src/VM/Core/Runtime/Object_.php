@@ -2,12 +2,19 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Symbol;
+namespace RubyVM\VM\Core\Runtime;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\SpecialMethodCallerEntries;
-use RubyVM\VM\Core\Runtime\Offset\Offset;
 use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\ArraySymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\BooleanSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\ID;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\NumberSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\ObjectInfo;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\StringSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\SymbolInterface;
+use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
 use RubyVM\VM\Core\YARV\Criterion\ShouldBeRubyClass;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
 use RubyVM\VM\Exception\SymbolUnsupportedException;

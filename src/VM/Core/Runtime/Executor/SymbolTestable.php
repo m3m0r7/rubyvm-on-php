@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Symbol\BooleanSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\BooleanSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\NumberSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\StringSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 trait SymbolTestable

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\YARV\Criterion\Essential;
 
 use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
-use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\NumberSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Core\YARV\Criterion\RubyClassImplementationInterface;
 
 interface RubyClassInterface extends RubyClassImplementationInterface

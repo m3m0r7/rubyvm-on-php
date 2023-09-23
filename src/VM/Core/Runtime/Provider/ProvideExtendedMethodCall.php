@@ -7,7 +7,7 @@ namespace RubyVM\VM\Core\Runtime\Provider;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\CallBlockHelper;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
+use RubyVM\VM\Core\Runtime\Object_;
 use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
 

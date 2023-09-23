@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Offset;
+namespace RubyVM\VM\Core\YARV\Criterion\Offset;
 
 use RubyVM\VM\Exception\VerificationException;
 use RubyVM\VM\Stream\Align;

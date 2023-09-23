@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader;
 
-use RubyVM\VM\Core\Runtime\Offset\Offset;
-use RubyVM\VM\Core\Runtime\Symbol\LoaderInterface;
-use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Internal\Arithmetic;
 use RubyVM\VM\Core\YARV\Criterion\Essential\KernelInterface;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\LoaderInterface;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\NumberSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\SymbolInterface;
+use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
 
 class FixedNumberLoader implements LoaderInterface
 {

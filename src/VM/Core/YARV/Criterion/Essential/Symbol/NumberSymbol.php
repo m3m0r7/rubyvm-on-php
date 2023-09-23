@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Symbol;
+namespace RubyVM\VM\Core\YARV\Criterion\Essential\Symbol;
+
+use RubyVM\VM\Core\Runtime\Object_;
 
 class NumberSymbol implements SymbolInterface
 {

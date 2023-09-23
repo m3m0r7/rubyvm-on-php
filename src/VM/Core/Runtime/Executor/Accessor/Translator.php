@@ -6,16 +6,16 @@ namespace RubyVM\VM\Core\Runtime\Executor\Accessor;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
-use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
-use RubyVM\VM\Core\Runtime\Symbol\BooleanSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\FloatSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\RangeSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
+use RubyVM\VM\Core\Runtime\Object_;
 use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\ArraySymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\BooleanSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\FloatSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\NilSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\NumberSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\RangeSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\StringSymbol;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\TranslationException;
 
 readonly class Translator
