@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Helper\LocalTableHelper;
-
 trait LocalTable
 {
     use Validatable;

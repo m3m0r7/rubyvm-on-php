@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Runtime\Executor\Accessor\ContextAccessor;
 use RubyVM\VM\Core\Runtime\Executor\Accessor\ContextAccessorInterface;
-use RubyVM\VM\Core\Runtime\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
 
 readonly class ExecutedResult
 {

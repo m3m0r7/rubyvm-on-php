@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor;
 
 use Psr\Log\LoggerInterface;
-use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
-use RubyVM\VM\Core\Runtime\KernelInterface;
-use RubyVM\VM\Core\Runtime\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Criterion\Essential\KernelInterface;
+use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
 
 interface ContextInterface
 {

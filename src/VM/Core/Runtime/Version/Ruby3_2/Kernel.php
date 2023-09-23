@@ -4,21 +4,12 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2;
 
-use RubyVM\VM\Core\Helper\DefaultOperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\Executor\IOContext;
 use RubyVM\VM\Core\Runtime\Executor\OperationProcessorEntries;
-use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
-use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
-use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
-use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequences;
-use RubyVM\VM\Core\Runtime\KernelInterface;
-use RubyVM\VM\Core\Runtime\MainInterface;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
 use RubyVM\VM\Core\Runtime\Offset\Offsets;
-use RubyVM\VM\Core\Runtime\RubyVersion;
-use RubyVM\VM\Core\Runtime\RubyVMInterface;
 use RubyVM\VM\Core\Runtime\Symbol\ID;
 use RubyVM\VM\Core\Runtime\Symbol\LoaderInterface;
 use RubyVM\VM\Core\Runtime\Symbol\Object_;
@@ -35,8 +26,17 @@ use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\NilLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StringLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\StructLoader;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Loader\SymbolLoader;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Standard\Main;
 use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Verification\VerificationHeader;
+use RubyVM\VM\Core\YARV\Criterion\DefaultOperationProcessorEntries;
+use RubyVM\VM\Core\YARV\Criterion\Essential\KernelInterface;
+use RubyVM\VM\Core\YARV\Criterion\Essential\Main;
+use RubyVM\VM\Core\YARV\Criterion\Essential\MainInterface;
+use RubyVM\VM\Core\YARV\Criterion\Essential\RubyVMInterface;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequences;
+use RubyVM\VM\Core\YARV\RubyVersion;
 use RubyVM\VM\Exception\ResolverException;
 use RubyVM\VM\Exception\RubyVMException;
 use RubyVM\VM\Stream\RubyVMBinaryStreamReader;
@@ -304,11 +304,7 @@ class Kernel implements KernelInterface
         $symbol = $this->resolveLoader($info, $offset->increase())
             ->load();
 
-        $this->globalObjectTable[$index] = $object = $symbol->toObject();
-
-        //        $object->setUserlandHeapSpace($this->main->userlandHeapSpace());
-
-        return $object;
+        return $this->globalObjectTable[$index] = $symbol->toObject();
     }
 
     private function resolveLoader(ObjectInfo $info, Offset $offset): LoaderInterface

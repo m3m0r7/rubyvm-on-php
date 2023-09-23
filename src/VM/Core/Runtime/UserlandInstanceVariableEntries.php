@@ -6,6 +6,7 @@ namespace RubyVM\VM\Core\Runtime;
 
 use RubyVM\VM\Core\Runtime\Entry\AbstractEntries;
 use RubyVM\VM\Core\Runtime\Entry\EntryType;
+use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
 
 final class UserlandInstanceVariableEntries extends AbstractEntries
 {

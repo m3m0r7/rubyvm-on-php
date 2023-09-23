@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence;
 
-use RubyVM\VM\Core\Runtime\InstructionSequence\ObjectParameterFlagsInterface;
-use RubyVM\VM\Core\Runtime\InstructionSequence\ObjectParameterInterface;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\ObjectParameterFlagsInterface;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\ObjectParameterInterface;
 
 class ObjectParameter implements ObjectParameterInterface
 {

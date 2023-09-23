@@ -7,8 +7,8 @@ namespace RubyVM\VM\Core\Runtime\Symbol;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\SpecialMethodCallerEntries;
 use RubyVM\VM\Core\Runtime\Offset\Offset;
-use RubyVM\VM\Core\Runtime\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\ShouldBeRubyClass;
+use RubyVM\VM\Core\YARV\Criterion\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Criterion\ShouldBeRubyClass;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
 use RubyVM\VM\Exception\SymbolUnsupportedException;
 

@@ -36,7 +36,7 @@ class TestApplication extends TestCase
         $stdIn = new StreamHandler(fopen('php://memory', 'w+'));
         $stdErr = new StreamHandler(fopen('php://memory', 'w+'));
 
-        $rubyVM = new \RubyVM\VM\Core\Runtime\RubyVM(
+        $rubyVM = new \RubyVM\VM\Core\YARV\RubyVM(
             new \RubyVM\VM\Core\Runtime\Option(
                 reader: new \RubyVM\VM\Stream\BinaryStreamReader(
                     streamHandler: new \RubyVM\VM\Stream\StringStreamHandler(
@@ -52,7 +52,7 @@ class TestApplication extends TestCase
 
         // Set default kernel
         $rubyVM->register(
-            rubyVersion: \RubyVM\VM\Core\Runtime\RubyVersion::VERSION_3_2,
+            rubyVersion: \RubyVM\VM\Core\YARV\RubyVersion::VERSION_3_2,
             kernelClass: \RubyVM\VM\Core\Runtime\Version\Ruby3_2\Kernel::class,
         );
 

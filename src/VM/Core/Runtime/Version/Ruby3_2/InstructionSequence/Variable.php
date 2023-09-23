@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Version\Ruby3_2\InstructionSequence;
 
-use RubyVM\VM\Core\Runtime\InstructionSequence\VariableInterfce;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\VariableInterfce;
 
 class Variable implements VariableInterfce
 {

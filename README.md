@@ -44,7 +44,7 @@ $ ruby HelloWorld.rb > HelloWorld.yarv
 require __DIR__ . '/vendor/autoload.php';
 
 // Instantiate RubyVM class
-$rubyVM = new \RubyVM\VM\Core\Runtime\RubyVM(
+$rubyVM = new \RubyVM\VM\Core\YARV\RubyVM(
     new \RubyVM\VM\Core\Runtime\Option(
         reader: new \RubyVM\VM\Stream\BinaryStreamReader(
             streamHandler: new \RubyVM\VM\Stream\FileStreamHandler(
@@ -60,13 +60,13 @@ $rubyVM = new \RubyVM\VM\Core\Runtime\RubyVM(
 
 // Register kernel its each of Ruby Versions
 $rubyVM->register(
-    rubyVersion: \RubyVM\VM\Core\Runtime\RubyVersion::VERSION_3_2,
+    rubyVersion: \RubyVM\VM\Core\YARV\RubyVersion::VERSION_3_2,
     kernelClass: \RubyVM\VM\Core\Runtime\Version\Ruby3_2\Kernel::class,
 );
 
 // Disassemble instruction sequence binary formatted and get executor
 $executor = $rubyVM->disassemble(
-    useVersion: \RubyVM\VM\Core\Runtime\RubyVersion::VERSION_3_2,
+    useVersion: \RubyVM\VM\Core\YARV\RubyVersion::VERSION_3_2,
 );
 
 // Execute disassembled instruction sequence
@@ -99,7 +99,7 @@ $ ruby -e "puts RubyVM::InstructionSequence.compile_file('test.rb').to_binary" >
 require __DIR__ . '/vendor/autoload.php';
 
 // Instantiate RubyVM class
-$rubyVM = new \RubyVM\VM\Core\Runtime\RubyVM(
+$rubyVM = new \RubyVM\VM\Core\YARV\RubyVM(
     new \RubyVM\VM\Core\Runtime\Option(
         reader: new \RubyVM\VM\Stream\BinaryStreamReader(
             streamHandler: new \RubyVM\VM\Stream\FileStreamHandler(
@@ -115,13 +115,13 @@ $rubyVM = new \RubyVM\VM\Core\Runtime\RubyVM(
 
 // Register kernel its each of Ruby Versions
 $rubyVM->register(
-    rubyVersion: \RubyVM\VM\Core\Runtime\RubyVersion::VERSION_3_2,
+    rubyVersion: \RubyVM\VM\Core\YARV\RubyVersion::VERSION_3_2,
     kernelClass: \RubyVM\VM\Core\Runtime\Version\Ruby3_2\Kernel::class,
 );
 
 // Disassemble instruction sequence binary formatted and get executor
 $executor = $rubyVM->disassemble(
-    useVersion: \RubyVM\VM\Core\Runtime\RubyVersion::VERSION_3_2,
+    useVersion: \RubyVM\VM\Core\YARV\RubyVersion::VERSION_3_2,
 );
 
 // Execute disassembled instruction sequence
@@ -178,7 +178,7 @@ _Notice: The executor debugger is using a lot of memories. We recommend to use d
 ```php
 // Disassemble instruction sequence binary formatted and get executor
 $executor = $rubyVM->disassemble(
-    useVersion: \RubyVM\VM\Core\Runtime\RubyVersion::VERSION_3_2,
+    useVersion: \RubyVM\VM\Core\YARV\RubyVersion::VERSION_3_2,
 );
 
 // Enable recording processed sequences with using `enableProcessedRecords` method.
@@ -197,7 +197,7 @@ Which collect previous stacks, registered local tables and so on. this is requir
 ```php
 // Disassemble instruction sequence binary formatted and get executor
 $executor = $rubyVM->disassemble(
-    useVersion: \RubyVM\VM\Core\Runtime\RubyVersion::VERSION_3_2,
+    useVersion: \RubyVM\VM\Core\YARV\RubyVersion::VERSION_3_2,
 );
 
 // Enable breakpoint with using `enableBreakPoint` method.
