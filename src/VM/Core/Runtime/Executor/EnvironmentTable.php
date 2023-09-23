@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Helper\DebugFormat;
+use RubyVM\VM\Core\Runtime\Executor\Debugger\DebugFormat;
 use RubyVM\VM\Core\Runtime\Object_;
 use RubyVM\VM\Core\YARV\Criterion\Entry\AbstractEntries;
 use RubyVM\VM\Exception\LocalTableException;
