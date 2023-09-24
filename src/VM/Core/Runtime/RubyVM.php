@@ -15,11 +15,22 @@ use RubyVM\VM\Exception\RubyVMException;
 
 class RubyVM implements RubyVMInterface
 {
+    public const DEFAULT_VERSION = RubyVersion::VERSION_3_2;
+
     protected array $registeredRuntimes = [];
 
-    public function __construct(public readonly Option $option) {}
+    public function __construct(public readonly Option $option)
+    {
+        // Register default kernels
+        $this->register(
+            rubyVersion: RubyVersion::VERSION_3_2,
+            kernelClass: \RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Kernel::class,
+        );
+    }
 
     /**
+     * NOTE: You did call register method to be overwrite default kernel if you want to replace any kernel.
+     *
      * @param class-string<KernelInterface> $kernelClass
      */
     public function register(
@@ -50,7 +61,7 @@ class RubyVM implements RubyVMInterface
             sprintf('Start to disassemble instruction sequences'),
         );
 
-        $runtime = $this->runtime($useVersion);
+        $runtime = $this->runtime($useVersion ?? static::DEFAULT_VERSION);
 
         $kernel = $runtime->kernel()->setup();
 

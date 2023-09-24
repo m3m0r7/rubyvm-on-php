@@ -50,12 +50,6 @@ class TestApplication extends TestCase
             ),
         );
 
-        // Set default kernel
-        $rubyVM->register(
-            rubyVersion: \RubyVM\VM\Core\YARV\RubyVersion::VERSION_3_2,
-            kernelClass: \RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Kernel::class,
-        );
-
         return new RubyVMManager(
             $rubyVM,
             $stdOut,
