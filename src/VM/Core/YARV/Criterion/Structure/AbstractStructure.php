@@ -10,6 +10,9 @@ use RubyVM\VM\Stream\SizeOf;
 
 abstract class AbstractStructure implements StructureInterface
 {
+    /**
+     * @var array<string, int|float|string>
+     */
     private array $structureProperties = [];
 
     public function __construct(protected readonly BinaryStreamReaderInterface $reader)
@@ -19,10 +22,6 @@ abstract class AbstractStructure implements StructureInterface
          * @var SizeOf $sizeOf
          */
         foreach (static::structure() as $name => $sizeOf) {
-            if (!($sizeOf instanceof SizeOf) && !is_int($sizeOf)) {
-                throw new RubyVMException('The AbstractStructure::structure accepts processing instantiated by SizeOf or integer property');
-            }
-
             $this->structureProperties[$name] = match ($sizeOf) {
                 SizeOf::CHAR => $this->reader->readAsChar(),
                 SizeOf::BYTE => $this->reader->readAsByte(),
@@ -35,12 +34,12 @@ abstract class AbstractStructure implements StructureInterface
                 SizeOf::UNSIGNED_INT => $this->reader->readAsUnsignedInt(),
                 SizeOf::UNSIGNED_LONG => $this->reader->readAsUnsignedLong(),
                 SizeOf::UNSIGNED_LONG_LONG => $this->reader->readAsUnsignedLongLong(),
-                default => $this->reader->read($sizeOf),
+                default => $this->reader->read($sizeOf->size()),
             };
         }
     }
 
-    public function __get(string $name): int|string
+    public function __get(string $name): int|float|string
     {
         return $this->structureProperties[$name];
     }

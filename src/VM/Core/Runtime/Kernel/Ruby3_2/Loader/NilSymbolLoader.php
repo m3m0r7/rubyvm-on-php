@@ -22,10 +22,8 @@ class NilSymbolLoader implements SymbolLoaderInterface
         $reader = $this->kernel->stream()->duplication();
         $reader->pos($this->offset->offset);
 
-        $value = $reader->smallValue();
+        $reader->smallValue();
 
-        return new NilSymbol(
-            $value,
-        );
+        return new NilSymbol();
     }
 }

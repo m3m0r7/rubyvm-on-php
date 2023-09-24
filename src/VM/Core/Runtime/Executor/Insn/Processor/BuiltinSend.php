@@ -59,7 +59,7 @@ class BuiltinSend implements OperationProcessorInterface
             $blockIseqNumber,
             $blockObject,
             false,
-            ...$arguments,
+            ...$this->translateForArguments(...$arguments),
         );
 
         if ($result instanceof \RubyVM\VM\Core\Runtime\RubyClass) {

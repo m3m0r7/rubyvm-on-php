@@ -13,7 +13,7 @@ use RubyVM\VM\Core\YARV\Criterion\ShouldBeRubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ObjectInfo;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
 
-class RubyClass implements RubyClassInterface, \Stringable
+class RubyClass implements RubyClassInterface
 {
     use ShouldBeRubyClass {
         __call as private callExtendedMethod;
@@ -33,6 +33,11 @@ class RubyClass implements RubyClassInterface, \Stringable
     public function __clone()
     {
         $this->entity = clone $this->entity;
+    }
+
+    public function entity(): EntityInterface
+    {
+        return $this->entity;
     }
 
     public function __call(string $name, array $arguments)

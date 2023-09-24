@@ -20,9 +20,14 @@ class VerificationHeader implements VerificationInterface
             return;
         }
 
-        $magicBytes = array_values(unpack('C*', $this->kernel->magic));
+        $headerBytes = unpack('C*', $this->kernel->magic);
+        if ($headerBytes === false) {
+            throw new VerificationException('The header bytes are invalid');
+        }
 
-        throw new VerificationException(sprintf('The magic byte is not matched expecting YARB (actual: ' . implode(', ', array_fill(0, is_countable($magicBytes) ? count($magicBytes) : 0, '0x%02x')) . ')', ...$magicBytes));
+        $magicBytes = array_values($headerBytes);
+
+        throw new VerificationException(sprintf('The magic byte is not matched expecting YARB (actual: ' . implode(', ', array_fill(0, count($magicBytes), '0x%02x')) . ')', ...$magicBytes));
     }
 
     private function verifyVersion(): void

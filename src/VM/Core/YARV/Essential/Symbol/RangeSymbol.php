@@ -4,8 +4,15 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
-class RangeSymbol implements SymbolInterface, \ArrayAccess, \Stringable
+/**
+ * @implements \ArrayAccess<int, NumberSymbol>
+ * @implements \IteratorAggregate<int, SymbolInterface>
+ */
+class RangeSymbol implements SymbolInterface, \ArrayAccess, \Countable, \IteratorAggregate, \Stringable
 {
+    /**
+     * @var array<int, NumberSymbol>
+     */
     private array $array;
 
     public function __construct(
@@ -32,6 +39,19 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, \Stringable
         $this->array = $array;
     }
 
+    public function count(): int
+    {
+        return count($this->array);
+    }
+
+    public function getIterator(): \Traversable
+    {
+        return new \ArrayIterator($this->array);
+    }
+
+    /**
+     * @return array<int, NumberSymbol>
+     */
     public function valueOf(): array
     {
         return $this->array;
@@ -54,7 +74,7 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, \Stringable
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        $this->array[$offset] = $value;
+        $this->array[(int) $offset] = $value;
     }
 
     public function offsetUnset(mixed $offset): void

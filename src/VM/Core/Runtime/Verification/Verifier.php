@@ -8,8 +8,15 @@ use RubyVM\VM\Exception\VerifierException;
 
 class Verifier
 {
+
+    /**
+     * @var array<string, bool>
+     */
     private array $verified = [];
 
+    /**
+     * @param string[] $requireVerificationNames
+     */
     public function __construct(
         array $requireVerificationNames
     ) {

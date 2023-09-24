@@ -10,6 +10,7 @@ class StringSymbol implements SymbolInterface, \Stringable
 {
     public function __construct(
         private readonly string $string,
+        // @phpstan-ignore-next-line
         private readonly Encoding $encoding = Encoding::RUBY_ENCINDEX_UTF_8,
     ) {}
 

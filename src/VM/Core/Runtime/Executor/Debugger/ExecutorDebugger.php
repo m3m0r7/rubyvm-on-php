@@ -154,7 +154,7 @@ class ExecutorDebugger
                 implode(
                     ', ',
                     array_map(
-                        static fn($argument) => match ($argument::class) {
+                        static fn ($argument) => match ($argument::class) {
                             SymbolInterface::class => (string) $argument,
                             Operand::class => (string) $argument->operand->entity,
                             RubyClass::class => (string) $argument->entity->entity,

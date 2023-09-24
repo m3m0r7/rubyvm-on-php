@@ -66,7 +66,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         $offset = $this->kernel->instructionSequenceList[$this->aux->loader->index];
         $this->kernel->stream()->pos($offset->offset);
 
-        $computeFromBodyOffset = static fn(int $x) => $offset->offset - $x;
+        $computeFromBodyOffset = static fn (int $x) => $offset->offset - $x;
 
         $type = $this->kernel->stream()->smallValue();
         $iseqSize = $this->kernel->stream()->smallValue();
@@ -369,9 +369,9 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         for ($i = 0; $i < $callInfoSize; ++$i) {
             $midIndex = $reader->smallValue();
             if ($midIndex === -1) {
-                $entries->append(new CallInfo());
-
-                continue;
+                throw new InstructionSequenceProcessorException(
+                    'Load call info getting unexpected value (mid: -1)',
+                );
             }
 
             $mid = $this->kernel->findId($midIndex);

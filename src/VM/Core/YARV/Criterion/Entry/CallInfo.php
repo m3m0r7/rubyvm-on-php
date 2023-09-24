@@ -10,10 +10,10 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 class CallInfo implements CallInfoInterface
 {
     public function __construct(
-        public readonly ?CallDataInterface $callData = null,
+        public readonly CallDataInterface $callData,
     ) {}
 
-    public function callData(): ?CallDataInterface
+    public function callData(): CallDataInterface
     {
         return $this->callData;
     }

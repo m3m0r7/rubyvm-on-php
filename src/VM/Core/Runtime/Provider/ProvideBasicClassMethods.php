@@ -16,7 +16,7 @@ trait ProvideBasicClassMethods
 {
     public function puts(RubyClassInterface $object): RubyClassInterface
     {
-        $symbol = $object->entity->symbol();
+        $symbol = $object->entity()->symbol();
 
         $string = '';
         if ($symbol instanceof ArraySymbol || $symbol instanceof RangeSymbol) {
@@ -34,7 +34,7 @@ trait ProvideBasicClassMethods
             $string .= "\n";
         }
 
-        $this->context->IOContext()->stdOut->write($string);
+        $this->context?->IOContext()->stdOut->write($string);
 
         // The puts returns (nil)
         return Nil::createBy()
@@ -48,7 +48,7 @@ trait ProvideBasicClassMethods
 
     public function inspect(): RubyClassInterface
     {
-        $string = match (($this->entity->symbol())::class) {
+        $string = match (($this->entity()->symbol())::class) {
             StringSymbol::class => '"' . ((string) $this) . '"',
             default => (string) $this,
         };

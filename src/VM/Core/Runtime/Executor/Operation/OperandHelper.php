@@ -30,6 +30,8 @@ trait OperandHelper
             RubyClass::class,
         );
 
+        assert($operand instanceof RubyClass);
+
         return $operand->entity;
     }
 
@@ -110,27 +112,39 @@ trait OperandHelper
 
     private function getOperandAsID(): ID
     {
-        return $this->getOperandAsAny(ID::class);
+        $value = $this->getOperandAsAny(ID::class);
+        assert($value instanceof ID);
+
+        return $value;
     }
 
-    private function getOperandAsMain(): RubyClassInterface
+    private function getOperandAsRubyClass(): RubyClassInterface
     {
-        return $this->getOperandAsAny(RubyClassInterface::class);
+        $value = $this->getOperandAsAny(RubyClassInterface::class);
+        assert($value instanceof RubyClassInterface);
+
+        return $value;
     }
 
     private function getOperandAsCallInfo(): CallInfoInterface
     {
-        return $this->getOperandAsAny(CallInfoInterface::class);
+        $value = $this->getOperandAsAny(CallInfoInterface::class);
+        assert($value instanceof CallInfoInterface);
+
+        return $value;
     }
 
     private function getOperandAsExecutedResult(): ExecutedResult
     {
-        return $this->getOperandAsAny(ExecutedResult::class);
+        $value = $this->getOperandAsAny(ExecutedResult::class);
+        assert($value instanceof ExecutedResult);
+
+        return $value;
     }
 
     private function getOperandAsObject(): RubyClassInterface
     {
-        return $this->getOperandAsAny(RubyClassInterface::class)
+        return $this->getOperandAsRubyClass()
             ->setRuntimeContext($this->context)
             ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace());
     }
@@ -172,6 +186,8 @@ trait OperandHelper
         $stack = $this->getStackAsAny(
             RubyClass::class
         );
+
+        assert($stack instanceof RubyClass);
 
         return $stack->entity;
     }
@@ -218,6 +234,8 @@ trait OperandHelper
             $entity,
         );
 
+        assert($entity instanceof String_);
+
         return $entity;
     }
 
@@ -232,6 +250,8 @@ trait OperandHelper
             Float_::class,
             $entity,
         );
+
+        assert($entity instanceof Float_);
 
         return $entity;
     }
@@ -248,32 +268,47 @@ trait OperandHelper
             $entity,
         );
 
+        assert($entity instanceof Offset);
+
         return $entity;
     }
 
     private function getStackAsID(): ID
     {
-        return $this->getStackAsAny(ID::class);
+        $value = $this->getStackAsAny(ID::class);
+
+        assert($value instanceof ID);
+
+        return $value;
     }
 
-    private function getStackAsClass(): RubyClassInterface
+    private function getStackAsRubyClass(): RubyClassInterface
     {
-        return $this->getStackAsAny(RubyClassInterface::class);
+        $value = $this->getStackAsAny(RubyClassInterface::class);
+        assert($value instanceof RubyClassInterface);
+
+        return $value;
     }
 
     private function getStackAsCallInfo(): CallInfoInterface
     {
-        return $this->getStackAsAny(CallInfoInterface::class);
+        $value = $this->getStackAsAny(CallInfoInterface::class);
+        assert($value instanceof CallInfoInterface);
+
+        return $value;
     }
 
     private function getStackAsExecutedResult(): ExecutedResult
     {
-        return $this->getStackAsAny(ExecutedResult::class);
+        $value = $this->getStackAsAny(ExecutedResult::class);
+        assert($value instanceof ExecutedResult);
+
+        return $value;
     }
 
     private function getStackAsObject(): RubyClassInterface
     {
-        return $this->getStackAsAny(RubyClassInterface::class)
+        return $this->getStackAsRubyClass()
             ->setRuntimeContext($this->context)
             ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace());
     }

@@ -63,5 +63,4 @@ return static function (RectorConfig $rectorConfig): void {
         \Rector\CodeQuality\Rector\For_\ForRepeatedCountToOwnVariableRector::class,
         \Rector\CodeQuality\Rector\ClassMethod\LocallyCalledStaticMethodToNonStaticRector::class,
     ]);
-
 };

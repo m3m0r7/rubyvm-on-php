@@ -4,14 +4,21 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Context;
 
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\DebugFormat;
+use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
+use RubyVM\VM\Core\Runtime\ID;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Exception\VMStackException;
 
 class VMStack implements \Countable
 {
     use DebugFormat;
 
+    /**
+     * @var (CallInfoInterface|ExecutedResult|ID|RubyClassInterface)[]
+     */
     protected array $items = [];
 
     public function pos(): int

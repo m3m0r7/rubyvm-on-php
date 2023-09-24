@@ -41,18 +41,16 @@ enum SizeOf
             self::SHORT, self::UNSIGNED_SHORT => 2,
             self::INT, self::LONG, self::UNSIGNED_INT, self::UNSIGNED_LONG => 4,
             self::LONG_LONG, self::UNSIGNED_LONG_LONG, self::DOUBLE => 8,
-            default => throw new BinaryStreamReaderException(sprintf('Unknown SizeOf type %s', $this->name)),
         };
     }
 
-    public function mask(): int|float
+    public function mask(): int
     {
         return match ($this) {
             self::BOOL, self::CHAR, self::BYTE, self::UNSIGNED_BYTE => 0xFF,
             self::SHORT, self::UNSIGNED_SHORT => 0xFFFF,
             self::INT, self::LONG, self::UNSIGNED_INT, self::UNSIGNED_LONG => 0xFFFFFFFF,
             self::LONG_LONG, self::UNSIGNED_LONG_LONG, self::DOUBLE => throw new BinaryStreamReaderException('The PHP cannot mask big integer'),
-            default => throw new BinaryStreamReaderException(sprintf('Unknown SizeOf type %s', $this->name)),
         };
     }
 }

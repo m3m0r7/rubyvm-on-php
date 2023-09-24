@@ -6,6 +6,7 @@ namespace RubyVM\VM\Core\YARV\Criterion\Entry;
 
 use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallDataInterface;
+use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 
 class CallData implements CallDataInterface
 {
@@ -13,6 +14,10 @@ class CallData implements CallDataInterface
         public readonly ID $mid,
         public readonly int $flag,
         public readonly int $argc,
+
+        /**
+         * @var StringSymbol[]|null
+         */
         public readonly ?array $keywords,
     ) {}
 

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
-use RubyVM\VM\Core\Runtime\RubyClass;
+use RubyVM\VM\Core\Runtime\ID;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 
 /**
  * In the C lang case, the language is very flexible for example to int, to unsigned int..., to defined struct and so on.
@@ -16,16 +18,14 @@ trait Translatable
 {
     use Validatable;
 
+    /**
+     * @return (CallInfoInterface|ExecutedResult|ID|RubyClassInterface)[]
+     */
     public function translateForArguments(Operand ...$operands): array
     {
         $arguments = [];
         foreach ($operands as $operand) {
-            // @var RubyClass $object
-            $arguments[] = $object = $operand->operand;
-            $this->validateType(
-                RubyClass::class,
-                $object,
-            );
+            $arguments[] = $operand->operand;
         }
 
         return $arguments;

@@ -104,7 +104,7 @@ class Executor implements ExecutorInterface
         );
     }
 
-    public function execute(...$arguments): ExecutedResult
+    public function execute(ContextInterface|RubyClassInterface ...$arguments): ExecutedResult
     {
         try {
             $result = $this->_execute(...$arguments);
@@ -127,7 +127,7 @@ class Executor implements ExecutorInterface
         }
     }
 
-    private function _execute(...$arguments): ExecutedResult
+    private function _execute(ContextInterface|RubyClassInterface ...$arguments): ExecutedResult
     {
         $this->debugger->bindContext($this->context);
 

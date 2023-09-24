@@ -22,7 +22,12 @@ class FileStreamHandler implements StreamHandlerInterface
 
     public function size(): ?int
     {
-        return filesize($this->path);
+        $size = filesize($this->path);
+        if ($size === false) {
+            return null;
+        }
+
+        return $size;
     }
 
     public function isTerminated(): bool

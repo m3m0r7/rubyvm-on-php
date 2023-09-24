@@ -27,12 +27,21 @@ trait OperatorCalculatable
 
         $callDataOperand = $this->getOperandAsCallInfo();
 
-        $operator = $callDataOperand->callData
-            ->mid
+        $operator = $callDataOperand
+            ->callData()
+            ->mid()
             ->object;
 
-        $leftOperand = $obj->operand->entity->symbol();
-        $rightOperand = $recv->operand->entity->symbol();
+        if (!$obj->operand instanceof RubyClassInterface) {
+            throw new OperationProcessorException('The passed argument is not a RubyClass');
+        }
+
+        if (!$recv->operand instanceof RubyClassInterface) {
+            throw new OperationProcessorException('The receiver is not a RubyClass');
+        }
+
+        $leftOperand = $obj->operand->entity()->symbol();
+        $rightOperand = $recv->operand->entity()->symbol();
 
         $value = null;
         if ($operator instanceof StringSymbol) {

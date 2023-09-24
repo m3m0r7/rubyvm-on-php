@@ -40,7 +40,7 @@ class BuiltinGetinstancevariable implements OperationProcessorInterface
         /**
          * @var RubyClassImplementationInterface $targetObject
          */
-        $targetObject = $this->getStackAsClass();
+        $targetObject = $this->getStackAsRubyClass();
 
         $this->context->vmStack()->push(
             new Operand(

@@ -17,10 +17,18 @@ class TestApplication extends TestCase
     protected function createRubyVMFromCode(string $code, string $extraData = '', string $binaryPath = 'ruby'): RubyVMManager
     {
         $handle = tmpfile();
+        if ($handle === false) {
+            throw new \RuntimeException('tmpfile did not created');
+        }
+
         fwrite($handle, $code);
         $uri = stream_get_meta_data($handle)['uri'];
 
         $compilerHandle = tmpfile();
+        if ($compilerHandle === false) {
+            throw new \RuntimeException('tmpfile did not created');
+        }
+
         fwrite(
             $compilerHandle,
             <<<_

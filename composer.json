@@ -28,5 +28,9 @@
         "phpstan/phpstan": "^1.10",
         "friendsofphp/php-cs-fixer": "^3.21",
         "rector/rector": "^0.18.3"
+    },
+    "scripts": {
+        "lint": "phpstan analyse -c phpstan.neon --memory-limit=-1",
+        "lint:fix": "php-cs-fixer fix --allow-risky=yes && rector process"
     }
 }

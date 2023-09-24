@@ -24,6 +24,8 @@ class Offset
 
     /**
      * NOTE: see also IBF_OBJBODY and IBF_ALIGNED_OFFSET(align, offset) implementation.
+     *
+     * @param int|SizeOf|SizeOf[] $size
      */
     public function align(SizeOf|array|int $size): Offset
     {

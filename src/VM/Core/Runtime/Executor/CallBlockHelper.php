@@ -7,7 +7,7 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 use RubyVM\VM\Core\Runtime\Entity\Number;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
-use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
+use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\VMCallFlagBit;
@@ -18,7 +18,7 @@ use RubyVM\VM\Exception\OperationProcessorException;
 
 trait CallBlockHelper
 {
-    private function callSimpleMethod(ContextInterface $context, RubyClass|ContextInterface ...$arguments): ExecutedResult|null
+    private function callSimpleMethod(ContextInterface $context, RubyClass|ContextInterface ...$arguments): ExecutedResult
     {
         // Validate first value is context?
         $calleeContexts = [];
@@ -77,8 +77,12 @@ trait CallBlockHelper
         return $result;
     }
 
-    private function callBlockWithArguments(CallInfoInterface $callInfo, Number $blockIseqIndex, RubyClass|RubyClassInterface $blockObject, bool $isSuper, Operand ...$arguments): ?RubyClass
+    private function callBlockWithArguments(CallInfoInterface $callInfo, Number $blockIseqIndex, RubyClass|RubyClassInterface $blockObject, bool $isSuper, CallInfoInterface|RubyClassInterface|ID|ExecutedResult ...$arguments): ?RubyClassInterface
     {
+        if ($this->context === null) {
+            throw new OperationProcessorException('The runtime context is not injected - did you forget to call setRuntimeContext before?');
+        }
+
         if (($callInfo->callData()->flag() & (0x01 << VMCallFlagBit::VM_CALL_ARGS_BLOCKARG->value)) !== 0) {
             throw new OperationProcessorException('The callBlockWithArguments is not implemented yet');
         }
@@ -108,10 +112,6 @@ trait CallBlockHelper
             debugger: $this->context->debugger(),
             previousContext: $this->context,
         ));
-
-        $arguments = $this->translateForArguments(
-            ...$arguments
-        );
 
         $result = $blockObject
             ->setRuntimeContext($executor->context())

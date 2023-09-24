@@ -11,6 +11,6 @@ trait ProvidePHPClassMethods
         ob_start();
         phpinfo(INFO_ALL);
         $info = ob_get_clean();
-        $this->context->IOContext()->stdOut->write($info);
+        $this->context?->IOContext()->stdOut->write($info);
     }
 }

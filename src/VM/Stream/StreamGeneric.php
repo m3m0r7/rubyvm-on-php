@@ -12,11 +12,20 @@ trait StreamGeneric
 
     public function read(int $bytes): string
     {
-        if (0 === $bytes) {
+        if ($bytes === 0) {
             return '';
         }
 
+        if ($bytes < 0) {
+            throw new FileStreamHandlerException(sprintf('Unexpected byte size (the value is negative: %d, but expecting positive)', $bytes));
+        }
+
         $read = fread($this->handle, $bytes);
+
+        if ($read === false) {
+            throw new FileStreamHandlerException('Unexpected byte size (stream cannot read)');
+        }
+
         if (strlen($read) !== $bytes) {
             throw new FileStreamHandlerException(sprintf('Unexpected read binary size (expected %d byte(s) but %d byte(s) insufficiency)', $bytes, $bytes - strlen($read)));
         }
@@ -28,13 +37,25 @@ trait StreamGeneric
     {
         rewind($this->handle);
 
-        return stream_get_contents($this->handle);
+        $read = stream_get_contents($this->handle);
+
+        if ($read === false) {
+            throw new FileStreamHandlerException('Unexpected byte size (stream cannot read)');
+        }
+
+        return $read;
     }
 
     public function pos(int $newPos = null, int $whence = SEEK_SET): int
     {
         if ($newPos === null) {
-            return ftell($this->handle);
+            $pos = ftell($this->handle);
+
+            if ($pos === false) {
+                throw new FileStreamHandlerException('Unexpected byte size (stream cannot read)');
+            }
+
+            return $pos;
         }
 
         $result = fseek($this->handle, $newPos, $whence);

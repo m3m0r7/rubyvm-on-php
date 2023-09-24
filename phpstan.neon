@@ -1,0 +1,7 @@
+parameters:
+    level: 8
+    paths:
+        - src
+        - tests
+    ignoreErrors:
+        - '#[^:]+::__debugInfo\(\) return type has no value type specified in iterable type array.#'

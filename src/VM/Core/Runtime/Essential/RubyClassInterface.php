@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Essential;
 
+use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
-use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 
-interface RubyClassInterface extends RubyClassImplementationInterface
+interface RubyClassInterface extends RubyClassImplementationInterface, \Stringable
 {
+    public function entity(): EntityInterface;
+
     public function setRuntimeContext(?ContextInterface $context): RubyClassInterface;
 
     public function userlandHeapSpace(): ?UserlandHeapSpaceInterface;
 
-    public function setUserlandHeapSpace(?UserlandHeapSpace $userlandHeapSpace): RubyClassInterface;
+    public function setUserlandHeapSpace(?UserlandHeapSpaceInterface $userlandHeapSpace): RubyClassInterface;
 
     public function classes(): array;
 

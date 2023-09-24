@@ -17,6 +17,9 @@ class RubyVM implements RubyVMInterface
 {
     final public const DEFAULT_VERSION = RubyVersion::VERSION_3_2;
 
+    /**
+     * @var array<string, Runtime>
+     */
     protected array $registeredRuntimes = [];
 
     public function __construct(public readonly Option $option)
@@ -115,6 +118,9 @@ class RubyVM implements RubyVMInterface
         return $this->option;
     }
 
+    /**
+     * @return class-string[]
+     */
     public function requireVerifications(): array
     {
         return [
