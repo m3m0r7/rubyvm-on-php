@@ -1,28 +1,25 @@
 name: PHP Testing
 on: [push]
 
-default_steps: &default_steps
-  - uses: actions/checkout@v3
-  - name: Setup PHP
-    uses: shivammathur/setup-php@v2
-    with:
-      php-version: '8.2'
-  - name: composer cache
-    uses: actions/cache@v3
-    with:
-      path: ${{ github.workspace }}/vendor
-      key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-      restore-keys: ${{ runner.os }}-composer-
-  - name: composer install
-    if: steps.composer-cache.outputs.cache-hit != 'true'
-    run: |
-      ./composer.phar install
-
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      <<: *default_steps
+      - uses: actions/checkout@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: composer cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+      - name: composer install
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: |
+          ./composer.phar install
       - name: Run PHPStan
         run: |
           ./composer.phar lint
@@ -35,7 +32,21 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      <<: *default_steps
+      - uses: actions/checkout@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: composer cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+      - name: composer install
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: |
+          ./composer.phar install
       - name: Run test
         run: |
           ./vendor/bin/phpunit tests/
