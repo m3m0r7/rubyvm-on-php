@@ -18,7 +18,7 @@ class String_ extends Entity implements EntityInterface
         return (bool) $this->symbol->valueOf();
     }
 
-    public static function createBy(mixed $value = ''): EntityInterface
+    public static function createBy(mixed $value = ''): self
     {
         return new self(new StringSymbol($value));
     }

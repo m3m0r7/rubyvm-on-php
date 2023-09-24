@@ -51,8 +51,8 @@ class BuiltinOptLtlt implements OperationProcessorInterface
 
     private function computeNumberLeftShiftNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
     {
-        return (new Number(new NumberSymbol(
+        return Number::createBy(
             $leftOperand->valueOf() << $rightOperand->valueOf()
-        )))->toBeRubyClass();
+        )->toBeRubyClass();
     }
 }

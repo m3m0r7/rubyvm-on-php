@@ -13,7 +13,7 @@ class Float_ extends Entity implements EntityInterface
         $this->symbol = $symbol;
     }
 
-    public static function createBy(mixed $value = 0): EntityInterface
+    public static function createBy(mixed $value = 0): self
     {
         return new self(new FloatSymbol($value));
     }

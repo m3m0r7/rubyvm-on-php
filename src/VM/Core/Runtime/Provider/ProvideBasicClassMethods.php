@@ -36,7 +36,7 @@ trait ProvideBasicClassMethods
         $this->context->IOContext()->stdOut->write($string);
 
         // The puts returns (nil)
-        return (new Nil(new NilSymbol()))
+        return Nil::createBy()
             ->toBeRubyClass();
     }
 
@@ -52,7 +52,7 @@ trait ProvideBasicClassMethods
             default => (string) $this,
         };
 
-        return (new String_(new StringSymbol($string)))
+        return String_::createBy($string)
             ->toBeRubyClass();
     }
 }

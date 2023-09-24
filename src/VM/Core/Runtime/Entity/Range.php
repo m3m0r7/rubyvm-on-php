@@ -9,7 +9,6 @@ use RubyVM\VM\Core\Runtime\Executor\Context\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\LocalTableHelper;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NilSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
 
 class Range extends Entity implements EntityInterface
@@ -58,10 +57,10 @@ class Range extends Entity implements EntityInterface
             }
         }
 
-        return new Nil(new NilSymbol());
+        return Nil::createBy();
     }
 
-    public static function createBy(mixed ...$value): EntityInterface
+    public static function createBy(mixed ...$value): self
     {
         return new self(new RangeSymbol(...$value));
     }

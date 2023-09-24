@@ -66,32 +66,32 @@ class BuiltinOptPlus implements OperationProcessorInterface
 
     private function computeStringPlusString(StringSymbol $leftOperand, StringSymbol $rightOperand): RubyClassInterface
     {
-        return (new String_(new StringSymbol(
+        return String_::createBy(
             $leftOperand . $rightOperand
-        )))->toBeRubyClass();
+        )->toBeRubyClass();
     }
 
     private function computeNumberPlusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
     {
-        return (new Number(new NumberSymbol(
+        return Number::createBy(
             $leftOperand->valueOf() + $rightOperand->valueOf()
-        )))->toBeRubyClass();
+        )->toBeRubyClass();
     }
 
     private function computeFloatPlusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClassInterface
     {
-        return (new Float_(new FloatSymbol(
+        return Float_::createBy(
             $leftOperand->valueOf() + $rightOperand->valueOf()
-        )))->toBeRubyClass();
+        )->toBeRubyClass();
     }
 
     private function computeArrayPlusArray(ArraySymbol $leftOperand, ArraySymbol $rightOperand): RubyClassInterface
     {
-        return (new Array_(new ArraySymbol(
+        return Array_::createBy(
             [
                 ...$leftOperand,
                 ...$rightOperand,
             ],
-        )))->toBeRubyClass();
+        )->toBeRubyClass();
     }
 }

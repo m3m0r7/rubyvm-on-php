@@ -51,8 +51,8 @@ class BuiltinOptMod implements OperationProcessorInterface
 
     private function computeNumberModNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
     {
-        return (new Number(new NumberSymbol(
+        return Number::createBy(
             $leftOperand->valueOf() % $rightOperand->valueOf()
-        )))->toBeRubyClass();
+        )->toBeRubyClass();
     }
 }

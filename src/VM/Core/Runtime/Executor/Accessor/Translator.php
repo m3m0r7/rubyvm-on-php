@@ -42,7 +42,7 @@ readonly class Translator
                 $result[] = static::PHPToRuby($element)->entity->symbol();
             }
 
-            return (new Array_(new ArraySymbol($result)))
+            return Array_::createBy($result)
                 ->toBeRubyClass();
         }
 
@@ -51,10 +51,10 @@ readonly class Translator
         }
 
         return match (gettype($elements)) {
-            'integer' => (new Number(new NumberSymbol($elements)))->toBeRubyClass(),
-            'string' => (new String_(new StringSymbol($elements)))->toBeRubyClass(),
-            'double' => (new Float_(new FloatSymbol($elements)))->toBeRubyClass(),
-            'boolean' => (new Boolean_(new BooleanSymbol($elements)))->toBeRubyClass(),
+            'integer' => Number::createBy($elements)->toBeRubyClass(),
+            'string' => String_::createBy($elements)->toBeRubyClass(),
+            'double' => Float_::createBy($elements)->toBeRubyClass(),
+            'boolean' => Boolean_::createBy($elements)->toBeRubyClass(),
             default => throw new TranslationException('The type is not implemented yet')
         };
     }

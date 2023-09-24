@@ -12,7 +12,6 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
 
 class BuiltinNewarray implements OperationProcessorInterface
 {
@@ -42,7 +41,7 @@ class BuiltinNewarray implements OperationProcessorInterface
 
         $this->context->vmStack()->push(
             new Operand(
-                (new Array_(new ArraySymbol(array_values($entries))))
+                Array_::createBy(array_values($entries))
                     ->toBeRubyClass(),
             ),
         );

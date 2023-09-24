@@ -12,7 +12,6 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 
 class BuiltinPutobjectINT2FIX0 implements OperationProcessorInterface
 {
@@ -35,7 +34,7 @@ class BuiltinPutobjectINT2FIX0 implements OperationProcessorInterface
     {
         $this->context->vmStack()->push(
             new Operand(
-                (new Number(new NumberSymbol(0)))
+                Number::createBy(0)
                     ->toBeRubyClass()
             ),
         );

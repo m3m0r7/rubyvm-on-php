@@ -13,7 +13,7 @@ class Class_ extends Entity implements EntityInterface
         $this->symbol = $symbol;
     }
 
-    public static function createBy(mixed $value = null): EntityInterface
+    public static function createBy(mixed $value = null): self
     {
         return new self(new ClassSymbol($value));
     }

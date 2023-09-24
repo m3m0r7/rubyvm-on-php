@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Entity;
 
 use RubyVM\VM\Core\Runtime\RubyClass;
-use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 
 class Number extends Entity implements EntityInterface
 {
@@ -24,30 +21,30 @@ class Number extends Entity implements EntityInterface
 
     public function xor(RubyClass $object): Number
     {
-        return new Number(new NumberSymbol(
+        return Number::createBy(
             $this->symbol->valueOf() ^ $object->entity->symbol()->valueOf(),
-        ));
+        );
     }
 
     public function power(RubyClass $object): Number
     {
-        return new Number(new NumberSymbol(
+        return Number::createBy(
             $this->symbol->valueOf() ** $object->entity->symbol()->valueOf(),
-        ));
+        );
     }
 
     public function rightShift(RubyClass $object): Number
     {
-        return new Number(new NumberSymbol(
+        return Number::createBy(
             $this->symbol->valueOf() >> $object->entity->symbol()->valueOf(),
-        ));
+        );
     }
 
     public function compareStrictEquals(RubyClass $object): Boolean_
     {
-        return new Boolean_(new BooleanSymbol(
+        return Boolean_::createBy(
             $this->symbol->valueOf() === $object->entity->symbol()->valueOf(),
-        ));
+        );
     }
 
     public function toInt(): self
@@ -57,19 +54,19 @@ class Number extends Entity implements EntityInterface
 
     public function toFloat(): Float_
     {
-        return new Float_(new FloatSymbol(
+        return Float_::createBy(
             (float) $this->symbol->valueOf(),
-        ));
+        );
     }
 
     public function toString(): String_
     {
-        return new String_(new StringSymbol(
-            string: (string) $this,
-        ));
+        return String_::createBy(
+            (string) $this,
+        );
     }
 
-    public static function createBy(mixed $value = 0): EntityInterface
+    public static function createBy(mixed $value = 0): self
     {
         return new self(new NumberSymbol($value));
     }

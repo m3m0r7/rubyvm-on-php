@@ -33,7 +33,6 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceBody;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceProcessorInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Keyword;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset as OffsetCriterion;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\OffsetSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\ExecutorExeption;
@@ -298,9 +297,9 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         // see: https://github.com/ruby/ruby/blob/ruby_3_2/iseq.c#L2090
                         InsnType::TS_NUM,
                         InsnType::TS_LINDEX => new Operand(
-                            operand: (new Number(new NumberSymbol(
+                            operand: Number::createBy(
                                 $reader->smallValue(),
-                            )))->toBeRubyClass()
+                            )->toBeRubyClass()
                         ),
 
                         // NOTE: here is not implemented on actually the RubyVM.
@@ -345,10 +344,8 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             for ($i = 0; $i < ($insn->operandSize() - 1); ++$i) {
                 $entries->append(
                     new Operand(
-                        operand: (new Number(new NumberSymbol(
-                            number: $reader->smallValue(),
-                            isFixed: true,
-                        )))->toBeRubyClass(),
+                        operand: Number::createBy($reader->smallValue())
+                            ->toBeRubyClass(),
                     )
                 );
                 ++$codeIndex;

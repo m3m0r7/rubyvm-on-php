@@ -14,7 +14,6 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinOptSize implements OperationProcessorInterface
@@ -44,9 +43,9 @@ class BuiltinOptSize implements OperationProcessorInterface
         if ($recv instanceof Array_) {
             $this->context->vmStack()->push(
                 new Operand(
-                    (new Number(new NumberSymbol(
+                    Number::createBy(
                         count($recv->symbol()),
-                    )))->toBeRubyClass()
+                    )->toBeRubyClass()
                 ),
             );
 

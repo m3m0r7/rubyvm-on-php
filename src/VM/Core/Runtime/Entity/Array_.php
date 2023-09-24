@@ -10,7 +10,6 @@ use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 
 class Array_ extends Entity implements EntityInterface
 {
@@ -42,7 +41,7 @@ class Array_ extends Entity implements EntityInterface
                 previousContext: $context,
             ));
 
-            $object = (new Number(new NumberSymbol($this->symbol[$i]->valueOf())))
+            $object = Number::createBy($this->symbol[$i]->valueOf())
                 ->toBeRubyClass()
                 ->setRuntimeContext($context)
                 ->setUserlandHeapSpace($context->self()->userlandHeapSpace());
@@ -73,7 +72,7 @@ class Array_ extends Entity implements EntityInterface
         return $this;
     }
 
-    public static function createBy(mixed $value = []): EntityInterface
+    public static function createBy(mixed $value = []): self
     {
         return new self(new ArraySymbol($value));
     }

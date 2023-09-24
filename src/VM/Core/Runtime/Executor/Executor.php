@@ -22,7 +22,6 @@ use RubyVM\VM\Core\Runtime\OptionInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
-use RubyVM\VM\Core\YARV\Essential\Symbol\VoidSymbol;
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\ExecutorFailedException;
 use RubyVM\VM\Exception\ExecutorUnknownException;
@@ -310,7 +309,7 @@ class Executor implements ExecutorInterface
         return new ExecutedResult(
             executor: $this,
             executedStatus: ExecutedStatus::SUCCESS,
-            returnValue: (new Void_(new VoidSymbol()))
+            returnValue: Void_::createBy()
                 ->toBeRubyClass(),
             threw: null,
             debugger: $this->debugger,

@@ -51,8 +51,8 @@ class BuiltinOptOr implements OperationProcessorInterface
 
     private function computeNumberOrNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
     {
-        return (new Number(new NumberSymbol(
+        return Number::createBy(
             $leftOperand->valueOf() | $rightOperand->valueOf()
-        )))->toBeRubyClass();
+        )->toBeRubyClass();
     }
 }
