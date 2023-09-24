@@ -54,4 +54,4 @@ jobs:
           ./composer.phar install
       - name: Run test
         run: |
-          ./vendor/bin/phpunit tests/
+          ENV=ci ./vendor/bin/phpunit tests/
