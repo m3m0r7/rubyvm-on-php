@@ -49,6 +49,7 @@ class EnvironmentTable extends AbstractEntries
         }
 
         parent::set($index, $value);
+
         return $this;
     }
 

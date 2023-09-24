@@ -43,7 +43,7 @@ class RubyClass implements RubyClassInterface
     }
 
     /**
-     * @param (RubyClass|ContextInterface)[] $arguments
+     * @param (ContextInterface|RubyClass)[] $arguments
      */
     public function __call(string $name, array $arguments): ExecutedResult|RubyClassInterface|null
     {

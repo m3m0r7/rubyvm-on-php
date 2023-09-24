@@ -11,7 +11,6 @@ use RubyVM\VM\Core\Runtime\Executor\SpecialMethod\SpecialMethodInterface;
 
 class SpecialMethodCallerEntries extends AbstractEntries
 {
-
     /**
      * @var array<string, class-string<SpecialMethodInterface>>
      */

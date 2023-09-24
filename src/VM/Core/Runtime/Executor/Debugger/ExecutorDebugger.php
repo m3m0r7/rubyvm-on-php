@@ -6,7 +6,6 @@ namespace RubyVM\VM\Core\Runtime\Executor\Debugger;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
-use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
@@ -21,7 +20,7 @@ use Symfony\Component\Console\Output\StreamOutput;
 class ExecutorDebugger
 {
     /**
-     * @var array<array{Insn, ContextInterface, int, string|null}>
+     * @var array<array{Insn, ContextInterface, int, null|string}>
      */
     protected array $snapshots = [];
 
@@ -169,7 +168,7 @@ class ExecutorDebugger
                     array_map(
                         static fn ($argument) => match ($argument::class) {
                             SymbolInterface::class => (string) $argument,
-                            Operand::class => match($argument->operand::class) {
+                            Operand::class => match ($argument->operand::class) {
                                 RubyClass::class => (string) $argument->operand->entity(),
                                 default => '?',
                             },

@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Criterion\Structure;
 
-use RubyVM\VM\Exception\RubyVMException;
 use RubyVM\VM\Stream\BinaryStreamReaderInterface;
 use RubyVM\VM\Stream\SizeOf;
 
 abstract class AbstractStructure implements StructureInterface
 {
     /**
-     * @var array<string, int|float|string>
+     * @var array<string, float|int|string>
      */
     private array $structureProperties = [];
 

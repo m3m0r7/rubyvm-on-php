@@ -61,8 +61,7 @@ readonly class Translator
     }
 
     /**
-     * @param SymbolInterface|EntityInterface|RubyClassInterface|mixed[] $objectOrClass
-     * @return mixed
+     * @param EntityInterface|mixed[]|RubyClassInterface|SymbolInterface $objectOrClass
      */
     public static function RubyToPHP(SymbolInterface|EntityInterface|RubyClassInterface|array $objectOrClass): mixed
     {

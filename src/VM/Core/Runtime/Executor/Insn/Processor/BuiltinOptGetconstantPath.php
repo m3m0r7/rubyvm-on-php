@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\Entity\Class_;
-use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -48,7 +47,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
         foreach ($symbol->valueOf() as $constantNameSymbol) {
             $classes = $this->context->self()->userlandHeapSpace()?->userlandClasses();
 
-            if ($classes === null) {
+            if (!$classes instanceof \RubyVM\VM\Core\Runtime\UserlandClassEntries) {
                 throw new OperationProcessorException(
                     'The userland heapspace was not initialized',
                 );

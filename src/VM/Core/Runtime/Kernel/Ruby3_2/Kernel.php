@@ -75,9 +75,8 @@ class Kernel implements KernelInterface
 
     public function __construct(
         public readonly RubyVMInterface $vm,
-        public readonly Verifier        $verifier,
-    )
-    {
+        public readonly Verifier $verifier,
+    ) {
         $this->instructionSequenceList = new Offsets();
         $this->globalObjectList = new Offsets();
         $this->instructionSequences = new InstructionSequenceEntries();
@@ -144,7 +143,7 @@ class Kernel implements KernelInterface
             $this->instructionSequenceList
                 ->append(
                     new Offset(
-                    // VALUE iseq_list;       /* [iseq0, ...] */
+                        // VALUE iseq_list;       /* [iseq0, ...] */
                         $reader->readAsUnsignedLong(),
                     )
                 );
@@ -240,9 +239,9 @@ class Kernel implements KernelInterface
         $byte = $reader->readAsUnsignedByte();
         $info = new ObjectInfo(
             type: SymbolType::of(($byte >> 0) & 0x1F),
-            specialConst: (bool)($byte >> 5) & 0x01,
-            frozen: (bool)($byte >> 6) & 0x01,
-            internal: (bool)($byte >> 7) & 0x01,
+            specialConst: (bool) ($byte >> 5) & 0x01,
+            frozen: (bool) ($byte >> 6) & 0x01,
+            internal: (bool) ($byte >> 7) & 0x01,
         );
 
         $this->vm->option()->logger->info(

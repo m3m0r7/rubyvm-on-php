@@ -13,7 +13,6 @@ use RubyVM\VM\Core\Runtime\Executor\Insn\InsnType;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operation;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperationEntries;
-use RubyVM\VM\Core\Runtime\Executor\UnknownEntry;
 use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CallData;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CallInfo;

@@ -27,8 +27,10 @@ trait BreakpointExecutable
         $entered = fread(STDIN, 1024);
         if ($entered === false) {
             echo "The stream cannot read 😭 may be closed stream pointer\n";
+
             exit(1);
         }
+
         $command = strtolower(trim($entered));
         if ('' === $command || 'y' === $command) {
             $this->debugger->showExecutedOperations();

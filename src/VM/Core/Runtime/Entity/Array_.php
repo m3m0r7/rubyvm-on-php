@@ -50,7 +50,7 @@ class Array_ extends Entity implements EntityInterface
                 previousContext: $context,
             ));
 
-            if ($symbol[$i] === null) {
+            if (!$symbol[$i] instanceof \RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface) {
                 throw new RuntimeException(
                     sprintf(
                         'Out of index#%d in Array',

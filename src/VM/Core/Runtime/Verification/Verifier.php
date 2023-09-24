@@ -8,7 +8,6 @@ use RubyVM\VM\Exception\VerifierException;
 
 class Verifier
 {
-
     /**
      * @var array<string, bool>
      */
@@ -27,7 +26,7 @@ class Verifier
 
     public function isVerified(string $verifyName): bool
     {
-        return true === $this->verified[$verifyName];
+        return $this->verified[$verifyName];
     }
 
     public function verify(VerificationInterface $verification): bool
@@ -43,7 +42,7 @@ class Verifier
     public function done(): void
     {
         foreach ($this->verified as $verifierName => $isVerified) {
-            if (true === $isVerified) {
+            if ($isVerified) {
                 continue;
             }
 

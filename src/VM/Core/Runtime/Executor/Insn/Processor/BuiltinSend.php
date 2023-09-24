@@ -52,7 +52,6 @@ class BuiltinSend implements OperationProcessorInterface
 
         $blockObject = $this->getStackAsRubyClass();
 
-
         $blockIseqNumber = $this->getOperandAsNumber();
 
         $result = $this->callBlockWithArguments(

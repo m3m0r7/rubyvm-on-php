@@ -9,9 +9,7 @@ use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\CallBlockHelper;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
-use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\RubyClass;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
 use RubyVM\VM\Exception\OperationProcessorException;
 
@@ -20,7 +18,7 @@ trait ProvideExtendedMethodCall
     use CallBlockHelper;
 
     /**
-     * @param (RubyClass|ContextInterface)[] $arguments
+     * @param (ContextInterface|RubyClass)[] $arguments
      */
     public function __call(string $name, array $arguments): ExecutedResult|RubyClassInterface|null
     {
@@ -30,6 +28,7 @@ trait ProvideExtendedMethodCall
             if ($this->context === null) {
                 throw new OperationProcessorException('The runtime context is not injected - did you forget to call setRuntimeContext before?');
             }
+
             $boundClass = $this
                 ->context
                 ->self()

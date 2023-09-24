@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Context;
 
-use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\DebugFormat;
-use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
-use RubyVM\VM\Core\Runtime\ID;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Exception\VMStackException;
 
 class VMStack implements \Countable
@@ -34,7 +30,7 @@ class VMStack implements \Countable
     public function pop(): Operand
     {
         $item = array_pop($this->items);
-        if ($item === null) {
+        if (!$item instanceof \RubyVM\VM\Core\Runtime\Executor\Operation\Operand) {
             throw new VMStackException('The VMStack is empty');
         }
 
@@ -47,7 +43,7 @@ class VMStack implements \Countable
             $this->items,
         );
 
-        if ($item === null) {
+        if (!$item instanceof \RubyVM\VM\Core\Runtime\Executor\Operation\Operand) {
             throw new VMStackException('The VMStack is empty');
         }
 

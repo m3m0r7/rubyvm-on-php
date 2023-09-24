@@ -31,7 +31,7 @@ readonly class ContextAccessor implements ContextAccessorInterface
             throw $executedResult->threw;
         }
 
-        if ($executedResult->returnValue === null) {
+        if (!$executedResult->returnValue instanceof \RubyVM\VM\Core\Runtime\Essential\RubyClassInterface) {
             throw new RuntimeException('Unexpected return value from the executed result');
         }
 

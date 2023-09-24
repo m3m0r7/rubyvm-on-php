@@ -102,7 +102,7 @@ class RubyVM implements RubyVMInterface
             $runtime = $this->registeredRuntimes[$selectedVersion = $useVersion->value] ?? null;
         }
 
-        if ($runtime === null) {
+        if (!$runtime instanceof \RubyVM\VM\Core\Runtime\Runtime) {
             throw new RubyVMException('The RubyVM is not registered a kernel - You should call RubyVM::register method before calling the disassemble method');
         }
 

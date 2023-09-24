@@ -16,7 +16,7 @@ class CallData implements CallDataInterface
         public readonly int $argc,
 
         /**
-         * @var StringSymbol[]|null
+         * @var null|StringSymbol[]
          */
         public readonly ?array $keywords,
     ) {}
