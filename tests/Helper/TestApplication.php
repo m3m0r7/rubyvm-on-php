@@ -65,4 +65,9 @@ class TestApplication extends TestCase
             $stdErr,
         );
     }
+
+    protected function isCI(): bool
+    {
+        return getenv('ENV') === 'ci';
+    }
 }

@@ -22,7 +22,11 @@ class YARBStructureTest extends TestApplication
         );
         $rubyVMManager->rubyVM->runtime()->setup();
         $this->assertSame('3.2', $rubyVMManager->rubyVM->runtime()->rubyVersion());
-        $this->assertSame('arm64-darwin22', $rubyVMManager->rubyVM->runtime()->rubyPlatform());
+        if ($this->isCI()) {
+            $this->assertSame('x86_64-linux', $rubyVMManager->rubyVM->runtime()->rubyPlatform());
+        } else {
+            $this->assertSame('arm64-darwin22', $rubyVMManager->rubyVM->runtime()->rubyPlatform());
+        }
     }
 
     public function testExtraData(): void
