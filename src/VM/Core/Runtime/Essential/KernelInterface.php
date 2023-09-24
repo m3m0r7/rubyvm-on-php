@@ -7,6 +7,7 @@ namespace RubyVM\VM\Core\Runtime\Essential;
 use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
+use RubyVM\VM\Core\YARV\Criterion\Offset\Offsets;
 use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Core\YARV\RubyVersion;
@@ -38,4 +39,10 @@ interface KernelInterface
     public function majorVersion(): int;
 
     public function userlandHeapSpace(): UserlandHeapSpaceInterface;
+
+    public function instructionSequenceListSize(): int;
+
+    public function instructionSequenceListOffset(): int;
+
+    public function instructionSequenceList(): Offsets;
 }

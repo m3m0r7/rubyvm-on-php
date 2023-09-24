@@ -15,6 +15,7 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterfa
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\LocationInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\ObjectParameterInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\VariableInterface;
+use RubyVM\VM\Exception\RubyVMException;
 
 class InstructionSequenceInfo implements InstructionSequenceInfoInterface
 {
@@ -59,7 +60,7 @@ class InstructionSequenceInfo implements InstructionSequenceInfoInterface
 
     public function operationEntries(): OperationEntries
     {
-        return $this->operationEntries;
+        return $this->operationEntries ?? throw new RubyVMException('The operation entry was not set - did you forget to call InstructionSequenceInfo::setOperationSentries before?');
     }
 
     public function compileData(): InstructionSequenceCompileData
@@ -92,7 +93,7 @@ class InstructionSequenceInfo implements InstructionSequenceInfoInterface
         return $this->localTableSize;
     }
 
-    public function objectParam(): ObjectParameter
+    public function objectParam(): ObjectParameterInterface
     {
         return $this->objectParam;
     }

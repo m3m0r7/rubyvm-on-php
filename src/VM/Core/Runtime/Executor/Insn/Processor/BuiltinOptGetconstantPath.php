@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\Entity\Class_;
+use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -45,7 +46,13 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
          * @var StringSymbol $constantNameSymbol
          */
         foreach ($symbol->valueOf() as $constantNameSymbol) {
-            $classes = $this->context->self()->userlandHeapSpace()->userlandClasses();
+            $classes = $this->context->self()->userlandHeapSpace()?->userlandClasses();
+
+            if ($classes === null) {
+                throw new OperationProcessorException(
+                    'The userland heapspace was not initialized',
+                );
+            }
 
             $className = $constantNameSymbol->valueOf();
 
@@ -64,6 +71,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
                     );
                 }
 
+                // @phpstan-ignore-next-line
                 $object = RubyClass::initializeByClassName($className);
             } else {
                 $object = (new Class_(new ClassSymbol($constantNameSymbol)))
@@ -76,7 +84,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
                 $this->context
                     ->self()
                     ->userlandHeapSpace()
-                    ->userlandClasses()
+                    ?->userlandClasses()
                     ->set(
                         $constantNameSymbol->valueOf(),
                         $heapSpace = new UserlandHeapSpace()

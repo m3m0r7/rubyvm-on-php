@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
+use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
@@ -36,7 +37,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         $this->insn = $insn;
         $this->context = $context;
 
-        static::$specialMethodCallerEntries ??= new SpecialMethodCallerEntries();
+        self::$specialMethodCallerEntries ??= new SpecialMethodCallerEntries();
     }
 
     public function before(): void {}
@@ -68,17 +69,26 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         $targetClass = $targetObjectOrClass = $this->getStack()
             ->operand;
 
+        if (!$targetClass instanceof RubyClassInterface) {
+            throw new OperationProcessorException(
+                sprintf(
+                    'Unexpected receiver class: %s',
+                    ClassHelper::nameBy($targetClass),
+                ),
+            );
+        }
+
         $targetClass->setRuntimeContext($this->context);
 
         $result = null;
 
         // Here is a special method calls
         $lookupSpecialMethodName = (string) $symbol;
-        if (static::$specialMethodCallerEntries->has($lookupSpecialMethodName)) {
+        if (self::$specialMethodCallerEntries->has($lookupSpecialMethodName)) {
             /**
              * @var SpecialMethodInterface $calleeSpecialMethodName
              */
-            $calleeSpecialMethodName = static::$specialMethodCallerEntries
+            $calleeSpecialMethodName = self::$specialMethodCallerEntries
                 ->get($lookupSpecialMethodName);
 
             $result = $calleeSpecialMethodName->process(

@@ -58,7 +58,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
         /**
          * @var StringSymbol $className
          */
-        $className = $class->entity->symbol();
+        $className = $class->entity()->symbol();
 
         /**
          * @var NumberSymbol $flagNumber
@@ -74,7 +74,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
 
         $class
             ->setRuntimeContext($this->context)
-            ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace()->userlandClasses()->get((string) $className));
+            ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace()?->userlandClasses()->get((string) $className));
 
         $executor = (new Executor(
             kernel: $this->context->kernel(),
@@ -86,7 +86,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
         ));
 
         $executor->context()
-            ->appendTrace($class->entity->valueOf());
+            ->appendTrace($class->entity()->valueOf());
 
         $result = $executor->execute();
 

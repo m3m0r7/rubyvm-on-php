@@ -45,12 +45,13 @@ class BuiltinSend implements OperationProcessorInterface
             $arguments[] = $this->context->vmStack()->pop();
         }
 
-        $blockObject = $this->getStack()->operand;
-
         $this->validateType(
             Operand::class,
             ...$arguments,
         );
+
+        $blockObject = $this->getStackAsRubyClass();
+
 
         $blockIseqNumber = $this->getOperandAsNumber();
 

@@ -63,7 +63,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         /**
          * @var OffsetCriterion $offset
          */
-        $offset = $this->kernel->instructionSequenceList[$this->aux->loader->index];
+        $offset = $this->kernel->instructionSequenceList()[$this->aux->loader->index];
         $this->kernel->stream()->pos($offset->offset);
 
         $computeFromBodyOffset = static fn (int $x) => $offset->offset - $x;
@@ -279,7 +279,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
 
             $types = $operationMap[$this->insnOperationOffsets()[$insnValue]] ?? null;
             if ($types === null) {
-                throw new ExecutorExeption(sprintf('Unknown INSN type: 0x%02x', $insn));
+                throw new ExecutorExeption(sprintf('Unknown INSN type: 0x%02x', $insn->name));
             }
 
             ++$codeIndex;
@@ -335,10 +335,6 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         InsnType::TS_BUILTIN,
                         InsnType::TS_CDHASH,
                         InsnType::TS_ICVARC => throw new ExecutorExeption(sprintf('The OperandType#%s is not supported', $operandType->name)),
-                        default => new UnknownEntry(
-                            $reader->smallValue(),
-                            $types[$opIndex],
-                        ),
                     },
                 );
             }
@@ -379,6 +375,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             $argc = $reader->smallValue();
 
             $keywordLength = $reader->smallValue();
+
             $keywords = null;
             if ($keywordLength > 0) {
                 $keywords = [];
@@ -395,6 +392,8 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         mid: $mid,
                         flag: $flag,
                         argc: $argc,
+
+                        // @phpstan-ignore-next-line
                         keywords: $keywords,
                     ),
                 )
@@ -470,7 +469,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
 
     public function path(): string
     {
-        return (string) $this->path->symbol;
+        return (string) $this->path;
     }
 
     private function processInlineCache(int $value): ID
@@ -478,6 +477,9 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         return $this->kernel->findId($value);
     }
 
+    /**
+     * @return string[]
+     */
     private function insnOperations(): array
     {
         return [
@@ -525,6 +527,9 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         ];
     }
 
+    /**
+     * @return int[]
+     */
     private function insnOperationOffsets(): array
     {
         return [

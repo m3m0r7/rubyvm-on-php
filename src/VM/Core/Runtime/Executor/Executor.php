@@ -18,6 +18,7 @@ use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operation;
 use RubyVM\VM\Core\Runtime\Main;
+use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\OptionInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
@@ -30,8 +31,6 @@ use RubyVM\VM\Exception\RubyVMException;
 class Executor implements ExecutorInterface
 {
     use BreakpointExecutable;
-
-    protected array $operations = [];
 
     protected ?bool $shouldProcessedRecords = null;
 
@@ -133,12 +132,12 @@ class Executor implements ExecutorInterface
 
         // NOTE: Exceeded counter increments self value including ProcessedStatus::SUCCESS and ProcessedStatus::JUMPED
         // requires this value because a role is outside of the program counter.
-        if ($this->context->depth() > ($this->option)::MAX_STACK_EXCEEDED) {
+        if ($this->context->depth() > Option::MAX_STACK_EXCEEDED) {
             throw new ExecutorExeption('The executor got max stack exceeded - maybe falling into infinity loop at an executor');
         }
 
-        if (!$this->context->shouldBreakPoint() && $this->context->elapsedTime() > ($this->option)::MAX_TIME_EXCEEDED) {
-            throw new ExecutorExeption(sprintf('The executor got max time exceeded %d sec. The process is very heavy or detected an infinity loop', ($this->option)::MAX_TIME_EXCEEDED));
+        if (!$this->context->shouldBreakPoint() && $this->context->elapsedTime() > Option::MAX_TIME_EXCEEDED) {
+            throw new ExecutorExeption(sprintf('The executor got max time exceeded %d sec. The process is very heavy or detected an infinity loop', Option::MAX_TIME_EXCEEDED));
         }
 
         $operations = $this->instructionSequence
@@ -148,7 +147,7 @@ class Executor implements ExecutorInterface
 
         $isFinished = false;
 
-        $this->option->logger->info(
+        $this->option->logger()->info(
             sprintf('Start an executor (total program counter: %d)', count($operations)),
         );
 
@@ -157,7 +156,7 @@ class Executor implements ExecutorInterface
         for (; $this->context->programCounter()->pos() < count($operations) && !$isFinished; $this->context->programCounter()->increase()) {
             if ($this->context->programCounter()->pos() === $this->context->programCounter()->previousPos()) {
                 ++$infinityLoopCounter;
-                if ($infinityLoopCounter >= ($this->option)::DETECT_INFINITY_LOOP) {
+                if ($infinityLoopCounter >= Option::DETECT_INFINITY_LOOP) {
                     throw new ExecutorExeption('The executor detected infinity loop because the program counter not changes internal counter - you should review incorrect implementation');
                 }
             } else {
@@ -172,7 +171,7 @@ class Executor implements ExecutorInterface
                 throw new ExecutorExeption(sprintf('The operator is not instantiated by Operation (actual: %s) - maybe an operation code processor has bug(s) or incorrect in implementation [%s]', ClassHelper::nameBy($operator), (string) $operations));
             }
 
-            $this->option->logger->info(
+            $this->option->logger()->info(
                 sprintf(
                     'Start to process an INSN `%s` (0x%02x) (ProgramCounter: %d)',
                     strtolower($operator->insn->name),
@@ -186,7 +185,7 @@ class Executor implements ExecutorInterface
                 ->operationProcessorEntries()
                 ->get($operator->insn);
 
-            $this->option->logger->info(
+            $this->option->logger()->info(
                 sprintf(
                     'Start to prepare an INSN `%s` (0x%02x) (ProgramCounter: %d)',
                     strtolower($operator->insn->name),
@@ -203,7 +202,7 @@ class Executor implements ExecutorInterface
                 $this->context,
             );
 
-            $this->option->logger->info(
+            $this->option->logger()->info(
                 sprintf(
                     'Start to process a before method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
                     strtolower($operator->insn->name),
@@ -214,7 +213,7 @@ class Executor implements ExecutorInterface
 
             $processor->before();
 
-            $this->option->logger->info(
+            $this->option->logger()->info(
                 sprintf(
                     'Start to process a main routine method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
                     strtolower($operator->insn->name),
@@ -234,7 +233,7 @@ class Executor implements ExecutorInterface
 
             $status = $processor->process(...$arguments);
 
-            $this->option->logger->info(
+            $this->option->logger()->info(
                 sprintf(
                     'Start to process a post method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
                     strtolower($operator->insn->name),
@@ -274,7 +273,7 @@ class Executor implements ExecutorInterface
         }
 
         if (false === $isFinished) {
-            $this->option->logger->emergency(
+            $this->option->logger()->emergency(
                 'Illegal finish an executor',
             );
 
@@ -282,7 +281,7 @@ class Executor implements ExecutorInterface
         }
 
         if (count($operations) !== $this->context->programCounter()->pos()) {
-            $this->option->logger->warning(
+            $this->option->logger()->warning(
                 sprintf(
                     'Unmatched expected processing operations and the program counter positions (expected operations: %d, actually program counter: %d)',
                     count($operations),
@@ -291,18 +290,29 @@ class Executor implements ExecutorInterface
             );
         }
 
-        $this->option->logger->info(
+        $this->option->logger()->info(
             'Success to finish normally an executor',
         );
 
         if (count($this->context->vmStack()) >= 1) {
+            $operand = $this->context
+                ->vmStack()
+                ->pop()
+                ->operand;
+
+            if (!$operand instanceof RubyClassInterface) {
+                throw new ExecutorExeption(
+                    sprintf(
+                        'The return value is not allowed types: %s',
+                        ClassHelper::nameBy($operand),
+                    )
+                );
+            }
+
             return new ExecutedResult(
                 executor: $this,
                 executedStatus: ExecutedStatus::SUCCESS,
-                returnValue: $this->context
-                    ->vmStack()
-                    ->pop()
-                    ->operand,
+                returnValue: $operand,
                 threw: null,
                 debugger: $this->debugger,
             );

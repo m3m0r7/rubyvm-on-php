@@ -11,6 +11,10 @@ use RubyVM\VM\Core\Runtime\Executor\SpecialMethod\SpecialMethodInterface;
 
 class SpecialMethodCallerEntries extends AbstractEntries
 {
+
+    /**
+     * @var array<string, class-string<SpecialMethodInterface>>
+     */
     protected static array $bindCallers = [
         'new' => Initialize::class,
     ];
@@ -34,6 +38,9 @@ class SpecialMethodCallerEntries extends AbstractEntries
         return EntryType::HASH;
     }
 
+    /**
+     * @return array<string, class-string<SpecialMethodInterface>>
+     */
     public static function map(): array
     {
         return static::$bindCallers;
