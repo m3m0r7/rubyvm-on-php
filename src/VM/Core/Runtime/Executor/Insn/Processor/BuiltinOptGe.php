@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
-use RubyVM\VM\Core\Runtime\Entity\Boolean;
+use RubyVM\VM\Core\Runtime\Entity\Boolean_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -56,14 +56,14 @@ class BuiltinOptGe implements OperationProcessorInterface
 
     private function computeNumberGreaterThanOrEqualsNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
     {
-        return (new Boolean(new BooleanSymbol(
+        return (new Boolean_(new BooleanSymbol(
             $leftOperand->valueOf() >= $rightOperand->valueOf()
         )))->toRubyClass();
     }
 
     private function computeFloatGreaterThanOrEqualsFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClassInterface
     {
-        return (new Boolean(new BooleanSymbol(
+        return (new Boolean_(new BooleanSymbol(
             $leftOperand->valueOf() >= $rightOperand->valueOf()
         )))->toRubyClass();
     }

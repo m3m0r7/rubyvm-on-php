@@ -26,7 +26,7 @@ class EntityHelper
     {
         return match ($symbol::class) {
             ArraySymbol::class => new Array_($symbol),
-            BooleanSymbol::class => new Boolean($symbol),
+            BooleanSymbol::class => new Boolean_($symbol),
             ClassSymbol::class => new Class_($symbol),
             FloatSymbol::class => new Float_($symbol),
             NilSymbol::class => new Nil($symbol),

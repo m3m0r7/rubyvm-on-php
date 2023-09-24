@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Entity\Array_;
-use RubyVM\VM\Core\Runtime\Entity\Boolean;
+use RubyVM\VM\Core\Runtime\Entity\Boolean_;
 use RubyVM\VM\Core\Runtime\Entity\Number;
 use RubyVM\VM\Core\Runtime\Entity\String_;
 use RubyVM\VM\Core\Runtime\Essential\EntityInterface;
@@ -78,7 +78,7 @@ class RubyClass implements RubyClassInterface
         return (new $className(match ($className) {
             Array_::class => new ArraySymbol([]),
             String_::class => new StringSymbol(''),
-            Boolean::class => new BooleanSymbol(true),
+            Boolean_::class => new BooleanSymbol(true),
             Number::class => new NumberSymbol(0),
             default => throw new SymbolUnsupportedException(
                 sprintf(

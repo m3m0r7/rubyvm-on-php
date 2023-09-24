@@ -8,7 +8,7 @@ use RubyVM\VM\Core\Runtime\Essential\EntityInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 
-class Boolean extends Entity implements EntityInterface
+class Boolean_ extends Entity implements EntityInterface
 {
     public function __construct(BooleanSymbol $symbol)
     {

@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Executor\Accessor;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Entity\Array_;
-use RubyVM\VM\Core\Runtime\Entity\Boolean;
+use RubyVM\VM\Core\Runtime\Entity\Boolean_;
 use RubyVM\VM\Core\Runtime\Entity\Float_;
 use RubyVM\VM\Core\Runtime\Entity\Number;
 use RubyVM\VM\Core\Runtime\Entity\Range;
@@ -54,7 +54,7 @@ readonly class Translator
             'integer' => (new Number(new NumberSymbol($elements)))->toRubyClass(),
             'string' => (new String_(new StringSymbol($elements)))->toRubyClass(),
             'double' => (new Float_(new FloatSymbol($elements)))->toRubyClass(),
-            'boolean' => (new Boolean(new BooleanSymbol($elements)))->toRubyClass(),
+            'boolean' => (new Boolean_(new BooleanSymbol($elements)))->toRubyClass(),
             default => throw new TranslationException('The type is not implemented yet')
         };
     }
@@ -71,7 +71,7 @@ readonly class Translator
         $symbol = $objectOrClass;
         if ($objectOrClass instanceof EntityInterface) {
             $symbol = $objectOrClass->symbol();
-        } elseif ($objectOrClass instanceof RubyClassInterface) {
+        } elseif ($objectOrClass instanceof RubyClass) {
             $symbol = $objectOrClass->entity->symbol();
         }
 
