@@ -68,6 +68,6 @@ class TestApplication extends TestCase
 
     protected function isCI(): bool
     {
-        return ($_ENV['ENV'] ?? null) === 'ci';
+        return getenv('ENV') === 'ci';
     }
 }
