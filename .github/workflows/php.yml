@@ -10,6 +10,10 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+        with:
+          ruby-version: '3.2'
       - name: composer cache
         uses: actions/cache@v3
         with:
@@ -20,9 +24,6 @@ jobs:
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: |
           ./composer.phar install
-      - name: Run PHPStan
-        run: |
-          ./composer.phar lint
       - name: Run PHPStan
         run: |
           ./composer.phar lint
@@ -37,6 +38,10 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+        with:
+          ruby-version: '3.2'
       - name: composer cache
         uses: actions/cache@v3
         with:
