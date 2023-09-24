@@ -69,7 +69,7 @@ class Array_ extends Entity implements EntityInterface
 
     public function push(RubyClass $object): self
     {
-        $this->symbol[] = $object->entity;
+        $this->symbol[] = $object->entity->symbol();
 
         return $this;
     }

@@ -43,7 +43,7 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        $this->array[$offset] = $value;
+        $this->array[$offset === null ? (int) $offset : $offset] = $value;
     }
 
     public function offsetUnset(mixed $offset): void

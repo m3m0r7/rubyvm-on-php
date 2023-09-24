@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
+use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Entity\Number;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
@@ -13,6 +14,7 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
+use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinOptAref implements OperationProcessorInterface
 {
@@ -40,9 +42,19 @@ class BuiltinOptAref implements OperationProcessorInterface
         $obj = $this->getStackAsEntity();
 
         /**
-         * @var NumberSymbol $selectedNumber
+         * @var null|NumberSymbol $selectedNumber
          */
-        $selectedNumber = $obj->symbol()[$recv->valueOf()];
+        $selectedNumber = $obj->symbol()[$recv->valueOf()] ?? null;
+
+        if ($selectedNumber === null) {
+            throw new OperationProcessorException(
+                sprintf(
+                    'Out of index#%d in the %s',
+                    $recv->valueOf(),
+                    ClassHelper::nameBy($obj),
+                )
+            );
+        }
 
         $this->context->vmStack()->push(
             new Operand(
