@@ -4,14 +4,25 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Insn\Insn;
-use RubyVM\VM\Core\Runtime\InstructionSequence\InstructionSequence;
-use RubyVM\VM\Core\Runtime\KernelInterface;
+use RubyVM\VM\Core\Runtime\Entity\Void_;
+use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
+use RubyVM\VM\Core\Runtime\Executor\Context\IOContext;
+use RubyVM\VM\Core\Runtime\Executor\Context\OperationProcessorContext;
+use RubyVM\VM\Core\Runtime\Executor\Context\ProgramCounter;
+use RubyVM\VM\Core\Runtime\Executor\Context\VMStack;
+use RubyVM\VM\Core\Runtime\Executor\Debugger\BreakpointExecutable;
+use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
+use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operation;
+use RubyVM\VM\Core\Runtime\Main;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\Runtime\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\Symbol\VoidSymbol;
+use RubyVM\VM\Core\Runtime\OptionInterface;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\ExecutorFailedException;
 use RubyVM\VM\Exception\ExecutorUnknownException;
@@ -21,11 +32,6 @@ class Executor implements ExecutorInterface
 {
     use BreakpointExecutable;
 
-    private const RSV_LOCAL_TABLE_0 = 0;
-    private const RSV_LOCAL_TABLE_1 = 1;
-    private const RSV_LOCAL_TABLE_2 = 2;
-
-    protected array $operations = [];
     protected ?bool $shouldProcessedRecords = null;
 
     protected ContextInterface $context;
@@ -34,7 +40,7 @@ class Executor implements ExecutorInterface
         private readonly KernelInterface $kernel,
         private readonly RubyClassInterface $rubyClass,
         private readonly InstructionSequence $instructionSequence,
-        private readonly LoggerInterface $logger,
+        private readonly OptionInterface $option,
         private readonly ExecutorDebugger $debugger = new ExecutorDebugger(),
         private readonly ?ContextInterface $previousContext = null,
     ) {
@@ -46,6 +52,30 @@ class Executor implements ExecutorInterface
         return $this->context;
     }
 
+    public static function createEntryPoint(KernelInterface $kernel, OptionInterface $option): ExecutorInterface
+    {
+        $aux = new Aux(
+            loader: new AuxLoader(
+                index: $option->entryPointIndex(),
+            ),
+        );
+
+        $instructionSequence = $kernel->loadInstructionSequence($aux);
+
+        $executor = new Executor(
+            $kernel,
+            (new Main())->setUserlandHeapSpace(
+                $kernel->userlandHeapSpace(),
+            ),
+            $instructionSequence,
+            $option,
+        );
+
+        $executor->context()->appendTrace('<main>');
+
+        return $executor;
+    }
+
     public function createContext(?ContextInterface $previousContext = null): ContextInterface
     {
         return new OperationProcessorContext(
@@ -55,10 +85,15 @@ class Executor implements ExecutorInterface
             $previousContext?->vmStack() ?? new VMStack(),
             new ProgramCounter(),
             $this->instructionSequence,
-            $this->logger,
+            $this->option,
+            $previousContext?->IOContext() ?? new IOContext(
+                $this->option->stdOut(),
+                $this->option->stdOut(),
+                $this->option->stdOut(),
+            ),
             $previousContext?->environmentTable() ?? new EnvironmentTable(),
             $this->debugger,
-            $previousContext
+            $previousContext instanceof \RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface
                 ? $previousContext->depth() + 1
                 : 0,
             $previousContext?->startTime() ?? null,
@@ -68,7 +103,7 @@ class Executor implements ExecutorInterface
         );
     }
 
-    public function execute(...$arguments): ExecutedResult
+    public function execute(ContextInterface|RubyClassInterface ...$arguments): ExecutedResult
     {
         try {
             $result = $this->_execute(...$arguments);
@@ -91,7 +126,7 @@ class Executor implements ExecutorInterface
         }
     }
 
-    private function _execute(...$arguments): ExecutedResult
+    private function _execute(ContextInterface|RubyClassInterface ...$arguments): ExecutedResult
     {
         $this->debugger->bindContext($this->context);
 
@@ -105,11 +140,14 @@ class Executor implements ExecutorInterface
             throw new ExecutorExeption(sprintf('The executor got max time exceeded %d sec. The process is very heavy or detected an infinity loop', Option::MAX_TIME_EXCEEDED));
         }
 
-        $operations = $this->instructionSequence->operations();
+        $operations = $this->instructionSequence
+            ->body()
+            ->info()
+            ->operationEntries();
 
         $isFinished = false;
 
-        $this->logger->info(
+        $this->option->logger()->info(
             sprintf('Start an executor (total program counter: %d)', count($operations)),
         );
 
@@ -126,14 +164,14 @@ class Executor implements ExecutorInterface
             }
 
             /**
-             * @var mixed|OperationEntry $operator
+             * @var mixed|Operation $operator
              */
             $operator = $operations[$this->context->programCounter()->pos()] ?? null;
-            if (!$operator instanceof OperationEntry) {
-                throw new ExecutorExeption(sprintf('The operator is not instantiated by OperationEntry (actual: %s) - maybe an operation code processor has bug(s) or incorrect in implementation [%s]', ClassHelper::nameBy($operator), (string) $operations));
+            if (!$operator instanceof Operation) {
+                throw new ExecutorExeption(sprintf('The operator is not instantiated by Operation (actual: %s) - maybe an operation code processor has bug(s) or incorrect in implementation [%s]', ClassHelper::nameBy($operator), (string) $operations));
             }
 
-            $this->logger->info(
+            $this->option->logger()->info(
                 sprintf(
                     'Start to process an INSN `%s` (0x%02x) (ProgramCounter: %d)',
                     strtolower($operator->insn->name),
@@ -143,11 +181,11 @@ class Executor implements ExecutorInterface
             );
 
             $processor = $this
-                ->kernel
+                ->option
                 ->operationProcessorEntries()
                 ->get($operator->insn);
 
-            $this->logger->info(
+            $this->option->logger()->info(
                 sprintf(
                     'Start to prepare an INSN `%s` (0x%02x) (ProgramCounter: %d)',
                     strtolower($operator->insn->name),
@@ -164,7 +202,7 @@ class Executor implements ExecutorInterface
                 $this->context,
             );
 
-            $this->logger->info(
+            $this->option->logger()->info(
                 sprintf(
                     'Start to process a before method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
                     strtolower($operator->insn->name),
@@ -175,7 +213,7 @@ class Executor implements ExecutorInterface
 
             $processor->before();
 
-            $this->logger->info(
+            $this->option->logger()->info(
                 sprintf(
                     'Start to process a main routine method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
                     strtolower($operator->insn->name),
@@ -195,7 +233,7 @@ class Executor implements ExecutorInterface
 
             $status = $processor->process(...$arguments);
 
-            $this->logger->info(
+            $this->option->logger()->info(
                 sprintf(
                     'Start to process a post method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
                     strtolower($operator->insn->name),
@@ -235,15 +273,15 @@ class Executor implements ExecutorInterface
         }
 
         if (false === $isFinished) {
-            $this->logger->emergency(
-                sprintf('Illegal finish an executor'),
+            $this->option->logger()->emergency(
+                'Illegal finish an executor',
             );
 
             throw new ExecutorExeption(sprintf('The executor did not finish - maybe did not call the `%s` (0x%02x)', strtolower(Insn::LEAVE->name), Insn::LEAVE->value));
         }
 
         if (count($operations) !== $this->context->programCounter()->pos()) {
-            $this->logger->warning(
+            $this->option->logger()->warning(
                 sprintf(
                     'Unmatched expected processing operations and the program counter positions (expected operations: %d, actually program counter: %d)',
                     count($operations),
@@ -252,18 +290,29 @@ class Executor implements ExecutorInterface
             );
         }
 
-        $this->logger->info(
-            sprintf('Success to finish normally an executor'),
+        $this->option->logger()->info(
+            'Success to finish normally an executor',
         );
 
         if (count($this->context->vmStack()) >= 1) {
+            $operand = $this->context
+                ->vmStack()
+                ->pop()
+                ->operand;
+
+            if (!$operand instanceof RubyClassInterface) {
+                throw new ExecutorExeption(
+                    sprintf(
+                        'The return value is not allowed types: %s',
+                        ClassHelper::nameBy($operand),
+                    )
+                );
+            }
+
             return new ExecutedResult(
                 executor: $this,
                 executedStatus: ExecutedStatus::SUCCESS,
-                returnValue: $this->context
-                    ->vmStack()
-                    ->pop()
-                    ->operand,
+                returnValue: $operand,
                 threw: null,
                 debugger: $this->debugger,
             );
@@ -272,8 +321,8 @@ class Executor implements ExecutorInterface
         return new ExecutedResult(
             executor: $this,
             executedStatus: ExecutedStatus::SUCCESS,
-            returnValue: (new VoidSymbol())
-                ->toObject(),
+            returnValue: Void_::createBy()
+                ->toBeRubyClass(),
             threw: null,
             debugger: $this->debugger,
         );

@@ -19,5 +19,7 @@ interface StreamHandlerInterface
     /**
      * @return resource
      */
-    public function resource(): mixed;
+    public function resource();
+
+    public function pos(int $newPos = null): int;
 }

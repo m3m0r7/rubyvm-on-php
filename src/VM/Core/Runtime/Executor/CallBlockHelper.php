@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Helper\LocalTableHelper;
-use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\Aux;
-use RubyVM\VM\Core\Runtime\InstructionSequence\Aux\AuxLoader;
+use RubyVM\VM\Core\Runtime\Entity\Number;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
+use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\Runtime\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
 use RubyVM\VM\Core\Runtime\VMCallFlagBit;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 trait CallBlockHelper
 {
-    private function callSimpleMethod(ContextInterface $context, Object_|ContextInterface ...$arguments): ExecutedResult|null
+    private function callSimpleMethod(ContextInterface $context, RubyClassInterface|ContextInterface ...$arguments): ExecutedResult
     {
         // Validate first value is context?
         $calleeContexts = [];
@@ -28,7 +29,7 @@ trait CallBlockHelper
             kernel: $context->kernel(),
             rubyClass: $context->self(),
             instructionSequence: $context->instructionSequence(),
-            logger: $context->logger(),
+            option: $context->option(),
             debugger: $context->debugger(),
             previousContext: $context
                 ->renewEnvironmentTable(),
@@ -38,7 +39,7 @@ trait CallBlockHelper
             ->context()
             ->instructionSequence()
             ->body()
-            ->data;
+            ->info();
 
         $localTableSize = $iseqBodyData
             ->localTableSize();
@@ -68,24 +69,31 @@ trait CallBlockHelper
         $result = $executor
             ->execute(...$calleeContexts);
 
-        if ($result->threw) {
+        if ($result->threw instanceof \Throwable) {
             throw $result->threw;
         }
 
         return $result;
     }
 
-    private function callBlockWithArguments(CallInfoEntryInterface $callInfo, NumberSymbol $blockIseqIndex, Object_|RubyClassInterface $blockObject, bool $isSuper, OperandEntry ...$arguments): ?Object_
+    private function callBlockWithArguments(CallInfoInterface $callInfo, Number $blockIseqIndex, RubyClassInterface $blockObject, bool $isSuper, CallInfoInterface|RubyClassInterface|ID|ExecutedResult ...$arguments): ?RubyClassInterface
     {
-        if ($callInfo->callData()->flag() & (0x01 << VMCallFlagBit::VM_CALL_ARGS_BLOCKARG->value)) {
+        // @phpstan-ignore-next-line
+        if ($this->context === null) {
+            throw new OperationProcessorException('The runtime context is not injected - did you forget to call setRuntimeContext before?');
+        }
+
+        if (($callInfo->callData()->flag() & (0x01 << VMCallFlagBit::VM_CALL_ARGS_BLOCKARG->value)) !== 0) {
             throw new OperationProcessorException('The callBlockWithArguments is not implemented yet');
         }
+
         if ($blockIseqIndex->valueOf() === 0) {
             // TODO: implement a super call
             // see: https://github.com/ruby/ruby/blob/ruby_3_2/vm_args.c#L888
 
             throw new OperationProcessorException('The callBlockWithArguments is not implemented yet');
         }
+
         $instructionSequence = $this->context
             ->kernel()
             ->loadInstructionSequence(new Aux(
@@ -100,14 +108,10 @@ trait CallBlockHelper
             kernel: $this->context->kernel(),
             rubyClass: $this->context->self(),
             instructionSequence: $instructionSequence,
-            logger: $this->context->logger(),
+            option: $this->context->option(),
             debugger: $this->context->debugger(),
             previousContext: $this->context,
         ));
-
-        $arguments = $this->translateForArguments(
-            ...$arguments
-        );
 
         $result = $blockObject
             ->setRuntimeContext($executor->context())
@@ -118,7 +122,7 @@ trait CallBlockHelper
             );
 
         if ($result instanceof ExecutedResult) {
-            if ($result->threw) {
+            if ($result->threw instanceof \Throwable) {
                 throw $result->threw;
             }
 

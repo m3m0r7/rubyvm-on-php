@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Provider;
 
-use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
-use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\RangeSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
+use RubyVM\VM\Core\Runtime\Entity\Nil;
+use RubyVM\VM\Core\Runtime\Entity\String_;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\NilSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 
 trait ProvideBasicClassMethods
 {
-    public function puts(Object_ $object): Object_
+    public function puts(RubyClassInterface $object): RubyClassInterface
     {
-        $symbol = $object->symbol;
+        $symbol = $object->entity()->symbol();
 
         $string = '';
         if ($symbol instanceof ArraySymbol || $symbol instanceof RangeSymbol) {
@@ -28,32 +29,31 @@ trait ProvideBasicClassMethods
         } else {
             $string = (string) $symbol;
         }
+
         if (!str_ends_with($string, "\n")) {
             $string .= "\n";
         }
 
-        $this->context->kernel()->IOContext()->stdOut->write($string);
+        $this->context?->IOContext()->stdOut->write($string);
 
         // The puts returns (nil)
-        return (new NilSymbol())
-            ->toObject();
+        return Nil::createBy()
+            ->toBeRubyClass();
     }
 
-    public function exit(int $code = 0): void
+    public function exit(int $code = 0): never
     {
         exit($code);
     }
 
-    public function inspect(): SymbolInterface
+    public function inspect(): RubyClassInterface
     {
-        $string = (string) $this;
-        if ($this instanceof Object_) {
-            $string = match (($this->symbol)::class) {
-                StringSymbol::class => '"' . $string . '"',
-                default => (string) $string,
-            };
-        }
+        $string = match (($this->entity()->symbol())::class) {
+            StringSymbol::class => '"' . ((string) $this) . '"',
+            default => (string) $this,
+        };
 
-        return new StringSymbol($string);
+        return String_::createBy($string)
+            ->toBeRubyClass();
     }
 }

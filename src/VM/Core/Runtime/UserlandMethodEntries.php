@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime;
 
-use RubyVM\VM\Core\Runtime\Entry\AbstractEntries;
-use RubyVM\VM\Core\Runtime\Entry\EntryType;
-use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
+use RubyVM\VM\Core\Criterion\Entry\AbstractEntries;
+use RubyVM\VM\Core\Criterion\Entry\EntryType;
+use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 
 final class UserlandMethodEntries extends AbstractEntries
 {

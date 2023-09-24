@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime;
 
+use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
+
 class UserlandHeapSpace implements UserlandHeapSpaceInterface
 {
     public readonly UserlandClassEntries $userlandClasses;
+
     public readonly UserlandMethodEntries $userlandMethods;
+
     public readonly UserlandInstanceVariableEntries $userlandInstanceVariables;
 
     public function __construct()
@@ -17,10 +21,10 @@ class UserlandHeapSpace implements UserlandHeapSpaceInterface
         $this->userlandInstanceVariables = new UserlandInstanceVariableEntries();
     }
 
-    //    public function __debugInfo(): ?array
-    //    {
-    //        return [];
-    //    }
+    public function __debugInfo(): ?array
+    {
+        return [];
+    }
 
     public function userlandClasses(): UserlandClassEntries
     {

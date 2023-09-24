@@ -4,43 +4,50 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Provider;
 
-use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
-use RubyVM\VM\Core\Runtime\Executor\SpecialMethodCallerEntries;
-use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
+use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
+use RubyVM\VM\Core\Runtime\Executor\Operation\SpecialMethodCallerEntries;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
+use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
+use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 
 trait ProvideClassExtendableMethods
 {
-    protected ?UserlandHeapSpace $userlandHeapSpace = null;
+    protected ?UserlandHeapSpaceInterface $userlandHeapSpace = null;
 
-    public function userlandHeapSpace(): ?UserlandHeapSpace
+    public function userlandHeapSpace(): ?UserlandHeapSpaceInterface
     {
         return $this->userlandHeapSpace;
     }
 
-    public function setUserlandHeapSpace(?UserlandHeapSpace $userlandHeapSpace): self
+    public function setUserlandHeapSpace(?UserlandHeapSpaceInterface $userlandHeapSpace): self
     {
         $this->userlandHeapSpace = $userlandHeapSpace;
 
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function classes(): array
     {
-        return array_keys($this->userlandHeapSpace->userlandClasses()->toArray());
+        return array_keys($this->userlandHeapSpace?->userlandClasses()->toArray() ?? []);
     }
 
+    /**
+     * @return string[]
+     */
     public function methods(): array
     {
         return [
             ...array_map(
-                fn (\ReflectionMethod $method) => $method->name,
+                static fn (\ReflectionMethod $method) => $method->name,
                 (new \ReflectionClass($this))
                     ->getMethods(),
             ),
             ...array_keys(SpecialMethodCallerEntries::map()),
-            ...array_keys($this->userlandHeapSpace->userlandMethods()->toArray()),
+            ...array_keys($this->userlandHeapSpace?->userlandMethods()->toArray() ?? []),
         ];
     }
 
@@ -54,11 +61,11 @@ trait ProvideClassExtendableMethods
         $className = (string) $className;
 
         $this->userlandHeapSpace
-            ->userlandClasses()
+            ?->userlandClasses()
             ->set(
                 $className,
                 $this->userlandHeapSpace
-                    ->userlandClasses
+                    ?->userlandClasses()
                     ->get($className) ?? new UserlandHeapSpace(),
             );
     }
@@ -67,7 +74,7 @@ trait ProvideClassExtendableMethods
     {
         $context->self()
             ->userlandHeapSpace()
-            ->userlandMethods()
+            ?->userlandMethods()
             ->set((string) $methodName, $context);
     }
 }

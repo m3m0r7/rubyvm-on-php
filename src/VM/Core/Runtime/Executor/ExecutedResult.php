@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Accessor\ContextAccessor;
 use RubyVM\VM\Core\Runtime\Executor\Accessor\ContextAccessorInterface;
-use RubyVM\VM\Core\Runtime\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
+use RubyVM\VM\Exception\RubyVMException;
 
 readonly class ExecutedResult
 {
@@ -25,6 +27,6 @@ readonly class ExecutedResult
 
     public function debugger(): ExecutorDebugger
     {
-        return $this->debugger;
+        return $this->debugger ?? throw new RubyVMException('The debugger was not enabled');
     }
 }

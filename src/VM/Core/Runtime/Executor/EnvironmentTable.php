@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Helper\DebugFormat;
-use RubyVM\VM\Core\Runtime\Entry\AbstractEntries;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
+use RubyVM\VM\Core\Criterion\Entry\AbstractEntries;
+use RubyVM\VM\Core\Runtime\Executor\Debugger\DebugFormat;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Exception\LocalTableException;
 
 class EnvironmentTable extends AbstractEntries
@@ -14,13 +14,13 @@ class EnvironmentTable extends AbstractEntries
     use DebugFormat;
 
     /**
-     * @var array<string, bool>
+     * @var array<int, bool>
      */
     protected array $leads = [];
 
     public function verify(mixed $value): bool
     {
-        return $value instanceof Object_;
+        return $value instanceof RubyClass;
     }
 
     public function get(mixed $index): mixed
@@ -39,15 +39,18 @@ class EnvironmentTable extends AbstractEntries
 
     public function set(mixed $index, mixed $value): self
     {
+        $index = (int) $index;
         // do not set new value if have a lead flag.
-        if (isset($this->leads[$index]) && $this->leads[$index] === true) {
+        if (isset($this->leads[$index]) && $this->leads[$index]) {
             // Forcibly set to non lead
             $this->leads[$index] = false;
 
             return $this;
         }
 
-        return parent::set($index, $value);
+        parent::set($index, $value);
+
+        return $this;
     }
 
     public function setWithLead(mixed $index, mixed $value, bool $isLead = false): self

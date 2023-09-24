@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime;
 
-use RubyVM\VM\Core\Runtime\Entry\AbstractEntries;
-use RubyVM\VM\Core\Runtime\Entry\EntryType;
-use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
-use RubyVM\VM\Core\Runtime\Version\Ruby3_2\Entry\AliasEntries;
+use RubyVM\VM\Core\Criterion\Entry\AbstractEntries;
+use RubyVM\VM\Core\Criterion\Entry\EntryType;
+use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
+use RubyVM\VM\Core\YARV\Criterion\Entry\AliasEntries;
+use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
 
 final class UserlandClassEntries extends AbstractEntries
 {
@@ -44,9 +45,10 @@ final class UserlandClassEntries extends AbstractEntries
     public function has(mixed $index): bool
     {
         $result = parent::has($index);
-        if ($result === true) {
+        if ($result) {
             return true;
         }
+
         if ($this->aliases->has($index)) {
             $index = $this->aliases->has($index);
         }
@@ -60,6 +62,7 @@ final class UserlandClassEntries extends AbstractEntries
         if ($result !== null) {
             return $result;
         }
+
         if ($this->aliases->has($index)) {
             $index = $this->aliases->get($index);
         }

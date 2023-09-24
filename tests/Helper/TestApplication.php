@@ -17,10 +17,18 @@ class TestApplication extends TestCase
     protected function createRubyVMFromCode(string $code, string $extraData = '', string $binaryPath = 'ruby'): RubyVMManager
     {
         $handle = tmpfile();
+        if ($handle === false) {
+            throw new \RuntimeException('tmpfile did not created');
+        }
+
         fwrite($handle, $code);
         $uri = stream_get_meta_data($handle)['uri'];
 
         $compilerHandle = tmpfile();
+        if ($compilerHandle === false) {
+            throw new \RuntimeException('tmpfile did not created');
+        }
+
         fwrite(
             $compilerHandle,
             <<<_
@@ -30,7 +38,7 @@ class TestApplication extends TestCase
         $compilerRubyUri = stream_get_meta_data($compilerHandle)['uri'];
 
         exec("{$binaryPath} {$compilerRubyUri}", $output);
-        $binary = (string) implode("\n", $output);
+        $binary = implode("\n", $output);
 
         $stdOut = new StreamHandler(fopen('php://memory', 'w+'));
         $stdIn = new StreamHandler(fopen('php://memory', 'w+'));
@@ -48,12 +56,6 @@ class TestApplication extends TestCase
                 stdIn: $stdIn,
                 stdErr: $stdErr,
             ),
-        );
-
-        // Set default kernel
-        $rubyVM->register(
-            rubyVersion: \RubyVM\VM\Core\Runtime\RubyVersion::VERSION_3_2,
-            kernelClass: \RubyVM\VM\Core\Runtime\Version\Ruby3_2\Kernel::class,
         );
 
         return new RubyVMManager(

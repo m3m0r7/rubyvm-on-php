@@ -5,38 +5,46 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Accessor;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
-use RubyVM\VM\Core\Runtime\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\Symbol\ArraySymbol;
-use RubyVM\VM\Core\Runtime\Symbol\BooleanSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\FloatSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\NilSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Core\Runtime\Symbol\RangeSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\StringSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\SymbolInterface;
+use RubyVM\VM\Core\Runtime\Entity\Array_;
+use RubyVM\VM\Core\Runtime\Entity\Boolean_;
+use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
+use RubyVM\VM\Core\Runtime\Entity\Float_;
+use RubyVM\VM\Core\Runtime\Entity\Number;
+use RubyVM\VM\Core\Runtime\Entity\Range;
+use RubyVM\VM\Core\Runtime\Entity\String_;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
+use RubyVM\VM\Core\Runtime\RubyClass;
+use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\NilSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\TranslationException;
 
 readonly class Translator
 {
-    public static function PHPToRuby(mixed $elements): Object_
+    public static function PHPToRuby(mixed $elements): RubyClassInterface
     {
         if (is_array($elements)) {
-            if (static::validateArrayIsNumber($elements)) {
-                return (new RangeSymbol(
+            if (self::validateArrayIsNumber($elements)) {
+                return (new Range(new RangeSymbol(
                     new NumberSymbol((int) array_key_first($elements)),
                     new NumberSymbol((int) array_key_last($elements)),
                     false,
-                ))->toObject();
-            }
-            $result = [];
-            foreach ($elements as $element) {
-                $result[] = static::PHPToRuby($element)->symbol;
+                )))->toBeRubyClass();
             }
 
-            return (new ArraySymbol($result))
-                ->toObject();
+            $result = [];
+            foreach ($elements as $element) {
+                $result[] = self::PHPToRuby($element)->entity()->symbol();
+            }
+
+            return Array_::createBy($result)
+                ->toBeRubyClass();
         }
 
         if (is_object($elements)) {
@@ -44,60 +52,63 @@ readonly class Translator
         }
 
         return match (gettype($elements)) {
-            'integer' => (new NumberSymbol($elements))->toObject(),
-            'string' => (new StringSymbol($elements))->toObject(),
-            'double' => (new FloatSymbol($elements))->toObject(),
-            'boolean' => (new BooleanSymbol($elements))->toObject(),
+            'integer' => Number::createBy($elements)->toBeRubyClass(),
+            'string' => String_::createBy($elements)->toBeRubyClass(),
+            'double' => Float_::createBy($elements)->toBeRubyClass(),
+            'boolean' => Boolean_::createBy($elements)->toBeRubyClass(),
             default => throw new TranslationException('The type is not implemented yet')
         };
     }
 
-    public static function RubyToPHP(Object_|SymbolInterface|RubyClassInterface|array $objectOrClass): mixed
+    /**
+     * @param EntityInterface|mixed[]|RubyClassInterface|SymbolInterface $objectOrClass
+     */
+    public static function RubyToPHP(SymbolInterface|EntityInterface|RubyClassInterface|array $objectOrClass): mixed
     {
         if (is_array($objectOrClass)) {
             return array_map(
-                fn ($element) => static::RubyToPHP($element),
+                static fn ($element) => static::RubyToPHP($element),
                 $objectOrClass,
             );
         }
 
-        if ($objectOrClass instanceof Object_ || $objectOrClass instanceof SymbolInterface) {
-            if ($objectOrClass instanceof Object_) {
-                $symbol = $objectOrClass->symbol;
-            } else {
-                $symbol = $objectOrClass;
-            }
-
-            return match ($symbol::class) {
-                FloatSymbol::class,
-                NumberSymbol::class,
-                StringSymbol::class,
-                BooleanSymbol::class => $symbol->valueOf(),
-                RangeSymbol::class,
-                ArraySymbol::class => array_map(
-                    fn (SymbolInterface $element) => static::RubyToPHP($element),
-                    $symbol->valueOf(),
-                ),
-                NilSymbol::class => null,
-                default => throw new TranslationException(
-                    sprintf(
-                        'The type is not implemented yet (%s)',
-                        ClassHelper::nameBy($symbol),
-                    ),
-                ),
-            };
+        $symbol = $objectOrClass;
+        if ($objectOrClass instanceof EntityInterface) {
+            $symbol = $objectOrClass->symbol();
+        } elseif ($objectOrClass instanceof RubyClass) {
+            $symbol = $objectOrClass->entity()->symbol();
         }
 
-        return $objectOrClass;
+        return match ($symbol::class) {
+            FloatSymbol::class,
+            NumberSymbol::class,
+            StringSymbol::class,
+            BooleanSymbol::class => $symbol->valueOf(),
+            RangeSymbol::class,
+            ArraySymbol::class => array_map(
+                static fn (SymbolInterface $element) => static::RubyToPHP($element),
+                $symbol->valueOf(),
+            ),
+            NilSymbol::class => null,
+            default => throw new TranslationException(
+                sprintf(
+                    'The type is not implemented yet (%s)',
+                    ClassHelper::nameBy($symbol),
+                ),
+            ),
+        };
     }
 
-    public function __construct(public readonly Object_ $object) {}
+    public function __construct(public readonly RubyClass $object) {}
 
-    public function toOperand(): OperandEntry
+    public function toOperand(): Operand
     {
-        return new OperandEntry($this->object);
+        return new Operand($this->object);
     }
 
+    /**
+     * @param mixed[] $values
+     */
     private static function validateArrayIsNumber(array $values): bool
     {
         if (!array_is_list($values)) {

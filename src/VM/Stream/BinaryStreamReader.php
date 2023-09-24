@@ -104,7 +104,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
 
     public function readAsUnsignedLong(): int
     {
-        return $this->readWithEndian(
+        return (int) $this->readWithEndian(
             littleEndian: 'V',
             bigEndian: 'N',
             bytes: SizeOf::UNSIGNED_LONG,
@@ -113,7 +113,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
 
     public function readAsUnsignedLongLong(): int
     {
-        return $this->readWithEndian(
+        return (int) $this->readWithEndian(
             littleEndian: 'P',
             bigEndian: 'J',
             bytes: SizeOf::UNSIGNED_LONG_LONG,
@@ -122,7 +122,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
 
     public function readAsUnsignedShort(): int
     {
-        return $this->readWithEndian(
+        return (int) $this->readWithEndian(
             littleEndian: 'v',
             bigEndian: 'n',
             bytes: SizeOf::UNSIGNED_SHORT,
@@ -131,7 +131,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
 
     public function readAsUnsignedByte(): int
     {
-        return $this->readWithEndian(
+        return (int) $this->readWithEndian(
             littleEndian: 'C',
             bigEndian: 'C',
             bytes: SizeOf::UNSIGNED_BYTE,

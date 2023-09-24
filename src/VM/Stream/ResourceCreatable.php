@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Stream;
 
+use RubyVM\VM\Exception\FileStreamHandlerException;
 use RubyVM\VM\Exception\RubyVMBinaryStreamReaderException;
 
 trait ResourceCreatable
@@ -11,12 +12,23 @@ trait ResourceCreatable
     /**
      * @return resource
      */
-    private function createResourceHandler(): mixed
+    private function createResourceHandler()
     {
-        return fopen('php://memory', 'r+b');
+        $resource = fopen('php://memory', 'r+b');
+
+        if ($resource === false) {
+            throw new FileStreamHandlerException('The resource cannot create');
+        }
+
+        return $resource;
     }
 
-    private function createResourceHandlerByStream(mixed $resource): mixed
+    /**
+     * @param resource $resource
+     *
+     * @return resource
+     */
+    private function createResourceHandlerByStream($resource, ?int $size = null)
     {
         ['seekable' => $seekable] = stream_get_meta_data($resource);
 
@@ -26,14 +38,13 @@ trait ResourceCreatable
             );
         }
 
-        $resource = $this->reader->streamHandler()->resource();
         $pipe = $this->createResourceHandler();
 
         rewind($resource);
         stream_copy_to_stream(
             $resource,
             $pipe,
-            $this->reader->streamHandler()->size(),
+            $size,
             0,
         );
         rewind($pipe);

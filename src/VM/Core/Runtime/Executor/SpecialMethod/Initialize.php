@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\SpecialMethod;
 
-use RubyVM\VM\Core\Runtime\Executor\ContextInterface;
-use RubyVM\VM\Core\Runtime\Executor\OperandEntry;
-use RubyVM\VM\Core\Runtime\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
+use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Exception\RubyVMException;
 
 class Initialize implements SpecialMethodInterface
@@ -16,18 +16,20 @@ class Initialize implements SpecialMethodInterface
     {
         $result = $class;
 
-        if (!$class instanceof Object_) {
+        if (!$class instanceof RubyClass) {
             throw new RubyVMException('The passed class is not implemented an Object class');
         }
 
         if ($class->hasMethod('initialize')) {
+            // @phpstan-ignore-next-line
             $class->initialize(...$arguments);
         } elseif ($class->hasMethod('new')) {
+            // @phpstan-ignore-next-line
             $result = $class->new(...$arguments);
         }
 
         $context->vmStack()->push(
-            new OperandEntry(
+            new Operand(
                 $result,
             ),
         );

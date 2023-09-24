@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Runtime\Symbol\NumberSymbol;
-use RubyVM\VM\Core\Runtime\Symbol\Object_;
-use RubyVM\VM\Exception\TranslationException;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
+use RubyVM\VM\Core\Runtime\ID;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 
 /**
  * In the C lang case, the language is very flexible for example to int, to unsigned int..., to defined struct and so on.
@@ -17,30 +18,14 @@ trait Translatable
 {
     use Validatable;
 
-    protected function translateAnEntryToInstructionSequenceNumber(OperationEntry|OperandEntry $entry): int
-    {
-        if ($entry instanceof OperationEntry) {
-            return $entry->insn->value;
-        }
-
-        $symbol = $entry->operand->symbol;
-        if ($symbol instanceof NumberSymbol) {
-            return $symbol->valueOf();
-        }
-
-        throw new TranslationException(sprintf('The symbol type cannot translate to number (symbol: %s)', get_class($symbol)));
-    }
-
-    public function translateForArguments(OperandEntry ...$operands): array
+    /**
+     * @return (CallInfoInterface|ExecutedResult|ID|RubyClassInterface)[]
+     */
+    public function translateForArguments(Operand ...$operands): array
     {
         $arguments = [];
         foreach ($operands as $operand) {
-            // @var Object_ $object
-            $arguments[] = $object = $operand->operand;
-            $this->validateType(
-                Object_::class,
-                $object,
-            );
+            $arguments[] = $operand->operand;
         }
 
         return $arguments;

@@ -1,0 +1,10 @@
+parameters:
+    level: 8
+    paths:
+        - src
+        - tests
+    checkGenericClassInNonGenericObjectType: false
+    ignoreErrors:
+        - '#[^:]+::__debugInfo\(\) return type has no value type specified in iterable type array#'
+        - '#Class [^\s]+ has an uninitialized readonly property \$.+?\. Assign it in the constructor#'
+        - '#Readonly property [^\s]+ is assigned outside of the constructor#'

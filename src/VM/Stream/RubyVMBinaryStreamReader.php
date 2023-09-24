@@ -25,6 +25,9 @@ class RubyVMBinaryStreamReader extends BinaryStreamReader implements RubyVMBinar
                         $this->reader
                             ->streamHandler()
                             ->resource(),
+                        $this->reader
+                            ->streamHandler()
+                            ->size(),
                     ),
                     $this->reader
                         ->streamHandler()
@@ -43,20 +46,19 @@ class RubyVMBinaryStreamReader extends BinaryStreamReader implements RubyVMBinar
         $offset = $this->pos();
 
         // Emulates: rb_popcount32(uint32_t x)
-        $ntzInt32 = function (int $x): int {
+        $ntzInt32 = static function (int $x): int {
             $x = ~$x & ($x - 1);
             $x = ($x & 0x55555555) + ($x >> 1 & 0x55555555);
             $x = ($x & 0x33333333) + ($x >> 2 & 0x33333333);
             $x = ($x & 0x0F0F0F0F) + ($x >> 4 & 0x0F0F0F0F);
             $x = ($x & 0x001F001F) + ($x >> 8 & 0x001F001F);
-            $x = ($x & 0x0000003F) + ($x >> 16 & 0x0000003F);
 
-            return $x;
+            return ($x & 0x0000003F) + ($x >> 16 & 0x0000003F);
         };
 
         $c = $this->readAsUnsignedByte();
 
-        $n = ($c & 1)
+        $n = (($c & 1) !== 0)
             ? 1
             : (0 == $c ? 9 : $ntzInt32($c) + 1);
 
@@ -65,6 +67,7 @@ class RubyVMBinaryStreamReader extends BinaryStreamReader implements RubyVMBinar
         if (0x7F === $x) {
             $x = 1;
         }
+
         for ($i = 1; $i < $n; ++$i) {
             $x <<= 8;
             $x |= $this->readAsUnsignedByte();
