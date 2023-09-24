@@ -7,11 +7,11 @@ namespace RubyVM\VM\Core\Runtime\Executor\Accessor;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Entity\Array_;
 use RubyVM\VM\Core\Runtime\Entity\Boolean_;
+use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Entity\Float_;
 use RubyVM\VM\Core\Runtime\Entity\Number;
 use RubyVM\VM\Core\Runtime\Entity\Range;
 use RubyVM\VM\Core\Runtime\Entity\String_;
-use RubyVM\VM\Core\Runtime\Essential\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\RubyClass;
@@ -35,7 +35,7 @@ readonly class Translator
                     new NumberSymbol((int) array_key_first($elements)),
                     new NumberSymbol((int) array_key_last($elements)),
                     false,
-                )))->toRubyClass();
+                )))->toBeRubyClass();
             }
             $result = [];
             foreach ($elements as $element) {
@@ -43,7 +43,7 @@ readonly class Translator
             }
 
             return (new Array_(new ArraySymbol($result)))
-                ->toRubyClass();
+                ->toBeRubyClass();
         }
 
         if (is_object($elements)) {
@@ -51,10 +51,10 @@ readonly class Translator
         }
 
         return match (gettype($elements)) {
-            'integer' => (new Number(new NumberSymbol($elements)))->toRubyClass(),
-            'string' => (new String_(new StringSymbol($elements)))->toRubyClass(),
-            'double' => (new Float_(new FloatSymbol($elements)))->toRubyClass(),
-            'boolean' => (new Boolean_(new BooleanSymbol($elements)))->toRubyClass(),
+            'integer' => (new Number(new NumberSymbol($elements)))->toBeRubyClass(),
+            'string' => (new String_(new StringSymbol($elements)))->toBeRubyClass(),
+            'double' => (new Float_(new FloatSymbol($elements)))->toBeRubyClass(),
+            'boolean' => (new Boolean_(new BooleanSymbol($elements)))->toBeRubyClass(),
             default => throw new TranslationException('The type is not implemented yet')
         };
     }

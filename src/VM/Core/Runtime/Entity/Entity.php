@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Entity;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Essential\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ObjectInfo;
@@ -17,7 +16,7 @@ abstract class Entity implements EntityInterface
 {
     protected SymbolInterface $symbol;
 
-    public function toRubyClass(): RubyClassInterface
+    public function toBeRubyClass(): RubyClassInterface
     {
         return new RubyClass(
             info: new ObjectInfo(

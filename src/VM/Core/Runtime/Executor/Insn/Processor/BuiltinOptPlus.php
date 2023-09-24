@@ -68,21 +68,21 @@ class BuiltinOptPlus implements OperationProcessorInterface
     {
         return (new String_(new StringSymbol(
             $leftOperand . $rightOperand
-        )))->toRubyClass();
+        )))->toBeRubyClass();
     }
 
     private function computeNumberPlusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
     {
         return (new Number(new NumberSymbol(
             $leftOperand->valueOf() + $rightOperand->valueOf()
-        )))->toRubyClass();
+        )))->toBeRubyClass();
     }
 
     private function computeFloatPlusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClassInterface
     {
         return (new Float_(new FloatSymbol(
             $leftOperand->valueOf() + $rightOperand->valueOf()
-        )))->toRubyClass();
+        )))->toBeRubyClass();
     }
 
     private function computeArrayPlusArray(ArraySymbol $leftOperand, ArraySymbol $rightOperand): RubyClassInterface
@@ -92,6 +92,6 @@ class BuiltinOptPlus implements OperationProcessorInterface
                 ...$leftOperand,
                 ...$rightOperand,
             ],
-        )))->toRubyClass();
+        )))->toBeRubyClass();
     }
 }

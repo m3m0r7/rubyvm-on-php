@@ -6,5 +6,5 @@ namespace RubyVM\VM\Core\Runtime\Essential;
 
 interface RubyClassifiable
 {
-    public function toRubyClass(): RubyClassInterface;
+    public function toBeRubyClass(): RubyClassInterface;
 }

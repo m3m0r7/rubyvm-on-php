@@ -36,7 +36,7 @@ class BuiltinPutobjectINT2FIX1 implements OperationProcessorInterface
         $this->context->vmStack()->push(
             new Operand(
                 (new Number(new NumberSymbol(1)))
-                    ->toRubyClass()
+                    ->toBeRubyClass()
             ),
         );
 

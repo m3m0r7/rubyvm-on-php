@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Entity;
 
-use RubyVM\VM\Core\Runtime\Essential\EntityInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 
@@ -25,5 +24,10 @@ class Boolean_ extends Entity implements EntityInterface
     public function testValue(): bool
     {
         return $this->symbol->valueOf();
+    }
+
+    public static function createBy(mixed $value = true): EntityInterface
+    {
+        return new self(new BooleanSymbol($value));
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Helper;
 
-use RubyVM\VM\Core\Runtime\Essential\EntityInterface;
+use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\RubyClass;
 
 class ClassHelper

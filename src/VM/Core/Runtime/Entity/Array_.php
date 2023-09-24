@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Entity;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Essential\EntityInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Option;
@@ -44,7 +43,7 @@ class Array_ extends Entity implements EntityInterface
             ));
 
             $object = (new Number(new NumberSymbol($this->symbol[$i]->valueOf())))
-                ->toRubyClass()
+                ->toBeRubyClass()
                 ->setRuntimeContext($context)
                 ->setUserlandHeapSpace($context->self()->userlandHeapSpace());
 
@@ -72,5 +71,10 @@ class Array_ extends Entity implements EntityInterface
         $this->symbol[] = $object->entity->symbol();
 
         return $this;
+    }
+
+    public static function createBy(mixed $value = []): EntityInterface
+    {
+        return new self(new ArraySymbol($value));
     }
 }

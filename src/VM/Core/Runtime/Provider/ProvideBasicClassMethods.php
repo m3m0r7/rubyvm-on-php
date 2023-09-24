@@ -37,7 +37,7 @@ trait ProvideBasicClassMethods
 
         // The puts returns (nil)
         return (new Nil(new NilSymbol()))
-            ->toRubyClass();
+            ->toBeRubyClass();
     }
 
     public function exit(int $code = 0): void
@@ -53,6 +53,6 @@ trait ProvideBasicClassMethods
         };
 
         return (new String_(new StringSymbol($string)))
-            ->toRubyClass();
+            ->toBeRubyClass();
     }
 }

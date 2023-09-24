@@ -53,7 +53,7 @@ class BuiltinNewrange implements OperationProcessorInterface
                         begin: $low,
                         end: $high,
                         excludeEnd: (bool) $flags->valueOf(),
-                    )))->toRubyClass(),
+                    )))->toBeRubyClass(),
                 ),
             );
 

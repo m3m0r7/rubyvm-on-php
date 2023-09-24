@@ -288,7 +288,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                             operand: EntityHelper::createEntityBySymbol(
                                 $this->kernel
                                     ->findObject($reader->smallValue())
-                            )->toRubyClass(),
+                            )->toBeRubyClass(),
                         ),
                         InsnType::TS_CALLDATA => new Operand(
                             operand: $instructionSequenceBody
@@ -300,7 +300,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         InsnType::TS_LINDEX => new Operand(
                             operand: (new Number(new NumberSymbol(
                                 $reader->smallValue(),
-                            )))->toRubyClass()
+                            )))->toBeRubyClass()
                         ),
 
                         // NOTE: here is not implemented on actually the RubyVM.
@@ -308,7 +308,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         InsnType::TS_OFFSET => new Operand(
                             operand: (new Offset(new OffsetSymbol(
                                 offset: $reader->smallValue(),
-                            )))->toRubyClass(),
+                            )))->toBeRubyClass(),
                         ),
 
                         InsnType::TS_IC => new Operand(
@@ -348,7 +348,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         operand: (new Number(new NumberSymbol(
                             number: $reader->smallValue(),
                             isFixed: true,
-                        )))->toRubyClass(),
+                        )))->toBeRubyClass(),
                     )
                 );
                 ++$codeIndex;

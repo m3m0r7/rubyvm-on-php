@@ -58,13 +58,13 @@ class BuiltinOptGt implements OperationProcessorInterface
     {
         return (new Boolean_(new BooleanSymbol(
             $leftOperand->valueOf() > $rightOperand->valueOf()
-        )))->toRubyClass();
+        )))->toBeRubyClass();
     }
 
     private function computeFloatGreaterThanOrEqualsFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClassInterface
     {
         return (new Boolean_(new BooleanSymbol(
             $leftOperand->valueOf() > $rightOperand->valueOf()
-        )))->toRubyClass();
+        )))->toBeRubyClass();
     }
 }

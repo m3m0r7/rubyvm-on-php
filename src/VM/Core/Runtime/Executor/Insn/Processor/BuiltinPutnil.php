@@ -33,7 +33,7 @@ class BuiltinPutnil implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $this->context->vmStack()->push(new Operand((new Nil(new NilSymbol()))->toRubyClass()));
+        $this->context->vmStack()->push(new Operand((new Nil(new NilSymbol()))->toBeRubyClass()));
 
         return ProcessedStatus::SUCCESS;
     }

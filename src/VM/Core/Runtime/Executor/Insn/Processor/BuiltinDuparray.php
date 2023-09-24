@@ -36,7 +36,7 @@ class BuiltinDuparray implements OperationProcessorInterface
     {
         $this->context->vmStack()->push(new Operand(
             $this->getOperandAsArray()
-                ->toRubyClass(),
+                ->toBeRubyClass(),
         ));
 
         return ProcessedStatus::SUCCESS;

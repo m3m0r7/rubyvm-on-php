@@ -53,6 +53,6 @@ class BuiltinOptOr implements OperationProcessorInterface
     {
         return (new Number(new NumberSymbol(
             $leftOperand->valueOf() | $rightOperand->valueOf()
-        )))->toRubyClass();
+        )))->toBeRubyClass();
     }
 }

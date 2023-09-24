@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Entity;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Essential\EntityInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\LocalTableHelper;
@@ -37,7 +36,7 @@ class Range extends Entity implements EntityInterface
 
             $localTableSize = $executor->context()->instructionSequence()->body()->data->localTableSize();
             $object = (new Number($number))
-                ->toRubyClass()
+                ->toBeRubyClass()
                 ->setRuntimeContext($context)
                 ->setUserlandHeapSpace($context->self()->userlandHeapSpace());
 
@@ -60,5 +59,10 @@ class Range extends Entity implements EntityInterface
         }
 
         return new Nil(new NilSymbol());
+    }
+
+    public static function createBy(mixed ...$value): EntityInterface
+    {
+        return new self(new RangeSymbol(...$value));
     }
 }

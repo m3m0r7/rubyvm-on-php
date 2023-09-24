@@ -5,22 +5,13 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Entity\Array_;
-use RubyVM\VM\Core\Runtime\Entity\Boolean_;
-use RubyVM\VM\Core\Runtime\Entity\Number;
-use RubyVM\VM\Core\Runtime\Entity\String_;
-use RubyVM\VM\Core\Runtime\Essential\EntityInterface;
+use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\SpecialMethodCallerEntries;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
 use RubyVM\VM\Core\YARV\Criterion\ShouldBeRubyClass;
-use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ObjectInfo;
-use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
-use RubyVM\VM\Exception\SymbolUnsupportedException;
 
 class RubyClass implements RubyClassInterface
 {
@@ -65,7 +56,7 @@ class RubyClass implements RubyClassInterface
         }
 
         if ($result instanceof EntityInterface) {
-            return $result->toRubyClass()
+            return $result->toBeRubyClass()
                 ->setRuntimeContext($this->context)
                 ->setUserlandHeapSpace($this->userlandHeapSpace);
         }
@@ -73,20 +64,13 @@ class RubyClass implements RubyClassInterface
         return $result;
     }
 
+    /**
+     * @param class-string<EntityInterface> $className
+     */
     public static function initializeByClassName(string $className): RubyClassInterface
     {
-        return (new $className(match ($className) {
-            Array_::class => new ArraySymbol([]),
-            String_::class => new StringSymbol(''),
-            Boolean_::class => new BooleanSymbol(true),
-            Number::class => new NumberSymbol(0),
-            default => throw new SymbolUnsupportedException(
-                sprintf(
-                    'The symbol cannot be instance - the symbol did not support initialize: %s',
-                    $className,
-                ),
-            ),
-        }))->toRubyClass();
+        return $className::createBy()
+            ->toBeRubyClass();
     }
 
     public function __toString(): string
