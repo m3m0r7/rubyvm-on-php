@@ -15,7 +15,6 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Operation;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperationEntries;
 use RubyVM\VM\Core\Runtime\Executor\UnknownEntry;
 use RubyVM\VM\Core\Runtime\ID;
-use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\InstructionSequence\InstructionSequenceBody as Ruby3_2_InstructionSequenceBody;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CallData;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CallInfo;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CallInfoEntries;
@@ -30,6 +29,7 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceBody;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceBodyInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceProcessorInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Keyword;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset as OffsetCriterion;
@@ -58,7 +58,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         return [];
     }
 
-    public function process(): InstructionSequenceBody
+    public function process(): InstructionSequenceBodyInterface
     {
         /**
          * @var OffsetCriterion $offset
@@ -172,7 +172,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             )
             : null;
 
-        $rbInstructionSequenceBody = new Ruby3_2_InstructionSequenceBody(
+        $rbInstructionSequenceBody = new InstructionSequenceInfo(
             type: $type,
             stackMax: $stackMax,
             iseqSize: $iseqSize,
@@ -241,14 +241,18 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             bytecodeSize: $bytecodeSize,
         );
 
+        $rbInstructionSequenceBody
+            ->setOperationEntries(
+                $this->loadCode(
+                    bytecodeOffset: $bytecodeOffset,
+                    bytecodeSize: $bytecodeSize,
+                    instructionSequenceSize: $iseqSize,
+                    instructionSequenceBody: $rbInstructionSequenceBody,
+                ),
+            );
+
         return new InstructionSequenceBody(
             $rbInstructionSequenceBody,
-            $this->loadCode(
-                bytecodeOffset: $bytecodeOffset,
-                bytecodeSize: $bytecodeSize,
-                instructionSequenceSize: $iseqSize,
-                instructionSequenceBody: $rbInstructionSequenceBody,
-            ),
         );
     }
 
@@ -256,7 +260,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         int $bytecodeOffset,
         int $bytecodeSize,
         int $instructionSequenceSize,
-        Ruby3_2_InstructionSequenceBody $instructionSequenceBody,
+        InstructionSequenceInfo $instructionSequenceBody,
     ): OperationEntries {
         $reader = $this->kernel->stream()->duplication();
 

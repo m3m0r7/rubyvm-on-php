@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\YARV\Criterion\InstructionSequence;
 
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
+use RubyVM\VM\Exception\RubyVMException;
 
 class InstructionSequence implements InstructionSequenceInterface
 {
-    private ?InstructionSequenceBody $body = null;
+    private ?InstructionSequenceBodyInterface $body = null;
 
     public function __construct(
         public readonly Aux $aux,
@@ -20,9 +21,14 @@ class InstructionSequence implements InstructionSequenceInterface
         $this->body = $this->processor->process();
     }
 
-    public function body(): ?InstructionSequenceBody
+    public function body(): InstructionSequenceBodyInterface
     {
-        return $this->body;
+        return $this->body ?? throw new RubyVMException(
+            sprintf(
+                'The instruction sequence (#%d) was not loaded - did you forget to call InstructionSequence::load before?',
+                $this->aux->loader->index,
+            )
+        );
     }
 
     public function index(): int

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Criterion\InstructionSequence;
 
-use RubyVM\VM\Core\Runtime\Executor\Operation\OperationEntries;
-
-class InstructionSequenceBody
+readonly class InstructionSequenceBody implements InstructionSequenceBodyInterface
 {
     public function __construct(
-        public readonly InstructionSequenceBodyInterface $data,
-        public readonly OperationEntries $operationEntries,
+        private InstructionSequenceInfoInterface $info,
     ) {}
+
+    public function info(): InstructionSequenceInfoInterface
+    {
+        return $this->info;
+    }
 }

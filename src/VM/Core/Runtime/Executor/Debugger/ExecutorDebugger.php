@@ -124,7 +124,8 @@ class ExecutorDebugger
             $callDataOperand = $context
                 ->instructionSequence()
                 ->body()
-                ->operationEntries
+                ->info()
+                ->operationEntries()
                 ->get($currentPos + 1);
 
             $arguments = [];
@@ -170,7 +171,8 @@ class ExecutorDebugger
             $number = $context
                 ->instructionSequence()
                 ->body()
-                ->operationEntries
+                ->info()
+                ->operationEntries()
                 ->get($currentPos + 1)
                 ->operand
                 ->entity;

@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\YARV\Criterion\InstructionSequence;
 
 interface InstructionSequenceInterface
 {
-    public function body(): ?InstructionSequenceBody;
+    public function body(): InstructionSequenceBodyInterface;
 
     public function load(): void;
 

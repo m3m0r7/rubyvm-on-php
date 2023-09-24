@@ -40,7 +40,7 @@ trait CallBlockHelper
             ->context()
             ->instructionSequence()
             ->body()
-            ->data;
+            ->info();
 
         $localTableSize = $iseqBodyData
             ->localTableSize();

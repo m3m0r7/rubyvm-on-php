@@ -33,7 +33,7 @@ class Range extends Entity implements EntityInterface
             $executor->context()
                 ->appendTrace(ClassHelper::nameBy($this) . '#' . __FUNCTION__);
 
-            $localTableSize = $executor->context()->instructionSequence()->body()->data->localTableSize();
+            $localTableSize = $executor->context()->instructionSequence()->body()->info()->localTableSize();
             $object = (new Number($number))
                 ->toBeRubyClass()
                 ->setRuntimeContext($context)

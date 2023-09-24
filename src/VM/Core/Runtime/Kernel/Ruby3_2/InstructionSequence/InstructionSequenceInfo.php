@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\InstructionSequence;
 
+use RubyVM\VM\Core\Runtime\Executor\Operation\OperationEntries;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CallInfoEntries;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CatchEntries;
 use RubyVM\VM\Core\YARV\Criterion\Entry\OuterVariableEntries;
 use RubyVM\VM\Core\YARV\Criterion\Entry\VariableEntries;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InsnsInterface;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceBodyInterface;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInfoInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\LocationInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\ObjectParameterInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\VariableInterface;
 
-class InstructionSequenceBody implements InstructionSequenceBodyInterface
+class InstructionSequenceInfo implements InstructionSequenceInfoInterface
 {
     protected InstructionSequenceCompileData $compileData;
 
@@ -44,8 +45,21 @@ class InstructionSequenceBody implements InstructionSequenceBodyInterface
         public readonly CallInfoEntries $callInfoEntries,
         public readonly int $bytecodeOffset,
         public readonly int $bytecodeSize,
+        private ?OperationEntries $operationEntries = null,
     ) {
         $this->compileData = new InstructionSequenceCompileData();
+    }
+
+    public function setOperationEntries(OperationEntries $entries): InstructionSequenceInfoInterface
+    {
+        $this->operationEntries = $entries;
+
+        return $this;
+    }
+
+    public function operationEntries(): OperationEntries
+    {
+        return $this->operationEntries;
     }
 
     public function compileData(): InstructionSequenceCompileData

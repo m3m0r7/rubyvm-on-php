@@ -23,7 +23,7 @@ trait LocalTable
                             $this->context
                                 ->instructionSequence()
                                 ->body()
-                                ->data
+                                ->info()
                                 ->localTableSize(),
                             $slotIndex,
                             $level,
@@ -43,7 +43,7 @@ trait LocalTable
                     $this->context
                         ->instructionSequence()
                         ->body()
-                        ->data
+                        ->info()
                         ->localTableSize(),
                     $slotIndex,
                     $level,
