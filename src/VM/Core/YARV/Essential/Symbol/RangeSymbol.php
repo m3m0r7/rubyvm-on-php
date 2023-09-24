@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
-class RangeSymbol implements SymbolInterface, \ArrayAccess
+class RangeSymbol implements SymbolInterface, \ArrayAccess, \Stringable
 {
     private array $array;
 

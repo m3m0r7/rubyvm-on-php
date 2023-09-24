@@ -47,6 +47,7 @@ class BuiltinOptLe implements OperationProcessorInterface
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
             $value = $this->computeNumberLessThanOrEqualsNumber($leftOperand, $rightOperand);
         }
+
         if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
             $value = $this->computeFloatLessThanOrEqualsFloat($leftOperand, $rightOperand);
         }

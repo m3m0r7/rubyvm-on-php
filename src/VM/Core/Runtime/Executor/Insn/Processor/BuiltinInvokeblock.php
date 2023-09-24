@@ -65,19 +65,20 @@ class BuiltinInvokeblock implements OperationProcessorInterface
                 ...$arguments,
             );
 
-        if ($executed->threw) {
+        if ($executed->threw instanceof \Throwable) {
             throw $executed->threw;
         }
-        if ($executed->returnValue !== null) {
+
+        if ($executed->returnValue instanceof \RubyVM\VM\Core\Runtime\Essential\RubyClassInterface) {
             $this->context->vmStack()
                 ->push(new Operand($executed->returnValue));
         }
 
-        if ($executed->returnValue === null) {
+        if (!$executed->returnValue instanceof \RubyVM\VM\Core\Runtime\Essential\RubyClassInterface) {
             return ProcessedStatus::SUCCESS;
         }
 
-        if ($executed !== null) {
+        if ($executed instanceof \RubyVM\VM\Core\Runtime\Executor\ExecutedResult) {
             // TODO: is this correctly?
             $this->context->vmStack()->dup();
         }

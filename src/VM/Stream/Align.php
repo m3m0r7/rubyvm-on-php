@@ -18,7 +18,7 @@ class Align
     {
         $high = SizeOf::CHAR;
 
-        if (empty($structures)) {
+        if ($structures === []) {
             return $high;
         }
 
@@ -35,6 +35,7 @@ class Align
                 // When reached int, which property to be CHAR
                 $structure = SizeOf::CHAR;
             }
+
             if ($structure->size() <= $high->size()) {
                 continue;
             }

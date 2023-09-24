@@ -52,6 +52,7 @@ trait BreakpointExecutable
                 (string) $nextContext->environmentTable(),
             );
         }
+
         printf("\n");
         if ('exit' === $command || 'quit' === $command || 'q' === $command) {
             echo "Finished executor, Goodbye ✋\n";

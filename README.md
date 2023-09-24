@@ -17,6 +17,10 @@ _Notice: I tested Ruby version 3.2 only_
 
 <img src="./docs/demo.gif" width="100%" />
 
+## Requirement
+
+- PHP 8.2+
+
 ## Quick start
 
 1. Install via composer as following

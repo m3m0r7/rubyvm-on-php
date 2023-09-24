@@ -24,6 +24,7 @@ class StringSymbolLoader implements SymbolLoaderInterface
     {
         $reader = $this->kernel->stream()->duplication();
         $reader->pos($this->offset->offset);
+
         $encIndex = $reader->smallValue();
         $len = $reader->smallValue();
 

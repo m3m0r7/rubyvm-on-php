@@ -21,6 +21,7 @@ class ArraySymbolLoader implements SymbolLoaderInterface
     {
         $reader = $this->kernel->stream()->duplication();
         $reader->pos($this->offset->offset);
+
         $len = $reader->smallValue();
         $array = [];
 

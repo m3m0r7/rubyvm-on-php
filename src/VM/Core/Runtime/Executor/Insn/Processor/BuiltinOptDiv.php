@@ -47,6 +47,7 @@ class BuiltinOptDiv implements OperationProcessorInterface
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
             $value = $this->computeNumberDivideNumber($leftOperand, $rightOperand);
         }
+
         if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
             $value = $this->computeFloatDivideFloat($leftOperand, $rightOperand);
         }

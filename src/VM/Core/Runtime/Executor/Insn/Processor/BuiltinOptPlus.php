@@ -51,12 +51,15 @@ class BuiltinOptPlus implements OperationProcessorInterface
         if ($leftOperand instanceof StringSymbol && $rightOperand instanceof StringSymbol) {
             $value = $this->computeStringPlusString($leftOperand, $rightOperand);
         }
+
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
             $value = $this->computeNumberPlusNumber($leftOperand, $rightOperand);
         }
+
         if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
             $value = $this->computeFloatPlusFloat($leftOperand, $rightOperand);
         }
+
         if ($leftOperand instanceof ArraySymbol && $rightOperand instanceof ArraySymbol) {
             $value = $this->computeArrayPlusArray($leftOperand, $rightOperand);
         }

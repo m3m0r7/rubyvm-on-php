@@ -14,10 +14,12 @@ class ClassHelper
         if (!is_object($obj)) {
             return gettype($obj);
         }
-        if (RubyClass::class === get_class($obj)) {
+
+        if ($obj instanceof \RubyVM\VM\Core\Runtime\RubyClass) {
             return static::nameBy($obj->entity);
         }
-        $classNamePath = explode('\\', is_object($obj) ? get_class($obj) : $obj);
+
+        $classNamePath = explode('\\', is_object($obj) ? $obj::class : $obj);
         $name = $classNamePath[array_key_last($classNamePath)];
         if ($obj instanceof EntityInterface) {
             $name = rtrim($name, '_');

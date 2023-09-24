@@ -40,7 +40,7 @@ class EnvironmentTable extends AbstractEntries
     public function set(mixed $index, mixed $value): self
     {
         // do not set new value if have a lead flag.
-        if (isset($this->leads[$index]) && $this->leads[$index] === true) {
+        if (isset($this->leads[$index]) && $this->leads[$index]) {
             // Forcibly set to non lead
             $this->leads[$index] = false;
 

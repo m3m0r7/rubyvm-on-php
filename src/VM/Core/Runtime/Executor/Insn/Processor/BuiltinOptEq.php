@@ -53,7 +53,7 @@ class BuiltinOptEq implements OperationProcessorInterface
     private function computeNumberEqNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
     {
         return (new Boolean_(new BooleanSymbol(
-            $leftOperand->valueOf() == $rightOperand->valueOf(),
+            $leftOperand->valueOf() === $rightOperand->valueOf(),
         )))->toBeRubyClass();
     }
 }

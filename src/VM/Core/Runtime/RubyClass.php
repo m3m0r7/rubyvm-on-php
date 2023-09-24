@@ -13,7 +13,7 @@ use RubyVM\VM\Core\YARV\Criterion\ShouldBeRubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ObjectInfo;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
 
-class RubyClass implements RubyClassInterface
+class RubyClass implements RubyClassInterface, \Stringable
 {
     use ShouldBeRubyClass {
         __call as private callExtendedMethod;
@@ -42,16 +42,14 @@ class RubyClass implements RubyClassInterface
         } catch (NotFoundInstanceMethod $e) {
             if (method_exists($this->entity, $name)) {
                 $result = $this->entity->{$name}(...$arguments);
+            } elseif (isset(SpecialMethodCallerEntries::map()[$name])) {
+                // Do not throw the name is a special method in the entries
+                $result = clone $this->entity;
             } else {
-                if (isset(SpecialMethodCallerEntries::map()[$name])) {
-                    // Do not throw the name is a special method in the entries
-                    $result = clone $this->entity;
-                } else {
-                    throw new NotFoundInstanceMethod(sprintf(<<< '_'
+                throw new NotFoundInstanceMethod(sprintf(<<< '_'
                         Not found instance method %s#%s. In the actually, arguments count are unmatched or anymore problems when throwing this exception.
                         Use try-catch statement and checking a previous exception via this exception if you want to solve kindly this problems.
                         _, /* Call to undefined method when not defined on symbol */ ClassHelper::nameBy($this->entity), $name), $e->getCode());
-                }
             }
         }
 

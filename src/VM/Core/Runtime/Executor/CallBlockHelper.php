@@ -70,7 +70,7 @@ trait CallBlockHelper
         $result = $executor
             ->execute(...$calleeContexts);
 
-        if ($result->threw) {
+        if ($result->threw instanceof \Throwable) {
             throw $result->threw;
         }
 
@@ -79,15 +79,17 @@ trait CallBlockHelper
 
     private function callBlockWithArguments(CallInfoInterface $callInfo, Number $blockIseqIndex, RubyClass|RubyClassInterface $blockObject, bool $isSuper, Operand ...$arguments): ?RubyClass
     {
-        if ($callInfo->callData()->flag() & (0x01 << VMCallFlagBit::VM_CALL_ARGS_BLOCKARG->value)) {
+        if (($callInfo->callData()->flag() & (0x01 << VMCallFlagBit::VM_CALL_ARGS_BLOCKARG->value)) !== 0) {
             throw new OperationProcessorException('The callBlockWithArguments is not implemented yet');
         }
+
         if ($blockIseqIndex->valueOf() === 0) {
             // TODO: implement a super call
             // see: https://github.com/ruby/ruby/blob/ruby_3_2/vm_args.c#L888
 
             throw new OperationProcessorException('The callBlockWithArguments is not implemented yet');
         }
+
         $instructionSequence = $this->context
             ->kernel()
             ->loadInstructionSequence(new Aux(
@@ -120,7 +122,7 @@ trait CallBlockHelper
             );
 
         if ($result instanceof ExecutedResult) {
-            if ($result->threw) {
+            if ($result->threw instanceof \Throwable) {
                 throw $result->threw;
             }
 

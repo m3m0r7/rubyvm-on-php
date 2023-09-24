@@ -44,7 +44,7 @@ class BuiltinOptSize implements OperationProcessorInterface
             $this->context->vmStack()->push(
                 new Operand(
                     Number::createBy(
-                        count($recv->symbol()),
+                        is_countable($recv->symbol()) ? count($recv->symbol()) : 0,
                     )->toBeRubyClass()
                 ),
             );

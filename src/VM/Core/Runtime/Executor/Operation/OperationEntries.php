@@ -10,7 +10,7 @@ use RubyVM\VM\Core\Runtime\Executor\UnknownEntry;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
-class OperationEntries extends AbstractEntries
+class OperationEntries extends AbstractEntries implements \Stringable
 {
     public function verify(mixed $value): bool
     {

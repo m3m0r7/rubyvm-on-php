@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
-class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \IteratorAggregate
+class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \IteratorAggregate, \Stringable
 {
     public function __construct(
         private array $array,
@@ -20,7 +20,7 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
         return sprintf(
             '[%s]',
             implode(', ', array_map(
-                fn ($value) => (string) $value,
+                static fn($value) => (string) $value,
                 $this->array,
             ))
         );

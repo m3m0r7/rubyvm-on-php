@@ -47,6 +47,7 @@ class BuiltinOptMinus implements OperationProcessorInterface
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
             $value = $this->computeNumberMinusNumber($leftOperand, $rightOperand);
         }
+
         if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
             $value = $this->computeFloatMinusFloat($leftOperand, $rightOperand);
         }

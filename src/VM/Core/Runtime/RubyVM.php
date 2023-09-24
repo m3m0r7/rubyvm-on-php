@@ -15,7 +15,7 @@ use RubyVM\VM\Exception\RubyVMException;
 
 class RubyVM implements RubyVMInterface
 {
-    public const DEFAULT_VERSION = RubyVersion::VERSION_3_2;
+    final public const DEFAULT_VERSION = RubyVersion::VERSION_3_2;
 
     protected array $registeredRuntimes = [];
 
@@ -58,7 +58,7 @@ class RubyVM implements RubyVMInterface
     public function disassemble(RubyVersion $useVersion = null): ExecutorInterface
     {
         $this->option->logger->info(
-            sprintf('Start to disassemble instruction sequences'),
+            'Start to disassemble instruction sequences',
         );
 
         $runtime = $this->runtime($useVersion ?? static::DEFAULT_VERSION);
@@ -66,11 +66,11 @@ class RubyVM implements RubyVMInterface
         $kernel = $runtime->kernel()->setup();
 
         $this->option->logger->info(
-            sprintf('Complete to disassemble instruction sequences'),
+            'Complete to disassemble instruction sequences',
         );
 
         $this->option->logger->info(
-            sprintf('Check to verify process for an instruction sequence structure'),
+            'Check to verify process for an instruction sequence structure',
         );
 
         // Verify structures
@@ -79,7 +79,7 @@ class RubyVM implements RubyVMInterface
             ->done();
 
         $this->option->logger->info(
-            sprintf('Complete to verify process'),
+            'Complete to verify process',
         );
 
         return Executor::createEntryPoint(
@@ -93,7 +93,7 @@ class RubyVM implements RubyVMInterface
         $selectedVersion = null;
 
         // @var Runtime|null $kernel
-        if ($useVersion === null) {
+        if (!$useVersion instanceof \RubyVM\VM\Core\YARV\RubyVersion) {
             $runtime = $this->registeredRuntimes[$selectedVersion = array_key_first($this->registeredRuntimes)] ?? null;
         } else {
             $runtime = $this->registeredRuntimes[$selectedVersion = $useVersion->value] ?? null;

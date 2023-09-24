@@ -32,6 +32,7 @@ class Executor implements ExecutorInterface
     use BreakpointExecutable;
 
     protected array $operations = [];
+
     protected ?bool $shouldProcessedRecords = null;
 
     protected ContextInterface $context;
@@ -93,7 +94,7 @@ class Executor implements ExecutorInterface
             ),
             $previousContext?->environmentTable() ?? new EnvironmentTable(),
             $this->debugger,
-            $previousContext
+            $previousContext instanceof \RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface
                 ? $previousContext->depth() + 1
                 : 0,
             $previousContext?->startTime() ?? null,
@@ -274,7 +275,7 @@ class Executor implements ExecutorInterface
 
         if (false === $isFinished) {
             $this->option->logger->emergency(
-                sprintf('Illegal finish an executor'),
+                'Illegal finish an executor',
             );
 
             throw new ExecutorExeption(sprintf('The executor did not finish - maybe did not call the `%s` (0x%02x)', strtolower(Insn::LEAVE->name), Insn::LEAVE->value));
@@ -291,7 +292,7 @@ class Executor implements ExecutorInterface
         }
 
         $this->option->logger->info(
-            sprintf('Success to finish normally an executor'),
+            'Success to finish normally an executor',
         );
 
         if (count($this->context->vmStack()) >= 1) {

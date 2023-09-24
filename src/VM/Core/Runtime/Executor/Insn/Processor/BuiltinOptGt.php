@@ -47,6 +47,7 @@ class BuiltinOptGt implements OperationProcessorInterface
         if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
             $value = $this->computeNumberGreaterThanOrEqualsNumber($leftOperand, $rightOperand);
         }
+
         if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
             $value = $this->computeFloatGreaterThanOrEqualsFloat($leftOperand, $rightOperand);
         }

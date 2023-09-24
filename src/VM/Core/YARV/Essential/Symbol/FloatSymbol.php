@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
-class FloatSymbol implements SymbolInterface
+class FloatSymbol implements SymbolInterface, \Stringable
 {
     public function __construct(
         private readonly float $number,
@@ -19,7 +19,7 @@ class FloatSymbol implements SymbolInterface
     {
         $hasFraction = str_contains((string) $this->number, '.');
         if ($hasFraction) {
-            return (string) rtrim(
+            return rtrim(
                 sprintf(
                     '%.16f',
                     $this->number

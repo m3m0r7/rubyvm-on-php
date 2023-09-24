@@ -90,7 +90,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
 
         $result = $executor->execute();
 
-        if ($result->threw) {
+        if ($result->threw instanceof \Throwable) {
             throw $result->threw;
         }
 

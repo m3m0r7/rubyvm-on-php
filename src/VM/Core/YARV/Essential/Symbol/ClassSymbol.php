@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
-class ClassSymbol implements SymbolInterface
+class ClassSymbol implements SymbolInterface, \Stringable
 {
     public function __construct(
-        private StringSymbol $class,
+        private readonly StringSymbol $class,
     ) {}
 
     public function valueOf(): string

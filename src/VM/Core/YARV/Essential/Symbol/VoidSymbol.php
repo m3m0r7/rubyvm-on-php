@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
-class VoidSymbol implements SymbolInterface
+class VoidSymbol implements SymbolInterface, \Stringable
 {
     public function __construct() {}
 

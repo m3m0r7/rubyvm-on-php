@@ -19,7 +19,9 @@ use Symfony\Component\Console\Output\StreamOutput;
 class ExecutorDebugger
 {
     protected array $snapshots = [];
+
     protected int $currentMemoryUsage;
+
     protected ContextInterface $context;
 
     public function __construct()
@@ -93,6 +95,7 @@ class ExecutorDebugger
                     new TableSeparator(),
                 ]);
             }
+
             $table->addRow([
                 $context->programCounter()->pos(),
                 implode(' -> ', $context->traces()),
@@ -151,7 +154,7 @@ class ExecutorDebugger
                 implode(
                     ', ',
                     array_map(
-                        fn ($argument) => match ($argument::class) {
+                        static fn($argument) => match ($argument::class) {
                             SymbolInterface::class => (string) $argument,
                             Operand::class => (string) $argument->operand->entity,
                             RubyClass::class => (string) $argument->entity->entity,
@@ -162,6 +165,7 @@ class ExecutorDebugger
                 ),
             );
         }
+
         if (Insn::GETLOCAL_WC_0 === $insn || Insn::GETLOCAL_WC_1 === $insn || Insn::SETLOCAL_WC_0 === $insn || Insn::SETLOCAL_WC_1 === $insn) {
             $currentPos = $context->programCounter()->pos();
 

@@ -7,6 +7,7 @@ namespace RubyVM\VM\Core\Runtime\Executor\Context;
 class ProgramCounter
 {
     private int $counter = 0;
+
     private ?int $previousCounter = null;
 
     public function increase(int $add = 1): int

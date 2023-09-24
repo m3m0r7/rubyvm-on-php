@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
-class UndefinedSymbol implements SymbolInterface
+class UndefinedSymbol implements SymbolInterface, \Stringable
 {
     public function __construct() {}
 

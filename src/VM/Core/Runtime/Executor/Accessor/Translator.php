@@ -37,6 +37,7 @@ readonly class Translator
                     false,
                 )))->toBeRubyClass();
             }
+
             $result = [];
             foreach ($elements as $element) {
                 $result[] = static::PHPToRuby($element)->entity->symbol();
@@ -63,7 +64,7 @@ readonly class Translator
     {
         if (is_array($objectOrClass)) {
             return array_map(
-                fn ($element) => static::RubyToPHP($element),
+                static fn($element) => static::RubyToPHP($element),
                 $objectOrClass,
             );
         }
@@ -82,7 +83,7 @@ readonly class Translator
             BooleanSymbol::class => $symbol->valueOf(),
             RangeSymbol::class,
             ArraySymbol::class => array_map(
-                fn (SymbolInterface $element) => static::RubyToPHP($element),
+                static fn(SymbolInterface $element) => static::RubyToPHP($element),
                 $symbol->valueOf(),
             ),
             NilSymbol::class => null,

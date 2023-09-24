@@ -13,16 +13,21 @@ use RubyVM\VM\Stream\StreamHandlerInterface;
 
 class Option implements OptionInterface
 {
-    public const DETECT_INFINITY_LOOP = 3;
-    public const MAX_TIME_EXCEEDED = 5;
-    public const MAX_STACK_EXCEEDED = 30;
-    public const RUBY_ENCINDEX_BUILTIN_MAX = 12;
-    public const RSV_TABLE_INDEX_0 = 0;
-    public const RSV_TABLE_INDEX_1 = 1;
+    final public const DETECT_INFINITY_LOOP = 3;
 
-    public const VM_ENV_DATA_SIZE = 3;
+    final public const MAX_TIME_EXCEEDED = 5;
 
-    public const DEFAULT_ENTRYPOINT_AUX_INDEX = 0;
+    final public const MAX_STACK_EXCEEDED = 30;
+
+    final public const RUBY_ENCINDEX_BUILTIN_MAX = 12;
+
+    final public const RSV_TABLE_INDEX_0 = 0;
+
+    final public const RSV_TABLE_INDEX_1 = 1;
+
+    final public const VM_ENV_DATA_SIZE = 3;
+
+    final public const DEFAULT_ENTRYPOINT_AUX_INDEX = 0;
 
     public function __construct(
         public readonly BinaryStreamReaderInterface $reader,

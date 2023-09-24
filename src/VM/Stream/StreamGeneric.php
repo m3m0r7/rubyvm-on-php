@@ -15,6 +15,7 @@ trait StreamGeneric
         if (0 === $bytes) {
             return '';
         }
+
         $read = fread($this->handle, $bytes);
         if (strlen($read) !== $bytes) {
             throw new FileStreamHandlerException(sprintf('Unexpected read binary size (expected %d byte(s) but %d byte(s) insufficiency)', $bytes, $bytes - strlen($read)));

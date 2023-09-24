@@ -37,11 +37,11 @@ class StructSymbolLoader implements SymbolLoaderInterface
             ->findObject($range->end);
 
         if (!$beginSymbol instanceof NumberSymbol) {
-            throw new RubyVMException(sprintf('The StructSymbolLoader expects NumberSymbol at a begin property when creating a range object but actual symbol is %s', get_class($beginSymbol)));
+            throw new RubyVMException(sprintf('The StructSymbolLoader expects NumberSymbol at a begin property when creating a range object but actual symbol is %s', $beginSymbol::class));
         }
 
         if (!$endSymbol instanceof NumberSymbol) {
-            throw new RubyVMException(sprintf('The StructSymbolLoader expects NumberSymbol at a end property when creating a range object but actual symbol is %s', get_class($endSymbol)));
+            throw new RubyVMException(sprintf('The StructSymbolLoader expects NumberSymbol at a end property when creating a range object but actual symbol is %s', $endSymbol::class));
         }
 
         return new RangeSymbol(

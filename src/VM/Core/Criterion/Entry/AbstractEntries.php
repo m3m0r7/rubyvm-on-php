@@ -50,11 +50,13 @@ abstract class AbstractEntries implements EntriesInterface
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if (!$this->verify($value)) {
-            throw new EntryException(sprintf('The entry value is not verified on %s (%s)', static::class, is_object($value) ? get_class($value) : gettype($value)));
+            throw new EntryException(sprintf('The entry value is not verified on %s (%s)', static::class, get_debug_type($value)));
         }
+
         if (!$this->verifyOffset($offset)) {
-            throw new EntryException(sprintf('The entry key is not verified on %s (%s)', static::class, is_object($value) ? get_class($value) : gettype($value)));
+            throw new EntryException(sprintf('The entry key is not verified on %s (%s)', static::class, get_debug_type($value)));
         }
+
         $this->items[$offset ? $this->filterKeyName($offset) : count($this->items)] = $value;
     }
 

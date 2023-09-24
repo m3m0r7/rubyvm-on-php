@@ -62,7 +62,7 @@ class BuiltinSend implements OperationProcessorInterface
             ...$arguments,
         );
 
-        if ($result !== null) {
+        if ($result instanceof \RubyVM\VM\Core\Runtime\RubyClass) {
             $this->context->vmStack()->push(new Operand($result));
         }
 

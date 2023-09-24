@@ -29,6 +29,7 @@ trait ProvideBasicClassMethods
         } else {
             $string = (string) $symbol;
         }
+
         if (!str_ends_with($string, "\n")) {
             $string .= "\n";
         }
@@ -40,7 +41,7 @@ trait ProvideBasicClassMethods
             ->toBeRubyClass();
     }
 
-    public function exit(int $code = 0): void
+    public function exit(int $code = 0): never
     {
         exit($code);
     }

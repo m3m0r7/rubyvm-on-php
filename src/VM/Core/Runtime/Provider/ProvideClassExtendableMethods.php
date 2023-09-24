@@ -36,7 +36,7 @@ trait ProvideClassExtendableMethods
     {
         return [
             ...array_map(
-                fn (\ReflectionMethod $method) => $method->name,
+                static fn(\ReflectionMethod $method) => $method->name,
                 (new \ReflectionClass($this))
                     ->getMethods(),
             ),

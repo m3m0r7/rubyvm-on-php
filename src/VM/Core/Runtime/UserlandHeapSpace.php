@@ -9,7 +9,9 @@ use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
 class UserlandHeapSpace implements UserlandHeapSpaceInterface
 {
     public readonly UserlandClassEntries $userlandClasses;
+
     public readonly UserlandMethodEntries $userlandMethods;
+
     public readonly UserlandInstanceVariableEntries $userlandInstanceVariables;
 
     public function __construct()

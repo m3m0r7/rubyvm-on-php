@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
-class OffsetSymbol implements SymbolInterface
+class OffsetSymbol implements SymbolInterface, \Stringable
 {
     public function __construct(
         public readonly int $offset,

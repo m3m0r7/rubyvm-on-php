@@ -19,7 +19,7 @@ trait DebugFormat
         foreach ($targetItems as $index => $item) {
             $result[] = match ($item::class) {
                 SymbolInterface::class => (string) $item,
-                Operand::class => (string) match (($item->operand)::class) {
+                Operand::class => match (($item->operand)::class) {
                     RubyClass::class => ClassHelper::nameBy($item->operand->entity) . "({$item->operand->entity})",
                     default => ClassHelper::nameBy($item->operand),
                 },

@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Internal;
 
 class Arithmetic
 {
-    public const RUBY_FIXNUM_FLAG = 0x01;
+    final public const RUBY_FIXNUM_FLAG = 0x01;
 
     public static function isFixNum(int $value): bool
     {

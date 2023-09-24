@@ -23,7 +23,7 @@ class OperationProcessorEntries extends AbstractEntries
     public function get(mixed $index): OperationProcessorInterface
     {
         if (!$index instanceof Insn) {
-            throw new OperationProcessorException(sprintf('The passed index is not instantiated by an Insn enum - you should to specify parameter with instantiated by Insn enum'));
+            throw new OperationProcessorException('The passed index is not instantiated by an Insn enum - you should to specify parameter with instantiated by Insn enum');
         }
 
         $processor = parent::get($index);

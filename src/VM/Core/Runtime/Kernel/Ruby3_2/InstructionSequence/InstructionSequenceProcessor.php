@@ -66,7 +66,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         $offset = $this->kernel->instructionSequenceList[$this->aux->loader->index];
         $this->kernel->stream()->pos($offset->offset);
 
-        $computeFromBodyOffset = fn (int $x) => $offset->offset - $x;
+        $computeFromBodyOffset = static fn(int $x) => $offset->offset - $x;
 
         $type = $this->kernel->stream()->smallValue();
         $iseqSize = $this->kernel->stream()->smallValue();
@@ -265,7 +265,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         $reader = $this->kernel->stream()->duplication();
 
         $entries = new OperationEntries();
-        $operationMap = implode($this->insnOperations());
+        $operationMap = implode('', $this->insnOperations());
         $callInfoEntryIndex = 0;
         $reader->pos($bytecodeOffset);
 
@@ -281,6 +281,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             if ($types === null) {
                 throw new ExecutorExeption(sprintf('Unknown INSN type: 0x%02x', $insn));
             }
+
             ++$codeIndex;
 
             for ($opIndex = 0; ord($types[$opIndex] ?? "\0"); $opIndex++, $codeIndex++) {
@@ -372,6 +373,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
 
                 continue;
             }
+
             $mid = $this->kernel->findId($midIndex);
             $flag = $reader->smallValue();
             $argc = $reader->smallValue();

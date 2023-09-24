@@ -31,7 +31,7 @@ class Array_ extends Entity implements EntityInterface
 
     public function each(ContextInterface $context): void
     {
-        for ($i = 0; $i < count($this->symbol); ++$i) {
+        for ($i = 0; $i < (is_countable($this->symbol) ? count($this->symbol) : 0); ++$i) {
             $executor = (new Executor(
                 kernel: $context->kernel(),
                 rubyClass: $context->self(),
@@ -59,7 +59,7 @@ class Array_ extends Entity implements EntityInterface
             $result = $executor->execute();
 
             // An occurred exception to be throwing
-            if ($result->threw) {
+            if ($result->threw instanceof \Throwable) {
                 throw $result->threw;
             }
         }

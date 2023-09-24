@@ -22,6 +22,7 @@ class FixedNumberSymbolLoader implements SymbolLoaderInterface
     {
         $reader = $this->kernel->stream()->duplication();
         $reader->pos($this->offset->offset);
+
         $value = $reader->smallValue();
 
         return new NumberSymbol(

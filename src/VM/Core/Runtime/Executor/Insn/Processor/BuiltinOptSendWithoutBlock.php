@@ -28,6 +28,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
     private Insn $insn;
 
     private ContextInterface $context;
+
     private static SpecialMethodCallerEntries $specialMethodCallerEntries;
 
     public function prepare(Insn $insn, ContextInterface $context): void
@@ -64,9 +65,6 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             ...$arguments,
         );
 
-        /**
-         * @var RubyClassInterface $targetSymbol
-         */
         $targetClass = $targetObjectOrClass = $this->getStack()
             ->operand;
 
@@ -109,10 +107,11 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         }
 
         if ($result instanceof ExecutedResult) {
-            if ($result->threw) {
+            if ($result->threw instanceof \Throwable) {
                 throw $result->threw;
             }
-            if ($result->returnValue !== null) {
+
+            if ($result->returnValue instanceof \RubyVM\VM\Core\Runtime\Essential\RubyClassInterface) {
                 $this->context->vmStack()
                     ->push(new Operand($result->returnValue));
             }

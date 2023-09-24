@@ -46,7 +46,7 @@ class BuiltinOptAref implements OperationProcessorInterface
          */
         $selectedNumber = $obj->symbol()[$recv->valueOf()] ?? null;
 
-        if ($selectedNumber === null) {
+        if (!$selectedNumber instanceof \RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol) {
             throw new OperationProcessorException(
                 sprintf(
                     'Out of index#%d in the %s',

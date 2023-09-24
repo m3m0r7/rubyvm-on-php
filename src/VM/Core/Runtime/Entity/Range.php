@@ -52,7 +52,7 @@ class Range extends Entity implements EntityInterface
             $result = $executor->execute();
 
             // An occurred exception to be throwing
-            if ($result->threw) {
+            if ($result->threw instanceof \Throwable) {
                 throw $result->threw;
             }
         }

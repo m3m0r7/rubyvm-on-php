@@ -37,13 +37,14 @@ trait OperatorCalculatable
         $value = null;
         if ($operator instanceof StringSymbol) {
             if ((string) $operator !== $expectedOperator) {
-                throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor cannot process %s operator because string concatenating was allowed only `%s`', strtolower($this->insn->name), $this->insn->value, $operator, $expectedOperator));
+                throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor cannot process %s operator because string concatenating was allowed only `%s`', strtolower((string) $this->insn->name), $this->insn->value, $operator, $expectedOperator));
             }
+
             $value = $this->compute($leftOperand, $rightOperand);
         }
 
         if ($value === null) {
-            throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor cannot process `%s` operator because it was not implemented or cannot comparison operator %s and %s', strtolower($this->insn->name), $this->insn->value, $operator, ClassHelper::nameBy($leftOperand), ClassHelper::nameBy($rightOperand)));
+            throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor cannot process `%s` operator because it was not implemented or cannot comparison operator %s and %s', strtolower((string) $this->insn->name), $this->insn->value, $operator, ClassHelper::nameBy($leftOperand), ClassHelper::nameBy($rightOperand)));
         }
 
         $this->context->vmStack()->push(new Operand($value));

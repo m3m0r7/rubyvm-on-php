@@ -39,16 +39,27 @@ use RubyVM\VM\Stream\RubyVMBinaryStreamReaderInterface;
 class Kernel implements KernelInterface
 {
     public readonly string $magic;
+
     public readonly int $majorVersion;
+
     public readonly int $minorVersion;
+
     public readonly int $size;
+
     public readonly int $extraSize;
+
     public readonly int $instructionSequenceListSize;
+
     public readonly int $globalObjectListSize;
+
     public readonly int $instructionSequenceListOffset;
+
     public readonly int $globalObjectListOffset;
+
     public readonly Offsets $instructionSequenceList;
+
     public readonly Offsets $globalObjectList;
+
     protected readonly InstructionSequenceEntries $instructionSequences;
 
     protected array $globalObjectTable = [];
@@ -81,7 +92,7 @@ class Kernel implements KernelInterface
     public function setup(): self
     {
         $this->vm->option()->logger->info(
-            sprintf('Load an instruction sequence header'),
+            'Load an instruction sequence header',
         );
         $pos = $this->stream()->pos();
 
@@ -201,9 +212,6 @@ class Kernel implements KernelInterface
         );
 
         if (isset($this->globalObjectTable[$index])) {
-            /**
-             * @var SymbolInterface $object
-             */
             $symbol = $this->globalObjectTable[$index];
 
             $this->vm->option()->logger->debug(
@@ -224,6 +232,7 @@ class Kernel implements KernelInterface
 
         $reader = $this->stream()->duplication();
         $reader->pos($offset->offset);
+
         $byte = $reader->readAsUnsignedByte();
         $info = new ObjectInfo(
             type: SymbolType::of(($byte >> 0) & 0x1F),
@@ -269,6 +278,7 @@ class Kernel implements KernelInterface
     {
         $reader = $this->stream()->duplication();
         $reader->pos($this->size);
+
         $this->extraData = $reader->read($this->extraSize);
     }
 
