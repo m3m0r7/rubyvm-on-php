@@ -21,11 +21,4 @@ class BooleanSymbol implements SymbolInterface
             ? 'true'
             : 'false';
     }
-
-    public function toString(): SymbolInterface
-    {
-        return new StringSymbol(
-            string: (string) $this,
-        );
-    }
 }

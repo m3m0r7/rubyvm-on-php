@@ -48,7 +48,7 @@ trait LocalTable
                     $slotIndex,
                     $level,
                 ),
-                clone $operand,
+                $operand,
             );
     }
 }

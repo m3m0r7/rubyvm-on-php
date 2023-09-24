@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Entity;
 
+use RubyVM\VM\Core\Runtime\Entity\Boolean as Boolean_;
 use RubyVM\VM\Core\Runtime\Essential\EntityInterface;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
 class Number extends Entity implements EntityInterface
 {
@@ -24,32 +24,32 @@ class Number extends Entity implements EntityInterface
         return (bool) $this->symbol->valueOf();
     }
 
-    public function xor(RubyClass $object): NumberSymbol
+    public function xor(RubyClass $object): Number
     {
-        return new NumberSymbol(
+        return new Number(new NumberSymbol(
             $this->symbol->valueOf() ^ $object->entity->symbol()->valueOf(),
-        );
+        ));
     }
 
-    public function power(RubyClass $object): NumberSymbol
+    public function power(RubyClass $object): Number
     {
-        return new NumberSymbol(
+        return new Number(new NumberSymbol(
             $this->symbol->valueOf() ** $object->entity->symbol()->valueOf(),
-        );
+        ));
     }
 
-    public function rightShift(RubyClass $object): NumberSymbol
+    public function rightShift(RubyClass $object): Number
     {
-        return new NumberSymbol(
+        return new Number(new NumberSymbol(
             $this->symbol->valueOf() >> $object->entity->symbol()->valueOf(),
-        );
+        ));
     }
 
-    public function compareStrictEquals(RubyClass $object): BooleanSymbol
+    public function compareStrictEquals(RubyClass $object): Boolean_
     {
-        return new BooleanSymbol(
+        return new Boolean_(new BooleanSymbol(
             $this->symbol->valueOf() === $object->entity->symbol()->valueOf(),
-        );
+        ));
     }
 
     public function toInt(): self
@@ -57,17 +57,17 @@ class Number extends Entity implements EntityInterface
         return clone $this;
     }
 
-    public function toFloat(): FloatSymbol
+    public function toFloat(): Float_
     {
-        return new FloatSymbol(
+        return new Float_(new FloatSymbol(
             (float) $this->symbol->valueOf(),
-        );
+        ));
     }
 
-    public function toString(): SymbolInterface
+    public function toString(): String_
     {
-        return new StringSymbol(
+        return new String_(new StringSymbol(
             string: (string) $this,
-        );
+        ));
     }
 }

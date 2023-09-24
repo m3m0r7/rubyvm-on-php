@@ -22,6 +22,7 @@ class ClassHelper
         if ($obj instanceof EntityInterface) {
             $name = rtrim($name, '_');
         }
+
         return $name;
     }
 

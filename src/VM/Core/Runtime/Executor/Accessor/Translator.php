@@ -71,7 +71,7 @@ readonly class Translator
         $symbol = $objectOrClass;
         if ($objectOrClass instanceof EntityInterface) {
             $symbol = $objectOrClass->symbol();
-        } elseif ($objectOrClass instanceof RubyClassInterface)  {
+        } elseif ($objectOrClass instanceof RubyClassInterface) {
             $symbol = $objectOrClass->entity->symbol();
         }
 

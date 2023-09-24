@@ -37,7 +37,7 @@ class BuiltinNewarray implements OperationProcessorInterface
         $num = $this->getOperandAsNumber();
 
         for ($i = $num->valueOf() - 1; $i >= 0; --$i) {
-            $entries[$i] = ($this->getStackAsNumber())->symbol();
+            $entries[$i] = $this->getStackAsNumber()->symbol();
         }
 
         $this->context->vmStack()->push(

@@ -331,6 +331,7 @@ class Kernel implements KernelInterface
     public function userlandHeapSpace(): UserlandHeapSpaceInterface
     {
         static $userlandHeapSpace;
+
         return $userlandHeapSpace ??= new DefaultInstanceHeapSpace();
     }
 }

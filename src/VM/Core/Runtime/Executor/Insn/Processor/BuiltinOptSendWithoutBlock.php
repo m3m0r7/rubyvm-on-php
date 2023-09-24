@@ -16,7 +16,6 @@ use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\SpecialMethod\SpecialMethodInterface;
 use RubyVM\VM\Core\Runtime\Executor\Translatable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
-use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Exception\OperationProcessorException;
 
@@ -66,7 +65,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         );
 
         /**
-         * @var RubyClass|RubyClassInterface $targetSymbol
+         * @var RubyClassInterface $targetSymbol
          */
         $targetClass = $targetObjectOrClass = $this->getStack()
             ->operand;

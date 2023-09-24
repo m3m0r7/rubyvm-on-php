@@ -8,7 +8,6 @@ use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Essential\EntityInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\Class_;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ClassSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NilSymbol;

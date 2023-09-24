@@ -30,6 +30,12 @@ abstract class Entity implements EntityInterface
         );
     }
 
+    public function __clone()
+    {
+        // Deep copy bound symbol
+        $this->symbol = clone $this->symbol;
+    }
+
     public function testValue(): bool
     {
         throw new OperationProcessorException(sprintf('The symbol type `%s` is not implemented `test` processing yet', ClassHelper::nameBy($this)));

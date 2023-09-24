@@ -287,7 +287,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         InsnType::TS_VALUE => new Operand(
                             operand: EntityHelper::createEntityBySymbol(
                                 $this->kernel
-                                ->findObject($reader->smallValue())
+                                    ->findObject($reader->smallValue())
                             )->toRubyClass(),
                         ),
                         InsnType::TS_CALLDATA => new Operand(

@@ -11,10 +11,7 @@ use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\LocalTableHelper;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NilSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
-use RubyVM\VM\Exception\OperationProcessorException;
 
 class Range extends Entity implements EntityInterface
 {
@@ -23,7 +20,7 @@ class Range extends Entity implements EntityInterface
         $this->symbol = $symbol;
     }
 
-    public function each(OperationProcessorContext $context): SymbolInterface
+    public function each(OperationProcessorContext $context): EntityInterface
     {
         foreach ($this->symbol->valueOf() as $index => $number) {
             $executor = (new Executor(
@@ -62,6 +59,6 @@ class Range extends Entity implements EntityInterface
             }
         }
 
-        return new NilSymbol();
+        return new Nil(new NilSymbol());
     }
 }

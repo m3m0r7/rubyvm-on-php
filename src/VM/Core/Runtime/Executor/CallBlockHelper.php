@@ -14,7 +14,6 @@ use RubyVM\VM\Core\Runtime\VMCallFlagBit;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 trait CallBlockHelper
