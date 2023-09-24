@@ -15,6 +15,10 @@ use RubyVM\VM\Stream\SizeOf;
  */
 class Range extends AbstractStructure implements StructureInterface
 {
+
+    /**
+     * @return array<string, SizeOf>
+     */
     public static function structure(): array
     {
         return [

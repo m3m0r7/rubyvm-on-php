@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Entity;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
+use RubyVM\VM\Exception\RuntimeException;
 
 class Array_ extends Entity implements EntityInterface
 {
@@ -18,11 +20,14 @@ class Array_ extends Entity implements EntityInterface
         $this->symbol = $symbol;
     }
 
-    public function new(RubyClass|array $values = null): self
+    /**
+     * @param RubyClassInterface|SymbolInterface[] $values
+     */
+    public function new(RubyClassInterface|array $values = null): self
     {
         $this->symbol = new ArraySymbol(
-            $values instanceof RubyClass
-                ? $values->entity->symbol()->valueOf()
+            $values instanceof RubyClassInterface
+                ? $values->entity()->symbol()->valueOf()
                 : ($values ?? []),
         );
 
@@ -31,7 +36,11 @@ class Array_ extends Entity implements EntityInterface
 
     public function each(ContextInterface $context): void
     {
-        for ($i = 0; $i < (is_countable($this->symbol) ? count($this->symbol) : 0); ++$i) {
+        /**
+         * @var ArraySymbol $symbol
+         */
+        $symbol = $this->symbol;
+        for ($i = 0; $i < count($symbol); ++$i) {
             $executor = (new Executor(
                 kernel: $context->kernel(),
                 rubyClass: $context->self(),
@@ -41,7 +50,16 @@ class Array_ extends Entity implements EntityInterface
                 previousContext: $context,
             ));
 
-            $object = Number::createBy($this->symbol[$i]->valueOf())
+            if ($symbol[$i] === null) {
+                throw new RuntimeException(
+                    sprintf(
+                        'Out of index#%d in Array',
+                        $i,
+                    )
+                );
+            }
+
+            $object = Number::createBy($symbol[$i]->valueOf())
                 ->toBeRubyClass()
                 ->setRuntimeContext($context)
                 ->setUserlandHeapSpace($context->self()->userlandHeapSpace());
@@ -65,9 +83,10 @@ class Array_ extends Entity implements EntityInterface
         }
     }
 
-    public function push(RubyClass $object): self
+    public function push(RubyClassInterface $object): self
     {
-        $this->symbol[] = $object->entity->symbol();
+        // @phpstan-ignore-next-line
+        $this->symbol[] = $object->entity()->symbol();
 
         return $this;
     }

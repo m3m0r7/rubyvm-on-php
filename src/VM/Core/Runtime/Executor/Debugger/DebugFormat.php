@@ -18,12 +18,10 @@ trait DebugFormat
         $result = [];
         foreach ($targetItems as $index => $item) {
             $result[] = match ($item::class) {
-                SymbolInterface::class => (string) $item,
                 Operand::class => match (($item->operand)::class) {
                     RubyClass::class => ClassHelper::nameBy($item->operand->entity) . "({$item->operand->entity})",
                     default => ClassHelper::nameBy($item->operand),
                 },
-                RubyClass::class => ClassHelper::nameBy($item->entity) . "({$item->entity})",
                 default => 'unknown',
             } . "#{$index}";
         }

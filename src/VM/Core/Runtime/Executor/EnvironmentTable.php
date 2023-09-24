@@ -14,7 +14,7 @@ class EnvironmentTable extends AbstractEntries
     use DebugFormat;
 
     /**
-     * @var array<string, bool>
+     * @var array<int, bool>
      */
     protected array $leads = [];
 
@@ -39,6 +39,7 @@ class EnvironmentTable extends AbstractEntries
 
     public function set(mixed $index, mixed $value): self
     {
+        $index = (int) $index;
         // do not set new value if have a lead flag.
         if (isset($this->leads[$index]) && $this->leads[$index]) {
             // Forcibly set to non lead
@@ -47,7 +48,8 @@ class EnvironmentTable extends AbstractEntries
             return $this;
         }
 
-        return parent::set($index, $value);
+        parent::set($index, $value);
+        return $this;
     }
 
     public function setWithLead(mixed $index, mixed $value, bool $isLead = false): self

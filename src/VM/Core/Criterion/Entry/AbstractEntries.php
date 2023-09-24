@@ -8,6 +8,9 @@ use RubyVM\VM\Exception\EntryException;
 
 abstract class AbstractEntries implements EntriesInterface
 {
+    /**
+     * @param mixed[] $items
+     */
     public function __construct(public array $items = []) {}
 
     public function __clone(): void
@@ -39,7 +42,7 @@ abstract class AbstractEntries implements EntriesInterface
 
     public function offsetExists(mixed $offset): bool
     {
-        return array_key_exists($this->filterKeyName($offset), $this->items);
+        return array_key_exists($this->filterKeyName($offset) ?? '', $this->items);
     }
 
     public function offsetGet(mixed $offset): mixed
@@ -112,6 +115,7 @@ abstract class AbstractEntries implements EntriesInterface
     private function enumToName(mixed $index): string|int
     {
         if (is_object($index) && enum_exists($index::class, false)) {
+            // @phpstan-ignore-next-line
             return $index->name;
         }
 

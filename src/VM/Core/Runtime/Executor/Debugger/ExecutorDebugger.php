@@ -11,13 +11,18 @@ use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\RubyClass;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
+use RubyVM\VM\Exception\RubyVMException;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Output\StreamOutput;
 
 class ExecutorDebugger
 {
+    /**
+     * @var array<array{Insn, ContextInterface, int, string|null}>
+     */
     protected array $snapshots = [];
 
     protected int $currentMemoryUsage;
@@ -54,6 +59,10 @@ class ExecutorDebugger
     public function showExecutedOperations(): void
     {
         $handle = fopen('php://stdout', 'rw+');
+
+        if ($handle === false) {
+            throw new RubyVMException('Unexpected to read stream');
+        }
 
         if (false === $this->context->shouldProcessedRecords()) {
             fwrite($handle, "No processed records enabled.\n");
@@ -131,13 +140,17 @@ class ExecutorDebugger
                 ->operationEntries()
                 ->get($currentPos + 1);
 
+            if (!$callDataOperand->operand instanceof CallInfoInterface) {
+                throw new RubyVMException('Unexpected to load operand');
+            }
+
             $arguments = [];
             for ($i = 0; $i < $callDataOperand->operand->callData()->argumentsCount(); ++$i) {
                 $arguments[] = $vmStack->pop();
             }
 
             /**
-             * @var Operand|RubyClassInterface $class
+             * @var Operand $class
              */
             $class = $vmStack->pop();
 
@@ -156,8 +169,10 @@ class ExecutorDebugger
                     array_map(
                         static fn ($argument) => match ($argument::class) {
                             SymbolInterface::class => (string) $argument,
-                            Operand::class => (string) $argument->operand->entity,
-                            RubyClass::class => (string) $argument->entity->entity,
+                            Operand::class => match($argument->operand::class) {
+                                RubyClass::class => (string) $argument->operand->entity(),
+                                default => '?',
+                            },
                             default => '?',
                         },
                         $arguments,

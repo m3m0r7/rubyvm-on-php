@@ -27,11 +27,17 @@ trait ProvideClassExtendableMethods
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function classes(): array
     {
-        return array_keys($this->userlandHeapSpace->userlandClasses()->toArray());
+        return array_keys($this->userlandHeapSpace?->userlandClasses()->toArray() ?? []);
     }
 
+    /**
+     * @return string[]
+     */
     public function methods(): array
     {
         return [
@@ -41,7 +47,7 @@ trait ProvideClassExtendableMethods
                     ->getMethods(),
             ),
             ...array_keys(SpecialMethodCallerEntries::map()),
-            ...array_keys($this->userlandHeapSpace->userlandMethods()->toArray()),
+            ...array_keys($this->userlandHeapSpace?->userlandMethods()->toArray() ?? []),
         ];
     }
 
@@ -55,11 +61,11 @@ trait ProvideClassExtendableMethods
         $className = (string) $className;
 
         $this->userlandHeapSpace
-            ->userlandClasses()
+            ?->userlandClasses()
             ->set(
                 $className,
                 $this->userlandHeapSpace
-                    ->userlandClasses
+                    ?->userlandClasses()
                     ->get($className) ?? new UserlandHeapSpace(),
             );
     }
@@ -68,7 +74,7 @@ trait ProvideClassExtendableMethods
     {
         $context->self()
             ->userlandHeapSpace()
-            ->userlandMethods()
+            ?->userlandMethods()
             ->set((string) $methodName, $context);
     }
 }

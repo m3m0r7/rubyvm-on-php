@@ -47,7 +47,7 @@ class BuiltinGetinstancevariable implements OperationProcessorInterface
                 $this->context
                     ->self()
                     ->userlandHeapSpace()
-                    ->userlandInstanceVariables()
+                    ?->userlandInstanceVariables()
                     ->get($instanceVar->id()),
             ),
         );

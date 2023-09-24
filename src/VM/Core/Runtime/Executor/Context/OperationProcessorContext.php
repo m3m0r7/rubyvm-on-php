@@ -17,6 +17,9 @@ class OperationProcessorContext implements ContextInterface
 {
     private float $startTime = 0.0;
 
+    /**
+     * @param string[] $traces
+     */
     public function __construct(
         private readonly KernelInterface $kernel,
         private readonly ExecutorInterface $executor,
@@ -102,7 +105,7 @@ class OperationProcessorContext implements ContextInterface
 
     public function logger(): LoggerInterface
     {
-        return $this->option->logger;
+        return $this->option->logger();
     }
 
     public function option(): OptionInterface
@@ -152,6 +155,9 @@ class OperationProcessorContext implements ContextInterface
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function traces(): array
     {
         return $this->traces;

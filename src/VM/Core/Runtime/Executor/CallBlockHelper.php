@@ -9,7 +9,6 @@ use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\VMCallFlagBit;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
@@ -18,7 +17,7 @@ use RubyVM\VM\Exception\OperationProcessorException;
 
 trait CallBlockHelper
 {
-    private function callSimpleMethod(ContextInterface $context, RubyClass|ContextInterface ...$arguments): ExecutedResult
+    private function callSimpleMethod(ContextInterface $context, RubyClassInterface|ContextInterface ...$arguments): ExecutedResult
     {
         // Validate first value is context?
         $calleeContexts = [];
@@ -77,8 +76,9 @@ trait CallBlockHelper
         return $result;
     }
 
-    private function callBlockWithArguments(CallInfoInterface $callInfo, Number $blockIseqIndex, RubyClass|RubyClassInterface $blockObject, bool $isSuper, CallInfoInterface|RubyClassInterface|ID|ExecutedResult ...$arguments): ?RubyClassInterface
+    private function callBlockWithArguments(CallInfoInterface $callInfo, Number $blockIseqIndex, RubyClassInterface $blockObject, bool $isSuper, CallInfoInterface|RubyClassInterface|ID|ExecutedResult ...$arguments): ?RubyClassInterface
     {
+        // @phpstan-ignore-next-line
         if ($this->context === null) {
             throw new OperationProcessorException('The runtime context is not injected - did you forget to call setRuntimeContext before?');
         }

@@ -20,8 +20,14 @@ interface RubyClassInterface extends RubyClassImplementationInterface, \Stringab
 
     public function setUserlandHeapSpace(?UserlandHeapSpaceInterface $userlandHeapSpace): RubyClassInterface;
 
+    /**
+     * @return string[]
+     */
     public function classes(): array;
 
+    /**
+     * @return string[]
+     */
     public function methods(): array;
 
     public function hasMethod(string $name): bool;

@@ -49,6 +49,9 @@ interface ContextInterface
 
     public function appendTrace(string ...$definitions): self;
 
+    /**
+     * @return string[]
+     */
     public function traces(): array;
 
     public function IOContext(): IOContext;

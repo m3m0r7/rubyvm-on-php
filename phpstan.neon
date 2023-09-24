@@ -3,5 +3,6 @@ parameters:
     paths:
         - src
         - tests
+    checkGenericClassInNonGenericObjectType: false
     ignoreErrors:
         - '#[^:]+::__debugInfo\(\) return type has no value type specified in iterable type array.#'

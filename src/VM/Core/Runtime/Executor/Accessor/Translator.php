@@ -30,7 +30,7 @@ readonly class Translator
     public static function PHPToRuby(mixed $elements): RubyClassInterface
     {
         if (is_array($elements)) {
-            if (static::validateArrayIsNumber($elements)) {
+            if (self::validateArrayIsNumber($elements)) {
                 return (new Range(new RangeSymbol(
                     new NumberSymbol((int) array_key_first($elements)),
                     new NumberSymbol((int) array_key_last($elements)),
@@ -40,7 +40,7 @@ readonly class Translator
 
             $result = [];
             foreach ($elements as $element) {
-                $result[] = static::PHPToRuby($element)->entity->symbol();
+                $result[] = self::PHPToRuby($element)->entity()->symbol();
             }
 
             return Array_::createBy($result)
@@ -60,6 +60,10 @@ readonly class Translator
         };
     }
 
+    /**
+     * @param SymbolInterface|EntityInterface|RubyClassInterface|mixed[] $objectOrClass
+     * @return mixed
+     */
     public static function RubyToPHP(SymbolInterface|EntityInterface|RubyClassInterface|array $objectOrClass): mixed
     {
         if (is_array($objectOrClass)) {
@@ -73,7 +77,7 @@ readonly class Translator
         if ($objectOrClass instanceof EntityInterface) {
             $symbol = $objectOrClass->symbol();
         } elseif ($objectOrClass instanceof RubyClass) {
-            $symbol = $objectOrClass->entity->symbol();
+            $symbol = $objectOrClass->entity()->symbol();
         }
 
         return match ($symbol::class) {
@@ -103,6 +107,9 @@ readonly class Translator
         return new Operand($this->object);
     }
 
+    /**
+     * @param mixed[] $values
+     */
     private static function validateArrayIsNumber(array $values): bool
     {
         if (!array_is_list($values)) {

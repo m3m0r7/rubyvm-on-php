@@ -15,5 +15,5 @@ interface EntityInterface extends RubyClassifiable, \Stringable
 
     public function valueOf(): mixed;
 
-    public static function createBy(mixed $value): self;
+    public static function createBy(mixed $value = null): self;
 }

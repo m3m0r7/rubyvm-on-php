@@ -18,7 +18,7 @@ class ClassHelper
             return static::nameBy($obj->entity);
         }
 
-        $classNamePath = explode('\\', is_object($obj) ? $obj::class : $obj);
+        $classNamePath = explode('\\', $obj::class);
         $name = $classNamePath[array_key_last($classNamePath)];
         if ($obj instanceof EntityInterface) {
             $name = rtrim($name, '_');

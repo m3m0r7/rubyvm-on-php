@@ -12,6 +12,7 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
+use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinSetlocal implements OperationProcessorInterface
 {
@@ -33,12 +34,6 @@ class BuiltinSetlocal implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        /**
-         * @var NumberSymbol $level
-         */
-        $level = $this->getOperandAsSymbol();
-        $this->setLocalTableFromStack($level->valueOf());
-
-        return ProcessedStatus::SUCCESS;
+        throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor is not implemented yet', strtolower($this->insn->name), $this->insn->value));
     }
 }

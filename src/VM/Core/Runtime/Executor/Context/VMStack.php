@@ -17,7 +17,7 @@ class VMStack implements \Countable
     use DebugFormat;
 
     /**
-     * @var (CallInfoInterface|ExecutedResult|ID|RubyClassInterface)[]
+     * @var Operand[]
      */
     protected array $items = [];
 
@@ -43,9 +43,15 @@ class VMStack implements \Countable
 
     public function shift(): Operand
     {
-        return array_shift(
+        $item = array_shift(
             $this->items,
         );
+
+        if ($item === null) {
+            throw new VMStackException('The VMStack is empty');
+        }
+
+        return $item;
     }
 
     public function dup(): self

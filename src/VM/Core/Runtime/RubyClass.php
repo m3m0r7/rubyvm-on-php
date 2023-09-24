@@ -7,7 +7,9 @@ namespace RubyVM\VM\Core\Runtime;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Operation\SpecialMethodCallerEntries;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
 use RubyVM\VM\Core\YARV\Criterion\ShouldBeRubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ObjectInfo;
@@ -40,7 +42,10 @@ class RubyClass implements RubyClassInterface
         return $this->entity;
     }
 
-    public function __call(string $name, array $arguments)
+    /**
+     * @param (CallInfoInterface|ExecutedResult|ID|RubyClassInterface)[] $arguments
+     */
+    public function __call(string $name, array $arguments): ExecutedResult|RubyClassInterface|null
     {
         try {
             $result = $this->callExtendedMethod($name, $arguments);
