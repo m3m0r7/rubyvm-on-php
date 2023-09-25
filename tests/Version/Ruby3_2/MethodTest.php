@@ -115,4 +115,21 @@ class MethodTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("65535\n", $rubyVMManager->stdOut->readAll());
     }
+
+    public function testProc(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            p = ->(word) { puts word }
+            p.call("Hello World!")
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame("Hello World!\n", $rubyVMManager->stdOut->readAll());
+    }
 }
