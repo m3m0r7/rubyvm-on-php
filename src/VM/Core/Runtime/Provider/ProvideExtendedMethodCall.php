@@ -22,13 +22,9 @@ trait ProvideExtendedMethodCall
      */
     public function __call(string $name, array $arguments): ExecutedResult|RubyClassInterface|null
     {
-        $context = $this->userlandHeapSpace?->userlandMethods()->get($name);
+        $context = $this->userlandHeapSpace->userlandMethods()->get($name);
 
         if ($context === null) {
-            if ($this->context === null) {
-                throw new OperationProcessorException('The runtime context is not injected - did you forget to call setRuntimeContext before?');
-            }
-
             $boundClass = $this
                 ->context
                 ->self()

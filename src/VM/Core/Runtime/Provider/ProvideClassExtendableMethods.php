@@ -15,7 +15,7 @@ trait ProvideClassExtendableMethods
 {
     protected ?UserlandHeapSpaceInterface $userlandHeapSpace = null;
 
-    public function userlandHeapSpace(): ?UserlandHeapSpaceInterface
+    public function userlandHeapSpace(): UserlandHeapSpaceInterface
     {
         return $this->userlandHeapSpace;
     }
@@ -47,7 +47,7 @@ trait ProvideClassExtendableMethods
                     ->getMethods(),
             ),
             ...array_keys(SpecialMethodCallerEntries::map()),
-            ...array_keys($this->userlandHeapSpace?->userlandMethods()->toArray() ?? []),
+            ...array_keys($this->userlandHeapSpace->userlandMethods()->toArray()),
         ];
     }
 
@@ -74,7 +74,7 @@ trait ProvideClassExtendableMethods
     {
         $context->self()
             ->userlandHeapSpace()
-            ?->userlandMethods()
+            ->userlandMethods()
             ->set((string) $methodName, $context);
     }
 }

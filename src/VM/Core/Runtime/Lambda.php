@@ -34,17 +34,13 @@ class Lambda implements MainInterface
 
     public function call(RubyClassInterface ...$arguments): RubyClassInterface|null
     {
-        if (!$this->context instanceof \RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface) {
-            throw new OperationProcessorException('The runtime context is not injected - did you forget to call setRuntimeContext before?');
-        }
-
         $executor = new Executor(
-            kernel: $this->context->kernel(),
-            rubyClass: $this->context->self(),
+            kernel: $this->context()->kernel(),
+            rubyClass: $this->context()->self(),
             instructionSequence: $this->instructionSequence,
-            option: $this->context->option(),
-            debugger: $this->context->debugger(),
-            previousContext: $this->context,
+            option: $this->context()->option(),
+            debugger: $this->context()->debugger(),
+            previousContext: $this->context(),
         );
 
         $localTableSize = $this

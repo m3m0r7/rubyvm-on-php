@@ -37,7 +37,7 @@ trait ProvideBasicClassMethods
             $string .= "\n";
         }
 
-        $this->context?->IOContext()->stdOut->write($string);
+        $this->context()->IOContext()->stdOut->write($string);
 
         // The puts returns (nil)
         return Nil::createBy()
@@ -63,7 +63,7 @@ trait ProvideBasicClassMethods
     public function lambda(ContextInterface $context): RubyClassInterface
     {
         return (new Lambda($context->instructionSequence()))
-            ->setRuntimeContext($this->context)
+            ->setRuntimeContext($this->context())
             ->setUserlandHeapSpace(new UserlandHeapSpace());
     }
 }

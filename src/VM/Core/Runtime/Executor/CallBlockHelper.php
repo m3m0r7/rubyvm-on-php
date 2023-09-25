@@ -78,11 +78,6 @@ trait CallBlockHelper
 
     private function callBlockWithArguments(CallInfoInterface $callInfo, Number $blockIseqIndex, RubyClassInterface $blockObject, bool $isSuper, CallInfoInterface|RubyClassInterface|ID|ExecutedResult ...$arguments): ?RubyClassInterface
     {
-        // @phpstan-ignore-next-line
-        if ($this->context === null) {
-            throw new OperationProcessorException('The runtime context is not injected - did you forget to call setRuntimeContext before?');
-        }
-
         if (($callInfo->callData()->flag() & (0x01 << VMCallFlagBit::VM_CALL_ARGS_BLOCKARG->value)) !== 0) {
             throw new OperationProcessorException('The callBlockWithArguments is not implemented yet');
         }

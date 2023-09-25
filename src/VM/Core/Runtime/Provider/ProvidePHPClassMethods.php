@@ -17,6 +17,6 @@ trait ProvidePHPClassMethods
             throw new RuntimeException('The buffer is invalid');
         }
 
-        $this->context?->IOContext()->stdOut->write($info);
+        $this->context()->IOContext()->stdOut->write($info);
     }
 }
