@@ -18,7 +18,7 @@ trait ProvideExtendedMethodCall
     use CallBlockHelper;
 
     /**
-     * @param (ContextInterface|RubyClass)[] $arguments
+     * @param (ContextInterface|RubyClassInterface)[] $arguments
      */
     public function __call(string $name, array $arguments): ExecutedResult|RubyClassInterface|null
     {

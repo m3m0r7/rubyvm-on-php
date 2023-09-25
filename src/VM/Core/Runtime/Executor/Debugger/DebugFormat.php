@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Debugger;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\RubyClass;
 
@@ -16,9 +17,13 @@ trait DebugFormat
 
         $result = [];
         foreach ($targetItems as $index => $item) {
+            if ($item instanceof RubyClassInterface) {
+                $result[] = ClassHelper::nameBy($item->entity()) . "({$item->entity()})";
+                continue;
+            }
             $result[] = match ($item::class) {
                 Operand::class => match (($item->operand)::class) {
-                    RubyClass::class => ClassHelper::nameBy($item->operand->entity) . "({$item->operand->entity})",
+                    RubyClass::class => ClassHelper::nameBy($item->operand->entity()) . "({$item->operand->entity()})",
                     default => ClassHelper::nameBy($item->operand),
                 },
                 default => 'unknown',

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Criterion\Entry\AbstractEntries;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\DebugFormat;
-use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Exception\LocalTableException;
 
 class EnvironmentTable extends AbstractEntries
@@ -20,7 +20,7 @@ class EnvironmentTable extends AbstractEntries
 
     public function verify(mixed $value): bool
     {
-        return $value instanceof RubyClass;
+        return $value instanceof RubyClassInterface;
     }
 
     public function get(mixed $index): mixed
