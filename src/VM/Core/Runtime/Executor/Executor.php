@@ -22,7 +22,7 @@ use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\OptionInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\ExecutorFailedException;
 use RubyVM\VM\Exception\ExecutorUnknownException;
@@ -39,7 +39,7 @@ class Executor implements ExecutorInterface
     public function __construct(
         private readonly KernelInterface $kernel,
         private readonly RubyClassInterface $rubyClass,
-        private readonly InstructionSequence $instructionSequence,
+        private readonly InstructionSequenceInterface $instructionSequence,
         private readonly OptionInterface $option,
         private readonly ExecutorDebugger $debugger = new ExecutorDebugger(),
         private readonly ?ContextInterface $previousContext = null,

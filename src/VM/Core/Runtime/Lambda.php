@@ -8,11 +8,11 @@ use RubyVM\VM\Core\Runtime\Entity\Class_;
 use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\MainInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;
 use RubyVM\VM\Core\YARV\Criterion\ShouldBeRubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
+use RubyVM\VM\Exception\OperationProcessorException;
 
 class Lambda implements MainInterface
 {
@@ -20,9 +20,7 @@ class Lambda implements MainInterface
 
     protected ?EntityInterface $entity = null;
 
-    public function __construct(private InstructionSequenceInterface $instructionSequence)
-    {
-    }
+    public function __construct(private readonly InstructionSequenceInterface $instructionSequence) {}
 
     public function entity(): EntityInterface
     {
@@ -36,6 +34,10 @@ class Lambda implements MainInterface
 
     public function call(RubyClassInterface ...$arguments): RubyClassInterface|null
     {
+        if (!$this->context instanceof \RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface) {
+            throw new OperationProcessorException('The runtime context is not injected - did you forget to call setRuntimeContext before?');
+        }
+
         $executor = new Executor(
             kernel: $this->context->kernel(),
             rubyClass: $this->context->self(),
@@ -52,7 +54,7 @@ class Lambda implements MainInterface
             ->localTableSize();
 
         $argumentSize = count($arguments);
-        for ($i = 0; $i < $argumentSize; $i++) {
+        for ($i = 0; $i < $argumentSize; ++$i) {
             $executor
                 ->context()
                 ->environmentTable()
@@ -64,7 +66,7 @@ class Lambda implements MainInterface
 
         $result = $executor->execute();
 
-        if ($result->threw) {
+        if ($result->threw instanceof \Throwable) {
             throw $result->threw;
         }
 
