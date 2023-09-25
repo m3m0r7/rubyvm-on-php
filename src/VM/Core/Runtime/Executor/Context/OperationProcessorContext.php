@@ -11,7 +11,7 @@ use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
 use RubyVM\VM\Core\Runtime\Executor\EnvironmentTable;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\OptionInterface;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;
 
 class OperationProcessorContext implements ContextInterface
 {
@@ -26,7 +26,7 @@ class OperationProcessorContext implements ContextInterface
         private readonly RubyClassInterface $rubyClass,
         private readonly VMStack $vmStack,
         private readonly ProgramCounter $pc,
-        private readonly InstructionSequence $instructionSequence,
+        private readonly InstructionSequenceInterface $instructionSequence,
         private readonly OptionInterface $option,
         private readonly IOContext $IOContext,
         private EnvironmentTable $environmentTable,
@@ -113,7 +113,7 @@ class OperationProcessorContext implements ContextInterface
         return $this->option;
     }
 
-    public function instructionSequence(): InstructionSequence
+    public function instructionSequence(): InstructionSequenceInterface
     {
         return $this->instructionSequence;
     }
