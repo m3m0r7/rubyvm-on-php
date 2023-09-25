@@ -7,12 +7,12 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 use RubyVM\VM\Core\Runtime\Entity\Number;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
-use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\VMCallFlagBit;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
+use RubyVM\VM\Core\YARV\Essential\ID;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 trait CallBlockHelper

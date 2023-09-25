@@ -12,6 +12,7 @@ use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Operation\SpecialMethodCallerEntries;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
 use RubyVM\VM\Core\YARV\Criterion\ShouldBeRubyClass;
+use RubyVM\VM\Core\YARV\Essential\ID;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ObjectInfo;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
 

@@ -13,7 +13,6 @@ use RubyVM\VM\Core\Runtime\Executor\Insn\InsnType;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operation;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperationEntries;
-use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CallData;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CallInfo;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CallInfoEntries;
@@ -32,6 +31,7 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceBodyInt
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceProcessorInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Keyword;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset as OffsetCriterion;
+use RubyVM\VM\Core\YARV\Essential\ID;
 use RubyVM\VM\Core\YARV\Essential\Symbol\OffsetSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\ExecutorExeption;

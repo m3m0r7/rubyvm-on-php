@@ -6,8 +6,8 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
-use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
+use RubyVM\VM\Core\YARV\Essential\ID;
 
 /**
  * In the C lang case, the language is very flexible for example to int, to unsigned int..., to defined struct and so on.
