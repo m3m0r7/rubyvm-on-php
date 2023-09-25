@@ -13,9 +13,9 @@ use RubyVM\VM\Core\Runtime\Entity\String_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
-use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
+use RubyVM\VM\Core\YARV\Essential\ID;
 
 /**
  * This trait helps an IDE.

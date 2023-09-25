@@ -6,8 +6,8 @@ namespace RubyVM\VM\Core\Runtime\Executor\Operation;
 
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
-use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
+use RubyVM\VM\Core\YARV\Essential\ID;
 
 class Operand
 {

@@ -6,7 +6,6 @@ namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_2;
 
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyVMInterface;
-use RubyVM\VM\Core\Runtime\ID;
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\HeapSpace\DefaultInstanceHeapSpace;
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Loader\ArraySymbolLoader;
@@ -26,6 +25,7 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceEntries
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offsets;
 use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
+use RubyVM\VM\Core\YARV\Essential\ID;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ObjectInfo;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolLoaderInterface;
