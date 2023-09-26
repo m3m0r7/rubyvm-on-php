@@ -4,4 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Criterion\InstructionSequence;
 
-interface ObjectParameterFlagsInterface {}
+interface ObjectParameterFlagsInterface
+{
+    public function hasRest(): bool;
+}

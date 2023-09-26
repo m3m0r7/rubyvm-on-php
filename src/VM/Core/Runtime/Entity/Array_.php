@@ -34,7 +34,7 @@ class Array_ extends Entity implements EntityInterface
         return $this;
     }
 
-    public function each(ContextInterface $context): void
+    public function each(ContextInterface $context): RubyClassInterface
     {
         /**
          * @var ArraySymbol $symbol
@@ -50,7 +50,11 @@ class Array_ extends Entity implements EntityInterface
                 previousContext: $context,
             ));
 
-            if (!$symbol[$i] instanceof \RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface) {
+            // Renew environment table
+            $executor->context()
+                ->renewEnvironmentTable();
+
+            if (!$symbol[$i] instanceof SymbolInterface) {
                 throw new RuntimeException(
                     sprintf(
                         'Out of index#%d in Array',
@@ -61,8 +65,8 @@ class Array_ extends Entity implements EntityInterface
 
             $object = Number::createBy($symbol[$i]->valueOf())
                 ->toBeRubyClass()
-                ->setRuntimeContext($context)
-                ->setUserlandHeapSpace($context->self()->userlandHeapSpace());
+                ->setRuntimeContext($executor->context())
+                ->setUserlandHeapSpace($executor->context()->self()->userlandHeapSpace());
 
             $executor->context()
                 ->environmentTable()
@@ -81,6 +85,9 @@ class Array_ extends Entity implements EntityInterface
                 throw $result->threw;
             }
         }
+
+        return Nil::createBy()
+            ->toBeRubyClass();
     }
 
     public function push(RubyClassInterface $object): self

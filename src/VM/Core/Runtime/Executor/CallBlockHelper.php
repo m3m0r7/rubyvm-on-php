@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use RubyVM\VM\Core\Runtime\Entity\Array_;
+use RubyVM\VM\Core\Runtime\Entity\Nil;
 use RubyVM\VM\Core\Runtime\Entity\Number;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
@@ -31,9 +33,11 @@ trait CallBlockHelper
             instructionSequence: $context->instructionSequence(),
             option: $context->option(),
             debugger: $context->debugger(),
-            previousContext: $context
-                ->renewEnvironmentTable(),
+            previousContext: $context,
         ));
+
+        $executor->context()
+            ->renewEnvironmentTable();
 
         $iseqBodyData = $executor
             ->context()
@@ -44,12 +48,28 @@ trait CallBlockHelper
         $localTableSize = $iseqBodyData
             ->localTableSize();
 
-        $startArguments = (Option::VM_ENV_DATA_SIZE + $localTableSize) - count($arguments);
+        $size = $iseqBodyData->objectParam()->size();
+
+        $comparedArgumentsSizeByLocalSize = min($size, count($arguments));
+
+        $startArguments = (Option::VM_ENV_DATA_SIZE + $localTableSize) - $comparedArgumentsSizeByLocalSize;
 
         // NOTE: this var means to required parameter (non optional parameter)
         $paramLead = $iseqBodyData->objectParam()->leadNum();
 
-        for ($localIndex = 0; $localIndex < count($arguments); ++$localIndex) {
+        // NOTE: Implements splat expression
+        if ($iseqBodyData->objectParam()->objectParamFlags()->hasRest()) {
+            $restStart = $iseqBodyData->objectParam()->restStart();
+
+            $startOfSplat = count($arguments) - $restStart;
+
+            $arguments = self::alignArguments(
+                array_reverse(array_slice($arguments, 0, $startOfSplat)),
+                ...array_slice($arguments, $startOfSplat),
+            );
+        }
+
+        for ($localIndex = 0; $localIndex < $comparedArgumentsSizeByLocalSize; ++$localIndex) {
             $argument = $arguments[$localIndex];
             $slotIndex = LocalTableHelper::computeLocalTableIndex(
                 $localTableSize,
@@ -62,7 +82,7 @@ trait CallBlockHelper
                     $slotIndex,
                     $argument,
                     // NOTE: The parameter is coming by reversed
-                    $paramLead <= (count($arguments) - $localIndex),
+                    $paramLead <= ($size - $localIndex),
                 );
         }
 
@@ -130,5 +150,51 @@ trait CallBlockHelper
         }
 
         return $result;
+    }
+
+    /**
+     * @param (array<ContextInterface|RubyClassInterface>[]|ContextInterface|RubyClassInterface)[] ...$arguments
+     *
+     * @return (array<ContextInterface|RubyClassInterface>[]|ContextInterface|RubyClassInterface)[]
+     */
+    private static function alignArguments(RubyClassInterface|ContextInterface|array ...$arguments): array
+    {
+        $newArguments = [];
+
+        foreach ($arguments as $argument) {
+            if (is_array($argument)) {
+                $newArguments[] = Array_::createBy(
+                    array_map(
+                        // Extract symbol
+                        // Do not expected coming here an array but PHP Stan will show an error
+                        // @phpstan-ignore-next-line
+                        static function (RubyClassInterface|ContextInterface $rubyClass) {
+                            if ($rubyClass instanceof ContextInterface) {
+                                return Nil::createBy()
+                                    ->symbol();
+                            }
+
+                            return $rubyClass
+                                ->entity()
+                                ->symbol();
+                        },
+                        $argument,
+                    )
+                )->toBeRubyClass();
+
+                continue;
+            }
+
+            if ($argument instanceof ContextInterface) {
+                $newArguments[] = Nil::createBy()
+                    ->toBeRubyClass();
+
+                continue;
+            }
+
+            $newArguments[] = $argument;
+        }
+
+        return $newArguments;
     }
 }

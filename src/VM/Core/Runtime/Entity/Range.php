@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Entity;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Executor\Context\OperationProcessorContext;
+use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\LocalTableHelper;
 use RubyVM\VM\Core\Runtime\Option;
@@ -18,7 +18,7 @@ class Range extends Entity implements EntityInterface
         $this->symbol = $symbol;
     }
 
-    public function each(OperationProcessorContext $context): EntityInterface
+    public function each(ContextInterface $context): EntityInterface
     {
         foreach ($this->symbol->valueOf() as $index => $number) {
             $executor = (new Executor(

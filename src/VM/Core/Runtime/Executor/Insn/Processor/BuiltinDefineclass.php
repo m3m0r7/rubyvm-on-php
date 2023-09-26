@@ -84,8 +84,11 @@ class BuiltinDefineclass implements OperationProcessorInterface
             instructionSequence: $instructionSequence,
             option: $this->context->option(),
             debugger: $this->context->debugger(),
-            previousContext: $this->context->renewEnvironmentTable(),
+            previousContext: $this->context,
         ));
+
+        $executor->context()
+            ->renewEnvironmentTable();
 
         $executor->context()
             ->appendTrace($class->entity()->valueOf());
