@@ -33,4 +33,9 @@ class OperationProcessorEntries extends AbstractEntries
 
         return $processor;
     }
+
+    public function __debugInfo(): array
+    {
+        return [];
+    }
 }

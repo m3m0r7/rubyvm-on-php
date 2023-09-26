@@ -22,4 +22,9 @@ class ObjectParameterFlags implements ObjectParameterFlagsInterface
         public readonly bool $acceptsNoKeywordArg,
         public readonly bool $ruby2Keywords,
     ) {}
+
+    public function hasRest(): bool
+    {
+        return $this->hasRest;
+    }
 }
