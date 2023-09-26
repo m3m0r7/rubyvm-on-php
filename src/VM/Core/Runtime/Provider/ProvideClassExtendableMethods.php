@@ -10,13 +10,20 @@ use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
+use RubyVM\VM\Exception\RuntimeException;
 
 trait ProvideClassExtendableMethods
 {
     protected ?UserlandHeapSpaceInterface $userlandHeapSpace = null;
 
-    public function userlandHeapSpace(): ?UserlandHeapSpaceInterface
+    public function userlandHeapSpace(): UserlandHeapSpaceInterface
     {
+        if ($this->userlandHeapSpace === null) {
+            throw new RuntimeException(
+                'The userland heapspace is null',
+            );
+        }
+
         return $this->userlandHeapSpace;
     }
 
@@ -32,7 +39,7 @@ trait ProvideClassExtendableMethods
      */
     public function classes(): array
     {
-        return array_keys($this->userlandHeapSpace?->userlandClasses()->toArray() ?? []);
+        return array_keys($this->userlandHeapSpace()->userlandClasses()->toArray());
     }
 
     /**
@@ -47,7 +54,7 @@ trait ProvideClassExtendableMethods
                     ->getMethods(),
             ),
             ...array_keys(SpecialMethodCallerEntries::map()),
-            ...array_keys($this->userlandHeapSpace?->userlandMethods()->toArray() ?? []),
+            ...array_keys($this->userlandHeapSpace()->userlandMethods()->toArray()),
         ];
     }
 
@@ -60,12 +67,12 @@ trait ProvideClassExtendableMethods
     {
         $className = (string) $className;
 
-        $this->userlandHeapSpace
-            ?->userlandClasses()
+        $this->userlandHeapSpace()
+            ->userlandClasses()
             ->set(
                 $className,
-                $this->userlandHeapSpace
-                    ?->userlandClasses()
+                $this->userlandHeapSpace()
+                    ->userlandClasses()
                     ->get($className) ?? new UserlandHeapSpace(),
             );
     }
@@ -74,7 +81,7 @@ trait ProvideClassExtendableMethods
     {
         $context->self()
             ->userlandHeapSpace()
-            ?->userlandMethods()
+            ->userlandMethods()
             ->set((string) $methodName, $context);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
+use RubyVM\VM\Core\Runtime\Entity\Class_;
 use RubyVM\VM\Core\Runtime\Entity\EntityHelper;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
@@ -39,7 +40,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $class = EntityHelper::createEntityBySymbol($this->getOperandAsID()->object)
+        $className = EntityHelper::createEntityBySymbol($this->getOperandAsID()->object)
             ->toBeRubyClass();
         $iseqNumber = $this->getOperandAsNumber();
         $flags = $this->getOperandAsNumber();
@@ -56,9 +57,10 @@ class BuiltinDefineclass implements OperationProcessorInterface
         $instructionSequence->load();
 
         /**
-         * @var StringSymbol $className
+         * @var StringSymbol $classNameSymbol
          */
-        $className = $class->entity()->symbol();
+        $classNameSymbol = $className->entity()->symbol();
+        $class = Class_::of($classNameSymbol, $this->context);
 
         /**
          * @var NumberSymbol $flagNumber
@@ -69,12 +71,12 @@ class BuiltinDefineclass implements OperationProcessorInterface
             ->self()
             ->class(
                 $flagNumber,
-                $className,
+                $classNameSymbol,
             );
 
         $class
             ->setRuntimeContext($this->context)
-            ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace()?->userlandClasses()->get((string) $className));
+            ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace()->userlandClasses()->get((string) $className));
 
         $executor = (new Executor(
             kernel: $this->context->kernel(),

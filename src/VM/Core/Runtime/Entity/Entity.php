@@ -7,6 +7,7 @@ namespace RubyVM\VM\Core\Runtime\Entity;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\RubyClass;
+use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ObjectInfo;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolType;
@@ -18,7 +19,7 @@ abstract class Entity implements EntityInterface
 
     public function toBeRubyClass(): RubyClassInterface
     {
-        return new RubyClass(
+        return (new RubyClass(
             info: new ObjectInfo(
                 type: SymbolType::findBySymbol($this->symbol),
                 specialConst: 0,
@@ -26,7 +27,7 @@ abstract class Entity implements EntityInterface
                 internal: 0,
             ),
             entity: clone $this,
-        );
+        ))->setUserlandHeapSpace(new UserlandHeapSpace());
     }
 
     public function __clone()

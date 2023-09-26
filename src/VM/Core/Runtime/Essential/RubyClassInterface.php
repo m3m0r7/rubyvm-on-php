@@ -16,9 +16,11 @@ interface RubyClassInterface extends RubyClassImplementationInterface, \Stringab
 
     public function setRuntimeContext(?ContextInterface $context): RubyClassInterface;
 
-    public function userlandHeapSpace(): ?UserlandHeapSpaceInterface;
+    public function context(): ContextInterface;
 
-    public function setUserlandHeapSpace(?UserlandHeapSpaceInterface $userlandHeapSpace): RubyClassInterface;
+    public function userlandHeapSpace(): UserlandHeapSpaceInterface;
+
+    public function setUserlandHeapSpace(?UserlandHeapSpaceInterface $userlandHeapSpace): self;
 
     /**
      * @return string[]

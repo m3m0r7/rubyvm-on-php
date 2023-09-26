@@ -14,7 +14,6 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterf
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
-use RubyVM\VM\Core\YARV\Essential\Symbol\ClassSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Exception\OperationProcessorException;
 
@@ -45,13 +44,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
          * @var StringSymbol $constantNameSymbol
          */
         foreach ($symbol->valueOf() as $constantNameSymbol) {
-            $classes = $this->context->self()->userlandHeapSpace()?->userlandClasses();
-
-            if (!$classes instanceof \RubyVM\VM\Core\Runtime\UserlandClassEntries) {
-                throw new OperationProcessorException(
-                    'The userland heapspace was not initialized',
-                );
-            }
+            $classes = $this->context->self()->userlandHeapSpace()->userlandClasses();
 
             $className = $constantNameSymbol->valueOf();
 
@@ -73,8 +66,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
                 // @phpstan-ignore-next-line
                 $object = RubyClass::initializeByClassName($className);
             } else {
-                $object = (new Class_(new ClassSymbol($constantNameSymbol)))
-                    ->toBeRubyClass();
+                $object = Class_::of($constantNameSymbol, $this->context);
             }
 
             $heapSpace = $classes->get($constantNameSymbol->valueOf());
@@ -83,7 +75,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
                 $this->context
                     ->self()
                     ->userlandHeapSpace()
-                    ?->userlandClasses()
+                    ->userlandClasses()
                     ->set(
                         $constantNameSymbol->valueOf(),
                         $heapSpace = new UserlandHeapSpace()
@@ -91,7 +83,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
             }
 
             $object->setRuntimeContext($this->context)
-                ->setUserlandHeapSpace($heapSpace);
+                ->setUserlandHeapSpace($object->userlandHeapSpace());
 
             $this->context->vmStack()->push(new Operand($object));
         }

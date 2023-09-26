@@ -55,20 +55,34 @@ class BuiltinDefinemethod implements OperationProcessorInterface
 
         $instructionSequence->load();
 
-        $executor = (new Executor(
+        $this->context
+            ->appendTrace($methodNameSymbol->valueOf());
+
+        $class = $this->context->self()->entity();
+
+        $receiverClass = $this
+            ->context
+            ->self();
+
+        if ($class->valueOf() === 'singletonclass') {
+            $receiverClass = $receiverClass
+                ->context()
+                ->self();
+            $context = $receiverClass->context();
+        } else {
+            $context = $this->context;
+        }
+
+        $executor = new Executor(
             kernel: $this->context->kernel(),
-            rubyClass: $this->context->self(),
+            rubyClass: $receiverClass,
             instructionSequence: $instructionSequence,
             option: $this->context->option(),
             debugger: $this->context->debugger(),
-            previousContext: $this->context,
-        ));
+            previousContext: $context,
+        );
 
-        $executor->context()
-            ->appendTrace($methodNameSymbol->valueOf());
-
-        $this->context
-            ->self()
+        $receiverClass
             ->def(
                 $methodNameSymbol,
                 $executor->context(),

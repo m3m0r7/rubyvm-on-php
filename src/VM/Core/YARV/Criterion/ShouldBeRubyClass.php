@@ -9,6 +9,7 @@ use RubyVM\VM\Core\Runtime\Provider\ProvideBasicClassMethods;
 use RubyVM\VM\Core\Runtime\Provider\ProvideClassExtendableMethods;
 use RubyVM\VM\Core\Runtime\Provider\ProvideExtendedMethodCall;
 use RubyVM\VM\Core\Runtime\Provider\ProvidePHPClassMethods;
+use RubyVM\VM\Exception\OperationProcessorException;
 
 trait ShouldBeRubyClass
 {
@@ -24,5 +25,15 @@ trait ShouldBeRubyClass
         $this->context = $context;
 
         return $this;
+    }
+
+    public function context(): ContextInterface
+    {
+        // @phpstan-ignore-next-line
+        if ($this->context === null) {
+            throw new OperationProcessorException('The runtime context is not injected - did you forget to call setRuntimeContext before?');
+        }
+
+        return $this->context;
     }
 }

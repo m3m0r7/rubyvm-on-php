@@ -10,8 +10,10 @@ use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
 use RubyVM\VM\Core\Runtime\Executor\EnvironmentTable;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
+use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\OptionInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;
+use RubyVM\VM\Exception\RuntimeException;
 
 class OperationProcessorContext implements ContextInterface
 {
@@ -166,5 +168,31 @@ class OperationProcessorContext implements ContextInterface
     public function IOContext(): IOContext
     {
         return $this->IOContext;
+    }
+
+    public function modulePath(string $path = null): string
+    {
+        $paths = [];
+        $classContext = null;
+        $remainingCounter = Option::MAX_STACK_EXCEEDED;
+        $roots = Option::MAIN_CONTEXT_CLASS;
+
+        do {
+            $self = ($classContext ?? $this)->self();
+
+            $classContext = $self->context();
+
+            $paths = [(string) $self->entity(), ...$paths];
+            --$remainingCounter;
+            if ($remainingCounter === 0) {
+                throw new RuntimeException('Cannot resolve module path because max stack exceeded');
+            }
+        } while (!$self instanceof $roots);
+
+        if ($path !== null) {
+            $paths[] = $path;
+        }
+
+        return implode('.', $paths);
     }
 }

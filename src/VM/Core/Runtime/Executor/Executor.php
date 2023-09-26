@@ -10,6 +10,7 @@ use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\IOContext;
+use RubyVM\VM\Core\Runtime\Executor\Context\NullContext;
 use RubyVM\VM\Core\Runtime\Executor\Context\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Executor\Context\ProgramCounter;
 use RubyVM\VM\Core\Runtime\Executor\Context\VMStack;
@@ -62,10 +63,17 @@ class Executor implements ExecutorInterface
 
         $instructionSequence = $kernel->loadInstructionSequence($aux);
 
+        $main = new Main();
         $executor = new Executor(
             $kernel,
-            (new Main())->setUserlandHeapSpace(
+            $main->setUserlandHeapSpace(
                 $kernel->userlandHeapSpace(),
+            )->setRuntimeContext(
+                new NullContext(
+                    $kernel,
+                    $main,
+                    $option,
+                ),
             ),
             $instructionSequence,
             $option,
