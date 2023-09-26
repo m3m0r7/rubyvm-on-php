@@ -45,13 +45,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
          * @var StringSymbol $constantNameSymbol
          */
         foreach ($symbol->valueOf() as $constantNameSymbol) {
-            $classes = $this->context->self()->userlandHeapSpace()?->userlandClasses();
-
-            if (!$classes instanceof \RubyVM\VM\Core\Runtime\UserlandClassEntries) {
-                throw new OperationProcessorException(
-                    'The userland heapspace was not initialized',
-                );
-            }
+            $classes = $this->context->self()->userlandHeapSpace()->userlandClasses();
 
             $className = $constantNameSymbol->valueOf();
 
@@ -82,7 +76,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
                 $this->context
                     ->self()
                     ->userlandHeapSpace()
-                    ?->userlandClasses()
+                    ->userlandClasses()
                     ->set(
                         $constantNameSymbol->valueOf(),
                         $heapSpace = new UserlandHeapSpace()
@@ -90,7 +84,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
             }
 
             $object->setRuntimeContext($this->context)
-                ->setUserlandHeapSpace($heapSpace);
+                ->setUserlandHeapSpace($object->userlandHeapSpace() ?? new UserlandHeapSpace());
 
             $this->context->vmStack()->push(new Operand($object));
         }

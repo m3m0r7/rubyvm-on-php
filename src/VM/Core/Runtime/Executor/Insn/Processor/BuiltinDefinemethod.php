@@ -61,41 +61,32 @@ class BuiltinDefinemethod implements OperationProcessorInterface
 
         $class = $this->context->self()->entity();
 
+        $receiverClass = $this
+            ->context
+            ->self();
+
         if ($class->valueOf() === 'singletonclass') {
-            $receiverClass = $this
-                ->context
-                ->self()
+            $receiverClass = $receiverClass
                 ->context()
                 ->self();
-
-            /**
-             * @var StringSymbol $symbol
-             */
-            $symbol = $receiverClass->entity()->symbol();
-
-            $context = $this->context;
-
-            $receiverClass = Class_::of($symbol);
+            $context = $receiverClass->context();
         } else {
-            $receiverClass = $this->context
-                ->self();
-
-            $executor = new Executor(
-                kernel: $this->context->kernel(),
-                rubyClass: $this->context->self(),
-                instructionSequence: $instructionSequence,
-                option: $this->context->option(),
-                debugger: $this->context->debugger(),
-                previousContext: $this->context,
-            );
-
-            $context = $executor->context();
+            $context = $this->context;
         }
+
+        $executor = new Executor(
+            kernel: $this->context->kernel(),
+            rubyClass: $receiverClass,
+            instructionSequence: $instructionSequence,
+            option: $this->context->option(),
+            debugger: $this->context->debugger(),
+            previousContext: $context,
+        );
 
         $receiverClass
             ->def(
                 $methodNameSymbol,
-                $context,
+                $executor->context(),
             );
 
         return ProcessedStatus::SUCCESS;

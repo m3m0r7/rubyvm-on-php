@@ -32,7 +32,7 @@ trait ProvideClassExtendableMethods
      */
     public function classes(): array
     {
-        return array_keys($this->userlandHeapSpace?->userlandClasses()->toArray() ?? []);
+        return array_keys($this->userlandHeapSpace->userlandClasses()->toArray() ?? []);
     }
 
     /**
@@ -61,11 +61,11 @@ trait ProvideClassExtendableMethods
         $className = (string) $className;
 
         $this->userlandHeapSpace
-            ?->userlandClasses()
+            ->userlandClasses()
             ->set(
                 $className,
                 $this->userlandHeapSpace
-                    ?->userlandClasses()
+                    ->userlandClasses()
                     ->get($className) ?? new UserlandHeapSpace(),
             );
     }

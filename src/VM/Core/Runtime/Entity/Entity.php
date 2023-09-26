@@ -19,7 +19,6 @@ abstract class Entity implements EntityInterface
 
     public function toBeRubyClass(): RubyClassInterface
     {
-        static $defaultUserlandHeapSpaces = [];
         return (new RubyClass(
             info: new ObjectInfo(
                 type: SymbolType::findBySymbol($this->symbol),
@@ -28,7 +27,7 @@ abstract class Entity implements EntityInterface
                 internal: 0,
             ),
             entity: clone $this,
-        ))->setUserlandHeapSpace($defaultUserlandHeapSpaces[(string) $this] ??= new UserlandHeapSpace());
+        ))->setUserlandHeapSpace(new UserlandHeapSpace());
     }
 
     public function __clone()

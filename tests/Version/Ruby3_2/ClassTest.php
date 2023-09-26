@@ -110,4 +110,36 @@ class ClassTest extends TestApplication
 
         _, $rubyVMManager->stdOut->readAll());
     }
+
+    public function testStaticClass(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            class Cat
+              class << self
+                def name1
+                  "ERU"
+                end
+                def name2
+                  "GURI"
+                end
+              end
+            end
+
+            puts Cat.name1
+            puts Cat.name2
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<< '_'
+        ERU
+        GURI
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
 }

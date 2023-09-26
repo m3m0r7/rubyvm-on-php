@@ -29,7 +29,7 @@ trait ProvideExtendedMethodCall
                 ->context
                 ->self()
                 ->userlandHeapSpace()
-                ?->userlandClasses()
+                ->userlandClasses()
                 ->get(self::resolveObjectName($this));
 
             if ($boundClass !== null) {
