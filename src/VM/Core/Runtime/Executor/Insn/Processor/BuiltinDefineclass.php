@@ -60,7 +60,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
          * @var StringSymbol $classNameSymbol
          */
         $classNameSymbol = $className->entity()->symbol();
-        $class = Class_::of($classNameSymbol);
+        $class = Class_::of($classNameSymbol, $this->context);
 
         /**
          * @var NumberSymbol $flagNumber

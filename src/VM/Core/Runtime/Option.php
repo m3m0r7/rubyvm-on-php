@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime;
 
 use Psr\Log\LoggerInterface;
+use RubyVM\VM\Core\Runtime\Essential\MainInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\DefaultOperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
 use RubyVM\VM\Stream\BinaryStreamReaderInterface;
@@ -28,6 +29,8 @@ class Option implements OptionInterface
     final public const VM_ENV_DATA_SIZE = 3;
 
     final public const DEFAULT_ENTRYPOINT_AUX_INDEX = 0;
+
+    final public const MAIN_CONTEXT_CLASS = MainInterface::class;
 
     public function __construct(
         public readonly BinaryStreamReaderInterface $reader,

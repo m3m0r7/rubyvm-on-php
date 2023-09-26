@@ -57,4 +57,6 @@ interface ContextInterface
     public function IOContext(): IOContext;
 
     public function option(): OptionInterface;
+
+    public function modulePath(string $path = null): string;
 }

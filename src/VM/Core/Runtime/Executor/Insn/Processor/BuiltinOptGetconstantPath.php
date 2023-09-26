@@ -67,7 +67,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
                 // @phpstan-ignore-next-line
                 $object = RubyClass::initializeByClassName($className);
             } else {
-                $object = Class_::of($constantNameSymbol);
+                $object = Class_::of($constantNameSymbol, $this->context);
             }
 
             $heapSpace = $classes->get($constantNameSymbol->valueOf());

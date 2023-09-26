@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Entity;
 
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ClassSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
@@ -26,9 +27,9 @@ class Class_ extends Entity implements EntityInterface
         return new self(new ClassSymbol($value));
     }
 
-    public static function of(StringSymbol $symbol): RubyClassInterface
+    public static function of(StringSymbol $symbol, ContextInterface $context): RubyClassInterface
     {
-        return static::$classes[(string) $symbol] ??= (new self(new ClassSymbol($symbol)))
+        return static::$classes[$context->modulePath((string) $symbol)] ??= (new self(new ClassSymbol($symbol)))
             ->toBeRubyClass();
     }
 }
