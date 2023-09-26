@@ -41,7 +41,7 @@ class BuiltinSetinstancevariable implements OperationProcessorInterface
         $this->context
             ->self()
             ->userlandHeapSpace()
-            ?->userlandInstanceVariables()
+            ->userlandInstanceVariables()
             ->set($instanceVar->id(), $targetObject);
 
         return ProcessedStatus::SUCCESS;

@@ -12,7 +12,6 @@ use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;
 use RubyVM\VM\Core\YARV\Criterion\ShouldBeRubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
-use RubyVM\VM\Exception\OperationProcessorException;
 
 class Lambda implements MainInterface
 {

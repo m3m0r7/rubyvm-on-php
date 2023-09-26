@@ -10,16 +10,13 @@ use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
 use RubyVM\VM\Core\Runtime\Executor\EnvironmentTable;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
-use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\OptionInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;
 use RubyVM\VM\Exception\RuntimeException;
 
 class NullContext implements ContextInterface
 {
-    public function __construct(private KernelInterface $kernel, private RubyClassInterface $rubyClass, private Option $option)
-    {
-    }
+    public function __construct(private readonly KernelInterface $kernel, private readonly RubyClassInterface $rubyClass, private readonly OptionInterface $option) {}
 
     public function kernel(): KernelInterface
     {
@@ -43,7 +40,7 @@ class NullContext implements ContextInterface
 
     public function logger(): LoggerInterface
     {
-        return $this->option->logger;
+        return $this->option->logger();
     }
 
     public function instructionSequence(): InstructionSequenceInterface

@@ -183,7 +183,7 @@ class OperationProcessorContext implements ContextInterface
             $classContext = $self->context();
 
             $paths = [(string) $self->entity(), ...$paths];
-            $remainingCounter--;
+            --$remainingCounter;
             if ($remainingCounter === 0) {
                 throw new RuntimeException('Cannot resolve module path because max stack exceeded');
             }

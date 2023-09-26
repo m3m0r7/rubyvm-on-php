@@ -33,6 +33,7 @@ trait ShouldBeRubyClass
         if ($this->context === null) {
             throw new OperationProcessorException('The runtime context is not injected - did you forget to call setRuntimeContext before?');
         }
+
         return $this->context;
     }
 }

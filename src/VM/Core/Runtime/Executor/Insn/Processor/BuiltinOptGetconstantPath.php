@@ -14,7 +14,6 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterf
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
-use RubyVM\VM\Core\YARV\Essential\Symbol\ClassSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Exception\OperationProcessorException;
 
@@ -84,7 +83,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
             }
 
             $object->setRuntimeContext($this->context)
-                ->setUserlandHeapSpace($object->userlandHeapSpace() ?? new UserlandHeapSpace());
+                ->setUserlandHeapSpace($object->userlandHeapSpace());
 
             $this->context->vmStack()->push(new Operand($object));
         }

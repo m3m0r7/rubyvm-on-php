@@ -17,7 +17,6 @@ use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\SpecialMethod\SpecialMethodInterface;
 use RubyVM\VM\Core\Runtime\Executor\Translatable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
-use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Exception\OperationProcessorException;
 

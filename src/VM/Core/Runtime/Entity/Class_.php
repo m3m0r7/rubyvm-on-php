@@ -6,7 +6,6 @@ namespace RubyVM\VM\Core\Runtime\Entity;
 
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
-use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ClassSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 

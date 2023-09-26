@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\SpecialMethod;
 
-use RubyVM\VM\Core\Runtime\Entity\Class_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
-use RubyVM\VM\Core\Runtime\RubyClass;
-use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
-use RubyVM\VM\Exception\RubyVMException;
 
 class Initialize implements SpecialMethodInterface
 {
