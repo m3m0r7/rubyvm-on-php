@@ -13,12 +13,12 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\Executor\Translatable;
+use RubyVM\VM\Core\Runtime\Executor\ArgumentTransformable;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinInvokeblock implements OperationProcessorInterface
 {
-    use Translatable;
+    use ArgumentTransformable;
     use OperandHelper;
     use CallBlockHelper;
 

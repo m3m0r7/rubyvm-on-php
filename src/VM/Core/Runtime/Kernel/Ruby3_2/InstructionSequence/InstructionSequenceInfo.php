@@ -9,6 +9,7 @@ use RubyVM\VM\Core\YARV\Criterion\Entry\CallInfoEntries;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CatchEntries;
 use RubyVM\VM\Core\YARV\Criterion\Entry\OuterVariableEntries;
 use RubyVM\VM\Core\YARV\Criterion\Entry\VariableEntries;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InsnsInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInfoInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;
@@ -20,6 +21,8 @@ use RubyVM\VM\Exception\RubyVMException;
 class InstructionSequenceInfo implements InstructionSequenceInfoInterface
 {
     protected InstructionSequenceCompileData $compileData;
+
+    protected ?CallInfoInterface $currentCallInfo = null;
 
     public function __construct(
         public readonly int $type,
@@ -38,7 +41,7 @@ class InstructionSequenceInfo implements InstructionSequenceInfoInterface
         public readonly int $iseSize,
         public readonly int $icSize,
         public readonly OuterVariableEntries $outerVariables,
-        public readonly VariableEntries $localTable,
+        public readonly VariableEntries $variableEntries,
         public readonly CatchEntries $catchTable,
         public readonly ?InstructionSequenceInterface $parentISeq,
         public readonly ?InstructionSequenceInterface $localISeq,
@@ -96,5 +99,27 @@ class InstructionSequenceInfo implements InstructionSequenceInfoInterface
     public function objectParam(): ObjectParameterInterface
     {
         return $this->objectParam;
+    }
+
+    public function variables(): VariableEntries
+    {
+        return $this->variableEntries;
+    }
+
+    public function callInfoEntries(): CallInfoEntries
+    {
+        return $this->callInfoEntries;
+    }
+
+    public function currentCallInfo(): ?CallInfoInterface
+    {
+        return $this->currentCallInfo;
+    }
+
+    public function setCurrentCallInfo(CallInfoInterface $callInfo): self
+    {
+        $this->currentCallInfo = $callInfo;
+
+        return $this;
     }
 }

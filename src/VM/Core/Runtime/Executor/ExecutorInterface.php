@@ -21,5 +21,5 @@ interface ExecutorInterface
 
     public function context(): ContextInterface;
 
-    public function createContext(?ContextInterface $previousContext = null): ContextInterface;
+    public function createContext(?ContextInterface $parentContext = null): ContextInterface;
 }

@@ -58,5 +58,7 @@ interface ContextInterface
 
     public function option(): OptionInterface;
 
+    public function parentContext(): ?ContextInterface;
+
     public function modulePath(string $path = null): string;
 }

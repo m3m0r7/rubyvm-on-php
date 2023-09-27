@@ -11,10 +11,10 @@ use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\VMCallFlagBit;
+use RubyVM\VM\Core\YARV\Criterion\Entry\Variable;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
-use RubyVM\VM\Core\YARV\Essential\ID;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 trait CallBlockHelper
@@ -33,7 +33,7 @@ trait CallBlockHelper
             instructionSequence: $context->instructionSequence(),
             option: $context->option(),
             debugger: $context->debugger(),
-            previousContext: $context,
+            parentContext: $context,
         ));
 
         $executor->context()
@@ -44,6 +44,13 @@ trait CallBlockHelper
             ->instructionSequence()
             ->body()
             ->info();
+
+        $currentCallInfo = $context
+            ->parentContext()
+            ?->instructionSequence()
+            ->body()
+            ->info()
+            ->currentCallInfo();
 
         $localTableSize = $iseqBodyData
             ->localTableSize();
@@ -64,8 +71,16 @@ trait CallBlockHelper
             $startOfSplat = count($arguments) - $restStart;
 
             $arguments = self::alignArguments(
+                $currentCallInfo,
+                $executor->context(),
                 array_reverse(array_slice($arguments, 0, $startOfSplat)),
                 ...array_slice($arguments, $startOfSplat),
+            );
+        } else {
+            $arguments = self::alignArguments(
+                $currentCallInfo,
+                $executor->context(),
+                ...$arguments,
             );
         }
 
@@ -96,7 +111,7 @@ trait CallBlockHelper
         return $result;
     }
 
-    private function callBlockWithArguments(CallInfoInterface $callInfo, Number $blockIseqIndex, RubyClassInterface $blockObject, bool $isSuper, CallInfoInterface|RubyClassInterface|ID|ExecutedResult ...$arguments): ?RubyClassInterface
+    private function callBlockWithArguments(CallInfoInterface $callInfo, Number $blockIseqIndex, RubyClassInterface $blockObject, bool $isSuper, RubyClassInterface|ContextInterface ...$arguments): ?RubyClassInterface
     {
         // @phpstan-ignore-next-line
         if ($this->context === null) {
@@ -130,7 +145,7 @@ trait CallBlockHelper
             instructionSequence: $instructionSequence,
             option: $this->context->option(),
             debugger: $this->context->debugger(),
-            previousContext: $this->context,
+            parentContext: $this->context,
         ));
 
         $result = $blockObject
@@ -138,7 +153,11 @@ trait CallBlockHelper
             ->setUserlandHeapSpace($executor->context()->self()->userlandHeapSpace())
             ->{(string) $callInfo->callData()->mid()->object}(
                 $executor->context(),
-                ...$arguments,
+                ...self::alignArguments(
+                    $callInfo,
+                    $executor->context(),
+                    ...$arguments
+                ),
             );
 
         if ($result instanceof ExecutedResult) {
@@ -153,14 +172,32 @@ trait CallBlockHelper
     }
 
     /**
-     * @param (array<ContextInterface|RubyClassInterface>[]|ContextInterface|RubyClassInterface)[] ...$arguments
+     * @param (ContextInterface|RubyClassInterface)[] ...$arguments
      *
      * @return (array<ContextInterface|RubyClassInterface>[]|ContextInterface|RubyClassInterface)[]
      */
-    private static function alignArguments(RubyClassInterface|ContextInterface|array ...$arguments): array
+    private static function alignArguments(?CallInfoInterface $callInfo, ContextInterface $context, RubyClassInterface|ContextInterface|array ...$arguments): array
+    {
+        return self::applyAlignmentArgumentsByKeywords(
+            $callInfo,
+            $context,
+            ...self::applySplatExpression(
+                $context,
+
+                // @phpstan-ignore-next-line
+                ...$arguments
+            ),
+        );
+    }
+
+    /**
+     * @param array<array<ContextInterface|RubyClassInterface>>|ContextInterface|RubyClassInterface ...$arguments
+     *
+     * @return (array<ContextInterface|RubyClassInterface>[]|ContextInterface|RubyClassInterface)[]
+     */
+    private static function applySplatExpression(ContextInterface $context, RubyClassInterface|ContextInterface|array ...$arguments): array
     {
         $newArguments = [];
-
         foreach ($arguments as $argument) {
             if (is_array($argument)) {
                 $newArguments[] = Array_::createBy(
@@ -193,6 +230,63 @@ trait CallBlockHelper
             }
 
             $newArguments[] = $argument;
+        }
+
+        return $newArguments;
+    }
+
+    /**
+     * @param array<array<ContextInterface|RubyClassInterface>>|ContextInterface|RubyClassInterface ...$arguments
+     *
+     * @return (array<ContextInterface|RubyClassInterface>[]|ContextInterface|RubyClassInterface)[]
+     */
+    private static function applyAlignmentArgumentsByKeywords(?CallInfoInterface $callInfo, ContextInterface $context, RubyClassInterface|ContextInterface|array ...$arguments): array
+    {
+        if (!$callInfo instanceof \RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface) {
+            return $arguments;
+        }
+
+        $keywords = $callInfo->callData()->keywords();
+
+        // A keyword is not available in callee arguments
+        if ($keywords === null) {
+            return $arguments;
+        }
+
+        $tempArguments = $newArguments = $arguments;
+        $size = count($tempArguments);
+
+        $localTable = $context->instructionSequence()
+            ->body()
+            ->info()
+            ->variables();
+
+        $size = count($tempArguments) - 1;
+        foreach ($tempArguments as $i => $argument) {
+            $keyword = array_pop($keywords)?->valueOf();
+            if ($keyword === null) {
+                $newArguments[$i] = $argument;
+
+                continue;
+            }
+
+            $position = null;
+
+            /**
+             * lookup position in variables.
+             *
+             * @var Variable $variable
+             */
+            foreach ($localTable as $index => $variable) {
+                if ($keyword === $variable->id->object->valueOf()) {
+                    // Reverse position
+                    $position = $size - $index;
+
+                    break;
+                }
+            }
+
+            $newArguments[$position] = $argument;
         }
 
         return $newArguments;

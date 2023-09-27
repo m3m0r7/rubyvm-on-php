@@ -39,7 +39,7 @@ class Lambda implements MainInterface
             instructionSequence: $this->instructionSequence,
             option: $this->context()->option(),
             debugger: $this->context()->debugger(),
-            previousContext: $this->context(),
+            parentContext: $this->context(),
         );
 
         $localTableSize = $this

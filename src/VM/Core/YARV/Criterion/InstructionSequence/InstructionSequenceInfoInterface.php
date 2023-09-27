@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\YARV\Criterion\InstructionSequence;
 
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperationEntries;
+use RubyVM\VM\Core\YARV\Criterion\Entry\CallInfoEntries;
+use RubyVM\VM\Core\YARV\Criterion\Entry\VariableEntries;
 
 interface InstructionSequenceInfoInterface
 {
@@ -16,6 +18,8 @@ interface InstructionSequenceInfoInterface
 
     public function localTableSize(): int;
 
+    public function variables(): VariableEntries;
+
     public function compileData(): InstructionSequenceCompileDataInterface;
 
     public function parentInstructionSequence(): ?InstructionSequenceInterface;
@@ -25,4 +29,10 @@ interface InstructionSequenceInfoInterface
     public function setOperationEntries(OperationEntries $entries): InstructionSequenceInfoInterface;
 
     public function operationEntries(): OperationEntries;
+
+    public function callInfoEntries(): CallInfoEntries;
+
+    public function currentCallInfo(): ?CallInfoInterface;
+
+    public function setCurrentCallInfo(CallInfoInterface $callInfo): self;
 }

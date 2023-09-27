@@ -14,7 +14,7 @@ use RubyVM\VM\Core\YARV\Essential\ID;
  * But in other language, especially it based on an object oriented programming languages cannot be flexible.
  * for that reason, this trait class is helping they are problems.
  */
-trait Translatable
+trait ArgumentTransformable
 {
     use Validatable;
 

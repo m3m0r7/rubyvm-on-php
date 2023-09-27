@@ -15,7 +15,7 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterf
 use RubyVM\VM\Core\Runtime\Executor\Operation\SpecialMethodCallerEntries;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\SpecialMethod\SpecialMethodInterface;
-use RubyVM\VM\Core\Runtime\Executor\Translatable;
+use RubyVM\VM\Core\Runtime\Executor\ArgumentTransformable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Exception\OperationProcessorException;
@@ -24,7 +24,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
 {
     use OperandHelper;
     use Validatable;
-    use Translatable;
+    use ArgumentTransformable;
 
     private Insn $insn;
 
@@ -79,6 +79,13 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
         }
 
         $targetClass->setRuntimeContext($this->context);
+
+        // Set current call info into instruction sequence
+        $this->context
+            ->instructionSequence()
+            ->body()
+            ->info()
+            ->setCurrentCallInfo($callInfo);
 
         $result = null;
 

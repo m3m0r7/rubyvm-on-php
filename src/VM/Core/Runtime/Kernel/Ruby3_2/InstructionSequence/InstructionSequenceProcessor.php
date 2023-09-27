@@ -230,7 +230,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             iseSize: $iseSize,
             icSize: $icSize,
             outerVariables: $outerVariables,
-            localTable: $localTable,
+            variableEntries: $localTable,
             catchTable: $catchTable,
             parentISeq: $parentISeq,
             localISeq: $localISeq,
@@ -455,7 +455,12 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         $reader->pos($localTableOffset);
 
         for ($i = 0; $i < $localTableSize; ++$i) {
+            // NOTE: only to read 4 bytes
             $entries[] = new VariableEntry($this->kernel->findId($reader->readAsUnsignedLong()));
+
+            // TODO: You must using longlong but the PHP cannot read longlong value
+            // You will rewrite here to enable to read by longlong
+            $reader->readAsUnsignedLong();
         }
 
         return $entries;
