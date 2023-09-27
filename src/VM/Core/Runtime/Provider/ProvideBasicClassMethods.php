@@ -10,6 +10,7 @@ use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Lambda;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NilSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
@@ -17,7 +18,7 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 
 trait ProvideBasicClassMethods
 {
-    public function puts(RubyClassInterface $object): RubyClassInterface
+    public function puts(CallInfoInterface $callInfo, RubyClassInterface $object): RubyClassInterface
     {
         $symbol = $object->entity()->symbol();
 
@@ -44,7 +45,7 @@ trait ProvideBasicClassMethods
             ->toBeRubyClass();
     }
 
-    public function exit(int $code = 0): never
+    public function exit(CallInfoInterface $callInfo, int $code = 0): never
     {
         exit($code);
     }
@@ -60,7 +61,7 @@ trait ProvideBasicClassMethods
             ->toBeRubyClass();
     }
 
-    public function lambda(ContextInterface $context): RubyClassInterface
+    public function lambda(CallInfoInterface $callInfo, ContextInterface $context): RubyClassInterface
     {
         return (new Lambda($context->instructionSequence()))
             ->setRuntimeContext($this->context())

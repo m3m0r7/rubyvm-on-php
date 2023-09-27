@@ -19,7 +19,7 @@ use RubyVM\VM\Exception\OperationProcessorException;
 
 trait CallBlockHelper
 {
-    private function callSimpleMethod(ContextInterface $context, RubyClassInterface|ContextInterface ...$arguments): ExecutedResult
+    private function callSimpleMethod(ContextInterface $context, CallInfoInterface $callInfo, RubyClassInterface|ContextInterface ...$arguments): ExecutedResult
     {
         // Validate first value is context?
         $calleeContexts = [];
@@ -45,13 +45,6 @@ trait CallBlockHelper
             ->body()
             ->info();
 
-        $currentCallInfo = $context
-            ->parentContext()
-            ?->instructionSequence()
-            ->body()
-            ->info()
-            ->currentCallInfo();
-
         $localTableSize = $iseqBodyData
             ->localTableSize();
 
@@ -71,14 +64,14 @@ trait CallBlockHelper
             $startOfSplat = count($arguments) - $restStart;
 
             $arguments = self::alignArguments(
-                $currentCallInfo,
+                $callInfo,
                 $executor->context(),
                 array_reverse(array_slice($arguments, 0, $startOfSplat)),
                 ...array_slice($arguments, $startOfSplat),
             );
         } else {
             $arguments = self::alignArguments(
-                $currentCallInfo,
+                $callInfo,
                 $executor->context(),
                 ...$arguments,
             );
@@ -152,6 +145,7 @@ trait CallBlockHelper
             ->setRuntimeContext($executor->context())
             ->setUserlandHeapSpace($executor->context()->self()->userlandHeapSpace())
             ->{(string) $callInfo->callData()->mid()->object}(
+                $callInfo,
                 $executor->context(),
                 ...self::alignArguments(
                     $callInfo,

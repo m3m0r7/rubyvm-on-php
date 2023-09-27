@@ -18,14 +18,20 @@ readonly class ContextAccessor implements ContextAccessorInterface
     {
         $self = $this->executedResult->executor->context()->self();
 
+        $arguments = array_map(
+            static fn ($value) => Translator::PHPToRuby($value),
+            $arguments,
+        );
+
         /**
          * @var ExecutedResult $executedResult
          */
         $executedResult = $self->{$name}(
-            ...array_map(
-                static fn ($value) => Translator::PHPToRuby($value),
+            new BridgeCallInfo(
+                $name,
                 $arguments,
             ),
+        ...$arguments,
         );
         if ($executedResult->threw instanceof \Throwable) {
             throw $executedResult->threw;

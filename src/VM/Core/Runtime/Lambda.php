@@ -9,6 +9,7 @@ use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\MainInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;
 use RubyVM\VM\Core\YARV\Criterion\ShouldBeRubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
@@ -31,7 +32,7 @@ class Lambda implements MainInterface
         return 'lambda';
     }
 
-    public function call(RubyClassInterface ...$arguments): RubyClassInterface|null
+    public function call(CallInfoInterface $callInfo, RubyClassInterface ...$arguments): RubyClassInterface|null
     {
         $executor = new Executor(
             kernel: $this->context()->kernel(),

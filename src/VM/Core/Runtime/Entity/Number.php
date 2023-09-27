@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Entity;
 
-use RubyVM\VM\Core\Runtime\RubyClass;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 
 class Number extends Entity implements EntityInterface
@@ -19,31 +20,31 @@ class Number extends Entity implements EntityInterface
         return (bool) $this->symbol->valueOf();
     }
 
-    public function xor(RubyClass $object): Number
+    public function xor(CallInfoInterface $callInfo, RubyClassInterface $object): Number
     {
         return Number::createBy(
-            $this->symbol->valueOf() ^ $object->entity->symbol()->valueOf(),
+            $this->symbol->valueOf() ^ $object->entity()->symbol()->valueOf(),
         );
     }
 
-    public function power(RubyClass $object): Number
+    public function power(CallInfoInterface $callInfo, RubyClassInterface $object): Number
     {
         return Number::createBy(
-            $this->symbol->valueOf() ** $object->entity->symbol()->valueOf(),
+            $this->symbol->valueOf() ** $object->entity()->symbol()->valueOf(),
         );
     }
 
-    public function rightShift(RubyClass $object): Number
+    public function rightShift(CallInfoInterface $callInfo, RubyClassInterface $object): Number
     {
         return Number::createBy(
-            $this->symbol->valueOf() >> $object->entity->symbol()->valueOf(),
+            $this->symbol->valueOf() >> $object->entity()->symbol()->valueOf(),
         );
     }
 
-    public function compareStrictEquals(RubyClass $object): Boolean_
+    public function compareStrictEquals(CallInfoInterface $callInfo, RubyClassInterface $object): Boolean_
     {
         return Boolean_::createBy(
-            $this->symbol->valueOf() === $object->entity->symbol()->valueOf(),
+            $this->symbol->valueOf() === $object->entity()->symbol()->valueOf(),
         );
     }
 
