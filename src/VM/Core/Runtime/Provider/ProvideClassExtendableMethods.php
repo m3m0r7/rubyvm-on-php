@@ -10,6 +10,7 @@ use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolSymbol;
 use RubyVM\VM\Exception\RuntimeException;
 
 trait ProvideClassExtendableMethods
@@ -63,7 +64,7 @@ trait ProvideClassExtendableMethods
         return in_array($name, $this->methods(), true);
     }
 
-    public function class(NumberSymbol $flags, StringSymbol $className): void
+    public function class(NumberSymbol $flags, StringSymbol|SymbolSymbol $className): void
     {
         $className = (string) $className;
 
@@ -77,7 +78,7 @@ trait ProvideClassExtendableMethods
             );
     }
 
-    public function def(StringSymbol $methodName, ContextInterface $context): void
+    public function def(StringSymbol|SymbolSymbol $methodName, ContextInterface $context): void
     {
         $context->self()
             ->userlandHeapSpace()

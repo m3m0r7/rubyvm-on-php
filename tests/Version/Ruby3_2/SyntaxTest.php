@@ -595,7 +595,7 @@ class SyntaxTest extends TestApplication
     {
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< '_'
-            def local_optional_var_test(x, y, z, a = 1, b = 2, c = 3, d = 4)
+            def local_optional_var_test(x, y, z, a = 1, b = 2, c = 3, d = 4, *variadic)
               e = 5
               puts x
               puts y
@@ -605,9 +605,12 @@ class SyntaxTest extends TestApplication
               puts c
               puts d
               puts e
+              variadic.each do | var |
+                puts var
+              end
             end
+            local_optional_var_test(1111, 2222, 3333, 4444, 5555, 3, 4, 6666, 7777, 8888, 9999)
 
-            local_optional_var_test(1111, 2222, 3333, 4444, 5555)
             _,
         );
 
@@ -625,6 +628,56 @@ class SyntaxTest extends TestApplication
         3
         4
         5
+        6666
+        7777
+        8888
+        9999
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
+
+    public function testSymbol(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            def symbol_test(a)
+              puts a
+            end
+
+            symbol_test(:HelloWorld)
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<'_'
+        HelloWorld
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
+
+    public function testStringArray(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            %w(foo bar baz).each do | str |
+              puts str
+            end
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<'_'
+        foo
+        bar
+        baz
 
         _, $rubyVMManager->stdOut->readAll());
     }

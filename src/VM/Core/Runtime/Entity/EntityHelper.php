@@ -15,6 +15,7 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\OffsetSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
+use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\UndefinedSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\VoidSymbol;
 use RubyVM\VM\Exception\EntityException;
@@ -35,6 +36,7 @@ class EntityHelper
             StringSymbol::class => new String_($symbol),
             UndefinedSymbol::class => new Undefined($symbol),
             VoidSymbol::class => new Void_($symbol),
+            SymbolSymbol::class => new Symbol($symbol),
             default => throw new EntityException(
                 sprintf(
                     'The specified entity was not implemented yet: %s',

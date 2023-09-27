@@ -64,7 +64,7 @@ class Array_ extends Entity implements EntityInterface
                 );
             }
 
-            $object = Number::createBy($symbol[$i]->valueOf())
+            $object = EntityHelper::createEntityBySymbol($symbol[$i])
                 ->toBeRubyClass()
                 ->setRuntimeContext($executor->context())
                 ->setUserlandHeapSpace($executor->context()->self()->userlandHeapSpace());

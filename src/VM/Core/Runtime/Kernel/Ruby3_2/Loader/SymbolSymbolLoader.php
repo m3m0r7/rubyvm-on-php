@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Loader;
 
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
+use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
+use RubyVM\VM\Core\YARV\Essential\Encoding;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolLoaderInterface;
+use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolSymbol;
+use RubyVM\VM\Exception\RubyVMException;
 
 class SymbolSymbolLoader implements SymbolLoaderInterface
 {
@@ -18,8 +22,20 @@ class SymbolSymbolLoader implements SymbolLoaderInterface
 
     public function load(): SymbolInterface
     {
-        // NOTE: The SymbolSymbolLoader is same at StringSymbolLoader
-        return (new StringSymbolLoader($this->kernel, $this->offset))
-            ->load();
+        $reader = $this->kernel->stream()->duplication();
+        $reader->pos($this->offset->offset);
+
+        $encIndex = $reader->smallValue();
+        $len = $reader->smallValue();
+
+        // see: https://github.com/ruby/ruby/blob/2f603bc4/compile.c#L12567
+        if ($encIndex > Option::RUBY_ENCINDEX_BUILTIN_MAX) {
+            throw new RubyVMException('Not implemented yet in encIndex > RUBY_ENCINDEX_BUILTIN_MAX comparison');
+        }
+
+        return new SymbolSymbol(
+            string: $reader->read($len),
+            encoding: Encoding::of($encIndex),
+        );
     }
 }

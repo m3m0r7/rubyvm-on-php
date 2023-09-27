@@ -84,7 +84,7 @@ enum SymbolType
             NilSymbol::class => self::NIL,
             ClassSymbol::class => self::CLASS_,
             OffsetSymbol::class,
-            VoidSymbol::class => self::SYMBOL,
+            VoidSymbol::class, SymbolSymbol::class => self::SYMBOL,
             NumberSymbol::class => self::FIXNUM,
             StringSymbol::class => self::STRING,
             default => self::NONE,

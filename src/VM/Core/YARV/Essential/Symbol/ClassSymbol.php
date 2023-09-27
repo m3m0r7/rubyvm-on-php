@@ -7,7 +7,7 @@ namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 class ClassSymbol implements SymbolInterface, \Stringable
 {
     public function __construct(
-        private readonly StringSymbol $class,
+        private readonly StringSymbol|SymbolSymbol $class,
     ) {}
 
     public function valueOf(): string
