@@ -157,4 +157,26 @@ class MethodTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("1\n2\n3\n4\n5\n", $rubyVMManager->stdOut->readAll());
     }
+
+    public function testKeywordArguments(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            def name(a:, b:, c:)
+              puts a
+              puts b
+              puts c
+            end
+            name(c: "neko", a: "tanuki", b: "inu")
+
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame("tanuki\ninu\nneko\n", $rubyVMManager->stdOut->readAll());
+    }
 }
