@@ -658,4 +658,27 @@ class SyntaxTest extends TestApplication
 
         _, $rubyVMManager->stdOut->readAll());
     }
+
+    public function testStringArray(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            %w(foo bar baz).each do | str |
+              puts str
+            end
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<'_'
+        foo
+        bar
+        baz
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
 }

@@ -36,13 +36,16 @@ class BuiltinNewarray implements OperationProcessorInterface
         $num = $this->getOperandAsNumber();
 
         for ($i = $num->valueOf() - 1; $i >= 0; --$i) {
-            $entries[$i] = $this->getStackAsNumber()->symbol();
+            $entries[$i] = $this->getStackAsEntity()->symbol();
         }
 
         $this->context->vmStack()->push(
             new Operand(
-                Array_::createBy(array_values($entries))
-                    ->toBeRubyClass(),
+                Array_::createBy(
+                    array_reverse(
+                        array_values($entries),
+                    ),
+                )->toBeRubyClass(),
             ),
         );
 
