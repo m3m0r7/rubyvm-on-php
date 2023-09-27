@@ -628,4 +628,27 @@ class SyntaxTest extends TestApplication
 
         _, $rubyVMManager->stdOut->readAll());
     }
+
+    public function testSymbol(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            def symbol_test(a)
+              puts a
+            end
+
+            symbol_test(:HelloWorld)
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<'_'
+        HelloWorld
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
 }
