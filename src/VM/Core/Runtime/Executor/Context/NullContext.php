@@ -11,7 +11,9 @@ use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
 use RubyVM\VM\Core\Runtime\Executor\EnvironmentTable;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\OptionInterface;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;
+use RubyVM\VM\Exception\ContextNotFound;
 use RubyVM\VM\Exception\RuntimeException;
 
 class NullContext implements ContextInterface
@@ -121,6 +123,11 @@ class NullContext implements ContextInterface
         );
     }
 
+    public function parentContext(): ?ContextInterface
+    {
+        return null;
+    }
+
     public function option(): OptionInterface
     {
         return $this->option;
@@ -129,5 +136,15 @@ class NullContext implements ContextInterface
     public function modulePath(string $path = null): string
     {
         return '';
+    }
+
+    public function setCallInfo(CallInfoInterface $callInfo): self
+    {
+        return $this;
+    }
+
+    public function callInfo(): ?CallInfoInterface
+    {
+        return null;
     }
 }

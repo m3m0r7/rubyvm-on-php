@@ -79,7 +79,7 @@ class BuiltinDefinemethod implements OperationProcessorInterface
             instructionSequence: $instructionSequence,
             option: $this->context->option(),
             debugger: $this->context->debugger(),
-            previousContext: $context,
+            parentContext: $context,
         );
 
         $receiverClass

@@ -27,7 +27,7 @@ class Range extends Entity implements EntityInterface
                 instructionSequence: $context->instructionSequence(),
                 option: $context->option(),
                 debugger: $context->debugger(),
-                previousContext: $context,
+                parentContext: $context,
             ));
 
             $executor->context()

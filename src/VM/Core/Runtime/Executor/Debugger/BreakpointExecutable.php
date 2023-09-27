@@ -21,7 +21,7 @@ trait BreakpointExecutable
         return $this;
     }
 
-    private function processBreakPoint(Insn $insn, ContextInterface $previousContext, ContextInterface $nextContext): void
+    private function processBreakPoint(Insn $insn, ContextInterface $parentContext, ContextInterface $nextContext): void
     {
         printf('Enter to next step (y/n/q): ');
         $entered = fread(STDIN, 1024);
@@ -41,12 +41,12 @@ trait BreakpointExecutable
             );
             printf(
                 "Previous Stacks: %s#%d\n",
-                (string) $previousContext->vmStack(),
-                spl_object_id($previousContext->vmStack()),
+                (string) $parentContext->vmStack(),
+                spl_object_id($parentContext->vmStack()),
             );
             printf(
                 "Previous Local Tables: %s\n",
-                (string) $previousContext->environmentTable(),
+                (string) $parentContext->environmentTable(),
             );
             printf(
                 "Current Stacks: %s#%d\n",

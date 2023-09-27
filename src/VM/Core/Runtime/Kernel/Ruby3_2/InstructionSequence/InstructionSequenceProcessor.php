@@ -230,7 +230,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             iseSize: $iseSize,
             icSize: $icSize,
             outerVariables: $outerVariables,
-            localTable: $localTable,
+            variableEntries: $localTable,
             catchTable: $catchTable,
             parentISeq: $parentISeq,
             localISeq: $localISeq,

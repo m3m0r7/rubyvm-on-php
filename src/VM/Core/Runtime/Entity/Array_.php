@@ -47,7 +47,7 @@ class Array_ extends Entity implements EntityInterface
                 instructionSequence: $context->instructionSequence(),
                 option: $context->option(),
                 debugger: $context->debugger(),
-                previousContext: $context,
+                parentContext: $context,
             ));
 
             // Renew environment table

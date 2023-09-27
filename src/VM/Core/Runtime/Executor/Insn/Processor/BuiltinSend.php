@@ -12,14 +12,14 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\Executor\Translatable;
+use RubyVM\VM\Core\Runtime\Executor\ArgumentTransformable;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 
 class BuiltinSend implements OperationProcessorInterface
 {
     use OperandHelper;
     use Validatable;
-    use Translatable;
+    use ArgumentTransformable;
     use CallBlockHelper;
 
     private Insn $insn;
@@ -59,7 +59,10 @@ class BuiltinSend implements OperationProcessorInterface
             $blockIseqNumber,
             $blockObject,
             false,
-            ...$this->translateForArguments(...$arguments),
+            ...$this->translateForArguments(
+
+                ...$arguments,
+            ),
         );
 
         if ($result instanceof RubyClassInterface) {

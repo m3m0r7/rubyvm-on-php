@@ -11,6 +11,7 @@ use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
 use RubyVM\VM\Core\Runtime\Executor\EnvironmentTable;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\OptionInterface;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;
 
 interface ContextInterface
@@ -57,6 +58,8 @@ interface ContextInterface
     public function IOContext(): IOContext;
 
     public function option(): OptionInterface;
+
+    public function parentContext(): ?ContextInterface;
 
     public function modulePath(string $path = null): string;
 }

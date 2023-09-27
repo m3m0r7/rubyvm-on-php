@@ -13,4 +13,6 @@ interface CallDataInterface
     public function mid(): ID;
 
     public function argumentsCount(): int;
+
+    public function keywords(): ?array;
 }

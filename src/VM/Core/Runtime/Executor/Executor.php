@@ -43,9 +43,9 @@ class Executor implements ExecutorInterface
         private readonly InstructionSequenceInterface $instructionSequence,
         private readonly OptionInterface $option,
         private readonly ExecutorDebugger $debugger = new ExecutorDebugger(),
-        private readonly ?ContextInterface $previousContext = null,
+        private readonly ?ContextInterface $parentContext = null,
     ) {
-        $this->context = $this->createContext($this->previousContext);
+        $this->context = $this->createContext($this->parentContext);
     }
 
     public function context(): ContextInterface
@@ -84,30 +84,31 @@ class Executor implements ExecutorInterface
         return $executor;
     }
 
-    public function createContext(?ContextInterface $previousContext = null): ContextInterface
+    public function createContext(?ContextInterface $parentContext = null): ContextInterface
     {
         return new OperationProcessorContext(
+            $parentContext,
             $this->kernel,
             $this,
             $this->rubyClass,
-            $previousContext?->vmStack() ?? new VMStack(),
+            $parentContext?->vmStack() ?? new VMStack(),
             new ProgramCounter(),
             $this->instructionSequence,
             $this->option,
-            $previousContext?->IOContext() ?? new IOContext(
+            $parentContext?->IOContext() ?? new IOContext(
                 $this->option->stdOut(),
                 $this->option->stdOut(),
                 $this->option->stdOut(),
             ),
-            $previousContext?->environmentTable() ?? new EnvironmentTable(),
+            $parentContext?->environmentTable() ?? new EnvironmentTable(),
             $this->debugger,
-            $previousContext instanceof \RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface
-                ? $previousContext->depth() + 1
+            $parentContext instanceof \RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface
+                ? $parentContext->depth() + 1
                 : 0,
-            $previousContext?->startTime() ?? null,
-            $this->shouldProcessedRecords ?? $previousContext?->shouldProcessedRecords() ?? false,
-            $this->shouldBreakPoint ?? $previousContext?->shouldBreakPoint() ?? false,
-            $previousContext?->traces() ?? [],
+            $parentContext?->startTime() ?? null,
+            $this->shouldProcessedRecords ?? $parentContext?->shouldProcessedRecords() ?? false,
+            $this->shouldBreakPoint ?? $parentContext?->shouldBreakPoint() ?? false,
+            $parentContext?->traces() ?? [],
         );
     }
 

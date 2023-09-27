@@ -35,4 +35,9 @@ class CallData implements CallDataInterface
     {
         return $this->argc;
     }
+
+    public function keywords(): ?array
+    {
+        return $this->keywords;
+    }
 }

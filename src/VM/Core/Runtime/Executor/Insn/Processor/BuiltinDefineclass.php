@@ -84,7 +84,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
             instructionSequence: $instructionSequence,
             option: $this->context->option(),
             debugger: $this->context->debugger(),
-            previousContext: $this->context,
+            parentContext: $this->context,
         ));
 
         $executor->context()

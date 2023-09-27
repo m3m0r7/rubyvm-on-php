@@ -23,6 +23,7 @@ class OperationProcessorContext implements ContextInterface
      * @param string[] $traces
      */
     public function __construct(
+        private readonly ?ContextInterface $parentContext,
         private readonly KernelInterface $kernel,
         private readonly ExecutorInterface $executor,
         private readonly RubyClassInterface $rubyClass,
@@ -72,6 +73,7 @@ class OperationProcessorContext implements ContextInterface
     public function createSnapshot(): self
     {
         return new self(
+            parentContext: $this->parentContext,
             kernel: clone $this->kernel,
             executor: clone $this->executor,
             rubyClass: clone $this->rubyClass,
@@ -168,6 +170,11 @@ class OperationProcessorContext implements ContextInterface
     public function IOContext(): IOContext
     {
         return $this->IOContext;
+    }
+
+    public function parentContext(): ?ContextInterface
+    {
+        return $this->parentContext;
     }
 
     public function modulePath(string $path = null): string
