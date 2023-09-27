@@ -13,7 +13,6 @@ use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\OptionInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;
-use RubyVM\VM\Exception\ContextNotFound;
 use RubyVM\VM\Exception\RuntimeException;
 
 class NullContext implements ContextInterface

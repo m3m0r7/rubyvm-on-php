@@ -15,7 +15,6 @@ use RubyVM\VM\Core\YARV\Criterion\Entry\Variable;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
-use RubyVM\VM\Core\YARV\Essential\ID;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 trait CallBlockHelper
@@ -48,7 +47,7 @@ trait CallBlockHelper
 
         $currentCallInfo = $context
             ->parentContext()
-            ->instructionSequence()
+            ?->instructionSequence()
             ->body()
             ->info()
             ->currentCallInfo();
@@ -112,7 +111,7 @@ trait CallBlockHelper
         return $result;
     }
 
-    private function callBlockWithArguments(CallInfoInterface $callInfo, Number $blockIseqIndex, RubyClassInterface $blockObject, bool $isSuper, CallInfoInterface|RubyClassInterface|ID|ExecutedResult ...$arguments): ?RubyClassInterface
+    private function callBlockWithArguments(CallInfoInterface $callInfo, Number $blockIseqIndex, RubyClassInterface $blockObject, bool $isSuper, RubyClassInterface|ContextInterface ...$arguments): ?RubyClassInterface
     {
         // @phpstan-ignore-next-line
         if ($this->context === null) {
@@ -173,7 +172,7 @@ trait CallBlockHelper
     }
 
     /**
-     * @param (array<ContextInterface|RubyClassInterface>[]|ContextInterface|RubyClassInterface)[] ...$arguments
+     * @param (ContextInterface|RubyClassInterface)[] ...$arguments
      *
      * @return (array<ContextInterface|RubyClassInterface>[]|ContextInterface|RubyClassInterface)[]
      */
@@ -184,11 +183,18 @@ trait CallBlockHelper
             $context,
             ...self::applySplatExpression(
                 $context,
+
+                // @phpstan-ignore-next-line
                 ...$arguments
             ),
         );
     }
 
+    /**
+     * @param array<array<ContextInterface|RubyClassInterface>>|ContextInterface|RubyClassInterface ...$arguments
+     *
+     * @return (array<ContextInterface|RubyClassInterface>[]|ContextInterface|RubyClassInterface)[]
+     */
     private static function applySplatExpression(ContextInterface $context, RubyClassInterface|ContextInterface|array ...$arguments): array
     {
         $newArguments = [];
@@ -229,11 +235,17 @@ trait CallBlockHelper
         return $newArguments;
     }
 
+    /**
+     * @param array<array<ContextInterface|RubyClassInterface>>|ContextInterface|RubyClassInterface ...$arguments
+     *
+     * @return (array<ContextInterface|RubyClassInterface>[]|ContextInterface|RubyClassInterface)[]
+     */
     private static function applyAlignmentArgumentsByKeywords(?CallInfoInterface $callInfo, ContextInterface $context, RubyClassInterface|ContextInterface|array ...$arguments): array
     {
-        if ($callInfo === null) {
+        if (!$callInfo instanceof \RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface) {
             return $arguments;
         }
+
         $keywords = $callInfo->callData()->keywords();
 
         // A keyword is not available in callee arguments
@@ -254,12 +266,14 @@ trait CallBlockHelper
             $keyword = array_pop($keywords)?->valueOf();
             if ($keyword === null) {
                 $newArguments[$i] = $argument;
+
                 continue;
             }
 
             $position = null;
+
             /**
-             * lookup position in variables
+             * lookup position in variables.
              *
              * @var Variable $variable
              */
@@ -267,6 +281,7 @@ trait CallBlockHelper
                 if ($keyword === $variable->id->object->valueOf()) {
                     // Reverse position
                     $position = $size - $index;
+
                     break;
                 }
             }

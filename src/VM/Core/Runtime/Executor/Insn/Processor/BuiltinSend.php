@@ -59,8 +59,9 @@ class BuiltinSend implements OperationProcessorInterface
             $blockIseqNumber,
             $blockObject,
             false,
-            ...$this->translateForArguments(
 
+            // @phpstan-ignore-next-line
+            ...$this->translateForArguments(
                 ...$arguments,
             ),
         );
