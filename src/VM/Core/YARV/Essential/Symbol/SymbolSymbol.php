@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
 use RubyVM\VM\Core\YARV\Essential\Encoding;
 
-class StringSymbol implements SymbolInterface, \Stringable
+class SymbolSymbol implements SymbolInterface, \Stringable
 {
     public function __construct(
         private readonly string $string,

@@ -9,6 +9,7 @@ use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolSymbol;
 
 interface RubyClassInterface extends RubyClassImplementationInterface, \Stringable
 {
@@ -34,7 +35,7 @@ interface RubyClassInterface extends RubyClassImplementationInterface, \Stringab
 
     public function hasMethod(string $name): bool;
 
-    public function class(NumberSymbol $flags, StringSymbol $className): void;
+    public function class(NumberSymbol $flags, StringSymbol|SymbolSymbol $className): void;
 
-    public function def(StringSymbol $methodName, ContextInterface $context): void;
+    public function def(StringSymbol|SymbolSymbol $methodName, ContextInterface $context): void;
 }
