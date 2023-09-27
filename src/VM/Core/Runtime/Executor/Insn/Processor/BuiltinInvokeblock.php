@@ -62,6 +62,7 @@ class BuiltinInvokeblock implements OperationProcessorInterface
         $executed = $this
             ->callSimpleMethod(
                 $processorContext,
+                $operand,
                 ...$arguments,
             );
 

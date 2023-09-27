@@ -9,6 +9,7 @@ use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Option;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\RuntimeException;
@@ -34,7 +35,7 @@ class Array_ extends Entity implements EntityInterface
         return $this;
     }
 
-    public function each(ContextInterface $context): RubyClassInterface
+    public function each(CallInfoInterface $callInfo, ContextInterface $context): RubyClassInterface
     {
         /**
          * @var ArraySymbol $symbol
@@ -90,7 +91,7 @@ class Array_ extends Entity implements EntityInterface
             ->toBeRubyClass();
     }
 
-    public function push(RubyClassInterface $object): self
+    public function push(CallInfoInterface $callInfo, RubyClassInterface $object): self
     {
         // @phpstan-ignore-next-line
         $this->symbol[] = $object->entity()->symbol();

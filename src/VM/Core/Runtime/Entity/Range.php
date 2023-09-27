@@ -9,6 +9,7 @@ use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\LocalTableHelper;
 use RubyVM\VM\Core\Runtime\Option;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
 
 class Range extends Entity implements EntityInterface
@@ -18,7 +19,7 @@ class Range extends Entity implements EntityInterface
         $this->symbol = $symbol;
     }
 
-    public function each(ContextInterface $context): EntityInterface
+    public function each(CallInfoInterface $callInfo, ContextInterface $context): EntityInterface
     {
         foreach ($this->symbol->valueOf() as $index => $number) {
             $executor = (new Executor(

@@ -10,8 +10,10 @@ use RubyVM\VM\Core\Runtime\Executor\CallBlockHelper;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\RubyClass;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
 use RubyVM\VM\Exception\OperationProcessorException;
+use RubyVM\VM\Exception\RuntimeException;
 
 trait ProvideExtendedMethodCall
 {
@@ -52,10 +54,17 @@ trait ProvideExtendedMethodCall
             return $this->__call($context, $arguments);
         }
 
+        if (($arguments[0] ?? null) !== null && !$arguments[0] instanceof CallInfoInterface) {
+            throw new RuntimeException('A CallInfo entry was not passed');
+        }
+
         return $this
             ->callSimpleMethod(
                 $context,
-                ...$arguments,
+
+                // @phpstan-ignore-next-line
+                $arguments[0],
+                ...array_slice($arguments, 1),
             );
     }
 

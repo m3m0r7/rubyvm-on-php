@@ -80,13 +80,6 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
 
         $targetClass->setRuntimeContext($this->context);
 
-        // Set current call info into instruction sequence
-        $this->context
-            ->instructionSequence()
-            ->body()
-            ->info()
-            ->setCurrentCallInfo($callInfo);
-
         $result = null;
 
         // Here is a special method calls
@@ -101,6 +94,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             $result = $calleeSpecialMethodName->process(
                 $targetClass,
                 $this->context,
+                $callInfo,
                 ...$this->translateForArguments(...$arguments),
             );
         } else {
@@ -108,7 +102,10 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
              * @var null|ExecutedResult|RubyClassInterface $result
              */
             $result = $targetClass
-                ->{(string) $symbol}(...$this->translateForArguments(...$arguments));
+                ->{(string) $symbol}(
+                    $callInfo,
+                    ...$this->translateForArguments(...$arguments),
+                );
         }
 
         if ($result instanceof RubyClassInterface) {
