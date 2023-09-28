@@ -10,6 +10,7 @@ use RubyVM\VM\Core\Runtime\Entity\Float_;
 use RubyVM\VM\Core\Runtime\Entity\Number;
 use RubyVM\VM\Core\Runtime\Entity\Offset;
 use RubyVM\VM\Core\Runtime\Entity\String_;
+use RubyVM\VM\Core\Runtime\Entity\Symbol;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
@@ -184,12 +185,27 @@ trait OperandHelper
     private function getStackAsEntity(): EntityInterface
     {
         $stack = $this->getStackAsAny(
-            RubyClass::class
+            RubyClassInterface::class
         );
 
-        assert($stack instanceof RubyClass);
+        assert($stack instanceof RubyClassInterface);
 
-        return $stack->entity;
+        return $stack->entity();
+    }
+
+    private function getStackAsSymbol(): Symbol
+    {
+        /**
+         * @var Symbol $entity
+         */
+        $entity = $this->getStackAsEntity();
+
+        $this->validateType(
+            Symbol::class,
+            $entity,
+        );
+
+        return $entity;
     }
 
     private function getStackAsNumber(): Number

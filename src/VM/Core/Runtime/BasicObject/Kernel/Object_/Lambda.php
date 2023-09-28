@@ -2,35 +2,17 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime;
+namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_;
 
-use RubyVM\VM\Core\Runtime\Entity\Class_;
-use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
-use RubyVM\VM\Core\Runtime\Essential\MainInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
+use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;
-use RubyVM\VM\Core\YARV\Criterion\ShouldBeRubyClass;
-use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 
-class Lambda implements MainInterface
+class Lambda extends Object_ implements RubyClassInterface
 {
-    use ShouldBeRubyClass;
-
-    protected ?EntityInterface $entity = null;
-
     public function __construct(private readonly InstructionSequenceInterface $instructionSequence) {}
-
-    public function entity(): EntityInterface
-    {
-        return $this->entity ??= Class_::createBy(new StringSymbol('lambda'));
-    }
-
-    public function __toString(): string
-    {
-        return 'lambda';
-    }
 
     public function call(CallInfoInterface $callInfo, RubyClassInterface ...$arguments): RubyClassInterface|null
     {

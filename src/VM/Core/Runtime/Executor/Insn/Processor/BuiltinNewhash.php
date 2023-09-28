@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Hash;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinNewhash implements OperationProcessorInterface
 {
@@ -31,6 +32,22 @@ class BuiltinNewhash implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor is not implemented yet', strtolower($this->insn->name), $this->insn->value));
+        $number = $this->getOperandAsNumber();
+        $newHash = new Hash();
+        for ($i = 0; $i < ($number->valueOf() / 2); ++$i) {
+            $value = $this->getStackAsEntity();
+            $name = $this->getStackAsSymbol();
+
+            $newHash[(string) $name] = $value
+                ->symbol();
+        }
+
+        $this->context->vmStack()->push(
+            new Operand(
+                $newHash,
+            )
+        );
+
+        return ProcessedStatus::SUCCESS;
     }
 }
