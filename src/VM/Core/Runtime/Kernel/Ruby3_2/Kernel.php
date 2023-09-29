@@ -13,6 +13,7 @@ use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Loader\BooleanSymbolLoader;
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Loader\FixedNumberSymbolLoader;
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Loader\FloatSymbolLoader;
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Loader\NilSymbolLoader;
+use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Loader\RegExpSymbolLoader;
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Loader\StringSymbolLoader;
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Loader\StructSymbolLoader;
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Loader\SymbolSymbolLoader;
@@ -273,6 +274,7 @@ class Kernel implements KernelInterface
             SymbolType::SYMBOL => new SymbolSymbolLoader($this, $offset),
             SymbolType::STRING => new StringSymbolLoader($this, $offset),
             SymbolType::ARRAY => new ArraySymbolLoader($this, $offset),
+            SymbolType::REGEXP => new RegExpSymbolLoader($this, $offset),
             default => throw new ResolverException("Cannot resolve a symbol: {$info->type->name} - maybe the symbol type is not supported yet"),
         };
     }

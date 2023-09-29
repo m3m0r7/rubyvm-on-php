@@ -14,7 +14,13 @@ class Nil extends Entity implements EntityInterface
         $this->symbol = $symbol;
     }
 
-    public static function createBy(mixed $value = null): EntityInterface
+    public function testValue(): bool
+    {
+        // Always return false
+        return false;
+    }
+
+    public static function createBy(mixed $value = null): self
     {
         static $symbol = new NilSymbol();
 

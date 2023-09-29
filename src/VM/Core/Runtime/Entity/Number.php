@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Entity;
 
+use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
@@ -20,6 +21,7 @@ class Number extends Entity implements EntityInterface
         return (bool) $this->symbol->valueOf();
     }
 
+    #[BindAliasAs('^')]
     public function xor(CallInfoInterface $callInfo, RubyClassInterface $object): Number
     {
         return Number::createBy(
@@ -27,6 +29,7 @@ class Number extends Entity implements EntityInterface
         );
     }
 
+    #[BindAliasAs('**')]
     public function power(CallInfoInterface $callInfo, RubyClassInterface $object): Number
     {
         return Number::createBy(
@@ -34,6 +37,7 @@ class Number extends Entity implements EntityInterface
         );
     }
 
+    #[BindAliasAs('>>')]
     public function rightShift(CallInfoInterface $callInfo, RubyClassInterface $object): Number
     {
         return Number::createBy(
@@ -41,6 +45,7 @@ class Number extends Entity implements EntityInterface
         );
     }
 
+    #[BindAliasAs('===')]
     public function compareStrictEquals(CallInfoInterface $callInfo, RubyClassInterface $object): Boolean_
     {
         return Boolean_::createBy(
@@ -48,11 +53,13 @@ class Number extends Entity implements EntityInterface
         );
     }
 
+    #[BindAliasAs('to_i')]
     public function toInt(): self
     {
         return clone $this;
     }
 
+    #[BindAliasAs('to_f')]
     public function toFloat(): Float_
     {
         return Float_::createBy(
@@ -60,6 +67,7 @@ class Number extends Entity implements EntityInterface
         );
     }
 
+    #[BindAliasAs('to_s')]
     public function toString(): String_
     {
         return String_::createBy(

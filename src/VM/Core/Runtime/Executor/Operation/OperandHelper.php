@@ -7,9 +7,12 @@ namespace RubyVM\VM\Core\Runtime\Executor\Operation;
 use RubyVM\VM\Core\Runtime\Entity\Array_;
 use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Entity\Float_;
+use RubyVM\VM\Core\Runtime\Entity\Nil;
 use RubyVM\VM\Core\Runtime\Entity\Number;
 use RubyVM\VM\Core\Runtime\Entity\Offset;
+use RubyVM\VM\Core\Runtime\Entity\RegExp;
 use RubyVM\VM\Core\Runtime\Entity\String_;
+use RubyVM\VM\Core\Runtime\Entity\Symbol;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
@@ -184,12 +187,27 @@ trait OperandHelper
     private function getStackAsEntity(): EntityInterface
     {
         $stack = $this->getStackAsAny(
-            RubyClass::class
+            RubyClassInterface::class
         );
 
-        assert($stack instanceof RubyClass);
+        assert($stack instanceof RubyClassInterface);
 
-        return $stack->entity;
+        return $stack->entity();
+    }
+
+    private function getStackAsSymbol(): Symbol
+    {
+        /**
+         * @var Symbol $entity
+         */
+        $entity = $this->getStackAsEntity();
+
+        $this->validateType(
+            Symbol::class,
+            $entity,
+        );
+
+        return $entity;
     }
 
     private function getStackAsNumber(): Number
@@ -235,6 +253,32 @@ trait OperandHelper
         );
 
         assert($entity instanceof String_);
+
+        return $entity;
+    }
+
+    private function getStackAsStringOrNil(): String_|Nil
+    {
+        $entity = $this->getStackAsEntity();
+
+        assert($entity instanceof String_ || $entity instanceof Nil);
+
+        return $entity;
+    }
+
+    private function getStackAsRegExp(): RegExp
+    {
+        /**
+         * @var RegExp $entity
+         */
+        $entity = $this->getStackAsEntity();
+
+        $this->validateType(
+            RegExp::class,
+            $entity,
+        );
+
+        assert($entity instanceof RegExp);
 
         return $entity;
     }
