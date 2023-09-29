@@ -31,6 +31,12 @@ class BuiltinJump implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor is not implemented yet', strtolower($this->insn->name), $this->insn->value));
+        $operand = $this->getOperandAsOffset();
+
+        $this->context
+            ->programCounter()
+            ->increase($operand->valueOf());
+
+        return ProcessedStatus::SUCCESS;
     }
 }

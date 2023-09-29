@@ -755,4 +755,36 @@ class SyntaxTest extends TestApplication
 
         _, $rubyVMManager->stdOut->readAll());
     }
+
+    public function testContinuingRegExp(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            str = "This is Regexp"
+            if /is Regexp/ =~ str
+              puts "matched!"
+            else
+              puts "unmatched!"
+            end
+
+            if /was Regexp/ =~ str
+              puts "matched!"
+            else
+              puts "unmatched!"
+            end
+
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<'_'
+        matched!
+        unmatched!
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
 }
