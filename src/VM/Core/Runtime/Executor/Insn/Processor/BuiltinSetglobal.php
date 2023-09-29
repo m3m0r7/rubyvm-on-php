@@ -31,6 +31,15 @@ class BuiltinSetglobal implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor is not implemented yet', strtolower($this->insn->name), $this->insn->value));
+        $operand = $this->getOperandAsID();
+        $value = $this->getStackAsEntity();
+
+        $this->context
+            ->kernel()
+            ->userlandHeapSpace()
+            ->userlandInstanceVariables()
+            ->set($operand->object->valueOf(), $value->toBeRubyClass()->setRuntimeContext($this->context));
+
+        return ProcessedStatus::SUCCESS;
     }
 }
