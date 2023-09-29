@@ -7,6 +7,7 @@ namespace RubyVM\VM\Core\Runtime\Entity;
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
 
+#[BindAliasAs('Boolean')]
 class Boolean_ extends Entity implements EntityInterface
 {
     public function __construct(BooleanSymbol $symbol)

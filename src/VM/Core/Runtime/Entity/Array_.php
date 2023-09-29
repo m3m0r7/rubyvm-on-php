@@ -13,7 +13,9 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\RuntimeException;
+use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 
+#[BindAliasAs('Array')]
 class Array_ extends Entity implements EntityInterface
 {
     public function __construct(ArraySymbol $symbol)
