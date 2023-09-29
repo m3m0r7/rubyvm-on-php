@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Entity;
 
+use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
 
 class Boolean_ extends Entity implements EntityInterface
@@ -13,6 +14,7 @@ class Boolean_ extends Entity implements EntityInterface
         $this->symbol = $symbol;
     }
 
+    #[BindAliasAs('to_s')]
     public function toString(): String_
     {
         return String_::createBy(

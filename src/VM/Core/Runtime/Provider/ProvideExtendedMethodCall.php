@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Provider;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\CallBlockHelper;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
@@ -30,6 +31,28 @@ trait ProvideExtendedMethodCall
         }
 
         $context = $this->userlandHeapSpace()->userlandMethods()->get($name);
+
+        // Lookup bound instance method
+        if ($context === null) {
+            $reflection = new \ReflectionClass($this->entity());
+            foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                // Lookup bound instance method by #[BindAliasAs(xxx)]
+                // The PHP cannot define a method with sign character but Ruby is allowed always
+                // thus, passed name is illegal on PHP, however it is embedded in RubyVM.
+                // So BindAliasAs attributes resolves this problem.
+                //
+                // @see Number entity class
+                foreach ($method->getAttributes(BindAliasAs::class) as $attribute) {
+                    [$originInstanceMethodName] = $attribute->getArguments();
+                    if ($name !== $originInstanceMethodName) {
+                        continue;
+                    }
+
+                    // Re-call by looked-up name
+                    return $this->{$method->getName()}(...$arguments);
+                }
+            }
+        }
 
         if ($context === null) {
             $boundClass = $this
