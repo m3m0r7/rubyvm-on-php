@@ -787,4 +787,27 @@ class SyntaxTest extends TestApplication
 
         _, $rubyVMManager->stdOut->readAll());
     }
+
+
+
+    public function testGlobalVariable(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            $globalVar = 'Hello World!'
+            puts $globalVar
+
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<'_'
+        Hello World!
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
 }
