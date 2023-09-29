@@ -36,9 +36,9 @@ trait ProvideExtendedMethodCall
         if ($context === null) {
             $reflection = new \ReflectionClass($this->entity());
             foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-                // Lookup bound instance method by #[BindAliasAs(xxx)]
+                // Lookup for bound instance method by #[BindAliasAs(xxx)]
                 // The PHP cannot define a method with sign character but Ruby is allowed always
-                // thus, passed name is illegal on PHP, however it is embedded in RubyVM.
+                // thus, passed name is illegal on PHP, however it is embedded in YARV.
                 // So BindAliasAs attributes resolves this problem.
                 //
                 // @see Number entity class
