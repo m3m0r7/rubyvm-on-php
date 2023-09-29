@@ -9,3 +9,4 @@ parameters:
         - '#Class [^\s]+ has an uninitialized readonly property \$.+?\. Assign it in the constructor#'
         - '#Readonly property [^\s]+ is assigned outside of the constructor#'
         - '#Attribute class [^\s]+ does not have a constructor and must be instantiated without any parameters#'
+        - '#Unsafe usage of new static#'

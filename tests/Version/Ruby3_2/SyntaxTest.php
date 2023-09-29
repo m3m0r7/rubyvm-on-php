@@ -788,8 +788,6 @@ class SyntaxTest extends TestApplication
         _, $rubyVMManager->stdOut->readAll());
     }
 
-
-
     public function testGlobalVariable(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(
@@ -807,6 +805,29 @@ class SyntaxTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame(<<<'_'
         Hello World!
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
+
+    public function testSimpleCatch(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            begin
+              raise RuntimeError, 'Hello World! I am calling via raise expression'
+            rescue RuntimeError => e
+              puts e
+            end
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<'_'
+        Hello World! I am calling via raise expression
 
         _, $rubyVMManager->stdOut->readAll());
     }
