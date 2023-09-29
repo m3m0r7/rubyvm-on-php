@@ -6,6 +6,7 @@ namespace RubyVM\VM\Core\YARV\Criterion\InstructionSequence;
 
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperationEntries;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CallInfoEntries;
+use RubyVM\VM\Core\YARV\Criterion\Entry\CatchEntries;
 use RubyVM\VM\Core\YARV\Criterion\Entry\VariableEntries;
 
 interface InstructionSequenceInfoInterface
@@ -32,7 +33,5 @@ interface InstructionSequenceInfoInterface
 
     public function callInfoEntries(): CallInfoEntries;
 
-    public function currentCallInfo(): ?CallInfoInterface;
-
-    public function setCurrentCallInfo(CallInfoInterface $callInfo): self;
+    public function catchEntries(): CatchEntries;
 }

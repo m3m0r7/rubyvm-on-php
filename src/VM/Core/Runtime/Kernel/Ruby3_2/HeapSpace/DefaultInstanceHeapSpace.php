@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\HeapSpace;
 
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
-use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 
 class DefaultInstanceHeapSpace extends UserlandHeapSpace

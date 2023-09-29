@@ -16,6 +16,7 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\OperationEntries;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CallData;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CallInfo;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CallInfoEntries;
+use RubyVM\VM\Core\YARV\Criterion\Entry\Catch_;
 use RubyVM\VM\Core\YARV\Criterion\Entry\CatchEntries;
 use RubyVM\VM\Core\YARV\Criterion\Entry\InsnsBodyEntries;
 use RubyVM\VM\Core\YARV\Criterion\Entry\InsnsPositionEntries;
@@ -468,7 +469,24 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
 
     private function loadCatchTable(int $catchTableOffset, int $catchTableSize): CatchEntries
     {
-        return new CatchEntries();
+        $reader = $this->kernel->stream()->duplication();
+        $reader->pos($catchTableOffset);
+
+        $entries = new CatchEntries();
+
+        for ($i = 0; $i < $catchTableSize; ++$i) {
+            $entries[] = new Catch_(
+                kernel: $this->kernel,
+                iseqIndex: $reader->smallValue(),
+                type: $reader->smallValue(),
+                start: $reader->smallValue(),
+                end: $reader->smallValue(),
+                cont: $reader->smallValue(),
+                sp: $reader->smallValue(),
+            );
+        }
+
+        return $entries;
     }
 
     public function path(): string

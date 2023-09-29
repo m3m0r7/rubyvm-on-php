@@ -111,15 +111,8 @@ class InstructionSequenceInfo implements InstructionSequenceInfoInterface
         return $this->callInfoEntries;
     }
 
-    public function currentCallInfo(): ?CallInfoInterface
+    public function catchEntries(): CatchEntries
     {
-        return $this->currentCallInfo;
-    }
-
-    public function setCurrentCallInfo(CallInfoInterface $callInfo): self
-    {
-        $this->currentCallInfo = $callInfo;
-
-        return $this;
+        return $this->catchTable;
     }
 }
