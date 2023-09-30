@@ -13,22 +13,9 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolType;
 use RubyVM\VM\Exception\OperationProcessorException;
 
-abstract class Entity implements EntityInterface
+trait Entityable
 {
     protected SymbolInterface $symbol;
-
-    public function toBeRubyClass(): RubyClassInterface
-    {
-        return (new RubyClass(
-            info: new ObjectInfo(
-                type: SymbolType::findBySymbol($this->symbol),
-                specialConst: 0,
-                frozen: 1,
-                internal: 0,
-            ),
-            entity: clone $this,
-        ))->setUserlandHeapSpace(new UserlandHeapSpace());
-    }
 
     public function __clone()
     {

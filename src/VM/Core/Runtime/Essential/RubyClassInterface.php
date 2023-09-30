@@ -14,8 +14,6 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolSymbol;
 
 interface RubyClassInterface extends RubyClassImplementationInterface, \Stringable
 {
-    public function entity(): Class_;
-
     public function setRuntimeContext(?ContextInterface $context): RubyClassInterface;
 
     public function context(): ContextInterface;

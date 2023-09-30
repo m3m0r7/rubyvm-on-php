@@ -14,7 +14,7 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\RegExpSymbol;
 
 class Regexp extends Object_ implements RubyClassInterface
 {
-    public function __construct(private RegExpSymbol $symbol)
+    public function __construct(RegExpSymbol $symbol)
     {
         $this->symbol = $symbol;
     }

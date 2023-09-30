@@ -35,7 +35,7 @@ trait OperandHelper
 
         assert($operand instanceof RubyClassInterface);
 
-        return $operand->entity();
+        return $operand;
     }
 
     private function getOperandAsNumber(): Integer_
@@ -184,7 +184,7 @@ trait OperandHelper
         return $operand->operand;
     }
 
-    private function getStackAsEntity(): EntityInterface
+    private function getStackAsEntity(): RubyClassInterface
     {
         $stack = $this->getStackAsAny(
             RubyClassInterface::class
@@ -192,7 +192,7 @@ trait OperandHelper
 
         assert($stack instanceof RubyClassInterface);
 
-        return $stack->entity();
+        return $stack;
     }
 
     private function getStackAsSymbol(): Symbol

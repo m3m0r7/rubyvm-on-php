@@ -12,7 +12,7 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 
 class Integer_ extends Comparable implements RubyClassInterface
 {
-    public function __construct(private NumberSymbol $symbol)
+    public function __construct(NumberSymbol $symbol)
     {
         $this->symbol = $symbol;
     }

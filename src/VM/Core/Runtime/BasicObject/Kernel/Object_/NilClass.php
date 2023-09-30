@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_;
 
-use RubyVM\VM\Core\Runtime\Entity\Entity;
+use RubyVM\VM\Core\Runtime\Entity\Entityable;
 use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NilSymbol;
 
 class NilClass extends Object_ implements RubyClassInterface
 {
-    public function __construct(private NilSymbol $symbol)
+    public function __construct(NilSymbol $symbol)
     {
         $this->symbol = $symbol;
     }

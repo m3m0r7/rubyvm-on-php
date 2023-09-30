@@ -11,7 +11,7 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
 #[BindAliasAs('Float')]
 class Float_ extends Comparable implements RubyClassInterface
 {
-    public function __construct(private FloatSymbol $symbol)
+    public function __construct(FloatSymbol $symbol)
     {
         $this->symbol = $symbol;
     }

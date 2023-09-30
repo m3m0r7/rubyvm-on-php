@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_;
 
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
-use RubyVM\VM\Core\Runtime\Entity\Entity;
+use RubyVM\VM\Core\Runtime\Entity\Entityable;
 use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
@@ -21,7 +21,7 @@ class Class_ extends Object_ implements RubyClassInterface
      */
     public static array $classes = [];
 
-    public function __construct(private ClassSymbol $symbol)
+    public function __construct(ClassSymbol $symbol)
     {
         $this->symbol = $symbol;
     }

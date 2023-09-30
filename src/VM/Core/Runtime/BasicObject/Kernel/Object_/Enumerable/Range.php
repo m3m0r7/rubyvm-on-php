@@ -18,7 +18,7 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
 
 class Range extends Enumerable implements RubyClassInterface
 {
-    public function __construct(private RangeSymbol $symbol)
+    public function __construct(RangeSymbol $symbol)
     {
         $this->symbol = $symbol;
     }

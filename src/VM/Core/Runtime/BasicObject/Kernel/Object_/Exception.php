@@ -13,7 +13,7 @@ abstract class Exception extends Object_ implements RubyClassInterface
 {
     protected RubyClassInterface $message;
 
-    public static function createBy(): self
+    public static function createBy(mixed $value = null): self
     {
         return new static();
     }

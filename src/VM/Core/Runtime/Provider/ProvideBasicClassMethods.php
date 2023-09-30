@@ -25,7 +25,7 @@ trait ProvideBasicClassMethods
 {
     public function puts(CallInfoInterface $callInfo, RubyClassInterface $object): RubyClassInterface
     {
-        $symbol = $object->entity()->symbol();
+        $symbol = $object->symbol();
 
         $string = '';
         if ($object instanceof Exception) {

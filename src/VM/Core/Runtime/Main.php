@@ -14,13 +14,6 @@ class Main implements MainInterface
 {
     use ShouldBeRubyClass;
 
-    protected ?Class_ $entity = null;
-
-    public function entity(): Class_
-    {
-        return $this->entity ??= Class_::createBy(new StringSymbol('<main>'));
-    }
-
     public function __toString(): string
     {
         return '<main>';

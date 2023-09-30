@@ -11,7 +11,7 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\VoidSymbol;
 #[BindAliasAs('Void')]
 class Void_ extends Object_ implements RubyClassInterface
 {
-    public function __construct(private VoidSymbol $symbol)
+    public function __construct(VoidSymbol $symbol)
     {
         $this->symbol = $symbol;
     }

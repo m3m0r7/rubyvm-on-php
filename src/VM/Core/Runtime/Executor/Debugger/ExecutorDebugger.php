@@ -193,7 +193,7 @@ class ExecutorDebugger
                 ->operationEntries()
                 ->get($currentPos + 1)
                 ->operand
-                ->entity;
+                ->entity();
 
             return sprintf('ref: %d', $number->valueOf());
         }

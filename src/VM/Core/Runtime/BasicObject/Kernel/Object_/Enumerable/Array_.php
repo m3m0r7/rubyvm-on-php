@@ -7,7 +7,7 @@ namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
-use RubyVM\VM\Core\Runtime\Entity\Entity;
+use RubyVM\VM\Core\Runtime\Entity\Entityable;
 use RubyVM\VM\Core\Runtime\Entity\EntityHelper;
 use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
@@ -22,7 +22,7 @@ use RubyVM\VM\Exception\RuntimeException;
 #[BindAliasAs('Array')]
 class Array_ extends Enumerable implements RubyClassInterface
 {
-    public function __construct(private ArraySymbol $symbol)
+    public function __construct(ArraySymbol $symbol)
     {
         $this->symbol = $symbol;
     }
