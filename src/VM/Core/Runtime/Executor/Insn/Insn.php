@@ -423,6 +423,7 @@ enum Insn: int
             Insn::GETINSTANCEVARIABLE,
             Insn::SEND => 2,
             Insn::DEFINECLASS => 3,
+            Insn::SETLOCAL, Insn::GETLOCAL => 2,
             default => 1,
         };
     }

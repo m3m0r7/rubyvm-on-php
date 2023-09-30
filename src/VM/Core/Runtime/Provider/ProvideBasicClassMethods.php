@@ -92,32 +92,8 @@ trait ProvideBasicClassMethods
          */
         foreach ($this->context()->instructionSequence()->body()->info()->catchEntries() as $entry) {
             if ($pos >= $entry->start() && $entry->end() > $pos) {
-                /**
-                 * @var Nil|SymbolSymbol[] $targetClasses
-                 */
-                $targetClasses = $this
-                    ->context()
-                    ->kernel()
-                    ->findObject($entry->cont());
-
-                if ($targetClasses instanceof Nil) {
-                    return Nil::createBy()
-                        ->toBeRubyClass();
-                }
-
-                foreach ($targetClasses as $targetClass) {
-                    if ($targetClass->valueOf() === $class->entity()->valueOf()) {
-                        $lookedUpCatchEntry = $entry;
-                    }
-
-                    if ($lookedUpCatchEntry !== null) {
-                        break;
-                    }
-                }
-
-                if ($lookedUpCatchEntry !== null) {
-                    break;
-                }
+                $lookedUpCatchEntry = $entry;
+                break;
             }
         }
 
