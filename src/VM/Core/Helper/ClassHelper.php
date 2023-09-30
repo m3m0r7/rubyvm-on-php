@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Helper;
 
-use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
-
 class ClassHelper
 {
     public static function nameBy(mixed $obj): string
@@ -14,17 +12,10 @@ class ClassHelper
             return gettype($obj);
         }
 
-        if ($obj instanceof \RubyVM\VM\Core\Runtime\RubyClass) {
-            return static::nameBy($obj->entity);
-        }
-
         $classNamePath = explode('\\', $obj::class);
         $name = $classNamePath[array_key_last($classNamePath)];
-        if ($obj instanceof EntityInterface) {
-            $name = rtrim($name, '_');
-        }
 
-        return $name;
+        return rtrim($name, '_');
     }
 
     public static function idBy(object $obj): string

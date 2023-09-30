@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Symbol;
+use RubyVM\VM\Core\Runtime\ClassCreator;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
@@ -14,7 +16,6 @@ use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
-use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 
 class BuiltinDefinemethod implements OperationProcessorInterface
 {
@@ -37,11 +38,10 @@ class BuiltinDefinemethod implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        /**
-         * @var StringSymbol $methodNameSymbol
-         */
-        $methodNameSymbol = $this->getOperandAsID()
-            ->object;
+        $methodName = ClassCreator::createClassBySymbol(
+            $this->getOperandAsID()
+                ->object
+        );
 
         $instructionSequence = $this->context->kernel()
             ->loadInstructionSequence(
@@ -56,9 +56,9 @@ class BuiltinDefinemethod implements OperationProcessorInterface
         $instructionSequence->load();
 
         $this->context
-            ->appendTrace($methodNameSymbol->valueOf());
+            ->appendTrace($methodName->valueOf());
 
-        $class = $this->context->self()->entity();
+        $class = $this->context->self();
 
         $receiverClass = $this
             ->context
@@ -82,9 +82,11 @@ class BuiltinDefinemethod implements OperationProcessorInterface
             parentContext: $context,
         );
 
+        assert($methodName instanceof Symbol);
+
         $receiverClass
             ->def(
-                $methodNameSymbol,
+                $methodName,
                 $executor->context(),
             );
 

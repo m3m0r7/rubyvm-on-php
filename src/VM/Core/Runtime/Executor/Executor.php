@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Entity\Void_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Void_;
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
@@ -330,8 +330,7 @@ class Executor implements ExecutorInterface
         return new ExecutedResult(
             executor: $this,
             executedStatus: ExecutedStatus::SUCCESS,
-            returnValue: Void_::createBy()
-                ->toBeRubyClass(),
+            returnValue: Void_::createBy(),
             threw: null,
             debugger: $this->debugger,
         );

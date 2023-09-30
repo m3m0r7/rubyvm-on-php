@@ -2,20 +2,27 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Entity;
+namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_;
 
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
+use RubyVM\VM\Core\Runtime\BasicObject\Symbolizable;
+use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\RegExpSymbol;
 
-class RegExp extends Entity implements EntityInterface
+class Regexp extends Object_ implements RubyClassInterface, Symbolize
 {
+    use Symbolizable;
+
     public function __construct(RegExpSymbol $symbol)
     {
         $this->symbol = $symbol;
     }
 
-    public static function createBy(mixed $value = null, int $option = null): EntityInterface
+    public static function createBy(mixed $value = null, int $option = null): self
     {
         return new self(new RegExpSymbol($value, $option));
     }
@@ -30,10 +37,10 @@ class RegExp extends Entity implements EntityInterface
      * @see https://docs.ruby-lang.org/ja/latest/class/Regexp.html#I_--3D--7E
      */
     #[BindAliasAs('=~')]
-    public function equalsTilde(CallInfoInterface $callInfo, String_|Nil $source): Number|Nil
+    public function equalsTilde(CallInfoInterface $callInfo, String_|NilClass $source): Integer_|NilClass
     {
-        if ($source instanceof Nil) {
-            return Nil::createBy();
+        if ($source instanceof NilClass) {
+            return NilClass::createBy();
         }
 
         preg_match(
@@ -44,11 +51,11 @@ class RegExp extends Entity implements EntityInterface
         );
 
         if ($match === []) {
-            return Nil::createBy();
+            return NilClass::createBy();
         }
 
         [, $offset] = $match[0];
 
-        return Number::createBy($offset);
+        return Integer_::createBy($offset);
     }
 }

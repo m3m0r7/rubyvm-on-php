@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Debugger;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\FalseClass;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\TrueClass;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Undefined;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Void_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
-use RubyVM\VM\Core\Runtime\RubyClass;
 
 trait DebugFormat
 {
@@ -18,18 +22,25 @@ trait DebugFormat
         $result = [];
         foreach ($targetItems as $index => $item) {
             if ($item instanceof RubyClassInterface) {
-                $result[] = ClassHelper::nameBy($item->entity()) . "({$item->entity()})";
+                $result[] = ClassHelper::nameBy($item) . "({$item})#{$index}";
 
                 continue;
             }
 
-            $result[] = match ($item::class) {
-                Operand::class => match (($item->operand)::class) {
-                    RubyClass::class => ClassHelper::nameBy($item->operand->entity()) . "({$item->operand->entity()})",
-                    default => ClassHelper::nameBy($item->operand),
-                },
-                default => 'unknown',
-            } . "#{$index}";
+            if ($item instanceof Operand) {
+                if ($item->operand instanceof RubyClassInterface) {
+                    $result[] = match ($item->operand::class) {
+                        TrueClass::class, FalseClass::class, NilClass::class, Void_::class, Undefined::class => ClassHelper::nameBy($item->operand),
+                        default => ClassHelper::nameBy($item->operand) . "({$item->operand})",
+                    } . "#{$index}";
+
+                    continue;
+                }
+
+                $result[] = ClassHelper::nameBy($item->operand) . "#{$index}";
+
+                continue;
+            }
         }
 
         return rtrim(

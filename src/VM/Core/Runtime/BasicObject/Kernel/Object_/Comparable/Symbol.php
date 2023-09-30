@@ -2,12 +2,17 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Entity;
+namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable;
 
+use RubyVM\VM\Core\Runtime\BasicObject\Symbolizable;
+use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolSymbol;
 
-class Symbol extends Entity implements EntityInterface
+class Symbol extends Comparable implements RubyClassInterface, Symbolize
 {
+    use Symbolizable;
+
     public function __construct(SymbolSymbol $symbol)
     {
         $this->symbol = $symbol;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
-use RubyVM\VM\Core\Runtime\Entity\Class_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Class_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -12,9 +12,7 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
-use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinOptGetconstantPath implements OperationProcessorInterface
@@ -40,9 +38,6 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
 
         $symbol = $operand->object;
 
-        /**
-         * @var StringSymbol $constantNameSymbol
-         */
         foreach ($symbol->valueOf() as $constantNameSymbol) {
             $classes = $this->context->self()->userlandHeapSpace()->userlandClasses();
 
@@ -63,8 +58,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
                     );
                 }
 
-                // @phpstan-ignore-next-line
-                $object = RubyClass::initializeByClassName($className);
+                $object = $className::createBy();
             } else {
                 $object = Class_::of($constantNameSymbol, $this->context);
             }

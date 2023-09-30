@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
-use RubyVM\VM\Core\Runtime\Entity\Boolean_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\FalseClass;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\TrueClass;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -12,9 +13,6 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperatorCalculatable;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
 class BuiltinOptEq implements OperationProcessorInterface
 {
@@ -40,20 +38,10 @@ class BuiltinOptEq implements OperationProcessorInterface
         return $this->processArithmetic('==');
     }
 
-    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?RubyClassInterface
+    private function compute(RubyClassInterface $leftOperand, RubyClassInterface $rightOperand): RubyClassInterface
     {
-        $value = null;
-        if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
-            $value = $this->computeNumberEqNumber($leftOperand, $rightOperand);
-        }
-
-        return $value;
-    }
-
-    private function computeNumberEqNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
-    {
-        return (new Boolean_(new BooleanSymbol(
-            $leftOperand->valueOf() === $rightOperand->valueOf(),
-        )))->toBeRubyClass();
+        return $leftOperand->valueOf() == $rightOperand->valueOf()
+            ? TrueClass::createBy()
+            : FalseClass::createBy();
     }
 }

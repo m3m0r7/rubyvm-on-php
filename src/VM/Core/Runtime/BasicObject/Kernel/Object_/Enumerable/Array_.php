@@ -2,9 +2,13 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Entity;
+namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
+use RubyVM\VM\Core\Runtime\BasicObject\Symbolizable;
+use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
@@ -13,11 +17,12 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\RuntimeException;
-use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 
 #[BindAliasAs('Array')]
-class Array_ extends Entity implements EntityInterface
+class Array_ extends Enumerable implements RubyClassInterface, Symbolize
 {
+    use Symbolizable;
+
     public function __construct(ArraySymbol $symbol)
     {
         $this->symbol = $symbol;
@@ -30,7 +35,7 @@ class Array_ extends Entity implements EntityInterface
     {
         $this->symbol = new ArraySymbol(
             $values instanceof RubyClassInterface
-                ? $values->entity()->symbol()->valueOf()
+                ? $values->valueOf()
                 : ($values ?? []),
         );
 
@@ -39,10 +44,10 @@ class Array_ extends Entity implements EntityInterface
 
     public function each(CallInfoInterface $callInfo, ContextInterface $context): RubyClassInterface
     {
-        /**
-         * @var ArraySymbol $symbol
-         */
         $symbol = $this->symbol;
+
+        assert($symbol instanceof ArraySymbol);
+
         for ($i = 0; $i < count($symbol); ++$i) {
             $executor = (new Executor(
                 kernel: $context->kernel(),
@@ -57,7 +62,7 @@ class Array_ extends Entity implements EntityInterface
             $executor->context()
                 ->renewEnvironmentTable();
 
-            if (!$symbol[$i] instanceof SymbolInterface) {
+            if (!$symbol[$i] instanceof RubyClassInterface) {
                 throw new RuntimeException(
                     sprintf(
                         'Out of index#%d in Array',
@@ -66,8 +71,7 @@ class Array_ extends Entity implements EntityInterface
                 );
             }
 
-            $object = EntityHelper::createEntityBySymbol($symbol[$i])
-                ->toBeRubyClass()
+            $object = $symbol[$i]
                 ->setRuntimeContext($executor->context())
                 ->setUserlandHeapSpace($executor->context()->self()->userlandHeapSpace());
 
@@ -89,14 +93,13 @@ class Array_ extends Entity implements EntityInterface
             }
         }
 
-        return Nil::createBy()
-            ->toBeRubyClass();
+        return NilClass::createBy();
     }
 
     public function push(CallInfoInterface $callInfo, RubyClassInterface $object): self
     {
         // @phpstan-ignore-next-line
-        $this->symbol[] = $object->entity()->symbol();
+        $this->symbol[] = $object;
 
         return $this;
     }
@@ -104,5 +107,45 @@ class Array_ extends Entity implements EntityInterface
     public static function createBy(mixed $value = []): self
     {
         return new self(new ArraySymbol($value));
+    }
+
+    public function offsetExists(mixed $offset): bool
+    {
+        assert($this->symbol instanceof ArraySymbol);
+
+        return $this->symbol->offsetExists($offset);
+    }
+
+    public function offsetGet(mixed $offset): mixed
+    {
+        assert($this->symbol instanceof ArraySymbol);
+
+        return $this->symbol->offsetGet($offset);
+    }
+
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        assert($this->symbol instanceof ArraySymbol);
+        $this->symbol->offsetSet($offset, $value);
+    }
+
+    public function offsetUnset(mixed $offset): void
+    {
+        assert($this->symbol instanceof ArraySymbol);
+        $this->symbol->offsetUnset($offset);
+    }
+
+    public function getIterator(): \Traversable
+    {
+        assert($this->symbol instanceof ArraySymbol);
+
+        return $this->symbol->getIterator();
+    }
+
+    public function count(): int
+    {
+        assert($this->symbol instanceof ArraySymbol);
+
+        return $this->symbol->count();
     }
 }

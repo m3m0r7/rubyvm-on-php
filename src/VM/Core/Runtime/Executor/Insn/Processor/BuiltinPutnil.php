@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
-use RubyVM\VM\Core\Runtime\Entity\Nil;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -32,7 +32,7 @@ class BuiltinPutnil implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $this->context->vmStack()->push(new Operand(Nil::createBy()->toBeRubyClass()));
+        $this->context->vmStack()->push(new Operand(NilClass::createBy()));
 
         return ProcessedStatus::SUCCESS;
     }

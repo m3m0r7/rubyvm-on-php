@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\FalseClass;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\TrueClass;
 use RubyVM\VM\Core\Runtime\CheckMatchType;
-use RubyVM\VM\Core\Runtime\Entity\Boolean_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -50,9 +51,9 @@ class BuiltinCheckmatch implements OperationProcessorInterface
         $this->context
             ->vmStack()
             ->push(new Operand(
-                Boolean_::createBy(
-                    $compareBy->entity()->valueOf() === $compareFrom->entity()->valueOf()
-                )->toBeRubyClass(),
+                $compareBy->valueOf() === $compareFrom->valueOf()
+                    ? TrueClass::createBy()
+                    : FalseClass::createBy(),
             ));
 
         return ProcessedStatus::SUCCESS;

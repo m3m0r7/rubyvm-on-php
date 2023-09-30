@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
-use RubyVM\VM\Core\Runtime\Entity\Array_;
-use RubyVM\VM\Core\Runtime\Entity\Nil;
-use RubyVM\VM\Core\Runtime\Entity\Number;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Option;
@@ -104,7 +104,7 @@ trait CallBlockHelper
         return $result;
     }
 
-    private function callBlockWithArguments(CallInfoInterface $callInfo, Number $blockIseqIndex, RubyClassInterface $blockObject, bool $isSuper, RubyClassInterface|ContextInterface ...$arguments): ?RubyClassInterface
+    private function callBlockWithArguments(CallInfoInterface $callInfo, Integer_ $blockIseqIndex, RubyClassInterface $blockObject, bool $isSuper, RubyClassInterface|ContextInterface ...$arguments): ?RubyClassInterface
     {
         // @phpstan-ignore-next-line
         if ($this->context === null) {
@@ -201,24 +201,20 @@ trait CallBlockHelper
                         // @phpstan-ignore-next-line
                         static function (RubyClassInterface|ContextInterface $rubyClass) {
                             if ($rubyClass instanceof ContextInterface) {
-                                return Nil::createBy()
-                                    ->symbol();
+                                return NilClass::createBy();
                             }
 
-                            return $rubyClass
-                                ->entity()
-                                ->symbol();
+                            return $rubyClass;
                         },
                         $argument,
                     )
-                )->toBeRubyClass();
+                );
 
                 continue;
             }
 
             if ($argument instanceof ContextInterface) {
-                $newArguments[] = Nil::createBy()
-                    ->toBeRubyClass();
+                $newArguments[] = NilClass::createBy();
 
                 continue;
             }

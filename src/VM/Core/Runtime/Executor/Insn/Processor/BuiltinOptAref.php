@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Entity\EntityHelper;
-use RubyVM\VM\Core\Runtime\Entity\Symbol;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -14,10 +12,6 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolSymbol;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinOptAref implements OperationProcessorInterface
@@ -45,32 +39,19 @@ class BuiltinOptAref implements OperationProcessorInterface
         $recv = $this->getStackAsEntity();
         $obj = $this->getStackAsAny(RubyClassInterface::class);
 
-        // @var null|SymbolSymbol|NumberSymbol|StringSymbol $value
         if ($obj instanceof \ArrayAccess) {
             $value = $obj[$recv->valueOf()] ?? null;
-        } elseif ($obj instanceof RubyClassInterface) {
-            $entity = $obj->entity();
-            if (!$entity->symbol() instanceof \ArrayAccess) {
-                throw new OperationProcessorException(
-                    sprintf(
-                        'The %s[%s] cannot access as an array',
-                        (string) $entity->symbol()->valueOf(),
-                        $recv->valueOf(),
-                    )
-                );
-            }
-
-            $value = $entity->symbol()[$recv->valueOf()] ?? null;
         } else {
             throw new OperationProcessorException(
                 sprintf(
-                    'The stacked operand was not implemented yet: %s',
+                    'The %s[%s] cannot access as an array',
                     ClassHelper::nameBy($obj),
+                    $recv->valueOf(),
                 )
             );
         }
 
-        if (!$value instanceof SymbolInterface && !$value instanceof RubyClassInterface) {
+        if (!$value instanceof RubyClassInterface) {
             throw new OperationProcessorException(
                 sprintf(
                     'Out of index#%d in the %s',
@@ -80,16 +61,9 @@ class BuiltinOptAref implements OperationProcessorInterface
             );
         }
 
-        if ($value instanceof RubyClassInterface) {
-            $value = $value
-                ->entity()
-                ->symbol();
-        }
-
         $this->context->vmStack()->push(
             new Operand(
-                EntityHelper::createEntityBySymbol($value)
-                    ->toBeRubyClass(),
+                $value,
             ),
         );
 

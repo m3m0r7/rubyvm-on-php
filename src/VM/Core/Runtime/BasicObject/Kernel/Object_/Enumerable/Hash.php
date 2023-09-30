@@ -7,7 +7,7 @@ namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
-class Hash extends Enumerable implements RubyClassInterface, \ArrayAccess
+class Hash extends Enumerable implements RubyClassInterface
 {
     /**
      * @param array<SymbolInterface> $hash
@@ -32,5 +32,25 @@ class Hash extends Enumerable implements RubyClassInterface, \ArrayAccess
     public function offsetUnset(mixed $offset): void
     {
         unset($this->hash[$offset]);
+    }
+
+    public static function createBy(mixed $value = null): self
+    {
+        return new self($value);
+    }
+
+    public function getIterator(): \Traversable
+    {
+        return new \ArrayIterator($this->hash);
+    }
+
+    public function valueOf(): mixed
+    {
+        return $this->hash;
+    }
+
+    public function count(): int
+    {
+        return count($this->hash);
     }
 }

@@ -10,7 +10,6 @@ use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\CallBlockHelper;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
-use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
 use RubyVM\VM\Exception\OperationProcessorException;
@@ -34,14 +33,14 @@ trait ProvideExtendedMethodCall
 
         // Lookup bound instance method
         if ($context === null) {
-            $reflection = new \ReflectionClass($this->entity());
+            $reflection = new \ReflectionClass($this);
             foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
                 // Lookup for bound instance method by #[BindAliasAs(xxx)]
                 // The PHP cannot define a method with sign character but Ruby is allowed always
                 // thus, passed name is illegal on PHP, however it is embedded in YARV.
                 // So BindAliasAs attributes resolves this problem.
                 //
-                // @see Number entity class
+                // @see Integer_ entity class
                 foreach ($method->getAttributes(BindAliasAs::class) as $attribute) {
                     [$originInstanceMethodName] = $attribute->getArguments();
                     if ($name !== $originInstanceMethodName) {
@@ -60,7 +59,7 @@ trait ProvideExtendedMethodCall
                 ->self()
                 ->userlandHeapSpace()
                 ->userlandClasses()
-                ->get(self::resolveObjectName($this));
+                ->get($this::class);
 
             if ($boundClass !== null) {
                 $context = $boundClass
@@ -89,14 +88,5 @@ trait ProvideExtendedMethodCall
                 $arguments[0],
                 ...array_slice($arguments, 1),
             );
-    }
-
-    private static function resolveObjectName(RubyClassInterface $class): string
-    {
-        if ($class instanceof RubyClass) {
-            return ($class->entity)::class;
-        }
-
-        return $class::class;
     }
 }

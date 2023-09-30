@@ -50,4 +50,9 @@ class Lambda extends Object_ implements RubyClassInterface
 
         return $result->returnValue;
     }
+
+    public static function createBy(mixed $value = null): self
+    {
+        return new self($value);
+    }
 }

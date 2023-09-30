@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Essential;
 
-use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Symbol;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolSymbol;
 
 interface RubyClassInterface extends RubyClassImplementationInterface, \Stringable
 {
-    public function entity(): EntityInterface;
-
     public function setRuntimeContext(?ContextInterface $context): RubyClassInterface;
 
     public function context(): ContextInterface;
@@ -35,7 +32,11 @@ interface RubyClassInterface extends RubyClassImplementationInterface, \Stringab
 
     public function hasMethod(string $name): bool;
 
-    public function class(NumberSymbol $flags, StringSymbol|SymbolSymbol $className): void;
+    public function class(Integer_ $flags, String_|Symbol $className): void;
 
-    public function def(StringSymbol|SymbolSymbol $methodName, ContextInterface $context): void;
+    public function def(String_|Symbol $methodName, ContextInterface $context): void;
+
+    public function valueOf(): mixed;
+
+    public function testValue(): bool;
 }

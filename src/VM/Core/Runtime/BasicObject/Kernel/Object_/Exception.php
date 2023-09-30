@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_;
 
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
+use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
@@ -13,7 +14,7 @@ abstract class Exception extends Object_ implements RubyClassInterface
 {
     protected RubyClassInterface $message;
 
-    public static function createBy(): self
+    public static function createBy(mixed $value = null): self
     {
         return new static();
     }
@@ -25,11 +26,6 @@ abstract class Exception extends Object_ implements RubyClassInterface
         return $this;
     }
 
-    public function toBeRubyClass(): RubyClassInterface
-    {
-        return $this;
-    }
-
     public function userlandHeapSpace(): UserlandHeapSpaceInterface
     {
         return $this->userlandHeapSpace ??= new UserlandHeapSpace();
@@ -38,9 +34,10 @@ abstract class Exception extends Object_ implements RubyClassInterface
     #[BindAliasAs('to_s')]
     public function __toString(): string
     {
+        assert($this->message instanceof Symbolize);
+
         return (string) $this
             ->message
-            ->entity()
             ->symbol()
             ->valueOf();
     }
@@ -48,5 +45,10 @@ abstract class Exception extends Object_ implements RubyClassInterface
     public function message(): RubyClassInterface
     {
         return $this->message;
+    }
+
+    public function valueOf(): string
+    {
+        return $this->className();
     }
 }

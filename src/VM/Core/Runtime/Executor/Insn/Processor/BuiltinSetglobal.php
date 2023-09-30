@@ -37,7 +37,7 @@ class BuiltinSetglobal implements OperationProcessorInterface
             ->kernel()
             ->userlandHeapSpace()
             ->userlandInstanceVariables()
-            ->set($operand->object->valueOf(), $value->toBeRubyClass()->setRuntimeContext($this->context));
+            ->set($operand->object->valueOf(), $value->setRuntimeContext($this->context));
 
         return ProcessedStatus::SUCCESS;
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Loader;
 
+use RubyVM\VM\Core\Runtime\ClassCreator;
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
@@ -26,11 +27,13 @@ class ArraySymbolLoader implements SymbolLoaderInterface
         $array = [];
 
         for ($i = 0; $i < $len; ++$i) {
-            $array[] = $this->kernel
-                ->findObject(
-                    $reader
-                        ->smallValue()
-                );
+            $array[] = ClassCreator::createClassBySymbol(
+                $this->kernel
+                    ->findObject(
+                        $reader
+                            ->smallValue()
+                    ),
+            );
         }
 
         return new ArraySymbol($array);

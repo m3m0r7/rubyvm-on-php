@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Provider;
 
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Enumerable;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Exception;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Lambda;
-use RubyVM\VM\Core\Runtime\Entity\Nil;
-use RubyVM\VM\Core\Runtime\Entity\String_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
@@ -15,30 +16,25 @@ use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CatchInterface;
-use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NilSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Exception\Raise;
 
 trait ProvideBasicClassMethods
 {
     public function puts(CallInfoInterface $callInfo, RubyClassInterface $object): RubyClassInterface
     {
-        $symbol = $object->entity()->symbol();
-
         $string = '';
+
         if ($object instanceof Exception) {
             $string .= (string) $object;
-        } elseif ($symbol instanceof ArraySymbol || $symbol instanceof RangeSymbol) {
-            foreach ($symbol as $number) {
+        } elseif ($object instanceof Enumerable) {
+            foreach ($object as $number) {
                 $string .= "{$number}\n";
             }
-        } elseif ($symbol instanceof NilSymbol) {
+        } elseif ($object instanceof NilClass) {
             // When an argument is a nil symbol, then displays a break only
             $string = "\n";
         } else {
-            $string = (string) $symbol;
+            $string = (string) $object;
         }
 
         if (!str_ends_with($string, "\n")) {
@@ -48,8 +44,7 @@ trait ProvideBasicClassMethods
         $this->context()->IOContext()->stdOut->write($string);
 
         // The puts returns (nil)
-        return Nil::createBy()
-            ->toBeRubyClass();
+        return NilClass::createBy();
     }
 
     public function exit(CallInfoInterface $callInfo, int $code = 0): never
@@ -59,13 +54,13 @@ trait ProvideBasicClassMethods
 
     public function inspect(): RubyClassInterface
     {
-        $string = match (($this->entity()->symbol())::class) {
-            StringSymbol::class => '"' . ((string) $this) . '"',
-            default => (string) $this,
-        };
+        if ($this instanceof String_) {
+            return String_::createBy(
+                '"' . ((string) $this) . '"'
+            );
+        }
 
-        return String_::createBy($string)
-            ->toBeRubyClass();
+        return String_::createBy((string) $this);
     }
 
     public function lambda(CallInfoInterface $callInfo, ContextInterface $context): RubyClassInterface
@@ -98,7 +93,7 @@ trait ProvideBasicClassMethods
         }
 
         if ($lookedUpCatchEntry === null) {
-            throw new Raise("{$class->entity()->valueOf()}: {$string->entity()->valueOf()}");
+            throw new Raise("{$class->valueOf()}: {$string->valueOf()}");
         }
 
         $instructionSequence = $lookedUpCatchEntry
@@ -136,8 +131,7 @@ trait ProvideBasicClassMethods
         }
 
         if (!$result->returnValue instanceof \RubyVM\VM\Core\Runtime\Essential\RubyClassInterface) {
-            return Nil::createBy()
-                ->toBeRubyClass();
+            return NilClass::createBy();
         }
 
         return $result->returnValue;

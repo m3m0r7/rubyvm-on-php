@@ -2,12 +2,17 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Entity;
+namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_;
 
+use RubyVM\VM\Core\Runtime\BasicObject\Symbolizable;
+use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\UndefinedSymbol;
 
-class Undefined extends Entity implements EntityInterface
+class Undefined extends Object_ implements RubyClassInterface, Symbolize
 {
+    use Symbolizable;
+
     public function __construct(UndefinedSymbol $symbol)
     {
         $this->symbol = $symbol;

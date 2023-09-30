@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\InstructionSequence;
 
-use RubyVM\VM\Core\Runtime\Entity\EntityHelper;
-use RubyVM\VM\Core\Runtime\Entity\Number;
-use RubyVM\VM\Core\Runtime\Entity\Offset;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Offset;
+use RubyVM\VM\Core\Runtime\ClassCreator;
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Insn\InsnType;
@@ -289,10 +289,10 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                 $entries->append(
                     match ($operandType) {
                         InsnType::TS_VALUE => new Operand(
-                            operand: EntityHelper::createEntityBySymbol(
+                            operand: ClassCreator::createClassBySymbol(
                                 $this->kernel
                                     ->findObject($reader->smallValue())
-                            )->toBeRubyClass(),
+                            ),
                         ),
                         InsnType::TS_CALLDATA => new Operand(
                             operand: $instructionSequenceBody
@@ -302,9 +302,9 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         // see: https://github.com/ruby/ruby/blob/ruby_3_2/iseq.c#L2090
                         InsnType::TS_NUM,
                         InsnType::TS_LINDEX => new Operand(
-                            operand: Number::createBy(
+                            operand: Integer_::createBy(
                                 $reader->smallValue(),
-                            )->toBeRubyClass()
+                            )
                         ),
 
                         // NOTE: here is not implemented on actually the RubyVM.
@@ -312,7 +312,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         InsnType::TS_OFFSET => new Operand(
                             operand: (new Offset(new OffsetSymbol(
                                 offset: $reader->smallValue(),
-                            )))->toBeRubyClass(),
+                            ))),
                         ),
 
                         InsnType::TS_IC => new Operand(
@@ -345,8 +345,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             for ($i = 0; $i < ($insn->operandSize() - 1); ++$i) {
                 $entries->append(
                     new Operand(
-                        operand: Number::createBy($reader->smallValue())
-                            ->toBeRubyClass(),
+                        operand: Integer_::createBy($reader->smallValue()),
                     )
                 );
                 ++$codeIndex;

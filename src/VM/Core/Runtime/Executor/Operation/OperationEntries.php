@@ -7,8 +7,6 @@ namespace RubyVM\VM\Core\Runtime\Executor\Operation;
 use RubyVM\VM\Core\Criterion\Entry\AbstractEntries;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\UnknownEntry;
-use RubyVM\VM\Core\Runtime\RubyClass;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
 class OperationEntries extends AbstractEntries implements \Stringable
 {
@@ -29,11 +27,7 @@ class OperationEntries extends AbstractEntries implements \Stringable
                     strtolower($item->insn->name),
                     $item->insn->value
                 ),
-                Operand::class => match (($item->operand)::class) {
-                    RubyClass::class => (string) $item->operand->entity()->symbol(),
-                    SymbolInterface::class => (string) $item->operand,
-                    default => ClassHelper::nameBy($item->operand),
-                },
+                Operand::class => ClassHelper::nameBy($item->operand),
                 default => 'none',
             } . '>';
         }

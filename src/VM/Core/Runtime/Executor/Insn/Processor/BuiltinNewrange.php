@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
-use RubyVM\VM\Core\Runtime\Entity\Range;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Range;
+use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -14,6 +15,7 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterf
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
+use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinNewrange implements OperationProcessorInterface
 {
@@ -39,21 +41,30 @@ class BuiltinNewrange implements OperationProcessorInterface
         /**
          * @var NumberSymbol $high
          */
-        $high = $this->getStackAsNumber()->symbol();
+        $high = $this->getStackAsNumber();
 
         /**
          * @var NumberSymbol $low
          */
-        $low = $this->getStackAsNumber()->symbol();
+        $low = $this->getStackAsNumber();
+
+        if (!$high instanceof Symbolize || !$low instanceof Symbolize) {
+            throw new OperationProcessorException(
+                'The passed value cannot symbolize',
+            );
+        }
+
+        assert($high->symbol() instanceof NumberSymbol);
+        assert($low->symbol() instanceof NumberSymbol);
 
         $this->context->vmStack()
             ->push(
                 new Operand(
-                    (new Range(new RangeSymbol(
-                        begin: $low,
-                        end: $high,
+                    new Range(new RangeSymbol(
+                        begin: $low->symbol(),
+                        end: $high->symbol(),
                         excludeEnd: (bool) $flags->valueOf(),
-                    )))->toBeRubyClass(),
+                    )),
                 ),
             );
 

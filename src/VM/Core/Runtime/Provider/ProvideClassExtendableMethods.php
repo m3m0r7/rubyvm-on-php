@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Provider;
 
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Symbol;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\SpecialMethodCallerEntries;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolSymbol;
-use RubyVM\VM\Exception\RuntimeException;
 
 trait ProvideClassExtendableMethods
 {
@@ -19,13 +18,7 @@ trait ProvideClassExtendableMethods
 
     public function userlandHeapSpace(): UserlandHeapSpaceInterface
     {
-        if ($this->userlandHeapSpace === null) {
-            throw new RuntimeException(
-                'The userland heapspace is null',
-            );
-        }
-
-        return $this->userlandHeapSpace;
+        return $this->userlandHeapSpace ??= new UserlandHeapSpace();
     }
 
     public function setUserlandHeapSpace(?UserlandHeapSpaceInterface $userlandHeapSpace): self
@@ -64,7 +57,7 @@ trait ProvideClassExtendableMethods
         return in_array($name, $this->methods(), true);
     }
 
-    public function class(NumberSymbol $flags, StringSymbol|SymbolSymbol $className): void
+    public function class(Integer_ $flags, String_|Symbol $className): void
     {
         $className = (string) $className;
 
@@ -78,7 +71,7 @@ trait ProvideClassExtendableMethods
             );
     }
 
-    public function def(StringSymbol|SymbolSymbol $methodName, ContextInterface $context): void
+    public function def(String_|Symbol $methodName, ContextInterface $context): void
     {
         $context->self()
             ->userlandHeapSpace()

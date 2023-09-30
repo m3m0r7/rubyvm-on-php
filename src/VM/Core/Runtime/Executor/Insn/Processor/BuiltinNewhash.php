@@ -38,8 +38,7 @@ class BuiltinNewhash implements OperationProcessorInterface
             $value = $this->getStackAsEntity();
             $name = $this->getStackAsSymbol();
 
-            $newHash[(string) $name] = $value
-                ->symbol();
+            $newHash[(string) $name] = $value;
         }
 
         $this->context->vmStack()->push(
