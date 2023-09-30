@@ -41,27 +41,14 @@ class BuiltinOptAref implements OperationProcessorInterface
         $recv = $this->getStackAsEntity();
         $obj = $this->getStackAsAny(RubyClassInterface::class);
 
-        // @var null|SymbolSymbol|NumberSymbol|StringSymbol $value
         if ($obj instanceof \ArrayAccess) {
             $value = $obj[$recv->valueOf()] ?? null;
-        } elseif ($obj instanceof RubyClassInterface) {
-            $entity = $obj;
-            if (!$entity->symbol() instanceof \ArrayAccess) {
-                throw new OperationProcessorException(
-                    sprintf(
-                        'The %s[%s] cannot access as an array',
-                        (string) $entity->symbol()->valueOf(),
-                        $recv->valueOf(),
-                    )
-                );
-            }
-
-            $value = $entity->symbol()[$recv->valueOf()] ?? null;
         } else {
             throw new OperationProcessorException(
                 sprintf(
-                    'The stacked operand was not implemented yet: %s',
+                    'The %s[%s] cannot access as an array',
                     ClassHelper::nameBy($obj),
+                    $recv->valueOf(),
                 )
             );
         }
@@ -76,15 +63,9 @@ class BuiltinOptAref implements OperationProcessorInterface
             );
         }
 
-        if ($value instanceof RubyClassInterface) {
-            $value = $value
-
-                ->symbol();
-        }
-
         $this->context->vmStack()->push(
             new Operand(
-                EntityHelper::createEntityBySymbol($value),
+                $value,
             ),
         );
 

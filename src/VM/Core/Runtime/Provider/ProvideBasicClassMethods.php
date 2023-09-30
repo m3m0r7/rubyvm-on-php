@@ -56,12 +56,13 @@ trait ProvideBasicClassMethods
 
     public function inspect(): RubyClassInterface
     {
-        $string = match (($this->symbol())::class) {
-            StringSymbol::class => '"' . ((string) $this) . '"',
-            default => (string) $this,
-        };
+        if ($this instanceof String_) {
+            return String_::createBy(
+                '"' . ((string) $this) . '"'
+            );
+        }
 
-        return String_::createBy($string)
+        return String_::createBy((string) $this)
         ;
     }
 

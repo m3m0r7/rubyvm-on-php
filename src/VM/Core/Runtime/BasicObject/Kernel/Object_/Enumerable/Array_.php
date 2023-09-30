@@ -35,7 +35,7 @@ class Array_ extends Enumerable implements RubyClassInterface
     {
         $this->symbol = new ArraySymbol(
             $values instanceof RubyClassInterface
-                ? $values->symbol()->valueOf()
+                ? $values->valueOf()
                 : ($values ?? []),
         );
 
@@ -44,9 +44,6 @@ class Array_ extends Enumerable implements RubyClassInterface
 
     public function each(CallInfoInterface $callInfo, ContextInterface $context): RubyClassInterface
     {
-        /**
-         * @var ArraySymbol $symbol
-         */
         $symbol = $this->symbol;
         for ($i = 0; $i < count($symbol); ++$i) {
             $executor = (new Executor(
@@ -100,7 +97,7 @@ class Array_ extends Enumerable implements RubyClassInterface
     public function push(CallInfoInterface $callInfo, RubyClassInterface $object): self
     {
         // @phpstan-ignore-next-line
-        $this->symbol[] = $object->symbol();
+        $this->symbol[] = $object;
 
         return $this;
     }
