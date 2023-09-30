@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable;
 
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
-use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Boolean_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\FalseClass;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\TrueClass;
 use RubyVM\VM\Core\Runtime\Entity\Entityable;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
@@ -50,11 +51,11 @@ class Integer_ extends Comparable implements RubyClassInterface
     }
 
     #[BindAliasAs('===')]
-    public function compareStrictEquals(CallInfoInterface $callInfo, RubyClassInterface $object): Boolean_
+    public function compareStrictEquals(CallInfoInterface $callInfo, RubyClassInterface $object): TrueClass|FalseClass
     {
-        return Boolean_::createBy(
-            $this->symbol->valueOf() === $object->symbol()->valueOf(),
-        );
+        return $this->symbol->valueOf() === $object->symbol()->valueOf()
+            ? TrueClass::createBy()
+            : FalseClass::createBy();
     }
 
     #[BindAliasAs('to_i')]

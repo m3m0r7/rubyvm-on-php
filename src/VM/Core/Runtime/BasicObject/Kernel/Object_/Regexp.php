@@ -22,7 +22,7 @@ class Regexp extends Object_ implements RubyClassInterface
         $this->symbol = $symbol;
     }
 
-    public static function createBy(mixed $value = null, int $option = null): EntityInterface
+    public static function createBy(mixed $value = null, int $option = null): self
     {
         return new self(new RegExpSymbol($value, $option));
     }

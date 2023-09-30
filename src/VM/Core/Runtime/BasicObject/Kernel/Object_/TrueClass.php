@@ -10,31 +10,35 @@ use RubyVM\VM\Core\Runtime\Entity\Entityable;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
 
-#[BindAliasAs('Boolean')]
-class Boolean_ extends Object_ implements RubyClassInterface
+
+#[BindAliasAs('TrueClass')]
+class TrueClass extends Object_ implements RubyClassInterface
 {
     use Entityable;
 
-    public function __construct(BooleanSymbol $symbol)
+    public function __construct()
     {
-        $this->symbol = $symbol;
+        $this->symbol = new BooleanSymbol(true);
+    }
+
+    public static function createBy(): self
+    {
+        return new self(new BooleanSymbol(true));
     }
 
     #[BindAliasAs('to_s')]
     public function toString(): String_
     {
-        return String_::createBy(
-            (string) $this,
-        );
+        return String_::createBy('true');
     }
 
     public function testValue(): bool
     {
-        return $this->symbol->valueOf();
+        return true;
     }
 
-    public static function createBy(mixed $value = true): self
+    public function __toString(): string
     {
-        return new self(new BooleanSymbol($value));
+        return (string) $this->symbol;
     }
 }

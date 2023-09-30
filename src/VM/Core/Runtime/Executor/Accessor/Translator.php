@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Accessor;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Boolean_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Float_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Range;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\FalseClass;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\TrueClass;
 use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
@@ -55,7 +56,9 @@ readonly class Translator
             'integer' => Integer_::createBy($elements),
             'string' => String_::createBy($elements),
             'double' => Float_::createBy($elements),
-            'boolean' => Boolean_::createBy($elements),
+            'boolean' => $elements === true
+                ? TrueClass::createBy()
+                : FalseClass::createBy(),
             default => throw new TranslationException('The type is not implemented yet')
         };
     }
