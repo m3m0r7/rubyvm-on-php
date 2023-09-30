@@ -10,7 +10,6 @@ use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinTopn implements OperationProcessorInterface
 {
@@ -31,6 +30,27 @@ class BuiltinTopn implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor is not implemented yet', strtolower($this->insn->name), $this->insn->value));
+        $n = $this->getOperandAsNumber();
+        $stacks = [];
+
+        // Get to specified value
+        for ($i = 0; $i <= $n->valueOf(); ++$i) {
+            $stacks[] = $this->getStack();
+        }
+
+        // Re-push same value
+        $this->context->vmStack()->push(
+            $first = array_pop($stacks),
+        );
+
+        // Re-push already existed stacks
+        foreach ($stacks as $stack) {
+            $this->context->vmStack()->push($stack);
+        }
+
+        // New push the specified pos in stacks
+        $this->context->vmStack()->push($first);
+
+        return ProcessedStatus::SUCCESS;
     }
 }

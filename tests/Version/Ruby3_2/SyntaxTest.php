@@ -858,4 +858,62 @@ class SyntaxTest extends TestApplication
 
         _, $rubyVMManager->stdOut->readAll());
     }
+
+    public function testCase(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            arr = 3
+
+            case arr
+            when 1 then
+              puts "1"
+            when 2 then
+              puts "2"
+            when 3 then
+              puts "3"
+            end
+
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<'_'
+        3
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
+
+    public function testCaseToElse(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            arr = 5
+            case arr
+            when 1 then
+              puts "1"
+            when 2 then
+              puts "2"
+            when 3 then
+              puts "3"
+            else
+              puts "else"
+            end
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<'_'
+        else
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
 }

@@ -10,7 +10,6 @@ use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinOptCaseDispatch implements OperationProcessorInterface
 {
@@ -31,6 +30,16 @@ class BuiltinOptCaseDispatch implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor is not implemented yet', strtolower($this->insn->name), $this->insn->value));
+        $hash = $this->getOperandAsID();
+        $elseOffset = $this->getOperandAsRubyClass();
+        $key = $this->getStackAsRubyClass();
+
+        if ($key->valueOf() !== $hash->object->valueOf()) {
+            $this->context
+                ->programCounter()
+                ->set($elseOffset->valueOf());
+        }
+
+        return ProcessedStatus::SUCCESS;
     }
 }

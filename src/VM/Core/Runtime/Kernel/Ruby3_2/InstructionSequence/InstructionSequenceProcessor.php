@@ -326,6 +326,12 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                             ),
                         ),
 
+                        InsnType::TS_CDHASH => new Operand(
+                            $this->kernel->findId(
+                                $reader->smallValue(),
+                            ),
+                        ),
+
                         // Not implemented yet
                         InsnType::TS_VARIABLE,
                         InsnType::TS_IVC,
@@ -333,7 +339,6 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         InsnType::TS_ISEQ,
                         InsnType::TS_FUNCPTR,
                         InsnType::TS_BUILTIN,
-                        InsnType::TS_CDHASH,
                         InsnType::TS_ICVARC => throw new ExecutorExeption(sprintf('The OperandType#%s is not supported', $operandType->name)),
                     },
                 );

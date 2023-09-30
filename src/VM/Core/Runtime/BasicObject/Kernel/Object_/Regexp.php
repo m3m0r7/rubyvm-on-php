@@ -11,20 +11,20 @@ use RubyVM\VM\Core\Runtime\BasicObject\Symbolizable;
 use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
-use RubyVM\VM\Core\YARV\Essential\Symbol\RegExpSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\RegexpSymbol;
 
 class Regexp extends Object_ implements RubyClassInterface, Symbolize
 {
     use Symbolizable;
 
-    public function __construct(RegExpSymbol $symbol)
+    public function __construct(RegexpSymbol $symbol)
     {
         $this->symbol = $symbol;
     }
 
     public static function createBy(mixed $value = null, int $option = null): self
     {
-        return new self(new RegExpSymbol($value, $option));
+        return new self(new RegexpSymbol($value, $option));
     }
 
     public function __toString(): string
