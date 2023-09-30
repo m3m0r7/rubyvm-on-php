@@ -19,7 +19,6 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NilSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolSymbol;
 use RubyVM\VM\Exception\Raise;
 
 trait ProvideBasicClassMethods
@@ -93,6 +92,7 @@ trait ProvideBasicClassMethods
         foreach ($this->context()->instructionSequence()->body()->info()->catchEntries() as $entry) {
             if ($pos >= $entry->start() && $entry->end() > $pos) {
                 $lookedUpCatchEntry = $entry;
+
                 break;
             }
         }

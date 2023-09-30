@@ -11,8 +11,6 @@ use RubyVM\VM\Core\Runtime\Executor\LocalTable;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinSetlocal implements OperationProcessorInterface
 {
