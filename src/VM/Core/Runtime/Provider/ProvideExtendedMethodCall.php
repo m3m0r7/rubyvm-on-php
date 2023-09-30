@@ -59,7 +59,7 @@ trait ProvideExtendedMethodCall
                 ->self()
                 ->userlandHeapSpace()
                 ->userlandClasses()
-                ->get(self::resolveObjectName($this));
+                ->get($this::class);
 
             if ($boundClass !== null) {
                 $context = $boundClass
@@ -88,14 +88,5 @@ trait ProvideExtendedMethodCall
                 $arguments[0],
                 ...array_slice($arguments, 1),
             );
-    }
-
-    private static function resolveObjectName(RubyClassInterface $class): string
-    {
-        if ($class instanceof RubyClass) {
-            return ($class->entity)::class;
-        }
-
-        return $class::class;
     }
 }

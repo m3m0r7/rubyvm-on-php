@@ -23,7 +23,7 @@ class FalseClass extends Object_ implements RubyClassInterface, Symbolize
 
     public static function createBy(): self
     {
-        return new self(new BooleanSymbol(false));
+        return new self();
     }
 
     #[BindAliasAs('to_s')]

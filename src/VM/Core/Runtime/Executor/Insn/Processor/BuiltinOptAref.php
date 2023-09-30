@@ -12,7 +12,6 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinOptAref implements OperationProcessorInterface
@@ -52,7 +51,7 @@ class BuiltinOptAref implements OperationProcessorInterface
             );
         }
 
-        if (!$value instanceof SymbolInterface && !$value instanceof RubyClassInterface) {
+        if (!$value instanceof RubyClassInterface) {
             throw new OperationProcessorException(
                 sprintf(
                     'Out of index#%d in the %s',

@@ -214,8 +214,7 @@ trait CallBlockHelper
             }
 
             if ($argument instanceof ContextInterface) {
-                $newArguments[] = NilClass::createBy()
-                ;
+                $newArguments[] = NilClass::createBy();
 
                 continue;
             }

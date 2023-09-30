@@ -58,7 +58,6 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
                     );
                 }
 
-                // @phpstan-ignore-next-line
                 $object = $className::createBy();
             } else {
                 $object = Class_::of($constantNameSymbol, $this->context);

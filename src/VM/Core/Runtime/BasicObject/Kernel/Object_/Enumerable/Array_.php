@@ -45,7 +45,10 @@ class Array_ extends Enumerable implements RubyClassInterface, Symbolize
     public function each(CallInfoInterface $callInfo, ContextInterface $context): RubyClassInterface
     {
         $symbol = $this->symbol;
-        for ($i = 0; $i < (is_countable($symbol) ? count($symbol) : 0); ++$i) {
+
+        assert($symbol instanceof ArraySymbol);
+
+        for ($i = 0; $i < count($symbol); ++$i) {
             $executor = (new Executor(
                 kernel: $context->kernel(),
                 rubyClass: $context->self(),
@@ -108,31 +111,41 @@ class Array_ extends Enumerable implements RubyClassInterface, Symbolize
 
     public function offsetExists(mixed $offset): bool
     {
+        assert($this->symbol instanceof ArraySymbol);
+
         return $this->symbol->offsetExists($offset);
     }
 
     public function offsetGet(mixed $offset): mixed
     {
+        assert($this->symbol instanceof ArraySymbol);
+
         return $this->symbol->offsetGet($offset);
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
+        assert($this->symbol instanceof ArraySymbol);
         $this->symbol->offsetSet($offset, $value);
     }
 
     public function offsetUnset(mixed $offset): void
     {
+        assert($this->symbol instanceof ArraySymbol);
         $this->symbol->offsetUnset($offset);
     }
 
     public function getIterator(): \Traversable
     {
+        assert($this->symbol instanceof ArraySymbol);
+
         return $this->symbol->getIterator();
     }
 
     public function count(): int
     {
+        assert($this->symbol instanceof ArraySymbol);
+
         return $this->symbol->count();
     }
 }

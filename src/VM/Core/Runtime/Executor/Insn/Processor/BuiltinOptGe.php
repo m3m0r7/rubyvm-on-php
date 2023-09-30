@@ -38,7 +38,7 @@ class BuiltinOptGe implements OperationProcessorInterface
         return $this->processArithmetic('>=');
     }
 
-    private function compute(RubyClassInterface $leftOperand, RubyClassInterface $rightOperand): ?RubyClassInterface
+    private function compute(RubyClassInterface $leftOperand, RubyClassInterface $rightOperand): RubyClassInterface
     {
         return $leftOperand->valueOf() >= $rightOperand->valueOf()
             ? TrueClass::createBy()

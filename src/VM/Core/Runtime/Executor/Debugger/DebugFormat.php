@@ -22,13 +22,17 @@ trait DebugFormat
                 continue;
             }
 
-            $result[] = match ($item::class) {
-                Operand::class => match (($item->operand)::class) {
-                    RubyClass::class => ClassHelper::nameBy($item->operand) . "({$item->operand})",
-                    default => ClassHelper::nameBy($item->operand),
-                },
-                default => 'unknown',
-            } . "#{$index}";
+            if ($item instanceof Operand) {
+                if ($item->operand instanceof RubyClassInterface) {
+                    $result[] = ClassHelper::nameBy($item->operand) . "({$item->operand})#{$index}";
+
+                    continue;
+                }
+
+                $result[] = ClassHelper::nameBy($item->operand) . "#{$index}";
+
+                continue;
+            }
         }
 
         return rtrim(

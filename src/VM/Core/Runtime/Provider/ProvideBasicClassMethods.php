@@ -44,8 +44,7 @@ trait ProvideBasicClassMethods
         $this->context()->IOContext()->stdOut->write($string);
 
         // The puts returns (nil)
-        return NilClass::createBy()
-        ;
+        return NilClass::createBy();
     }
 
     public function exit(CallInfoInterface $callInfo, int $code = 0): never
@@ -61,8 +60,7 @@ trait ProvideBasicClassMethods
             );
         }
 
-        return String_::createBy((string) $this)
-        ;
+        return String_::createBy((string) $this);
     }
 
     public function lambda(CallInfoInterface $callInfo, ContextInterface $context): RubyClassInterface
@@ -133,8 +131,7 @@ trait ProvideBasicClassMethods
         }
 
         if (!$result->returnValue instanceof \RubyVM\VM\Core\Runtime\Essential\RubyClassInterface) {
-            return NilClass::createBy()
-            ;
+            return NilClass::createBy();
         }
 
         return $result->returnValue;

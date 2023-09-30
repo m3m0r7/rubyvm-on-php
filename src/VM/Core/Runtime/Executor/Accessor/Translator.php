@@ -36,8 +36,7 @@ readonly class Translator
                 $result[] = self::PHPToRuby($element);
             }
 
-            return Array_::createBy($result)
-            ;
+            return Array_::createBy($result);
         }
 
         if (is_object($elements)) {
@@ -56,7 +55,7 @@ readonly class Translator
     }
 
     /**
-     * @param (RubyClassInterface|SymbolInterface)[]|RubyClassInterface $objectOrClass
+     * @param (RubyClassInterface|SymbolInterface)[]|RubyClassInterface|SymbolInterface $objectOrClass
      */
     public static function RubyToPHP(RubyClassInterface|SymbolInterface|array $objectOrClass): mixed
     {

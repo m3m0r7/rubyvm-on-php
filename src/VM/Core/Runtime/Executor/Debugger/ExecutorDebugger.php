@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Debugger;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
@@ -164,13 +165,18 @@ class ExecutorDebugger
                 implode(
                     ', ',
                     array_map(
-                        static fn ($argument) => match ($argument::class) {
-                            SymbolInterface::class => (string) $argument,
-                            Operand::class => match ($argument->operand::class) {
-                                RubyClass::class => (string) $argument->operand,
-                                default => '?',
-                            },
-                            default => '?',
+                        static function ($argument) {
+                            if ($argument instanceof SymbolInterface) {
+                                return (string) $argument;
+                            }
+
+                            if ($argument instanceof Operand) {
+                                if ($argument->operand instanceof RubyClassInterface) {
+                                    return (string) $argument->operand;
+                                }
+
+                                return '?';
+                            }
                         },
                         $arguments,
                     ),
@@ -187,8 +193,7 @@ class ExecutorDebugger
                 ->info()
                 ->operationEntries()
                 ->get($currentPos + 1)
-                ->operand
-            ;
+                ->operand;
 
             return sprintf('ref: %d', $number->valueOf());
         }

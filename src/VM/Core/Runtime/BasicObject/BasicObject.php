@@ -45,7 +45,7 @@ abstract class BasicObject implements RubyClassInterface
     }
 
     /**
-     * @param (ContextInterface|RubyClass)[] $arguments
+     * @param (ContextInterface|RubyClassInterface)[] $arguments
      */
     public function __call(string $name, array $arguments): ExecutedResult|RubyClassInterface|null
     {

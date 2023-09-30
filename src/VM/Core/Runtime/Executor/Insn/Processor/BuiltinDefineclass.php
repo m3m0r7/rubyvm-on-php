@@ -17,7 +17,6 @@ use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 
 class BuiltinDefineclass implements OperationProcessorInterface
 {
@@ -40,8 +39,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $className = ClassCreator::createClassBySymbol($this->getOperandAsID()->object)
-        ;
+        $className = ClassCreator::createClassBySymbol($this->getOperandAsID()->object);
         $iseqNumber = $this->getOperandAsNumber();
         $flags = $this->getOperandAsNumber();
 

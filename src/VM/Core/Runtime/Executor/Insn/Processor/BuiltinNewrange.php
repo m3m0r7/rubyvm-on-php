@@ -54,6 +54,9 @@ class BuiltinNewrange implements OperationProcessorInterface
             );
         }
 
+        assert($high->symbol() instanceof NumberSymbol);
+        assert($low->symbol() instanceof NumberSymbol);
+
         $this->context->vmStack()
             ->push(
                 new Operand(

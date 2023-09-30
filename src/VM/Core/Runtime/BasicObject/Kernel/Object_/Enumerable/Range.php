@@ -75,31 +75,41 @@ class Range extends Enumerable implements RubyClassInterface, Symbolize
 
     public function offsetExists(mixed $offset): bool
     {
+        assert($this->symbol instanceof RangeSymbol);
+
         return $this->symbol->offsetExists($offset);
     }
 
     public function offsetGet(mixed $offset): mixed
     {
+        assert($this->symbol instanceof RangeSymbol);
+
         return $this->symbol->offsetGet($offset);
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
+        assert($this->symbol instanceof RangeSymbol);
         $this->symbol->offsetSet($offset, $value);
     }
 
     public function offsetUnset(mixed $offset): void
     {
+        assert($this->symbol instanceof RangeSymbol);
         $this->symbol->offsetUnset($offset);
     }
 
     public function getIterator(): \Traversable
     {
+        assert($this->symbol instanceof RangeSymbol);
+
         return $this->symbol->getIterator();
     }
 
     public function count(): int
     {
+        assert($this->symbol instanceof RangeSymbol);
+
         return $this->symbol->count();
     }
 }

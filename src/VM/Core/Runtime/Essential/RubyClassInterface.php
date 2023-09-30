@@ -9,7 +9,6 @@ use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Symbol;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 
 interface RubyClassInterface extends RubyClassImplementationInterface, \Stringable
 {
@@ -38,4 +37,6 @@ interface RubyClassInterface extends RubyClassImplementationInterface, \Stringab
     public function def(String_|Symbol $methodName, ContextInterface $context): void;
 
     public function valueOf(): mixed;
+
+    public function testValue(): bool;
 }

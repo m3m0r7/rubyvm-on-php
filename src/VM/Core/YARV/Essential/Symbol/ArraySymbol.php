@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
+
 /**
- * @implements \ArrayAccess<int, SymbolInterface>
- * @implements \IteratorAggregate<int, SymbolInterface>
+ * @implements \ArrayAccess<int, RubyClassInterface>
+ * @implements \IteratorAggregate<int, RubyClassInterface>
  */
 class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \IteratorAggregate, \Stringable
 {
     /**
-     * @param array<int, SymbolInterface> $array
+     * @param array<int, RubyClassInterface> $array
      */
     public function __construct(
         private array $array,
     ) {}
 
     /**
-     * @return array<int, SymbolInterface>
+     * @return array<int, RubyClassInterface>
      */
     public function valueOf(): array
     {
