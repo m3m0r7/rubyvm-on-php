@@ -916,4 +916,33 @@ class SyntaxTest extends TestApplication
 
         _, $rubyVMManager->stdOut->readAll());
     }
+
+    public function testCaseToNonElse(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            arr = 5
+            case arr
+            when 1 then
+              puts "1"
+            when 2 then
+              puts "2"
+            when 3 then
+              puts "3"
+            end
+
+            puts arr
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<'_'
+        5
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
 }

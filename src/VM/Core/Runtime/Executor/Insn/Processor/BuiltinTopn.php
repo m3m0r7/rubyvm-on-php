@@ -10,6 +10,7 @@ use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
+use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinTopn implements OperationProcessorInterface
 {
@@ -40,7 +41,9 @@ class BuiltinTopn implements OperationProcessorInterface
 
         // Re-push same value
         $this->context->vmStack()->push(
-            $first = array_pop($stacks),
+            $first = array_pop($stacks) ?? throw new OperationProcessorException(
+                'VMStack is null',
+            ),
         );
 
         // Re-push already existed stacks
