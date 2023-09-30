@@ -86,4 +86,9 @@ class RubyClass implements RubyClassInterface
     {
         return (string) $this->entity;
     }
+
+    public function valueOf(): mixed
+    {
+        return null;
+    }
 }

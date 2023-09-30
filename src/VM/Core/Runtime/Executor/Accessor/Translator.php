@@ -64,9 +64,9 @@ readonly class Translator
     }
 
     /**
-     * @param EntityInterface|mixed[]|RubyClassInterface|SymbolInterface $objectOrClass
+     * @param (RubyClassInterface|SymbolInterface)[]|RubyClassInterface $objectOrClass
      */
-    public static function RubyToPHP(SymbolInterface|EntityInterface|RubyClassInterface|array $objectOrClass): mixed
+    public static function RubyToPHP(RubyClassInterface|SymbolInterface|array $objectOrClass): mixed
     {
         if (is_array($objectOrClass)) {
             return array_map(
@@ -75,31 +75,14 @@ readonly class Translator
             );
         }
 
-        $symbol = $objectOrClass;
-        if ($objectOrClass instanceof EntityInterface) {
-            $symbol = $objectOrClass->symbol();
-        } elseif ($objectOrClass instanceof RubyClassInterface) {
-            $symbol = $objectOrClass->symbol();
+        if (is_array($objectOrClass->valueOf())) {
+            return array_map(
+                static fn ($element) => static::RubyToPHP($element),
+                $objectOrClass->valueOf(),
+            );
         }
 
-        return match ($symbol::class) {
-            FloatSymbol::class,
-            NumberSymbol::class,
-            StringSymbol::class,
-            BooleanSymbol::class => $symbol->valueOf(),
-            RangeSymbol::class,
-            ArraySymbol::class => array_map(
-                static fn (SymbolInterface $element) => static::RubyToPHP($element),
-                $symbol->valueOf(),
-            ),
-            NilSymbol::class => null,
-            default => throw new TranslationException(
-                sprintf(
-                    'The type is not implemented yet (%s)',
-                    ClassHelper::nameBy($symbol),
-                ),
-            ),
-        };
+        return $objectOrClass->valueOf();
     }
 
     public function __construct(public readonly RubyClass $object) {}
