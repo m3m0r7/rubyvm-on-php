@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Provider;
 
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Symbol;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\SpecialMethodCallerEntries;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 
 trait ProvideClassExtendableMethods
 {
@@ -57,7 +57,7 @@ trait ProvideClassExtendableMethods
         return in_array($name, $this->methods(), true);
     }
 
-    public function class(NumberSymbol $flags, String_|Symbol $className): void
+    public function class(Integer_ $flags, String_|Symbol $className): void
     {
         $className = (string) $className;
 

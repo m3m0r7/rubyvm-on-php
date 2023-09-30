@@ -60,15 +60,10 @@ class BuiltinDefineclass implements OperationProcessorInterface
 
         $class = Class_::of($className, $this->context);
 
-        /**
-         * @var NumberSymbol $flagNumber
-         */
-        $flagNumber = $flags->symbol();
-
         $this->context
             ->self()
             ->class(
-                $flagNumber,
+                $flags,
                 $className,
             );
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Essential;
 
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Symbol;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
@@ -32,7 +33,7 @@ interface RubyClassInterface extends RubyClassImplementationInterface, \Stringab
 
     public function hasMethod(string $name): bool;
 
-    public function class(NumberSymbol $flags, String_|Symbol $className): void;
+    public function class(Integer_ $flags, String_|Symbol $className): void;
 
     public function def(String_|Symbol $methodName, ContextInterface $context): void;
 
