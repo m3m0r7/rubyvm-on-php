@@ -11,7 +11,6 @@ use RubyVM\VM\Core\Runtime\Executor\LocalTable;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinSetlocal implements OperationProcessorInterface
 {
@@ -33,6 +32,10 @@ class BuiltinSetlocal implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor is not implemented yet', strtolower($this->insn->name), $this->insn->value));
+        $slotIndex = $this->getOperandAsNumber()->valueOf();
+        $level = $this->getOperandAsNumber()->valueOf();
+        $this->setLocalTableFromStack($slotIndex, $level);
+
+        return ProcessedStatus::SUCCESS;
     }
 }

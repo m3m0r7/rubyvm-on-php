@@ -831,4 +831,31 @@ class SyntaxTest extends TestApplication
 
         _, $rubyVMManager->stdOut->readAll());
     }
+
+    public function testNestedCatch(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            begin
+              raise RuntimeError, 'Hello World! I am calling via raise expression'
+            rescue RuntimeError => e
+              begin
+                raise SystemCallError, e.message + " - Additional message"
+              rescue SystemCallError => e
+                puts e
+              end
+            end
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<'_'
+        unknown error - Hello World! I am calling via raise expression - Additional message
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
 }

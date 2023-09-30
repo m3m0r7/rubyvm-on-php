@@ -44,4 +44,9 @@ abstract class Exception extends Object_ implements RubyClassInterface
             ->symbol()
             ->valueOf();
     }
+
+    public function message(): RubyClassInterface
+    {
+        return $this->message;
+    }
 }
