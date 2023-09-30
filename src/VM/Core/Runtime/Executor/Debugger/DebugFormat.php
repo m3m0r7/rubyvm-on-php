@@ -22,7 +22,7 @@ trait DebugFormat
         $result = [];
         foreach ($targetItems as $index => $item) {
             if ($item instanceof RubyClassInterface) {
-                $result[] = ClassHelper::nameBy($item) . "({$item})". "#{$index}";
+                $result[] = ClassHelper::nameBy($item) . "({$item})#{$index}";
 
                 continue;
             }
@@ -32,7 +32,7 @@ trait DebugFormat
                     $result[] = match ($item->operand::class) {
                         TrueClass::class, FalseClass::class, NilClass::class, Void_::class, Undefined::class => ClassHelper::nameBy($item->operand),
                         default => ClassHelper::nameBy($item->operand) . "({$item->operand})",
-                        } . "#{$index}";
+                    } . "#{$index}";
 
                     continue;
                 }
