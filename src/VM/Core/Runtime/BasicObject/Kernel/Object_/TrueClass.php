@@ -10,7 +10,6 @@ use RubyVM\VM\Core\Runtime\Entity\Entityable;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
 
-
 #[BindAliasAs('TrueClass')]
 class TrueClass extends Object_ implements RubyClassInterface
 {

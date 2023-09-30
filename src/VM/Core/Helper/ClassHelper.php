@@ -12,10 +12,6 @@ class ClassHelper
             return gettype($obj);
         }
 
-        if ($obj instanceof \RubyVM\VM\Core\Runtime\RubyClass) {
-            return static::nameBy($obj->entity);
-        }
-
         $classNamePath = explode('\\', $obj::class);
         $name = $classNamePath[array_key_last($classNamePath)];
 

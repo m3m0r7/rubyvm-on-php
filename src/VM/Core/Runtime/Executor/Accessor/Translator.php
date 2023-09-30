@@ -13,7 +13,6 @@ use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\FalseClass;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\TrueClass;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
-use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
@@ -49,7 +48,7 @@ readonly class Translator
             'integer' => Integer_::createBy($elements),
             'string' => String_::createBy($elements),
             'double' => Float_::createBy($elements),
-            'boolean' => $elements === true
+            'boolean' => $elements
                 ? TrueClass::createBy()
                 : FalseClass::createBy(),
             default => throw new TranslationException('The type is not implemented yet')
@@ -78,7 +77,7 @@ readonly class Translator
         return $objectOrClass->valueOf();
     }
 
-    public function __construct(public readonly RubyClass $object) {}
+    public function __construct(public readonly RubyClassInterface $object) {}
 
     public function toOperand(): Operand
     {

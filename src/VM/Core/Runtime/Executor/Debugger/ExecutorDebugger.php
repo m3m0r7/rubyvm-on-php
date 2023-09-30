@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Debugger;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
-use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\RubyVMException;
@@ -183,9 +181,6 @@ class ExecutorDebugger
         if (Insn::GETLOCAL_WC_0 === $insn || Insn::GETLOCAL_WC_1 === $insn || Insn::SETLOCAL_WC_0 === $insn || Insn::SETLOCAL_WC_1 === $insn) {
             $currentPos = $context->programCounter()->pos();
 
-            /**
-             * @var EntityInterface $number
-             */
             $number = $context
                 ->instructionSequence()
                 ->body()

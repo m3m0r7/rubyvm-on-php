@@ -7,7 +7,6 @@ namespace RubyVM\VM\Core\Runtime\Executor\Debugger;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
-use RubyVM\VM\Core\Runtime\RubyClass;
 
 trait DebugFormat
 {

@@ -42,7 +42,7 @@ class EntityHelper
     {
         return match ($symbol::class) {
             ArraySymbol::class => new Array_($symbol),
-            BooleanSymbol::class => $symbol->valueOf() === true
+            BooleanSymbol::class => $symbol->valueOf()
                 ? TrueClass::createBy()
                 : FalseClass::createBy(),
             ClassSymbol::class => new Class_($symbol),

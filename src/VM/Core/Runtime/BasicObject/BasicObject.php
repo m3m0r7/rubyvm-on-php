@@ -12,7 +12,6 @@ use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Operation\SpecialMethodCallerEntries;
-use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Criterion\ShouldBeRubyClass;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
 
@@ -66,9 +65,10 @@ abstract class BasicObject implements RubyClassInterface
         }
 
         if ($result instanceof ExecutedResult) {
-            if ($result->threw) {
+            if ($result->threw instanceof \Throwable) {
                 throw $result->threw;
             }
+
             return $result->returnValue;
         }
 
@@ -76,7 +76,6 @@ abstract class BasicObject implements RubyClassInterface
             ->setRuntimeContext($this->context)
             ->setUserlandHeapSpace($this->userlandHeapSpace);
     }
-
 
     public function valueOf(): mixed
     {

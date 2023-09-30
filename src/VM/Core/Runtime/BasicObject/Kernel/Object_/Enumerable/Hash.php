@@ -6,7 +6,6 @@ namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable;
 
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
-use Traversable;
 
 class Hash extends Enumerable implements RubyClassInterface
 {
@@ -40,7 +39,7 @@ class Hash extends Enumerable implements RubyClassInterface
         return new self($value);
     }
 
-    public function getIterator(): Traversable
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->hash);
     }
