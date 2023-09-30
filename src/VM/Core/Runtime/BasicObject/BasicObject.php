@@ -66,12 +66,21 @@ abstract class BasicObject implements RubyClassInterface
             }
         }
 
-        if ($result instanceof EntityInterface) {
-            return $result
-                ->setRuntimeContext($this->context)
-                ->setUserlandHeapSpace($this->userlandHeapSpace);
+        if ($result instanceof ExecutedResult) {
+            if ($result->threw) {
+                throw $result->threw;
+            }
+            return $result->returnValue;
         }
 
-        return $result;
+        return $result
+            ->setRuntimeContext($this->context)
+            ->setUserlandHeapSpace($this->userlandHeapSpace);
+    }
+
+
+    public function valueOf(): mixed
+    {
+        return null;
     }
 }

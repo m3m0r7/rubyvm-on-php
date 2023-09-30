@@ -45,4 +45,9 @@ class Hash extends Enumerable implements RubyClassInterface
     {
         return new \ArrayIterator($this->hash);
     }
+
+    public function valueOf(): mixed
+    {
+        return $this->hash;
+    }
 }

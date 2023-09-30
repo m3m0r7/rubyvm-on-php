@@ -23,14 +23,14 @@ class Integer_ extends Comparable implements RubyClassInterface
 
     public function testValue(): bool
     {
-        return (bool) $this->symbol->valueOf();
+        return (bool) $this->valueOf();
     }
 
     #[BindAliasAs('^')]
     public function xor(CallInfoInterface $callInfo, RubyClassInterface $object): Integer_
     {
         return Integer_::createBy(
-            $this->symbol->valueOf() ^ $object->symbol()->valueOf(),
+            $this->valueOf() ^ $object->valueOf(),
         );
     }
 
@@ -38,7 +38,7 @@ class Integer_ extends Comparable implements RubyClassInterface
     public function power(CallInfoInterface $callInfo, RubyClassInterface $object): Integer_
     {
         return Integer_::createBy(
-            $this->symbol->valueOf() ** $object->symbol()->valueOf(),
+            $this->valueOf() ** $object->valueOf(),
         );
     }
 
@@ -46,14 +46,14 @@ class Integer_ extends Comparable implements RubyClassInterface
     public function rightShift(CallInfoInterface $callInfo, RubyClassInterface $object): Integer_
     {
         return Integer_::createBy(
-            $this->symbol->valueOf() >> $object->symbol()->valueOf(),
+            $this->valueOf() >> $object->valueOf(),
         );
     }
 
     #[BindAliasAs('===')]
     public function compareStrictEquals(CallInfoInterface $callInfo, RubyClassInterface $object): TrueClass|FalseClass
     {
-        return $this->symbol->valueOf() === $object->symbol()->valueOf()
+        return $this->valueOf() === $object->valueOf()
             ? TrueClass::createBy()
             : FalseClass::createBy();
     }
@@ -68,7 +68,7 @@ class Integer_ extends Comparable implements RubyClassInterface
     public function toFloat(): Float_
     {
         return Float_::createBy(
-            (float) $this->symbol->valueOf(),
+            (float) $this->valueOf(),
         );
     }
 

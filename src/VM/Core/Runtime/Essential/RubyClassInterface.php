@@ -35,4 +35,6 @@ interface RubyClassInterface extends RubyClassImplementationInterface, \Stringab
     public function class(NumberSymbol $flags, StringSymbol|SymbolSymbol $className): void;
 
     public function def(StringSymbol|SymbolSymbol $methodName, ContextInterface $context): void;
+
+    public function valueOf(): mixed;
 }
