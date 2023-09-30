@@ -31,6 +31,29 @@ class BuiltinTopn implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor is not implemented yet', strtolower($this->insn->name), $this->insn->value));
+        $n = $this->getOperandAsNumber();
+        $stacks = [];
+
+        // Get to specified value
+        for ($i = 0; $i <= $n->valueOf(); ++$i) {
+            $stacks[] = $this->getStack();
+        }
+
+        // Re-push same value
+        $this->context->vmStack()->push(
+            $first = array_pop($stacks) ?? throw new OperationProcessorException(
+                'VMStack is null',
+            ),
+        );
+
+        // Re-push already existed stacks
+        foreach ($stacks as $stack) {
+            $this->context->vmStack()->push($stack);
+        }
+
+        // New push the specified pos in stacks
+        $this->context->vmStack()->push($first);
+
+        return ProcessedStatus::SUCCESS;
     }
 }

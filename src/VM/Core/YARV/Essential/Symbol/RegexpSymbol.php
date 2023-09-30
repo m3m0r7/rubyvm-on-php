@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
-class RegExpSymbol implements SymbolInterface, \Stringable
+class RegexpSymbol implements SymbolInterface, \Stringable
 {
     public function __construct(
         private readonly StringSymbol $source,

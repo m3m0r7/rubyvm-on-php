@@ -6,12 +6,12 @@ namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Loader;
 
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
-use RubyVM\VM\Core\YARV\Essential\Symbol\RegExpSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\RegexpSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolLoaderInterface;
 
-class RegExpSymbolLoader implements SymbolLoaderInterface
+class RegexpSymbolLoader implements SymbolLoaderInterface
 {
     public function __construct(
         protected readonly KernelInterface $kernel,
@@ -28,7 +28,7 @@ class RegExpSymbolLoader implements SymbolLoaderInterface
 
         assert($sourceString instanceof StringSymbol);
 
-        return new RegExpSymbol(
+        return new RegexpSymbol(
             $sourceString,
             $option,
         );
