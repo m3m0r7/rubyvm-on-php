@@ -33,7 +33,7 @@ readonly class Translator
 
             $result = [];
             foreach ($elements as $element) {
-                $result[] = self::PHPToRuby($element)->symbol();
+                $result[] = self::PHPToRuby($element);
             }
 
             return Array_::createBy($result)

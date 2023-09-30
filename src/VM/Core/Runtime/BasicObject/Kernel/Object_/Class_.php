@@ -9,7 +9,6 @@ use RubyVM\VM\Core\Runtime\Entity\Entityable;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ClassSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolSymbol;
 
 #[BindAliasAs('Class')]
@@ -32,7 +31,7 @@ class Class_ extends Object_ implements RubyClassInterface
         return new self(new ClassSymbol($value));
     }
 
-    public static function of(StringSymbol|SymbolSymbol $symbol, ContextInterface $context): RubyClassInterface
+    public static function of(SymbolSymbol $symbol, ContextInterface $context): RubyClassInterface
     {
         return static::$classes[$context->modulePath((string) $symbol)] ??= (new self(new ClassSymbol($symbol)));
     }

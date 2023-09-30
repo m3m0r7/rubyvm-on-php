@@ -201,12 +201,10 @@ trait CallBlockHelper
                         // @phpstan-ignore-next-line
                         static function (RubyClassInterface|ContextInterface $rubyClass) {
                             if ($rubyClass instanceof ContextInterface) {
-                                return NilClass::createBy()
-                                    ->symbol();
+                                return NilClass::createBy();
                             }
 
-                            return $rubyClass
-                                ->symbol();
+                            return $rubyClass;
                         },
                         $argument,
                     )

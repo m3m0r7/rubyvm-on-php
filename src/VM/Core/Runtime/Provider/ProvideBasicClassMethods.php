@@ -16,7 +16,6 @@ use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CatchInterface;
-use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Exception\Raise;
 
 trait ProvideBasicClassMethods

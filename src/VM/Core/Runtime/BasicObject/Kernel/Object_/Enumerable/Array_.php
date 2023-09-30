@@ -8,7 +8,6 @@ use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
 use RubyVM\VM\Core\Runtime\Entity\Entityable;
-use RubyVM\VM\Core\Runtime\Entity\EntityHelper;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
@@ -45,7 +44,7 @@ class Array_ extends Enumerable implements RubyClassInterface
     public function each(CallInfoInterface $callInfo, ContextInterface $context): RubyClassInterface
     {
         $symbol = $this->symbol;
-        for ($i = 0; $i < count($symbol); ++$i) {
+        for ($i = 0; $i < (is_countable($symbol) ? count($symbol) : 0); ++$i) {
             $executor = (new Executor(
                 kernel: $context->kernel(),
                 rubyClass: $context->self(),
@@ -59,7 +58,7 @@ class Array_ extends Enumerable implements RubyClassInterface
             $executor->context()
                 ->renewEnvironmentTable();
 
-            if (!$symbol[$i] instanceof SymbolInterface) {
+            if (!$symbol[$i] instanceof RubyClassInterface) {
                 throw new RuntimeException(
                     sprintf(
                         'Out of index#%d in Array',
@@ -68,8 +67,7 @@ class Array_ extends Enumerable implements RubyClassInterface
                 );
             }
 
-            $object = EntityHelper::createEntityBySymbol($symbol[$i])
-
+            $object = $symbol[$i]
                 ->setRuntimeContext($executor->context())
                 ->setUserlandHeapSpace($executor->context()->self()->userlandHeapSpace());
 
