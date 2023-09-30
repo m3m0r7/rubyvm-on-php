@@ -12,8 +12,6 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperatorCalculatable;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
 class BuiltinOptAnd implements OperationProcessorInterface
 {
@@ -39,17 +37,17 @@ class BuiltinOptAnd implements OperationProcessorInterface
         return $this->processArithmetic('&');
     }
 
-    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?RubyClassInterface
+    private function compute(RubyClassInterface $leftOperand, RubyClassInterface $rightOperand): ?RubyClassInterface
     {
         $value = null;
-        if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
+        if ($leftOperand instanceof Integer_ && $rightOperand instanceof Integer_) {
             $value = $this->computeNumberAndNumber($leftOperand, $rightOperand);
         }
 
         return $value;
     }
 
-    private function computeNumberAndNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
+    private function computeNumberAndNumber(Integer_ $leftOperand, Integer_ $rightOperand): RubyClassInterface
     {
         return Integer_::createBy(
             $leftOperand->valueOf() & $rightOperand->valueOf()

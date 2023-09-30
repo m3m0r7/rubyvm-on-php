@@ -134,4 +134,9 @@ class Array_ extends Enumerable implements RubyClassInterface
     {
         return $this->symbol->getIterator();
     }
+
+    public function count(): int
+    {
+        return $this->symbol->count();
+    }
 }

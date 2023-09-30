@@ -13,9 +13,6 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperatorCalculatable;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
 class BuiltinOptDiv implements OperationProcessorInterface
 {
@@ -41,28 +38,28 @@ class BuiltinOptDiv implements OperationProcessorInterface
         return $this->processArithmetic('/');
     }
 
-    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?RubyClassInterface
+    private function compute(RubyClassInterface $leftOperand, RubyClassInterface $rightOperand): ?RubyClassInterface
     {
         $value = null;
-        if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
+        if ($leftOperand instanceof Integer_ && $rightOperand instanceof Integer_) {
             $value = $this->computeNumberDivideNumber($leftOperand, $rightOperand);
         }
 
-        if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
+        if ($leftOperand instanceof Float_ && $rightOperand instanceof Float_) {
             $value = $this->computeFloatDivideFloat($leftOperand, $rightOperand);
         }
 
         return $value;
     }
 
-    private function computeNumberDivideNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
+    private function computeNumberDivideNumber(Integer_ $leftOperand, Integer_ $rightOperand): RubyClassInterface
     {
         return Integer_::createBy(
             (int) ($leftOperand->valueOf() / $rightOperand->valueOf())
         );
     }
 
-    private function computeFloatDivideFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClassInterface
+    private function computeFloatDivideFloat(Float_ $leftOperand, Float_ $rightOperand): RubyClassInterface
     {
         return Float_::createBy(
             $leftOperand->valueOf() / $rightOperand->valueOf()

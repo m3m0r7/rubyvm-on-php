@@ -44,7 +44,7 @@ class BuiltinOptSize implements OperationProcessorInterface
             $this->context->vmStack()->push(
                 new Operand(
                     Integer_::createBy(
-                        is_countable($recv->symbol()) ? count($recv->symbol()) : 0,
+                        is_countable($recv) ? count($recv) : 0,
                     )
                 ),
             );

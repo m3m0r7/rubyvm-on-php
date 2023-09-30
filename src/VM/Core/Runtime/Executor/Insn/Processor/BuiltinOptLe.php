@@ -13,9 +13,6 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperatorCalculatable;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
 class BuiltinOptLe implements OperationProcessorInterface
 {
@@ -41,28 +38,7 @@ class BuiltinOptLe implements OperationProcessorInterface
         return $this->processArithmetic('<=');
     }
 
-    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?RubyClassInterface
-    {
-        $value = null;
-        if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
-            $value = $this->computeNumberLessThanOrEqualsNumber($leftOperand, $rightOperand);
-        }
-
-        if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
-            $value = $this->computeFloatLessThanOrEqualsFloat($leftOperand, $rightOperand);
-        }
-
-        return $value;
-    }
-
-    private function computeNumberLessThanOrEqualsNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
-    {
-        return $leftOperand->valueOf() <= $rightOperand->valueOf()
-            ? TrueClass::createBy()
-            : FalseClass::createBy();
-    }
-
-    private function computeFloatLessThanOrEqualsFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClassInterface
+    private function compute(RubyClassInterface $leftOperand, RubyClassInterface $rightOperand): ?RubyClassInterface
     {
         return $leftOperand->valueOf() <= $rightOperand->valueOf()
             ? TrueClass::createBy()

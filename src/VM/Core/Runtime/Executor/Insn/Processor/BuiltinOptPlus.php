@@ -15,11 +15,6 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\OperatorCalculatable;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
 class BuiltinOptPlus implements OperationProcessorInterface
 {
@@ -45,50 +40,50 @@ class BuiltinOptPlus implements OperationProcessorInterface
         return $this->processArithmetic('+');
     }
 
-    private function compute(SymbolInterface $leftOperand, SymbolInterface $rightOperand): ?RubyClassInterface
+    private function compute(RubyClassInterface $leftOperand, RubyClassInterface $rightOperand): ?RubyClassInterface
     {
         $value = null;
-        if ($leftOperand instanceof StringSymbol && $rightOperand instanceof StringSymbol) {
+        if ($leftOperand instanceof String_ && $rightOperand instanceof String_) {
             $value = $this->computeStringPlusString($leftOperand, $rightOperand);
         }
 
-        if ($leftOperand instanceof NumberSymbol && $rightOperand instanceof NumberSymbol) {
+        if ($leftOperand instanceof Integer_ && $rightOperand instanceof Integer_) {
             $value = $this->computeNumberPlusNumber($leftOperand, $rightOperand);
         }
 
-        if ($leftOperand instanceof FloatSymbol && $rightOperand instanceof FloatSymbol) {
+        if ($leftOperand instanceof Float_ && $rightOperand instanceof Float_) {
             $value = $this->computeFloatPlusFloat($leftOperand, $rightOperand);
         }
 
-        if ($leftOperand instanceof ArraySymbol && $rightOperand instanceof ArraySymbol) {
+        if ($leftOperand instanceof Array_ && $rightOperand instanceof Array_) {
             $value = $this->computeArrayPlusArray($leftOperand, $rightOperand);
         }
 
         return $value;
     }
 
-    private function computeStringPlusString(StringSymbol $leftOperand, StringSymbol $rightOperand): RubyClassInterface
+    private function computeStringPlusString(String_ $leftOperand, String_ $rightOperand): RubyClassInterface
     {
         return String_::createBy(
             $leftOperand . $rightOperand
         );
     }
 
-    private function computeNumberPlusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
+    private function computeNumberPlusNumber(Integer_ $leftOperand, Integer_ $rightOperand): RubyClassInterface
     {
         return Integer_::createBy(
             $leftOperand->valueOf() + $rightOperand->valueOf()
         );
     }
 
-    private function computeFloatPlusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClassInterface
+    private function computeFloatPlusFloat(Float_ $leftOperand, Float_ $rightOperand): RubyClassInterface
     {
         return Float_::createBy(
             $leftOperand->valueOf() + $rightOperand->valueOf()
         );
     }
 
-    private function computeArrayPlusArray(ArraySymbol $leftOperand, ArraySymbol $rightOperand): RubyClassInterface
+    private function computeArrayPlusArray(Array_ $leftOperand, Array_ $rightOperand): RubyClassInterface
     {
         return Array_::createBy(
             [

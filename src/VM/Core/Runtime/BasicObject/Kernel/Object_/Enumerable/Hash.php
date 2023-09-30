@@ -48,4 +48,9 @@ class Hash extends Enumerable implements RubyClassInterface
     {
         return $this->hash;
     }
+
+    public function count(): int
+    {
+        return count($this->hash);
+    }
 }
