@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Provider;
 
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Enumerable;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Hash;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Range;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Exception;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Lambda;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
@@ -16,7 +20,6 @@ use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CatchInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NilSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Exception\Raise;
@@ -29,19 +32,15 @@ trait ProvideBasicClassMethods
 
         if ($object instanceof Exception) {
             $string .= (string) $object;
-        } else {
-            $symbol = $object->symbol();
-
-            if ($symbol instanceof ArraySymbol || $symbol instanceof RangeSymbol) {
-                foreach ($symbol as $number) {
-                    $string .= "{$number}\n";
-                }
-            } elseif ($symbol instanceof NilSymbol) {
-                // When an argument is a nil symbol, then displays a break only
-                $string = "\n";
-            } else {
-                $string = (string) $symbol;
+        } elseif ($object instanceof Enumerable) {
+            foreach ($object as $number) {
+                $string .= "{$number}\n";
             }
+        } elseif ($object instanceof NilClass) {
+            // When an argument is a nil symbol, then displays a break only
+            $string = "\n";
+        } else {
+            $string = (string) $object;
         }
 
         if (!str_ends_with($string, "\n")) {

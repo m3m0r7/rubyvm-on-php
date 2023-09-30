@@ -15,6 +15,7 @@ use RubyVM\VM\Core\Runtime\Executor\LocalTableHelper;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
+use Traversable;
 
 class Range extends Enumerable implements RubyClassInterface
 {
@@ -90,5 +91,10 @@ class Range extends Enumerable implements RubyClassInterface
     public function offsetUnset(mixed $offset): void
     {
         $this->symbol->offsetUnset($offset);
+    }
+
+    public function getIterator(): Traversable
+    {
+        return $this->symbol->getIterator();
     }
 }

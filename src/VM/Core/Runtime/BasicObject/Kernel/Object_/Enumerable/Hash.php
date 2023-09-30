@@ -7,6 +7,7 @@ namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable;
 use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
+use Traversable;
 
 class Hash extends Enumerable implements RubyClassInterface
 {
@@ -35,8 +36,13 @@ class Hash extends Enumerable implements RubyClassInterface
         unset($this->hash[$offset]);
     }
 
-    public static function createBy(mixed $value = null): EntityInterface
+    public static function createBy(mixed $value = null): self
     {
         return new self($value);
+    }
+
+    public function getIterator(): Traversable
+    {
+        return new \ArrayIterator($this->hash);
     }
 }

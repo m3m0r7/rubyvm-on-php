@@ -17,6 +17,7 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\RuntimeException;
+use Traversable;
 
 #[BindAliasAs('Array')]
 class Array_ extends Enumerable implements RubyClassInterface
@@ -128,5 +129,10 @@ class Array_ extends Enumerable implements RubyClassInterface
     public function offsetUnset(mixed $offset): void
     {
         $this->symbol->offsetUnset($offset);
+    }
+
+    public function getIterator(): Traversable
+    {
+        return $this->symbol->getIterator();
     }
 }
