@@ -42,7 +42,7 @@ class BuiltinOptRegexpmatch2 implements OperationProcessorInterface
         $this->context->vmStack()->push(
             new Operand(
                 $regexp
-                    ->toBeRubyClass()
+
                     ->setRuntimeContext($this->context)
                     // Call =~ instance method. but an internal calls equalsTilde function on PHP
                     ->{'=~'}($callInfo, $source)

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Operation;
 
-use RubyVM\VM\Core\Runtime\Entity\Array_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Float_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Symbol;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Regexp;
 use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
-use RubyVM\VM\Core\Runtime\Entity\Float_;
-use RubyVM\VM\Core\Runtime\Entity\Nil;
-use RubyVM\VM\Core\Runtime\Entity\Number;
 use RubyVM\VM\Core\Runtime\Entity\Offset;
-use RubyVM\VM\Core\Runtime\Entity\RegExp;
-use RubyVM\VM\Core\Runtime\Entity\String_;
-use RubyVM\VM\Core\Runtime\Entity\Symbol;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
@@ -27,26 +27,26 @@ trait OperandHelper
 {
     use Validatable;
 
-    private function getOperandAsEntity(): EntityInterface
+    private function getOperandAsEntity(): RubyClassInterface
     {
         $operand = $this->getOperandAsAny(
-            RubyClass::class,
+            RubyClassInterface::class,
         );
 
-        assert($operand instanceof RubyClass);
+        assert($operand instanceof RubyClassInterface);
 
-        return $operand->entity;
+        return $operand->entity();
     }
 
-    private function getOperandAsNumber(): Number
+    private function getOperandAsNumber(): Integer_
     {
         /**
-         * @var Number $number
+         * @var Integer_ $number
          */
         $number = $this->getOperandAsEntity();
 
         $this->validateType(
-            Number::class,
+            Integer_::class,
             $number,
         );
 
@@ -210,15 +210,15 @@ trait OperandHelper
         return $entity;
     }
 
-    private function getStackAsNumber(): Number
+    private function getStackAsNumber(): Integer_
     {
         /**
-         * @var Number $entity
+         * @var Integer_ $entity
          */
         $entity = $this->getStackAsEntity();
 
         $this->validateType(
-            Number::class,
+            Integer_::class,
             $entity,
         );
 
@@ -257,28 +257,28 @@ trait OperandHelper
         return $entity;
     }
 
-    private function getStackAsStringOrNil(): String_|Nil
+    private function getStackAsStringOrNil(): String_|NilClass
     {
         $entity = $this->getStackAsEntity();
 
-        assert($entity instanceof String_ || $entity instanceof Nil);
+        assert($entity instanceof String_ || $entity instanceof NilClass);
 
         return $entity;
     }
 
-    private function getStackAsRegExp(): RegExp
+    private function getStackAsRegExp(): Regexp
     {
         /**
-         * @var RegExp $entity
+         * @var Regexp $entity
          */
         $entity = $this->getStackAsEntity();
 
         $this->validateType(
-            RegExp::class,
+            Regexp::class,
             $entity,
         );
 
-        assert($entity instanceof RegExp);
+        assert($entity instanceof Regexp);
 
         return $entity;
     }

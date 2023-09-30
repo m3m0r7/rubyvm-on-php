@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
-use RubyVM\VM\Core\Runtime\Entity\Number;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -51,8 +51,8 @@ class BuiltinOptLtlt implements OperationProcessorInterface
 
     private function computeNumberLeftShiftNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
     {
-        return Number::createBy(
+        return Integer_::createBy(
             $leftOperand->valueOf() << $rightOperand->valueOf()
-        )->toBeRubyClass();
+        );
     }
 }

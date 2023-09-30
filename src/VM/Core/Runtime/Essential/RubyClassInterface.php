@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Essential;
 
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Class_;
 use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
@@ -13,7 +14,7 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolSymbol;
 
 interface RubyClassInterface extends RubyClassImplementationInterface, \Stringable
 {
-    public function entity(): EntityInterface;
+    public function entity(): Class_;
 
     public function setRuntimeContext(?ContextInterface $context): RubyClassInterface;
 

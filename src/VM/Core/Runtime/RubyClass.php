@@ -65,7 +65,7 @@ class RubyClass implements RubyClassInterface
         }
 
         if ($result instanceof EntityInterface) {
-            return $result->toBeRubyClass()
+            return $result
                 ->setRuntimeContext($this->context)
                 ->setUserlandHeapSpace($this->userlandHeapSpace);
         }
@@ -79,7 +79,7 @@ class RubyClass implements RubyClassInterface
     public static function initializeByClassName(string $className): RubyClassInterface
     {
         return $className::createBy()
-            ->toBeRubyClass();
+            ;
     }
 
     public function __toString(): string

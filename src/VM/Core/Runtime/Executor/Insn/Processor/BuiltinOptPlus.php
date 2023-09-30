@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
-use RubyVM\VM\Core\Runtime\Entity\Array_;
-use RubyVM\VM\Core\Runtime\Entity\Float_;
-use RubyVM\VM\Core\Runtime\Entity\Number;
-use RubyVM\VM\Core\Runtime\Entity\String_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Float_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -71,21 +71,21 @@ class BuiltinOptPlus implements OperationProcessorInterface
     {
         return String_::createBy(
             $leftOperand . $rightOperand
-        )->toBeRubyClass();
+        );
     }
 
     private function computeNumberPlusNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
     {
-        return Number::createBy(
+        return Integer_::createBy(
             $leftOperand->valueOf() + $rightOperand->valueOf()
-        )->toBeRubyClass();
+        );
     }
 
     private function computeFloatPlusFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClassInterface
     {
         return Float_::createBy(
             $leftOperand->valueOf() + $rightOperand->valueOf()
-        )->toBeRubyClass();
+        );
     }
 
     private function computeArrayPlusArray(ArraySymbol $leftOperand, ArraySymbol $rightOperand): RubyClassInterface
@@ -95,6 +95,6 @@ class BuiltinOptPlus implements OperationProcessorInterface
                 ...$leftOperand,
                 ...$rightOperand,
             ],
-        )->toBeRubyClass();
+        );
     }
 }

@@ -2,9 +2,14 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Entity;
+namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
+use RubyVM\VM\Core\Runtime\Entity\Entity;
+use RubyVM\VM\Core\Runtime\Entity\EntityHelper;
+use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
@@ -13,12 +18,11 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\RuntimeException;
-use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 
 #[BindAliasAs('Array')]
-class Array_ extends Entity implements EntityInterface
+class Array_ extends Enumerable implements RubyClassInterface
 {
-    public function __construct(ArraySymbol $symbol)
+    public function __construct(private ArraySymbol $symbol)
     {
         $this->symbol = $symbol;
     }
@@ -67,7 +71,7 @@ class Array_ extends Entity implements EntityInterface
             }
 
             $object = EntityHelper::createEntityBySymbol($symbol[$i])
-                ->toBeRubyClass()
+
                 ->setRuntimeContext($executor->context())
                 ->setUserlandHeapSpace($executor->context()->self()->userlandHeapSpace());
 
@@ -89,8 +93,7 @@ class Array_ extends Entity implements EntityInterface
             }
         }
 
-        return Nil::createBy()
-            ->toBeRubyClass();
+        return NilClass::createBy();
     }
 
     public function push(CallInfoInterface $callInfo, RubyClassInterface $object): self

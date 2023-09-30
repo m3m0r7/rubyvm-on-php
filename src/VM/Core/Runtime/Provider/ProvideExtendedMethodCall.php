@@ -41,7 +41,7 @@ trait ProvideExtendedMethodCall
                 // thus, passed name is illegal on PHP, however it is embedded in YARV.
                 // So BindAliasAs attributes resolves this problem.
                 //
-                // @see Number entity class
+                // @see Integer_ entity class
                 foreach ($method->getAttributes(BindAliasAs::class) as $attribute) {
                     [$originInstanceMethodName] = $attribute->getArguments();
                     if ($name !== $originInstanceMethodName) {

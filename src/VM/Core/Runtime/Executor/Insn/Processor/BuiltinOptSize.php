@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Entity\Array_;
-use RubyVM\VM\Core\Runtime\Entity\Number;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -43,9 +43,9 @@ class BuiltinOptSize implements OperationProcessorInterface
         if ($recv instanceof Array_) {
             $this->context->vmStack()->push(
                 new Operand(
-                    Number::createBy(
+                    Integer_::createBy(
                         is_countable($recv->symbol()) ? count($recv->symbol()) : 0,
-                    )->toBeRubyClass()
+                    )
                 ),
             );
 

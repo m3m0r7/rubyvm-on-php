@@ -2,15 +2,18 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Entity;
+namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable;
 
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
+use RubyVM\VM\Core\Runtime\Entity\Entity;
+use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
+use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 
 #[BindAliasAs('String')]
-class String_ extends Entity implements EntityInterface
+class String_ extends Comparable implements RubyClassInterface
 {
-    public function __construct(StringSymbol $symbol)
+    public function __construct(private StringSymbol $symbol)
     {
         $this->symbol = $symbol;
     }

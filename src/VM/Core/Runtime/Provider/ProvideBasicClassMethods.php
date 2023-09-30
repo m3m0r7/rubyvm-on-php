@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Provider;
 
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Exception;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Lambda;
-use RubyVM\VM\Core\Runtime\Entity\Nil;
-use RubyVM\VM\Core\Runtime\Entity\String_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
@@ -48,8 +48,8 @@ trait ProvideBasicClassMethods
         $this->context()->IOContext()->stdOut->write($string);
 
         // The puts returns (nil)
-        return Nil::createBy()
-            ->toBeRubyClass();
+        return NilClass::createBy()
+            ;
     }
 
     public function exit(CallInfoInterface $callInfo, int $code = 0): never
@@ -65,7 +65,7 @@ trait ProvideBasicClassMethods
         };
 
         return String_::createBy($string)
-            ->toBeRubyClass();
+            ;
     }
 
     public function lambda(CallInfoInterface $callInfo, ContextInterface $context): RubyClassInterface
@@ -136,8 +136,8 @@ trait ProvideBasicClassMethods
         }
 
         if (!$result->returnValue instanceof \RubyVM\VM\Core\Runtime\Essential\RubyClassInterface) {
-            return Nil::createBy()
-                ->toBeRubyClass();
+            return NilClass::createBy()
+                ;
         }
 
         return $result->returnValue;

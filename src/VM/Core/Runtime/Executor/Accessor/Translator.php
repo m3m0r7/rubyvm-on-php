@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Accessor;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Entity\Array_;
-use RubyVM\VM\Core\Runtime\Entity\Boolean_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Boolean_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Float_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Range;
 use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
-use RubyVM\VM\Core\Runtime\Entity\Float_;
-use RubyVM\VM\Core\Runtime\Entity\Number;
-use RubyVM\VM\Core\Runtime\Entity\Range;
-use RubyVM\VM\Core\Runtime\Entity\String_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\RubyClass;
@@ -35,7 +35,7 @@ readonly class Translator
                     new NumberSymbol((int) array_key_first($elements)),
                     new NumberSymbol((int) array_key_last($elements)),
                     false,
-                )))->toBeRubyClass();
+                )));
             }
 
             $result = [];
@@ -44,7 +44,7 @@ readonly class Translator
             }
 
             return Array_::createBy($result)
-                ->toBeRubyClass();
+                ;
         }
 
         if (is_object($elements)) {
@@ -52,10 +52,10 @@ readonly class Translator
         }
 
         return match (gettype($elements)) {
-            'integer' => Number::createBy($elements)->toBeRubyClass(),
-            'string' => String_::createBy($elements)->toBeRubyClass(),
-            'double' => Float_::createBy($elements)->toBeRubyClass(),
-            'boolean' => Boolean_::createBy($elements)->toBeRubyClass(),
+            'integer' => Integer_::createBy($elements),
+            'string' => String_::createBy($elements),
+            'double' => Float_::createBy($elements),
+            'boolean' => Boolean_::createBy($elements),
             default => throw new TranslationException('The type is not implemented yet')
         };
     }

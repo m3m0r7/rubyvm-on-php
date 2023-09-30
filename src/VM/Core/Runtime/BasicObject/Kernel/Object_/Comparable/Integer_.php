@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Entity;
+namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable;
 
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Boolean_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 
-class Number extends Entity implements EntityInterface
+class Integer_ extends Comparable implements RubyClassInterface
 {
-    public function __construct(NumberSymbol $symbol)
+    public function __construct(private NumberSymbol $symbol)
     {
         $this->symbol = $symbol;
     }
@@ -22,25 +23,25 @@ class Number extends Entity implements EntityInterface
     }
 
     #[BindAliasAs('^')]
-    public function xor(CallInfoInterface $callInfo, RubyClassInterface $object): Number
+    public function xor(CallInfoInterface $callInfo, RubyClassInterface $object): Integer_
     {
-        return Number::createBy(
+        return Integer_::createBy(
             $this->symbol->valueOf() ^ $object->entity()->symbol()->valueOf(),
         );
     }
 
     #[BindAliasAs('**')]
-    public function power(CallInfoInterface $callInfo, RubyClassInterface $object): Number
+    public function power(CallInfoInterface $callInfo, RubyClassInterface $object): Integer_
     {
-        return Number::createBy(
+        return Integer_::createBy(
             $this->symbol->valueOf() ** $object->entity()->symbol()->valueOf(),
         );
     }
 
     #[BindAliasAs('>>')]
-    public function rightShift(CallInfoInterface $callInfo, RubyClassInterface $object): Number
+    public function rightShift(CallInfoInterface $callInfo, RubyClassInterface $object): Integer_
     {
-        return Number::createBy(
+        return Integer_::createBy(
             $this->symbol->valueOf() >> $object->entity()->symbol()->valueOf(),
         );
     }
