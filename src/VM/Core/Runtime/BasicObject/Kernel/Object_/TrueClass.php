@@ -6,14 +6,15 @@ namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_;
 
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
-use RubyVM\VM\Core\Runtime\Entity\Entityable;
+use RubyVM\VM\Core\Runtime\BasicObject\Symbolizable;
+use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
 
 #[BindAliasAs('TrueClass')]
-class TrueClass extends Object_ implements RubyClassInterface
+class TrueClass extends Object_ implements RubyClassInterface, Symbolize
 {
-    use Entityable;
+    use Symbolizable;
 
     public function __construct()
     {

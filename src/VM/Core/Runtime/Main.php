@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime;
 
-use RubyVM\VM\Core\Runtime\Entity\Entityable;
+use RubyVM\VM\Core\Runtime\BasicObject\Symbolizable;
 use RubyVM\VM\Core\Runtime\Essential\MainInterface;
 use RubyVM\VM\Core\YARV\Criterion\ShouldBeRubyClass;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
@@ -12,7 +12,7 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 class Main implements MainInterface
 {
     use ShouldBeRubyClass;
-    use Entityable;
+    use Symbolizable;
 
     public function __construct()
     {

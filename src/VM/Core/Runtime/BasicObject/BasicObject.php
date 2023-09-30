@@ -14,6 +14,7 @@ use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Operation\SpecialMethodCallerEntries;
 use RubyVM\VM\Core\YARV\Criterion\ShouldBeRubyClass;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
+use RubyVM\VM\Exception\OperationProcessorException;
 
 abstract class BasicObject implements RubyClassInterface
 {
@@ -80,5 +81,10 @@ abstract class BasicObject implements RubyClassInterface
     public function valueOf(): mixed
     {
         return null;
+    }
+
+    public function testValue(): bool
+    {
+        throw new OperationProcessorException(sprintf('The symbol type `%s` is not implemented `test` processing yet', ClassHelper::nameBy($this)));
     }
 }

@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Entity;
+namespace RubyVM\VM\Core\Runtime\BasicObject;
 
-use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
-use RubyVM\VM\Exception\OperationProcessorException;
 
-trait Entityable
+trait Symbolizable
 {
     protected SymbolInterface $symbol;
 
@@ -16,11 +14,6 @@ trait Entityable
     {
         // Deep copy bound symbol
         $this->symbol = clone $this->symbol;
-    }
-
-    public function testValue(): bool
-    {
-        throw new OperationProcessorException(sprintf('The symbol type `%s` is not implemented `test` processing yet', ClassHelper::nameBy($this)));
     }
 
     public function __toString()

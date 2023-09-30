@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\InstructionSequence;
 
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Offset;
-use RubyVM\VM\Core\Runtime\Entity\EntityHelper;
+use RubyVM\VM\Core\Runtime\ClassCreator;
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Insn\InsnType;
@@ -289,7 +289,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                 $entries->append(
                     match ($operandType) {
                         InsnType::TS_VALUE => new Operand(
-                            operand: EntityHelper::createEntityBySymbol(
+                            operand: ClassCreator::createClassBySymbol(
                                 $this->kernel
                                     ->findObject($reader->smallValue())
                             ),

@@ -7,7 +7,8 @@ namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
-use RubyVM\VM\Core\Runtime\Entity\Entityable;
+use RubyVM\VM\Core\Runtime\BasicObject\Symbolizable;
+use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
@@ -18,9 +19,9 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\RuntimeException;
 
 #[BindAliasAs('Array')]
-class Array_ extends Enumerable implements RubyClassInterface
+class Array_ extends Enumerable implements RubyClassInterface, Symbolize
 {
-    use Entityable;
+    use Symbolizable;
 
     public function __construct(ArraySymbol $symbol)
     {

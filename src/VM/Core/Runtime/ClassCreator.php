@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Entity;
+namespace RubyVM\VM\Core\Runtime;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Class_;
@@ -36,9 +36,9 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\UndefinedSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\VoidSymbol;
 use RubyVM\VM\Exception\EntityException;
 
-class EntityHelper
+class ClassCreator
 {
-    public static function createEntityBySymbol(SymbolInterface $symbol): RubyClassInterface
+    public static function createClassBySymbol(SymbolInterface $symbol): RubyClassInterface
     {
         return match ($symbol::class) {
             ArraySymbol::class => new Array_($symbol),

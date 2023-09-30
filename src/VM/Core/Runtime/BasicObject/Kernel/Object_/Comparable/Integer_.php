@@ -7,14 +7,15 @@ namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable;
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\FalseClass;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\TrueClass;
-use RubyVM\VM\Core\Runtime\Entity\Entityable;
+use RubyVM\VM\Core\Runtime\BasicObject\Symbolizable;
+use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 
-class Integer_ extends Comparable implements RubyClassInterface
+class Integer_ extends Comparable implements RubyClassInterface, Symbolize
 {
-    use Entityable;
+    use Symbolizable;
 
     public function __construct(NumberSymbol $symbol)
     {

@@ -57,10 +57,9 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
                         ),
                     );
                 }
+
                 // @phpstan-ignore-next-line
                 $object = $className::createBy();
-            } elseif ($constantNameSymbol instanceof RubyClassInterface) {
-                $object = Class_::of($constantNameSymbol->symbol(), $this->context);
             } else {
                 $object = Class_::of($constantNameSymbol, $this->context);
             }
