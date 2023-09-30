@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Accessor;
 
-use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Float_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
@@ -12,17 +11,11 @@ use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Range;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\FalseClass;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\TrueClass;
-use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\RubyClass;
-use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NilSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
-use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\TranslationException;
 
