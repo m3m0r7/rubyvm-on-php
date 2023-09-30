@@ -169,7 +169,7 @@ class ExecutorDebugger
                         static fn ($argument) => match ($argument::class) {
                             SymbolInterface::class => (string) $argument,
                             Operand::class => match ($argument->operand::class) {
-                                RubyClass::class => (string) $argument->operand->entity(),
+                                RubyClass::class => (string) $argument->operand,
                                 default => '?',
                             },
                             default => '?',
@@ -193,7 +193,7 @@ class ExecutorDebugger
                 ->operationEntries()
                 ->get($currentPos + 1)
                 ->operand
-                ->entity();
+                ;
 
             return sprintf('ref: %d', $number->valueOf());
         }

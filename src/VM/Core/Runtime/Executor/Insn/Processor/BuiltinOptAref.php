@@ -45,7 +45,7 @@ class BuiltinOptAref implements OperationProcessorInterface
         if ($obj instanceof \ArrayAccess) {
             $value = $obj[$recv->valueOf()] ?? null;
         } elseif ($obj instanceof RubyClassInterface) {
-            $entity = $obj->entity();
+            $entity = $obj;
             if (!$entity->symbol() instanceof \ArrayAccess) {
                 throw new OperationProcessorException(
                     sprintf(
@@ -78,7 +78,7 @@ class BuiltinOptAref implements OperationProcessorInterface
 
         if ($value instanceof RubyClassInterface) {
             $value = $value
-                ->entity()
+
                 ->symbol();
         }
 

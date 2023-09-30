@@ -41,8 +41,8 @@ trait OperatorCalculatable
             throw new OperationProcessorException('The receiver is not a RubyClass');
         }
 
-        $leftOperand = $obj->operand->entity()->symbol();
-        $rightOperand = $recv->operand->entity()->symbol();
+        $leftOperand = $obj->operand->symbol();
+        $rightOperand = $recv->operand->symbol();
 
         $value = null;
         if ($operator instanceof StringSymbol || $operator instanceof SymbolSymbol) {

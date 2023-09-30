@@ -59,7 +59,7 @@ trait ProvideBasicClassMethods
 
     public function inspect(): RubyClassInterface
     {
-        $string = match (($this->entity()->symbol())::class) {
+        $string = match (($this->symbol())::class) {
             StringSymbol::class => '"' . ((string) $this) . '"',
             default => (string) $this,
         };
@@ -98,7 +98,7 @@ trait ProvideBasicClassMethods
         }
 
         if ($lookedUpCatchEntry === null) {
-            throw new Raise("{$class->entity()->valueOf()}: {$string->entity()->valueOf()}");
+            throw new Raise("{$class->valueOf()}: {$string->valueOf()}");
         }
 
         $instructionSequence = $lookedUpCatchEntry

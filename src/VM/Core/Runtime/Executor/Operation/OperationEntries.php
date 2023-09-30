@@ -30,7 +30,7 @@ class OperationEntries extends AbstractEntries implements \Stringable
                     $item->insn->value
                 ),
                 Operand::class => match (($item->operand)::class) {
-                    RubyClass::class => (string) $item->operand->entity()->symbol(),
+                    RubyClass::class => (string) $item->operand->symbol(),
                     SymbolInterface::class => (string) $item->operand,
                     default => ClassHelper::nameBy($item->operand),
                 },

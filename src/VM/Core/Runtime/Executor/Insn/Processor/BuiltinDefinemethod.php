@@ -58,7 +58,8 @@ class BuiltinDefinemethod implements OperationProcessorInterface
         $this->context
             ->appendTrace($methodNameSymbol->valueOf());
 
-        $class = $this->context->self()->entity();
+        $class = $this->context->self();
+
 
         $receiverClass = $this
             ->context

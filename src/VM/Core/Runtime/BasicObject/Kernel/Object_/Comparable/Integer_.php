@@ -26,7 +26,7 @@ class Integer_ extends Comparable implements RubyClassInterface
     public function xor(CallInfoInterface $callInfo, RubyClassInterface $object): Integer_
     {
         return Integer_::createBy(
-            $this->symbol->valueOf() ^ $object->entity()->symbol()->valueOf(),
+            $this->symbol->valueOf() ^ $object->symbol()->valueOf(),
         );
     }
 
@@ -34,7 +34,7 @@ class Integer_ extends Comparable implements RubyClassInterface
     public function power(CallInfoInterface $callInfo, RubyClassInterface $object): Integer_
     {
         return Integer_::createBy(
-            $this->symbol->valueOf() ** $object->entity()->symbol()->valueOf(),
+            $this->symbol->valueOf() ** $object->symbol()->valueOf(),
         );
     }
 
@@ -42,7 +42,7 @@ class Integer_ extends Comparable implements RubyClassInterface
     public function rightShift(CallInfoInterface $callInfo, RubyClassInterface $object): Integer_
     {
         return Integer_::createBy(
-            $this->symbol->valueOf() >> $object->entity()->symbol()->valueOf(),
+            $this->symbol->valueOf() >> $object->symbol()->valueOf(),
         );
     }
 
@@ -50,7 +50,7 @@ class Integer_ extends Comparable implements RubyClassInterface
     public function compareStrictEquals(CallInfoInterface $callInfo, RubyClassInterface $object): Boolean_
     {
         return Boolean_::createBy(
-            $this->symbol->valueOf() === $object->entity()->symbol()->valueOf(),
+            $this->symbol->valueOf() === $object->symbol()->valueOf(),
         );
     }
 

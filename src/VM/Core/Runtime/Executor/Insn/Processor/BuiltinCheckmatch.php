@@ -51,7 +51,7 @@ class BuiltinCheckmatch implements OperationProcessorInterface
             ->vmStack()
             ->push(new Operand(
                 Boolean_::createBy(
-                    $compareBy->entity()->valueOf() === $compareFrom->entity()->valueOf()
+                    $compareBy->valueOf() === $compareFrom->valueOf()
                 ),
             ));
 

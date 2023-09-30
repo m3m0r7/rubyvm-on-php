@@ -18,14 +18,14 @@ trait DebugFormat
         $result = [];
         foreach ($targetItems as $index => $item) {
             if ($item instanceof RubyClassInterface) {
-                $result[] = ClassHelper::nameBy($item->entity()) . "({$item->entity()})";
+                $result[] = ClassHelper::nameBy($item) . "({$item})";
 
                 continue;
             }
 
             $result[] = match ($item::class) {
                 Operand::class => match (($item->operand)::class) {
-                    RubyClass::class => ClassHelper::nameBy($item->operand->entity()) . "({$item->operand->entity()})",
+                    RubyClass::class => ClassHelper::nameBy($item->operand) . "({$item->operand})",
                     default => ClassHelper::nameBy($item->operand),
                 },
                 default => 'unknown',

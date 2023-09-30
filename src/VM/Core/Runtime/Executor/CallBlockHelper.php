@@ -206,7 +206,7 @@ trait CallBlockHelper
                             }
 
                             return $rubyClass
-                                ->entity()
+
                                 ->symbol();
                         },
                         $argument,

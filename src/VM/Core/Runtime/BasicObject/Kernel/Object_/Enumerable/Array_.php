@@ -34,7 +34,7 @@ class Array_ extends Enumerable implements RubyClassInterface
     {
         $this->symbol = new ArraySymbol(
             $values instanceof RubyClassInterface
-                ? $values->entity()->symbol()->valueOf()
+                ? $values->symbol()->valueOf()
                 : ($values ?? []),
         );
 
@@ -99,7 +99,7 @@ class Array_ extends Enumerable implements RubyClassInterface
     public function push(CallInfoInterface $callInfo, RubyClassInterface $object): self
     {
         // @phpstan-ignore-next-line
-        $this->symbol[] = $object->entity()->symbol();
+        $this->symbol[] = $object->symbol();
 
         return $this;
     }

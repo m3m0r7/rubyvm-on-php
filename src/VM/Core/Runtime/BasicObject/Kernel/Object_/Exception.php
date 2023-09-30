@@ -40,7 +40,7 @@ abstract class Exception extends Object_ implements RubyClassInterface
     {
         return (string) $this
             ->message
-            ->entity()
+
             ->symbol()
             ->valueOf();
     }

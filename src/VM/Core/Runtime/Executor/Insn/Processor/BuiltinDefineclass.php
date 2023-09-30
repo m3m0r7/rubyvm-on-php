@@ -59,7 +59,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
         /**
          * @var StringSymbol $classNameSymbol
          */
-        $classNameSymbol = $className->entity()->symbol();
+        $classNameSymbol = $className->symbol();
         $class = Class_::of($classNameSymbol, $this->context);
 
         /**
@@ -91,7 +91,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
             ->renewEnvironmentTable();
 
         $executor->context()
-            ->appendTrace($class->entity()->valueOf());
+            ->appendTrace($class->valueOf());
 
         $result = $executor->execute();
 

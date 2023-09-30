@@ -40,7 +40,7 @@ readonly class Translator
 
             $result = [];
             foreach ($elements as $element) {
-                $result[] = self::PHPToRuby($element)->entity()->symbol();
+                $result[] = self::PHPToRuby($element)->symbol();
             }
 
             return Array_::createBy($result)
@@ -76,7 +76,7 @@ readonly class Translator
         if ($objectOrClass instanceof EntityInterface) {
             $symbol = $objectOrClass->symbol();
         } elseif ($objectOrClass instanceof RubyClass) {
-            $symbol = $objectOrClass->entity()->symbol();
+            $symbol = $objectOrClass->symbol();
         }
 
         return match ($symbol::class) {

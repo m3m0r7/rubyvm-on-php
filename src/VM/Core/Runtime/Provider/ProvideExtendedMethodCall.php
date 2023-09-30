@@ -34,7 +34,7 @@ trait ProvideExtendedMethodCall
 
         // Lookup bound instance method
         if ($context === null) {
-            $reflection = new \ReflectionClass($this->entity());
+            $reflection = new \ReflectionClass($this);
             foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
                 // Lookup for bound instance method by #[BindAliasAs(xxx)]
                 // The PHP cannot define a method with sign character but Ruby is allowed always
