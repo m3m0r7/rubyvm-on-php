@@ -57,15 +57,15 @@ class BuiltinOptLe implements OperationProcessorInterface
 
     private function computeNumberLessThanOrEqualsNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
     {
-        return (new Boolean_(new BooleanSymbol(
+        return new Boolean_(new BooleanSymbol(
             $leftOperand->valueOf() <= $rightOperand->valueOf()
-        )));
+        ));
     }
 
     private function computeFloatLessThanOrEqualsFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClassInterface
     {
-        return (new Boolean_(new BooleanSymbol(
+        return new Boolean_(new BooleanSymbol(
             $leftOperand->valueOf() <= $rightOperand->valueOf()
-        )));
+        ));
     }
 }

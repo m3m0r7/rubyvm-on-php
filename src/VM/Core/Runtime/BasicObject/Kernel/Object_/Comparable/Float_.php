@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable;
 
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
+use RubyVM\VM\Core\Runtime\Entity\Entityable;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
 
 #[BindAliasAs('Float')]
 class Float_ extends Comparable implements RubyClassInterface
 {
+    use Entityable;
+
     public function __construct(FloatSymbol $symbol)
     {
         $this->symbol = $symbol;

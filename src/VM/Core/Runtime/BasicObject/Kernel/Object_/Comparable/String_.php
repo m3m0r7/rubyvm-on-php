@@ -6,13 +6,14 @@ namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable;
 
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\Runtime\Entity\Entityable;
-use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 
 #[BindAliasAs('String')]
 class String_ extends Comparable implements RubyClassInterface
 {
+    use Entityable;
+
     public function __construct(StringSymbol $symbol)
     {
         $this->symbol = $symbol;

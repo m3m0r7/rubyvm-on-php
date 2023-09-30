@@ -60,7 +60,6 @@ class BuiltinDefinemethod implements OperationProcessorInterface
 
         $class = $this->context->self();
 
-
         $receiverClass = $this
             ->context
             ->self();

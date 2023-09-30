@@ -25,20 +25,23 @@ trait ProvideBasicClassMethods
 {
     public function puts(CallInfoInterface $callInfo, RubyClassInterface $object): RubyClassInterface
     {
-        $symbol = $object->symbol();
-
         $string = '';
+
         if ($object instanceof Exception) {
             $string .= (string) $object;
-        } elseif ($symbol instanceof ArraySymbol || $symbol instanceof RangeSymbol) {
-            foreach ($symbol as $number) {
-                $string .= "{$number}\n";
-            }
-        } elseif ($symbol instanceof NilSymbol) {
-            // When an argument is a nil symbol, then displays a break only
-            $string = "\n";
         } else {
-            $string = (string) $symbol;
+            $symbol = $object->symbol();
+
+            if ($symbol instanceof ArraySymbol || $symbol instanceof RangeSymbol) {
+                foreach ($symbol as $number) {
+                    $string .= "{$number}\n";
+                }
+            } elseif ($symbol instanceof NilSymbol) {
+                // When an argument is a nil symbol, then displays a break only
+                $string = "\n";
+            } else {
+                $string = (string) $symbol;
+            }
         }
 
         if (!str_ends_with($string, "\n")) {
@@ -49,7 +52,7 @@ trait ProvideBasicClassMethods
 
         // The puts returns (nil)
         return NilClass::createBy()
-            ;
+        ;
     }
 
     public function exit(CallInfoInterface $callInfo, int $code = 0): never
@@ -65,7 +68,7 @@ trait ProvideBasicClassMethods
         };
 
         return String_::createBy($string)
-            ;
+        ;
     }
 
     public function lambda(CallInfoInterface $callInfo, ContextInterface $context): RubyClassInterface
@@ -137,7 +140,7 @@ trait ProvideBasicClassMethods
 
         if (!$result->returnValue instanceof \RubyVM\VM\Core\Runtime\Essential\RubyClassInterface) {
             return NilClass::createBy()
-                ;
+            ;
         }
 
         return $result->returnValue;

@@ -20,9 +20,10 @@ trait ProvideClassExtendableMethods
     public function userlandHeapSpace(): UserlandHeapSpaceInterface
     {
         if ($this->userlandHeapSpace === null) {
-            throw new RuntimeException(
-                'The userland heapspace is null',
-            );
+            $this->userlandHeapSpace = new UserlandHeapSpace();
+            //            throw new RuntimeException(
+            //                'The userland heapspace is null',
+            //            );
         }
 
         return $this->userlandHeapSpace;

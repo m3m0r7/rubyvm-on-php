@@ -52,7 +52,7 @@ class Lambda extends Object_ implements RubyClassInterface
         return $result->returnValue;
     }
 
-    public static function createBy(mixed $value = null): \RubyVM\VM\Core\Runtime\Entity\EntityInterface
+    public static function createBy(mixed $value = null): EntityInterface
     {
         return new self($value);
     }

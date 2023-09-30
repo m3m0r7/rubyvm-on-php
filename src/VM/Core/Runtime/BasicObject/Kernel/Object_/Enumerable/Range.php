@@ -7,7 +7,7 @@ namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
-use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
+use RubyVM\VM\Core\Runtime\Entity\Entityable;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
@@ -18,6 +18,8 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
 
 class Range extends Enumerable implements RubyClassInterface
 {
+    use Entityable;
+
     public function __construct(RangeSymbol $symbol)
     {
         $this->symbol = $symbol;
@@ -68,5 +70,25 @@ class Range extends Enumerable implements RubyClassInterface
     public static function createBy(mixed ...$value): self
     {
         return new self(new RangeSymbol(...$value));
+    }
+
+    public function offsetExists(mixed $offset): bool
+    {
+        return $this->symbol->offsetExists($offset);
+    }
+
+    public function offsetGet(mixed $offset): mixed
+    {
+        return $this->symbol->offsetGet($offset);
+    }
+
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        $this->symbol->offsetSet($offset, $value);
+    }
+
+    public function offsetUnset(mixed $offset): void
+    {
+        $this->symbol->offsetUnset($offset);
     }
 }

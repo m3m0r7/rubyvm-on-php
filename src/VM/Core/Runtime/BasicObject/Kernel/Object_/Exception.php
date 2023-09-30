@@ -25,11 +25,6 @@ abstract class Exception extends Object_ implements RubyClassInterface
         return $this;
     }
 
-    public function toBeRubyClass(): RubyClassInterface
-    {
-        return $this;
-    }
-
     public function userlandHeapSpace(): UserlandHeapSpaceInterface
     {
         return $this->userlandHeapSpace ??= new UserlandHeapSpace();
@@ -48,5 +43,10 @@ abstract class Exception extends Object_ implements RubyClassInterface
     public function message(): RubyClassInterface
     {
         return $this->message;
+    }
+
+    public function valueOf(): string
+    {
+        return $this->className();
     }
 }

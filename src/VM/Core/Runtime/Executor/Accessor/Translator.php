@@ -31,11 +31,11 @@ readonly class Translator
     {
         if (is_array($elements)) {
             if (self::validateArrayIsNumber($elements)) {
-                return (new Range(new RangeSymbol(
+                return new Range(new RangeSymbol(
                     new NumberSymbol((int) array_key_first($elements)),
                     new NumberSymbol((int) array_key_last($elements)),
                     false,
-                )));
+                ));
             }
 
             $result = [];
@@ -44,7 +44,7 @@ readonly class Translator
             }
 
             return Array_::createBy($result)
-                ;
+            ;
         }
 
         if (is_object($elements)) {
@@ -75,7 +75,7 @@ readonly class Translator
         $symbol = $objectOrClass;
         if ($objectOrClass instanceof EntityInterface) {
             $symbol = $objectOrClass->symbol();
-        } elseif ($objectOrClass instanceof RubyClass) {
+        } elseif ($objectOrClass instanceof RubyClassInterface) {
             $symbol = $objectOrClass->symbol();
         }
 

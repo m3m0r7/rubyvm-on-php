@@ -57,15 +57,15 @@ class BuiltinOptGe implements OperationProcessorInterface
 
     private function computeNumberGreaterThanOrEqualsNumber(NumberSymbol $leftOperand, NumberSymbol $rightOperand): RubyClassInterface
     {
-        return (new Boolean_(new BooleanSymbol(
+        return new Boolean_(new BooleanSymbol(
             $leftOperand->valueOf() >= $rightOperand->valueOf()
-        )));
+        ));
     }
 
     private function computeFloatGreaterThanOrEqualsFloat(FloatSymbol $leftOperand, FloatSymbol $rightOperand): RubyClassInterface
     {
-        return (new Boolean_(new BooleanSymbol(
+        return new Boolean_(new BooleanSymbol(
             $leftOperand->valueOf() >= $rightOperand->valueOf()
-        )));
+        ));
     }
 }

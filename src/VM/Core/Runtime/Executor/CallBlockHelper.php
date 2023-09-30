@@ -206,7 +206,6 @@ trait CallBlockHelper
                             }
 
                             return $rubyClass
-
                                 ->symbol();
                         },
                         $argument,
@@ -218,7 +217,7 @@ trait CallBlockHelper
 
             if ($argument instanceof ContextInterface) {
                 $newArguments[] = NilClass::createBy()
-                    ;
+                ;
 
                 continue;
             }

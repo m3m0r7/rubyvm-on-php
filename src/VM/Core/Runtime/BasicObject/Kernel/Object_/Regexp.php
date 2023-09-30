@@ -7,6 +7,7 @@ namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_;
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
+use RubyVM\VM\Core\Runtime\Entity\Entityable;
 use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
@@ -14,6 +15,8 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\RegExpSymbol;
 
 class Regexp extends Object_ implements RubyClassInterface
 {
+    use Entityable;
+
     public function __construct(RegExpSymbol $symbol)
     {
         $this->symbol = $symbol;

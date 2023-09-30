@@ -14,6 +14,7 @@ use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Symbol;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Range;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Offset;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Regexp;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Undefined;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Void_;

@@ -35,7 +35,7 @@ class Hash extends Enumerable implements RubyClassInterface
         unset($this->hash[$offset]);
     }
 
-    public static function createBy(mixed $value = null): \RubyVM\VM\Core\Runtime\Entity\EntityInterface
+    public static function createBy(mixed $value = null): EntityInterface
     {
         return new self($value);
     }

@@ -84,8 +84,7 @@ class BuiltinOptAref implements OperationProcessorInterface
 
         $this->context->vmStack()->push(
             new Operand(
-                EntityHelper::createEntityBySymbol($value)
-                    ,
+                EntityHelper::createEntityBySymbol($value),
             ),
         );
 

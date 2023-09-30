@@ -6,7 +6,6 @@ namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_;
 
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\Runtime\Entity\Entityable;
-use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ClassSymbol;
@@ -16,6 +15,8 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolSymbol;
 #[BindAliasAs('Class')]
 class Class_ extends Object_ implements RubyClassInterface
 {
+    use Entityable;
+
     /**
      * @var RubyClassInterface[]
      */

@@ -41,7 +41,7 @@ class BuiltinDefineclass implements OperationProcessorInterface
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
         $className = EntityHelper::createEntityBySymbol($this->getOperandAsID()->object)
-            ;
+        ;
         $iseqNumber = $this->getOperandAsNumber();
         $flags = $this->getOperandAsNumber();
 

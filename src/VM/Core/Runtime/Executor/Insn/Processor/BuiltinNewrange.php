@@ -49,11 +49,11 @@ class BuiltinNewrange implements OperationProcessorInterface
         $this->context->vmStack()
             ->push(
                 new Operand(
-                    (new Range(new RangeSymbol(
+                    new Range(new RangeSymbol(
                         begin: $low,
                         end: $high,
                         excludeEnd: (bool) $flags->valueOf(),
-                    ))),
+                    )),
                 ),
             );
 

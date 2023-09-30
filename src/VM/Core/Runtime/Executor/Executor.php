@@ -330,8 +330,7 @@ class Executor implements ExecutorInterface
         return new ExecutedResult(
             executor: $this,
             executedStatus: ExecutedStatus::SUCCESS,
-            returnValue: Void_::createBy()
-                ,
+            returnValue: Void_::createBy(),
             threw: null,
             debugger: $this->debugger,
         );

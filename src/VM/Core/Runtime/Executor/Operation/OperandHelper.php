@@ -10,13 +10,11 @@ use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Symbol;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Offset;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Regexp;
-use RubyVM\VM\Core\Runtime\Entity\EntityInterface;
-use RubyVM\VM\Core\Runtime\Entity\Offset;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
-use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\ID;
 

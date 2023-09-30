@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\InstructionSequence;
 
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Offset;
 use RubyVM\VM\Core\Runtime\Entity\EntityHelper;
-use RubyVM\VM\Core\Runtime\Entity\Offset;
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Insn\InsnType;
@@ -345,8 +345,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             for ($i = 0; $i < ($insn->operandSize() - 1); ++$i) {
                 $entries->append(
                     new Operand(
-                        operand: Integer_::createBy($reader->smallValue())
-                            ,
+                        operand: Integer_::createBy($reader->smallValue()),
                     )
                 );
                 ++$codeIndex;

@@ -12,7 +12,6 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\RubyClass;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Exception\OperationProcessorException;
@@ -64,7 +63,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
                 }
 
                 // @phpstan-ignore-next-line
-                $object = RubyClass::initializeByClassName($className);
+                $object = $className::createBy();
             } else {
                 $object = Class_::of($constantNameSymbol, $this->context);
             }

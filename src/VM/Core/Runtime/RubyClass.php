@@ -79,7 +79,7 @@ class RubyClass implements RubyClassInterface
     public static function initializeByClassName(string $className): RubyClassInterface
     {
         return $className::createBy()
-            ;
+        ;
     }
 
     public function __toString(): string
