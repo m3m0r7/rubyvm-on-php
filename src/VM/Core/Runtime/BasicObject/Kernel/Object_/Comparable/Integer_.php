@@ -51,6 +51,14 @@ class Integer_ extends Comparable implements RubyClassInterface, Symbolize
         );
     }
 
+    #[BindAliasAs('<<')]
+    public function leftShift(CallInfoInterface $callInfo, RubyClassInterface $object): Integer_
+    {
+        return Integer_::createBy(
+            $this->valueOf() << $object->valueOf(),
+        );
+    }
+
     #[BindAliasAs('===')]
     public function compareStrictEquals(CallInfoInterface $callInfo, RubyClassInterface $object): TrueClass|FalseClass
     {
@@ -79,6 +87,102 @@ class Integer_ extends Comparable implements RubyClassInterface, Symbolize
         return String_::createBy(
             (string) $this,
         );
+    }
+
+    #[BindAliasAs('+')]
+    public function plus(CallInfoInterface $callInfo, RubyClassInterface $object): Integer_
+    {
+        return Integer_::createBy(
+            $this->valueOf() + $object->valueOf(),
+        );
+    }
+
+    #[BindAliasAs('-')]
+    public function minus(CallInfoInterface $callInfo, RubyClassInterface $object): Integer_
+    {
+        return Integer_::createBy(
+            $this->valueOf() - $object->valueOf(),
+        );
+    }
+
+    #[BindAliasAs('*')]
+    public function multiply(CallInfoInterface $callInfo, RubyClassInterface $object): Integer_
+    {
+        return Integer_::createBy(
+            $this->valueOf() * $object->valueOf(),
+        );
+    }
+
+    #[BindAliasAs('/')]
+    public function divide(CallInfoInterface $callInfo, RubyClassInterface $object): Integer_
+    {
+        return Integer_::createBy(
+            (int) ($this->valueOf() / $object->valueOf()),
+        );
+    }
+
+    #[BindAliasAs('&')]
+    public function and(CallInfoInterface $callInfo, RubyClassInterface $object): Integer_
+    {
+        return Integer_::createBy(
+            $this->valueOf() & $object->valueOf(),
+        );
+    }
+
+    #[BindAliasAs('|')]
+    public function or(CallInfoInterface $callInfo, RubyClassInterface $object): Integer_
+    {
+        return Integer_::createBy(
+            $this->valueOf() | $object->valueOf(),
+        );
+    }
+
+    #[BindAliasAs('%')]
+    public function mod(CallInfoInterface $callInfo, RubyClassInterface $object): Integer_
+    {
+        return Integer_::createBy(
+            $this->valueOf() % $object->valueOf(),
+        );
+    }
+
+    #[BindAliasAs('==')]
+    public function equals(CallInfoInterface $callInfo, RubyClassInterface $object): TrueClass|FalseClass
+    {
+        return $this->valueOf() == $object->valueOf()
+            ? TrueClass::createBy()
+            : FalseClass::createBy();
+    }
+
+    #[BindAliasAs('<=')]
+    public function equalsOrLessThan(CallInfoInterface $callInfo, RubyClassInterface $object): TrueClass|FalseClass
+    {
+        return $this->valueOf() <= $object->valueOf()
+            ? TrueClass::createBy()
+            : FalseClass::createBy();
+    }
+
+    #[BindAliasAs('>=')]
+    public function equalsOrGreaterThan(CallInfoInterface $callInfo, RubyClassInterface $object): TrueClass|FalseClass
+    {
+        return $this->valueOf() >= $object->valueOf()
+            ? TrueClass::createBy()
+            : FalseClass::createBy();
+    }
+
+    #[BindAliasAs('<')]
+    public function lessThan(CallInfoInterface $callInfo, RubyClassInterface $object): TrueClass|FalseClass
+    {
+        return $this->valueOf() < $object->valueOf()
+            ? TrueClass::createBy()
+            : FalseClass::createBy();
+    }
+
+    #[BindAliasAs('>')]
+    public function greaterThan(CallInfoInterface $callInfo, RubyClassInterface $object): TrueClass|FalseClass
+    {
+        return $this->valueOf() > $object->valueOf()
+            ? TrueClass::createBy()
+            : FalseClass::createBy();
     }
 
     public static function createBy(mixed $value = 0): self

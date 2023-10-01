@@ -147,4 +147,12 @@ class Array_ extends Enumerable implements RubyClassInterface, Symbolize
 
         return $this->symbol->count();
     }
+
+    #[BindAliasAs('+')]
+    public function plus(CallInfoInterface $callInfo, RubyClassInterface $object): Array_
+    {
+        return Array_::createBy(
+            [...$this->valueOf(), ...$object->valueOf()],
+        );
+    }
 }

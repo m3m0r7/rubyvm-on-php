@@ -7,6 +7,7 @@ namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
@@ -33,7 +34,20 @@ class BuiltinPutobject implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $this->context->vmStack()->push($this->getOperand());
+        $operand = $this->getOperandAsRubyClass();
+        $operand
+            ->setUserlandHeapSpace(
+                $operand
+                    ->setRuntimeContext($this->context)
+                    ->context()
+                    ->self()
+                    ->userlandHeapSpace()
+                    ->userlandClasses()
+                    ->get($operand->className()),
+            )
+            ->setRuntimeContext($this->context);
+
+        $this->context->vmStack()->push(new Operand($operand));
 
         return ProcessedStatus::SUCCESS;
     }

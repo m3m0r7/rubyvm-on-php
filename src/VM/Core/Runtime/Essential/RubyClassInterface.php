@@ -39,4 +39,6 @@ interface RubyClassInterface extends RubyClassImplementationInterface, \Stringab
     public function valueOf(): mixed;
 
     public function testValue(): bool;
+
+    public function className(): string;
 }

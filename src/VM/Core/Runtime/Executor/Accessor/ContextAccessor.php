@@ -16,10 +16,12 @@ readonly class ContextAccessor implements ContextAccessorInterface
      */
     public function __call(string $name, array $arguments): mixed
     {
-        $self = $this->executedResult->executor->context()->self();
+        $context = $this->executedResult->executor->context();
+        $self = $context->self();
 
         $arguments = array_map(
-            static fn ($value) => Translator::PHPToRuby($value),
+            static fn ($value) => Translator::PHPToRuby($value)
+                ->setRuntimeContext($context),
             $arguments,
         );
 

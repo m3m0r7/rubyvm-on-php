@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
-use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -35,22 +34,5 @@ class BuiltinOptMod implements OperationProcessorInterface
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
         return $this->processArithmetic('%');
-    }
-
-    private function compute(RubyClassInterface $leftOperand, RubyClassInterface $rightOperand): ?RubyClassInterface
-    {
-        $value = null;
-        if ($leftOperand instanceof Integer_ && $rightOperand instanceof Integer_) {
-            $value = $this->computeNumberModNumber($leftOperand, $rightOperand);
-        }
-
-        return $value;
-    }
-
-    private function computeNumberModNumber(Integer_ $leftOperand, Integer_ $rightOperand): RubyClassInterface
-    {
-        return Integer_::createBy(
-            $leftOperand->valueOf() % $rightOperand->valueOf()
-        );
     }
 }

@@ -35,7 +35,8 @@ class BuiltinDuparray implements OperationProcessorInterface
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
         $this->context->vmStack()->push(new Operand(
-            $this->getOperandAsArray(),
+            $this->getOperandAsArray()
+                ->setRuntimeContext($this->context),
         ));
 
         return ProcessedStatus::SUCCESS;
