@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
-use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
@@ -35,7 +34,9 @@ trait OperatorCalculatable
                 throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor cannot process %s operator because string concatenating was allowed only `%s`', strtolower((string) $this->insn->name), $this->insn->value, $operator, $expectedOperator));
             }
 
-            $value = $this->compute($obj, $recv);
+            $value = $obj
+                ->setRuntimeContext($this->context)
+                ->{$expectedOperator}($callDataOperand, $recv);
         }
 
         if ($value === null) {
@@ -46,6 +47,4 @@ trait OperatorCalculatable
 
         return ProcessedStatus::SUCCESS;
     }
-
-    abstract private function compute(RubyClassInterface $leftOperand, RubyClassInterface $rightOperand): ?RubyClassInterface;
 }

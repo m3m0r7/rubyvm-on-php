@@ -50,4 +50,57 @@ class ExtendedClassTest extends TestApplication
 
         _, $rubyVMManager->stdOut->readAll());
     }
+
+    public function testExtendedPlusOperatorIntoIntegerClass(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            class Integer
+              def +(s)
+                self - s
+              end
+            end
+
+            puts 3 + 1
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<< '_'
+        2
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
+
+    public function testExtendedDoubleDefinitionPlusAndMinusOperatorIntoIntegerClass(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            class Integer
+              def +(s)
+                self - s
+              end
+              def -(s)
+                self * s
+              end
+            end
+
+            puts 10 + 10
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<< '_'
+        100
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
 }

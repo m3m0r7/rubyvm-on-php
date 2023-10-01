@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Class_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
@@ -27,9 +28,16 @@ trait CallBlockHelper
             $calleeContexts = [array_shift($arguments)];
         }
 
+        $isSameClass = $this instanceof RubyClassInterface
+            && $context->self() instanceof Class_
+            && $this->className() === $context->self()->valueOf();
+
         $executor = (new Executor(
             kernel: $context->kernel(),
-            rubyClass: $context->self(),
+            // Use runtime class if is the same class constant and current class
+            rubyClass: $isSameClass
+                ? $this
+                : $context->self(),
             instructionSequence: $context->instructionSequence(),
             option: $context->option(),
             parentContext: $context,

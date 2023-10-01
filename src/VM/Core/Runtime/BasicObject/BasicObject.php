@@ -6,7 +6,6 @@ namespace RubyVM\VM\Core\Runtime\BasicObject;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
-use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Class_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
@@ -22,13 +21,11 @@ abstract class BasicObject implements RubyClassInterface
         __call as private callExtendedMethod;
     }
 
-    protected ?Class_ $entity = null;
-
     public function className(): string
     {
         $classNames = explode('\\', static::class);
 
-        return array_pop($classNames);
+        return rtrim(array_pop($classNames), '_');
     }
 
     #[BindAliasAs('to_s')]
@@ -61,7 +58,7 @@ abstract class BasicObject implements RubyClassInterface
                 throw new NotFoundInstanceMethod(sprintf(<<< '_'
                         Not found instance method %s#%s. In the actually, arguments count are unmatched or anymore problems when throwing this exception.
                         Use try-catch statement and checking a previous exception via this exception if you want to solve kindly this problems.
-                        _, /* Call to undefined method when not defined on symbol */ ClassHelper::nameBy($this), $name), $e->getCode());
+                        _, /* Call to undefined method when not defined on symbol */ ClassHelper::nameBy($this), $name), $e->getCode(), $e);
             }
         }
 

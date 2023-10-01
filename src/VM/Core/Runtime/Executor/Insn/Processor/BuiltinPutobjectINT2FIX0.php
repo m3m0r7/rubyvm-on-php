@@ -35,6 +35,7 @@ class BuiltinPutobjectINT2FIX0 implements OperationProcessorInterface
         $this->context->vmStack()->push(
             new Operand(
                 Integer_::createBy(0)
+                    ->setRuntimeContext($this->context)
             ),
         );
 

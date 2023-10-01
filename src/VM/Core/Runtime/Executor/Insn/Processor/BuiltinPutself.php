@@ -31,9 +31,10 @@ class BuiltinPutself implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
+        $self = $this->context->self();
         $this->context
             ->vmStack()
-            ->push(new Operand($this->context->self()));
+            ->push(new Operand($self));
 
         return ProcessedStatus::SUCCESS;
     }
