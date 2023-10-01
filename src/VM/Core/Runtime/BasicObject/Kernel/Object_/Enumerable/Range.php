@@ -28,7 +28,7 @@ class Range extends Enumerable implements RubyClassInterface, Symbolize
 
     public function each(CallInfoInterface $callInfo, ContextInterface $context): RubyClassInterface
     {
-        foreach ($this->symbol->valueOf() as $index => $number) {
+        foreach ($this->symbol as $index => $number) {
             $executor = (new Executor(
                 kernel: $context->kernel(),
                 rubyClass: $context->self(),

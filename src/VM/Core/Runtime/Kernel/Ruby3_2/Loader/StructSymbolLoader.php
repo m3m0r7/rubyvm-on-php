@@ -7,6 +7,7 @@ namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Loader;
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
 use RubyVM\VM\Core\YARV\Criterion\Structure\Range;
+use RubyVM\VM\Core\YARV\Essential\Symbol\NilSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
@@ -38,11 +39,11 @@ class StructSymbolLoader implements SymbolLoaderInterface
         $endSymbol = $this->kernel
             ->findObject($range->end);
 
-        if (!$beginSymbol instanceof NumberSymbol) {
+        if (!$beginSymbol instanceof NumberSymbol && !$beginSymbol instanceof NilSymbol) {
             throw new RubyVMException(sprintf('The StructSymbolLoader expects NumberSymbol at a begin property when creating a range object but actual symbol is %s', $beginSymbol::class));
         }
 
-        if (!$endSymbol instanceof NumberSymbol) {
+        if (!$endSymbol instanceof NumberSymbol && !$endSymbol instanceof NilSymbol) {
             throw new RubyVMException(sprintf('The StructSymbolLoader expects NumberSymbol at a end property when creating a range object but actual symbol is %s', $endSymbol::class));
         }
 
