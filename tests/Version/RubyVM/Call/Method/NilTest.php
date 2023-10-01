@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\RubyVM\Version\RubyVM\GenericSyntax;
+namespace Tests\RubyVM\Version\RubyVM\Call\Method;
 
 use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
 use RubyVM\VM\Core\YARV\RubyVersion;
@@ -13,18 +13,19 @@ use Tests\RubyVM\Helper\TestApplication;
  *
  * @coversNothing
  */
-class HashTest extends TestApplication
+class NilTest extends TestApplication
 {
-    public function testHash(): void
+    public function testObjectIsNil()
     {
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< '_'
-            obj = { a: :symbol, b: 1234, c: 'Hello World!' }
+            var1 = nil
+            var2 = "text"
 
-            puts obj[:a]
-            puts obj[:b]
-            puts obj[:c]
-
+            puts nil.nil?
+            puts var1.nil?
+            puts var2.nil?
+            puts 1.nil?
             _,
         );
 
@@ -33,10 +34,11 @@ class HashTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame(<<<'_'
-        symbol
-        1234
-        Hello World!
+        $this->assertSame(<<<_
+        true
+        true
+        false
+        false
 
         _, $rubyVMManager->stdOut->readAll());
     }

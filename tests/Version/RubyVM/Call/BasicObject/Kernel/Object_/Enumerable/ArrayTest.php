@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\RubyVM\Version\Ruby3_2\Call\BasicObject\Kernel\Object_\Enumerable;
+namespace Tests\RubyVM\Version\RubyVM\Call\BasicObject\Kernel\Object_\Enumerable;
 
 use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
 use RubyVM\VM\Core\YARV\RubyVersion;

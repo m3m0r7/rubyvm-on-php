@@ -6,7 +6,9 @@ namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
+use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
@@ -31,6 +33,33 @@ class BuiltinOptNilP implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor is not implemented yet', strtolower($this->insn->name), $this->insn->value));
+        $class = $this->getStackAsEntity();
+        $callInfo = $this->getOperandAsCallInfo();
+
+        $methodName = (string) $callInfo
+            ->callData()
+            ->mid()
+            ->object;
+
+        /**
+         * @var RubyClassInterface|ExecutedResult $result
+         */
+        $result = $class
+            ->setRuntimeContext($this->context)
+            ->{$methodName}($callInfo);
+
+        if ($result instanceof ExecutedResult && $result->threw) {
+            throw $result->threw;
+        }
+
+        $this->context->vmStack()->push(
+            new Operand(
+                $result instanceof RubyClassInterface
+                    ? $result
+                    : $result->returnValue,
+            ),
+        );
+
+        return ProcessedStatus::SUCCESS;
     }
 }

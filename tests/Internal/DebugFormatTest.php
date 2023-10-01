@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\RubyVM\Version\Ruby3_2\Internal;
+namespace Tests\RubyVM\Version\RubyVM\Internal;
 
 use RubyVM\VM\Core\Criterion\Entry\AbstractEntries;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
