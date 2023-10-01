@@ -39,7 +39,7 @@ class BuiltinDefinemethod implements OperationProcessorInterface
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
         $methodName = ClassCreator::createClassBySymbol(
-            $this->getOperandAsID()
+            $this->operandAsID()
                 ->object
         );
 
@@ -47,7 +47,7 @@ class BuiltinDefinemethod implements OperationProcessorInterface
             ->loadInstructionSequence(
                 aux: new Aux(
                     loader: new AuxLoader(
-                        index: $this->getOperandAsNumber()
+                        index: $this->operandAsNumber()
                             ->valueOf(),
                     ),
                 ),

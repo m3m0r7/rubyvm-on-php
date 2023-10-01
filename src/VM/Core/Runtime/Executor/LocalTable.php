@@ -35,7 +35,7 @@ trait LocalTable
 
     public function setLocalTableFromStack(int $slotIndex, int $level): void
     {
-        $operand = $this->getStackAsObject();
+        $operand = $this->stackAsObject();
 
         $this->context->environmentTable()
             ->set(

@@ -34,7 +34,7 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $operand = $this->getOperandAsID();
+        $operand = $this->operandAsID();
 
         $symbol = $operand->object;
 

@@ -30,7 +30,7 @@ class BuiltinJump implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $operand = $this->getOperandAsOffset();
+        $operand = $this->operandAsOffset();
 
         $this->context
             ->programCounter()

@@ -33,9 +33,9 @@ class BuiltinBranchunless implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $offset = $this->getOperandAsOffset();
+        $offset = $this->operandAsOffset();
 
-        $entity = $this->getStackAsEntity();
+        $entity = $this->stackAsRubyClass();
 
         if (!$entity->testValue()) {
             $this->context

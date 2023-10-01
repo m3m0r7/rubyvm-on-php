@@ -38,7 +38,7 @@ class BuiltinSend implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $callInfo = $this->getOperandAsCallInfo();
+        $callInfo = $this->operandAsCallInfo();
 
         $arguments = [];
         for ($i = 0; $i < $callInfo->callData()->argumentsCount(); ++$i) {
@@ -50,9 +50,9 @@ class BuiltinSend implements OperationProcessorInterface
             ...$arguments,
         );
 
-        $blockObject = $this->getStackAsRubyClass();
+        $blockObject = $this->stackAsRubyClass();
 
-        $blockIseqNumber = $this->getOperandAsNumber();
+        $blockIseqNumber = $this->operandAsNumber();
 
         $result = $this->callBlockWithArguments(
             $callInfo,

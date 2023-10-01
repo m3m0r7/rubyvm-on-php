@@ -46,7 +46,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $callInfo = $this->getOperandAsCallInfo();
+        $callInfo = $this->operandAsCallInfo();
 
         /**
          * @var StringSymbol $symbol

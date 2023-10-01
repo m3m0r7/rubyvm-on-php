@@ -30,12 +30,12 @@ class BuiltinSetinstancevariable implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $instanceVar = $this->getOperandAsID();
+        $instanceVar = $this->operandAsID();
 
         // this is instance variable index
-        $ivIndex = $this->getOperandAsNumber()->valueOf();
+        $ivIndex = $this->operandAsNumber()->valueOf();
 
-        $targetObject = $this->getStackAsObject();
+        $targetObject = $this->stackAsObject();
 
         // TODO: is correctly here? we will implement iv or ivc pattern.
         $this->context

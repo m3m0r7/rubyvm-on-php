@@ -39,9 +39,9 @@ class BuiltinDefineclass implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $className = ClassCreator::createClassBySymbol($this->getOperandAsID()->object);
-        $iseqNumber = $this->getOperandAsNumber();
-        $flags = $this->getOperandAsNumber();
+        $className = ClassCreator::createClassBySymbol($this->operandAsID()->object);
+        $iseqNumber = $this->operandAsNumber();
+        $flags = $this->operandAsNumber();
 
         $instructionSequence = $this->context->kernel()
             ->loadInstructionSequence(

@@ -52,11 +52,11 @@ class BuiltinInvokeblock implements OperationProcessorInterface
         // This is an operation processor context including instruction sequence context
         $processorContext = $arguments[0];
 
-        $operand = $this->getOperandAsCallInfo();
+        $operand = $this->operandAsCallInfo();
         $arguments = [];
 
         for ($i = 0; $i < $operand->callData()->argumentsCount(); ++$i) {
-            $arguments[] = $this->getStackAsObject();
+            $arguments[] = $this->stackAsObject();
         }
 
         $executed = $this

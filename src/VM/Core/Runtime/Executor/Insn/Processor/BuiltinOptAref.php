@@ -34,10 +34,10 @@ class BuiltinOptAref implements OperationProcessorInterface
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
         // No used (This operand is only array always; which calls [] in the ruby and refs array symbol)
-        $this->getOperand();
+        $this->operand();
 
-        $recv = $this->getStackAsEntity();
-        $obj = $this->getStackAsAny(RubyClassInterface::class);
+        $recv = $this->stackAsRubyClass();
+        $obj = $this->stackAsAny(RubyClassInterface::class);
 
         if ($obj instanceof \ArrayAccess) {
             $value = $obj[$recv->valueOf()] ?? null;

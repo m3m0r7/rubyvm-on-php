@@ -32,8 +32,8 @@ class BuiltinOptEmptyP implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $class = $this->getStackAsEntity();
-        $callInfo = $this->getOperandAsCallInfo();
+        $class = $this->stackAsRubyClass();
+        $callInfo = $this->operandAsCallInfo();
 
         $methodName = (string) $callInfo
             ->callData()

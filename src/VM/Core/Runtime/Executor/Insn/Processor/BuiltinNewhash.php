@@ -32,11 +32,11 @@ class BuiltinNewhash implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $number = $this->getOperandAsNumber();
+        $number = $this->operandAsNumber();
         $newHash = new Hash();
         for ($i = 0; $i < ($number->valueOf() / 2); ++$i) {
-            $value = $this->getStackAsEntity();
-            $name = $this->getStackAsSymbol();
+            $value = $this->stackAsRubyClass();
+            $name = $this->stackAsSymbol();
 
             $newHash[(string) $name] = $value;
         }

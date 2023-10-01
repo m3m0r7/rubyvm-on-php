@@ -25,9 +25,9 @@ trait OperandHelper
 {
     use Validatable;
 
-    private function getOperandAsEntity(): RubyClassInterface
+    private function operandAsRubyClass(): RubyClassInterface
     {
-        $operand = $this->getOperandAsAny(
+        $operand = $this->operandAsAny(
             RubyClassInterface::class,
         );
 
@@ -36,12 +36,12 @@ trait OperandHelper
         return $operand;
     }
 
-    private function getOperandAsNumber(): Integer_
+    private function operandAsNumber(): Integer_
     {
         /**
          * @var Integer_ $number
          */
-        $number = $this->getOperandAsEntity();
+        $number = $this->operandAsRubyClass();
 
         $this->validateType(
             Integer_::class,
@@ -51,12 +51,12 @@ trait OperandHelper
         return $number;
     }
 
-    private function getOperandAsString(): String_
+    private function operandAsString(): String_
     {
         /**
          * @var String_ $entity
          */
-        $entity = $this->getOperandAsEntity();
+        $entity = $this->operandAsRubyClass();
 
         $this->validateType(
             String_::class,
@@ -66,12 +66,12 @@ trait OperandHelper
         return $entity;
     }
 
-    private function getOperandAsFloat(): Float_
+    private function operandAsFloat(): Float_
     {
         /**
          * @var Float_ $entity
          */
-        $entity = $this->getOperandAsEntity();
+        $entity = $this->operandAsRubyClass();
 
         $this->validateType(
             Float_::class,
@@ -81,12 +81,12 @@ trait OperandHelper
         return $entity;
     }
 
-    private function getOperandAsOffset(): Offset
+    private function operandAsOffset(): Offset
     {
         /**
          * @var Offset $entity
          */
-        $entity = $this->getOperandAsEntity();
+        $entity = $this->operandAsRubyClass();
 
         $this->validateType(
             Offset::class,
@@ -96,12 +96,12 @@ trait OperandHelper
         return $entity;
     }
 
-    private function getOperandAsArray(): Array_
+    private function operandAsArray(): Array_
     {
         /**
          * @var Array_ $entity
          */
-        $entity = $this->getOperandAsEntity();
+        $entity = $this->operandAsRubyClass();
 
         $this->validateType(
             Array_::class,
@@ -111,46 +111,38 @@ trait OperandHelper
         return $entity;
     }
 
-    private function getOperandAsID(): ID
+    private function operandAsID(): ID
     {
-        $value = $this->getOperandAsAny(ID::class);
+        $value = $this->operandAsAny(ID::class);
         assert($value instanceof ID);
 
         return $value;
     }
 
-    private function getOperandAsRubyClass(): RubyClassInterface
+    private function operandAsCallInfo(): CallInfoInterface
     {
-        $value = $this->getOperandAsAny(RubyClassInterface::class);
-        assert($value instanceof RubyClassInterface);
-
-        return $value;
-    }
-
-    private function getOperandAsCallInfo(): CallInfoInterface
-    {
-        $value = $this->getOperandAsAny(CallInfoInterface::class);
+        $value = $this->operandAsAny(CallInfoInterface::class);
         assert($value instanceof CallInfoInterface);
 
         return $value;
     }
 
-    private function getOperandAsExecutedResult(): ExecutedResult
+    private function operandAsExecutedResult(): ExecutedResult
     {
-        $value = $this->getOperandAsAny(ExecutedResult::class);
+        $value = $this->operandAsAny(ExecutedResult::class);
         assert($value instanceof ExecutedResult);
 
         return $value;
     }
 
-    private function getOperandAsObject(): RubyClassInterface
+    private function operandAsObject(): RubyClassInterface
     {
-        return $this->getOperandAsRubyClass()
+        return $this->operandAsRubyClass()
             ->setRuntimeContext($this->context)
             ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace());
     }
 
-    private function getOperand(): Operand
+    private function operand(): Operand
     {
         /**
          * @var Operand $operand
@@ -170,9 +162,9 @@ trait OperandHelper
         return $operand;
     }
 
-    private function getOperandAsAny(string $className): CallInfoInterface|RubyClassInterface|ID|ExecutedResult
+    private function operandAsAny(string $className): CallInfoInterface|RubyClassInterface|ID|ExecutedResult
     {
-        $operand = $this->getOperand();
+        $operand = $this->operand();
 
         $this->validateType(
             $className,
@@ -182,9 +174,9 @@ trait OperandHelper
         return $operand->operand;
     }
 
-    private function getStackAsEntity(): RubyClassInterface
+    private function stackAsRubyClass(): RubyClassInterface
     {
-        $stack = $this->getStackAsAny(
+        $stack = $this->stackAsAny(
             RubyClassInterface::class
         );
 
@@ -193,12 +185,12 @@ trait OperandHelper
         return $stack;
     }
 
-    private function getStackAsSymbol(): Symbol
+    private function stackAsSymbol(): Symbol
     {
         /**
          * @var Symbol $entity
          */
-        $entity = $this->getStackAsEntity();
+        $entity = $this->stackAsRubyClass();
 
         $this->validateType(
             Symbol::class,
@@ -208,12 +200,12 @@ trait OperandHelper
         return $entity;
     }
 
-    private function getStackAsNumber(): Integer_
+    private function stackAsNumber(): Integer_
     {
         /**
          * @var Integer_ $entity
          */
-        $entity = $this->getStackAsEntity();
+        $entity = $this->stackAsRubyClass();
 
         $this->validateType(
             Integer_::class,
@@ -223,12 +215,12 @@ trait OperandHelper
         return $entity;
     }
 
-    private function getStackAsArray(): Array_
+    private function stackAsArray(): Array_
     {
         /**
          * @var Array_ $entity
          */
-        $entity = $this->getStackAsEntity();
+        $entity = $this->stackAsRubyClass();
 
         $this->validateType(
             Array_::class,
@@ -238,12 +230,12 @@ trait OperandHelper
         return $entity;
     }
 
-    private function getStackAsString(): String_
+    private function stackAsString(): String_
     {
         /**
          * @var String_ $entity
          */
-        $entity = $this->getStackAsEntity();
+        $entity = $this->stackAsRubyClass();
 
         $this->validateType(
             String_::class,
@@ -255,21 +247,21 @@ trait OperandHelper
         return $entity;
     }
 
-    private function getStackAsStringOrNil(): String_|NilClass
+    private function stackAsStringOrNil(): String_|NilClass
     {
-        $entity = $this->getStackAsEntity();
+        $entity = $this->stackAsRubyClass();
 
         assert($entity instanceof String_ || $entity instanceof NilClass);
 
         return $entity;
     }
 
-    private function getStackAsRegExp(): Regexp
+    private function stackAsRegExp(): Regexp
     {
         /**
          * @var Regexp $entity
          */
-        $entity = $this->getStackAsEntity();
+        $entity = $this->stackAsRubyClass();
 
         $this->validateType(
             Regexp::class,
@@ -281,12 +273,12 @@ trait OperandHelper
         return $entity;
     }
 
-    private function getStackAsFloat(): Float_
+    private function stackAsFloat(): Float_
     {
         /**
          * @var Float_ $entity
          */
-        $entity = $this->getStackAsEntity();
+        $entity = $this->stackAsRubyClass();
 
         $this->validateType(
             Float_::class,
@@ -298,12 +290,12 @@ trait OperandHelper
         return $entity;
     }
 
-    private function getStackAsOffsetSymbol(): Offset
+    private function stackAsOffsetSymbol(): Offset
     {
         /**
          * @var Offset $entity
          */
-        $entity = $this->getStackAsEntity();
+        $entity = $this->stackAsRubyClass();
 
         $this->validateType(
             Offset::class,
@@ -315,42 +307,34 @@ trait OperandHelper
         return $entity;
     }
 
-    private function getStackAsID(): ID
+    private function stackAsID(): ID
     {
-        $value = $this->getStackAsAny(ID::class);
+        $value = $this->stackAsAny(ID::class);
 
         assert($value instanceof ID);
 
         return $value;
     }
 
-    private function getStackAsRubyClass(): RubyClassInterface
+    private function stackAsCallInfo(): CallInfoInterface
     {
-        $value = $this->getStackAsAny(RubyClassInterface::class);
-        assert($value instanceof RubyClassInterface);
-
-        return $value;
-    }
-
-    private function getStackAsCallInfo(): CallInfoInterface
-    {
-        $value = $this->getStackAsAny(CallInfoInterface::class);
+        $value = $this->stackAsAny(CallInfoInterface::class);
         assert($value instanceof CallInfoInterface);
 
         return $value;
     }
 
-    private function getStackAsExecutedResult(): ExecutedResult
+    private function stackAsExecutedResult(): ExecutedResult
     {
-        $value = $this->getStackAsAny(ExecutedResult::class);
+        $value = $this->stackAsAny(ExecutedResult::class);
         assert($value instanceof ExecutedResult);
 
         return $value;
     }
 
-    private function getStackAsObject(): RubyClassInterface
+    private function stackAsObject(): RubyClassInterface
     {
-        return $this->getStackAsRubyClass()
+        return $this->stackAsRubyClass()
             ->setRuntimeContext($this->context)
             ->setUserlandHeapSpace($this->context->self()->userlandHeapSpace());
     }
@@ -368,7 +352,7 @@ trait OperandHelper
         return $operand;
     }
 
-    private function getStackAsAny(string $className): CallInfoInterface|RubyClassInterface|ID|ExecutedResult
+    private function stackAsAny(string $className): CallInfoInterface|RubyClassInterface|ID|ExecutedResult
     {
         $operand = $this->getStack();
 

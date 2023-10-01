@@ -34,10 +34,10 @@ class BuiltinOptRegexpmatch2 implements OperationProcessorInterface
      */
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $callInfo = $this->getOperandAsCallInfo();
+        $callInfo = $this->operandAsCallInfo();
 
-        $source = $this->getStackAsStringOrNil();
-        $regexp = $this->getStackAsRegExp();
+        $source = $this->stackAsStringOrNil();
+        $regexp = $this->stackAsRegExp();
 
         $this->context->vmStack()->push(
             new Operand(

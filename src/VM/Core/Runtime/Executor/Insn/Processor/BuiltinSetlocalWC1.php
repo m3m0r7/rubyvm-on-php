@@ -34,7 +34,7 @@ class BuiltinSetlocalWC1 implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $slotIndex = $this->getOperandAsNumber()->valueOf();
+        $slotIndex = $this->operandAsNumber()->valueOf();
         $this->setLocalTableFromStack($slotIndex, Option::RSV_TABLE_INDEX_1);
 
         return ProcessedStatus::SUCCESS;
