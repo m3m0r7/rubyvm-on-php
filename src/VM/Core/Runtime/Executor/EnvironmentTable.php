@@ -9,7 +9,7 @@ use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\DebugFormat;
 use RubyVM\VM\Exception\LocalTableException;
 
-class EnvironmentTable extends AbstractEntries
+class EnvironmentTable extends AbstractEntries implements \Stringable
 {
     use DebugFormat;
 
@@ -73,5 +73,12 @@ class EnvironmentTable extends AbstractEntries
         $this->leads[$index] = $which;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return self::getEntriesAsString(
+            $this->items ?? [],
+        );
     }
 }

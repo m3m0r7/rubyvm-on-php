@@ -14,8 +14,6 @@ use RubyVM\VM\Core\Runtime\Executor\Context\NullContext;
 use RubyVM\VM\Core\Runtime\Executor\Context\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Executor\Context\ProgramCounter;
 use RubyVM\VM\Core\Runtime\Executor\Context\VMStack;
-use RubyVM\VM\Core\Runtime\Executor\Debugger\BreakpointExecutable;
-use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operation;
 use RubyVM\VM\Core\Runtime\Main;
@@ -27,14 +25,11 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterfa
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\ExecutorFailedException;
 use RubyVM\VM\Exception\ExecutorUnknownException;
+use RubyVM\VM\Exception\Raise;
 use RubyVM\VM\Exception\RubyVMException;
 
 class Executor implements ExecutorInterface
 {
-    use BreakpointExecutable;
-
-    protected ?bool $shouldProcessedRecords = null;
-
     protected ContextInterface $context;
 
     public function __construct(
@@ -42,7 +37,6 @@ class Executor implements ExecutorInterface
         private readonly RubyClassInterface $rubyClass,
         private readonly InstructionSequenceInterface $instructionSequence,
         private readonly OptionInterface $option,
-        private readonly ExecutorDebugger $debugger = new ExecutorDebugger(),
         private readonly ?ContextInterface $parentContext = null,
     ) {
         $this->context = $this->createContext($this->parentContext);
@@ -97,17 +91,14 @@ class Executor implements ExecutorInterface
             $this->option,
             $parentContext?->IOContext() ?? new IOContext(
                 $this->option->stdOut(),
-                $this->option->stdOut(),
-                $this->option->stdOut(),
+                $this->option->stdIn(),
+                $this->option->stdErr(),
             ),
             $parentContext?->environmentTable() ?? new EnvironmentTable(),
-            $this->debugger,
             $parentContext instanceof \RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface
                 ? $parentContext->depth() + 1
                 : 0,
             $parentContext?->startTime() ?? null,
-            $this->shouldProcessedRecords ?? $parentContext?->shouldProcessedRecords() ?? false,
-            $this->shouldBreakPoint ?? $parentContext?->shouldBreakPoint() ?? false,
             $parentContext?->traces() ?? [],
         );
     }
@@ -122,7 +113,19 @@ class Executor implements ExecutorInterface
                 executedStatus: $result->executedStatus,
                 returnValue: $result->returnValue,
                 threw: null,
-                debugger: $this->debugger,
+            );
+        } catch (Raise $e) {
+            // Write to stderr
+            $this->context
+                ->IOContext()
+                ->stdErr
+                ->write((string) $e);
+
+            return new ExecutedResult(
+                executor: $this,
+                executedStatus: ExecutedStatus::EXIT,
+                returnValue: null,
+                threw: $e,
             );
         } catch (RubyVMException $e) {
             return new ExecutedResult(
@@ -130,14 +133,13 @@ class Executor implements ExecutorInterface
                 executedStatus: ExecutedStatus::THREW_EXCEPTION,
                 returnValue: null,
                 threw: $e,
-                debugger: $this->debugger,
             );
         }
     }
 
     private function _execute(ContextInterface|RubyClassInterface ...$arguments): ExecutedResult
     {
-        $this->debugger->bindContext($this->context);
+        $this->option->debugger()->enter($this->context);
 
         // NOTE: Exceeded counter increments self value including ProcessedStatus::SUCCESS and ProcessedStatus::JUMPED
         // requires this value because a role is outside of the program counter.
@@ -145,7 +147,7 @@ class Executor implements ExecutorInterface
             throw new ExecutorExeption('The executor got max stack exceeded - maybe falling into infinity loop at an executor');
         }
 
-        if (!$this->context->shouldBreakPoint() && $this->context->elapsedTime() > Option::MAX_TIME_EXCEEDED) {
+        if ($this->context->elapsedTime() > Option::MAX_TIME_EXCEEDED) {
             throw new ExecutorExeption(sprintf('The executor got max time exceeded %d sec. The process is very heavy or detected an infinity loop', Option::MAX_TIME_EXCEEDED));
         }
 
@@ -233,12 +235,11 @@ class Executor implements ExecutorInterface
 
             $details = null;
 
-            if ($this->context->shouldProcessedRecords()) {
-                $this->debugger->append(
+            $this->option->debugger()
+                ->append(
                     $operator->insn,
                     $snapshotContext,
                 );
-            }
 
             $status = $processor->process(...$arguments);
 
@@ -253,13 +254,11 @@ class Executor implements ExecutorInterface
 
             $processor->after();
 
-            if ($this->context->shouldBreakPoint()) {
-                $this->processBreakPoint(
+            $this->option->debugger()
+                ->process(
                     $operator->insn,
                     $snapshotContext,
-                    $this->context,
                 );
-            }
 
             // Finish this loop when returning ProcessedStatus::FINISH
             if (ProcessedStatus::FINISH === $status) {
@@ -303,46 +302,39 @@ class Executor implements ExecutorInterface
             'Success to finish normally an executor',
         );
 
+        $returnValue = Void_::createBy();
         if (count($this->context->vmStack()) >= 1) {
-            $operand = $this->context
+            $returnValue = $this->context
                 ->vmStack()
                 ->pop()
                 ->operand;
+            if ($returnValue instanceof ExecutedResult) {
+                if ($returnValue->threw instanceof \Throwable) {
+                    throw $returnValue->threw;
+                }
 
-            if (!$operand instanceof RubyClassInterface) {
-                throw new ExecutorExeption(
-                    sprintf(
-                        'The return value is not allowed types: %s',
-                        ClassHelper::nameBy($operand),
-                    )
-                );
+                $returnValue = $returnValue->returnValue;
             }
 
-            return new ExecutedResult(
-                executor: $this,
-                executedStatus: ExecutedStatus::SUCCESS,
-                returnValue: $operand,
-                threw: null,
-                debugger: $this->debugger,
-            );
+            if (!$returnValue instanceof RubyClassInterface) {
+                throw new ExecutorExeption(
+                    sprintf(
+                        'The operand is not instantiated by RubyClassInterface: %s',
+                        ClassHelper::nameBy($returnValue),
+                    ),
+                );
+            }
         }
 
-        return new ExecutedResult(
+        $result = new ExecutedResult(
             executor: $this,
             executedStatus: ExecutedStatus::SUCCESS,
-            returnValue: Void_::createBy(),
+            returnValue: $returnValue,
             threw: null,
-            debugger: $this->debugger,
         );
-    }
 
-    public function enableProcessedRecords(bool $enabled = true): ExecutorInterface
-    {
-        $this->shouldProcessedRecords = $enabled;
+        $this->option->debugger()->leave($result);
 
-        // Renew context
-        $this->context = $this->createContext($this->context);
-
-        return $this;
+        return $result;
     }
 }

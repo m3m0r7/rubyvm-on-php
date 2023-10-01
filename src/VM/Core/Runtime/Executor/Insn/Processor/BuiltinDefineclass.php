@@ -74,7 +74,6 @@ class BuiltinDefineclass implements OperationProcessorInterface
             rubyClass: $class,
             instructionSequence: $instructionSequence,
             option: $this->context->option(),
-            debugger: $this->context->debugger(),
             parentContext: $this->context,
         ));
 

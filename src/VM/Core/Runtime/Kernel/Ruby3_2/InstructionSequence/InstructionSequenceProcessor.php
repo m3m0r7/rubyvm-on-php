@@ -173,6 +173,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
             : null;
 
         $rbInstructionSequenceBody = new InstructionSequenceInfo(
+            path: $this->path(),
             type: $type,
             stackMax: $stackMax,
             iseqSize: $iseqSize,

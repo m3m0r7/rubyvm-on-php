@@ -7,7 +7,6 @@ namespace RubyVM\VM\Core\Runtime\Executor\Context;
 use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
 use RubyVM\VM\Core\Runtime\Executor\EnvironmentTable;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\Option;
@@ -33,11 +32,8 @@ class OperationProcessorContext implements ContextInterface
         private readonly OptionInterface $option,
         private readonly IOContext $IOContext,
         private EnvironmentTable $environmentTable,
-        private readonly ExecutorDebugger $debugger,
         private readonly int $depth,
         ?float $startTime,
-        private readonly bool $shouldProcessedRecords,
-        private readonly bool $shouldBreakPoint,
         private array $traces = [],
     ) {
         $this->startTime = $startTime ?? microtime(true);
@@ -83,11 +79,8 @@ class OperationProcessorContext implements ContextInterface
             option: $this->option,
             IOContext: $this->IOContext,
             environmentTable: clone $this->environmentTable,
-            debugger: $this->debugger, // NOTE: Do not clone because logger is shared resource
             depth: $this->depth,
             startTime: $this->startTime,
-            shouldProcessedRecords: $this->shouldProcessedRecords,
-            shouldBreakPoint: $this->shouldBreakPoint,
             traces: $this->traces,
         );
     }
@@ -135,21 +128,6 @@ class OperationProcessorContext implements ContextInterface
     public function executor(): ExecutorInterface
     {
         return $this->executor;
-    }
-
-    public function debugger(): ExecutorDebugger
-    {
-        return $this->debugger;
-    }
-
-    public function shouldProcessedRecords(): bool
-    {
-        return $this->shouldProcessedRecords;
-    }
-
-    public function shouldBreakPoint(): bool
-    {
-        return $this->shouldBreakPoint;
     }
 
     public function appendTrace(string ...$definitions): ContextInterface

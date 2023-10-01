@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_;
 
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
 use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
@@ -12,7 +13,7 @@ use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
 
 abstract class Exception extends Object_ implements RubyClassInterface
 {
-    protected RubyClassInterface $message;
+    protected ?RubyClassInterface $message = null;
 
     public static function createBy(mixed $value = null): self
     {
@@ -34,6 +35,10 @@ abstract class Exception extends Object_ implements RubyClassInterface
     #[BindAliasAs('to_s')]
     public function __toString(): string
     {
+        if (!$this->message instanceof \RubyVM\VM\Core\Runtime\Essential\RubyClassInterface) {
+            return '';
+        }
+
         assert($this->message instanceof Symbolize);
 
         return (string) $this
@@ -44,7 +49,7 @@ abstract class Exception extends Object_ implements RubyClassInterface
 
     public function message(): RubyClassInterface
     {
-        return $this->message;
+        return $this->message ?? String_::createBy();
     }
 
     public function valueOf(): string

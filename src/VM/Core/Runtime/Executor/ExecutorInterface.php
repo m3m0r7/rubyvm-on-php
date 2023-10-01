@@ -15,10 +15,6 @@ interface ExecutorInterface
 
     public function execute(ContextInterface|RubyClassInterface ...$arguments): ExecutedResult;
 
-    public function enableBreakpoint(bool $enabled = true): self;
-
-    public function enableProcessedRecords(bool $enabled = true): self;
-
     public function context(): ContextInterface;
 
     public function createContext(?ContextInterface $parentContext = null): ContextInterface;

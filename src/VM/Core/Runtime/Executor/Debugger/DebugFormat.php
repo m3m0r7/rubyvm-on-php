@@ -12,35 +12,37 @@ use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Undefined;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Void_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Operation;
 
 trait DebugFormat
 {
-    public function __toString(): string
+    /**
+     * @param array<Operand|Operation|RubyClassInterface> $entries
+     */
+    private static function getEntriesAsString(array $entries): string
     {
-        $targetItems = $this->items ?? [];
-
         $result = [];
-        foreach ($targetItems as $index => $item) {
+        foreach ($entries as $index => $item) {
+            $string = ClassHelper::nameBy($item);
+
             if ($item instanceof RubyClassInterface) {
-                $result[] = ClassHelper::nameBy($item) . "({$item})#{$index}";
+                $string .= "({$item})";
+            } elseif ($item instanceof Operation) {
+                $string .= "({$item->insn->name})";
+            } elseif ($item instanceof Operand && $item->operand instanceof RubyClassInterface) {
+                $string = ClassHelper::nameBy($item->operand);
 
-                continue;
+                $string .= match ($item->operand::class) {
+                    TrueClass::class,
+                    FalseClass::class,
+                    NilClass::class,
+                    Void_::class,
+                    Undefined::class => '',
+                    default => "({$item->operand})",
+                };
             }
 
-            if ($item instanceof Operand) {
-                if ($item->operand instanceof RubyClassInterface) {
-                    $result[] = match ($item->operand::class) {
-                        TrueClass::class, FalseClass::class, NilClass::class, Void_::class, Undefined::class => ClassHelper::nameBy($item->operand),
-                        default => ClassHelper::nameBy($item->operand) . "({$item->operand})",
-                    } . "#{$index}";
-
-                    continue;
-                }
-
-                $result[] = ClassHelper::nameBy($item->operand) . "#{$index}";
-
-                continue;
-            }
+            $result[] = $string . "#{$index}";
         }
 
         return rtrim(

@@ -34,7 +34,7 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\UndefinedSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\VoidSymbol;
-use RubyVM\VM\Exception\EntityException;
+use RubyVM\VM\Exception\RubyVMException;
 
 class ClassCreator
 {
@@ -56,7 +56,7 @@ class ClassCreator
             VoidSymbol::class => new Void_($symbol),
             SymbolSymbol::class => new Symbol($symbol),
             RegexpSymbol::class => new Regexp($symbol),
-            default => throw new EntityException(
+            default => throw new RubyVMException(
                 sprintf(
                     'The specified entity was not implemented yet: %s',
                     ClassHelper::nameBy($symbol),

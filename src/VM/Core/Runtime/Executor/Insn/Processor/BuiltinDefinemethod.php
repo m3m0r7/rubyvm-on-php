@@ -78,7 +78,6 @@ class BuiltinDefinemethod implements OperationProcessorInterface
             rubyClass: $receiverClass,
             instructionSequence: $instructionSequence,
             option: $this->context->option(),
-            debugger: $this->context->debugger(),
             parentContext: $context,
         );
 

@@ -25,6 +25,7 @@ class InstructionSequenceInfo implements InstructionSequenceInfoInterface
     protected ?CallInfoInterface $currentCallInfo = null;
 
     public function __construct(
+        private readonly string $path,
         public readonly int $type,
         public readonly int $stackMax,
         public readonly int $iseqSize,
@@ -114,5 +115,10 @@ class InstructionSequenceInfo implements InstructionSequenceInfoInterface
     public function catchEntries(): CatchEntries
     {
         return $this->catchTable;
+    }
+
+    public function path(): string
+    {
+        return $this->path;
     }
 }

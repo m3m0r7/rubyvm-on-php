@@ -169,25 +169,30 @@ If you want to display above table then add below code from the Quick start.
 _Notice: The executor debugger is using a lot of memories. We recommend to use disabling ordinarily. In depending on the case, may be using `-d memory_limit=NEEDING_MEMORY_BYTES` parameters to be working when calling `php` command_
 
 ```php
-// Enable recording processed sequences with using `enableProcessedRecords` method.
-$executor->enableProcessedRecords(true)->execute();
 
 // You can display processed an INSN table when adding below code
-$executor->debugger()->showExecutedOperations();
+$executor->context()->option()->debugger()->showExecutedOperations();
 ```
 
 
-### Breakpoint
+### Step by step debugging
 
-The RubyVM on PHP is providing breakpoint. The breakpoint is available to confirm to process a sequence step by step.
+The RubyVM on PHP is providing step by step debugger. It is available to confirm to process a sequence step by step.
 Which collect previous stacks, registered local tables and so on. this is required debugging this project.
 
 ```php
-// Enable breakpoint with using `enableBreakPoint` method.
-$executor->enableBreakPoint(true)->execute();
+// Use breakpoint debugger with option
+
+$rubyVM = new \RubyVM\VM\Core\Runtime\RubyVM(
+    new \RubyVM\VM\Core\Runtime\Option(
+        // excluded...
+
+        debugger: new \RubyVM\VM\Core\Runtime\Executor\Debugger\StepByStepDebugger(),
+    ),
+);
 ```
 
-When you enabled breakpoint, displays as below:
+When you enabled it, displays as below:
 
 ```
 +-----+--------------------------------+-------------------------------+--------------------------------+--------------+

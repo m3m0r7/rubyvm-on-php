@@ -7,7 +7,6 @@ namespace RubyVM\VM\Core\Runtime\Executor\Context;
 use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
 use RubyVM\VM\Core\Runtime\Executor\EnvironmentTable;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\OptionInterface;
@@ -31,8 +30,6 @@ interface ContextInterface
 
     public function executor(): ExecutorInterface;
 
-    public function debugger(): ExecutorDebugger;
-
     public function createSnapshot(): self;
 
     public function depth(): int;
@@ -40,10 +37,6 @@ interface ContextInterface
     public function elapsedTime(): float;
 
     public function startTime(): float;
-
-    public function shouldBreakPoint(): bool;
-
-    public function shouldProcessedRecords(): bool;
 
     public function renewEnvironmentTable(): self;
 

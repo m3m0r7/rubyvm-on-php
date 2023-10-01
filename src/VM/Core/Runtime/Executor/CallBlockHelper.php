@@ -32,7 +32,6 @@ trait CallBlockHelper
             rubyClass: $context->self(),
             instructionSequence: $context->instructionSequence(),
             option: $context->option(),
-            debugger: $context->debugger(),
             parentContext: $context,
         ));
 
@@ -137,7 +136,6 @@ trait CallBlockHelper
             rubyClass: $this->context->self(),
             instructionSequence: $instructionSequence,
             option: $this->context->option(),
-            debugger: $this->context->debugger(),
             parentContext: $this->context,
         ));
 

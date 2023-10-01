@@ -21,7 +21,6 @@ class Lambda extends Object_ implements RubyClassInterface
             rubyClass: $this->context()->self(),
             instructionSequence: $this->instructionSequence,
             option: $this->context()->option(),
-            debugger: $this->context()->debugger(),
             parentContext: $this->context(),
         );
 

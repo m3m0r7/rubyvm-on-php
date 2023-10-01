@@ -34,4 +34,6 @@ interface InstructionSequenceInfoInterface
     public function callInfoEntries(): CallInfoEntries;
 
     public function catchEntries(): CatchEntries;
+
+    public function path(): string;
 }

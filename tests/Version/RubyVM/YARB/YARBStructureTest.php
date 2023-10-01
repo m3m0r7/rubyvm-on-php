@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\RubyVM\Version\Ruby3_2;
+namespace Tests\RubyVM\Version\Ruby3_2\YARB;
 
 use Tests\RubyVM\Helper\TestApplication;
 

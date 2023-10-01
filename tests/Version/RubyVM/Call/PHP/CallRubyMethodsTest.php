@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\RubyVM\Version\Ruby3_2;
+namespace Tests\RubyVM\Version\Ruby3_2\Call\PHP;
 
 use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
 use RubyVM\VM\Core\YARV\RubyVersion;
@@ -13,7 +13,7 @@ use Tests\RubyVM\Helper\TestApplication;
  *
  * @coversNothing
  */
-class CallRubyMethodsFromPHPTest extends TestApplication
+class CallRubyMethodsTest extends TestApplication
 {
     public function testCallUserlandMethodWithoutArgumentsFromPHP(): void
     {

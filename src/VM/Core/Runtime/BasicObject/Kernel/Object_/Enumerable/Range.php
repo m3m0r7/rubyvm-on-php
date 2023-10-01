@@ -34,7 +34,6 @@ class Range extends Enumerable implements RubyClassInterface, Symbolize
                 rubyClass: $context->self(),
                 instructionSequence: $context->instructionSequence(),
                 option: $context->option(),
-                debugger: $context->debugger(),
                 parentContext: $context,
             ));
 
