@@ -30,9 +30,9 @@ class BuiltinOptCaseDispatch implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $hash = $this->getOperandAsID();
-        $elseOffset = $this->getOperandAsRubyClass();
-        $key = $this->getStackAsRubyClass();
+        $hash = $this->operandAsID();
+        $elseOffset = $this->operandAsRubyClass();
+        $key = $this->stackAsRubyClass();
 
         if ($key->valueOf() !== $hash->object->valueOf()) {
             $this->context

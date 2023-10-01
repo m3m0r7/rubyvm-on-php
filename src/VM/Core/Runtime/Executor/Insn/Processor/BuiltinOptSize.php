@@ -36,9 +36,9 @@ class BuiltinOptSize implements OperationProcessorInterface
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
         // No used
-        $this->getOperand();
+        $this->operand();
 
-        $recv = $this->getStackAsEntity();
+        $recv = $this->stackAsRubyClass();
 
         if ($recv instanceof Array_) {
             $this->context->vmStack()->push(

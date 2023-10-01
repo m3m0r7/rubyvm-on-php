@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\RubyVM\Version\Ruby3_2\GenericSyntax\Class;
+namespace Tests\RubyVM\Version\RubyVM\GenericSyntax\Class;
 
 use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
 use RubyVM\VM\Core\YARV\RubyVersion;

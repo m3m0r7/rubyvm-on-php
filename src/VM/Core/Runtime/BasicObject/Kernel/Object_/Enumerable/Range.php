@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
+use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\FalseClass;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\TrueClass;
 use RubyVM\VM\Core\Runtime\BasicObject\Symbolizable;
 use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
@@ -28,7 +31,9 @@ class Range extends Enumerable implements RubyClassInterface, Symbolize
 
     public function each(CallInfoInterface $callInfo, ContextInterface $context): RubyClassInterface
     {
-        foreach ($this->symbol->valueOf() as $index => $number) {
+        assert($this->symbol instanceof \Traversable);
+
+        foreach ($this->symbol as $index => $number) {
             $executor = (new Executor(
                 kernel: $context->kernel(),
                 rubyClass: $context->self(),
@@ -102,7 +107,7 @@ class Range extends Enumerable implements RubyClassInterface, Symbolize
     {
         assert($this->symbol instanceof RangeSymbol);
 
-        return $this->symbol->getIterator();
+        return $this->symbol;
     }
 
     public function count(): int
@@ -110,5 +115,19 @@ class Range extends Enumerable implements RubyClassInterface, Symbolize
         assert($this->symbol instanceof RangeSymbol);
 
         return $this->symbol->count();
+    }
+
+    #[BindAliasAs('===')]
+    public function compareStrictEquals(CallInfoInterface $callInfo, RubyClassInterface $object): TrueClass|FalseClass
+    {
+        assert($this->symbol instanceof RangeSymbol);
+
+        if ($this->symbol->isInfinity() && $object->valueOf() === INF) {
+            return TrueClass::createBy();
+        }
+
+        return $this->valueOf() === $object->valueOf()
+            ? TrueClass::createBy()
+            : FalseClass::createBy();
     }
 }

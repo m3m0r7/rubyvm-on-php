@@ -34,7 +34,7 @@ class BuiltinPutobject implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $operand = $this->getOperandAsRubyClass();
+        $operand = $this->operandAsRubyClass();
         $operand
             ->setUserlandHeapSpace(
                 $operand

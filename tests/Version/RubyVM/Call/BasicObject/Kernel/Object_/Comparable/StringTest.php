@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\RubyVM\Version\RubyVM\GenericSyntax\Class;
+namespace Tests\RubyVM\Version\RubyVM\Call\BasicObject\Kernel\Object_\Enumerable;
 
 use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
 use RubyVM\VM\Core\YARV\RubyVersion;
@@ -13,22 +13,14 @@ use Tests\RubyVM\Helper\TestApplication;
  *
  * @coversNothing
  */
-class DefineMethodInClassTest extends TestApplication
+class StringTest extends TestApplication
 {
-    public function testDynamicMethodItsCallingAsKeywordsArguments(): void
+    public function testEmpty(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< '_'
-            class Animal
-              def name(a:, b:, c:)
-                puts a
-                puts b
-                puts c
-              end
-            end
-
-            Animal.new.name(c: "neko", a: "tanuki", b: "inu")
-
+            puts "".empty?
+            puts "Hello World!".empty?
             _,
         );
 
@@ -37,28 +29,19 @@ class DefineMethodInClassTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame(<<< '_'
-        tanuki
-        inu
-        neko
+        $this->assertSame(<<<'_'
+        true
+        false
 
         _, $rubyVMManager->stdOut->readAll());
     }
 
-    public function testStaticMethodItsCallingAsKeywordsArguments(): void
+    public function testInclude(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< '_'
-            class Animal
-              class << self
-                  def name(a:, b:, c:)
-                    puts a
-                    puts b
-                    puts c
-                  end
-              end
-            end
-            Animal.name(c: "neko", a: "tanuki", b: "inu")
+            puts "Hello World!".include? "World"
+            puts "Hello World!".include? "Underground"
             _,
         );
 
@@ -67,10 +50,9 @@ class DefineMethodInClassTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame(<<< '_'
-        tanuki
-        inu
-        neko
+        $this->assertSame(<<<'_'
+        true
+        false
 
         _, $rubyVMManager->stdOut->readAll());
     }

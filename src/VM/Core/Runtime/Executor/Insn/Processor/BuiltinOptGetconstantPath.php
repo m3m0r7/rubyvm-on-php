@@ -34,10 +34,11 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $operand = $this->getOperandAsID();
+        $operand = $this->operandAsID();
 
         $symbol = $operand->object;
 
+        $current = null;
         foreach ($symbol->valueOf() as $constantNameSymbol) {
             $classes = $this->context->self()->userlandHeapSpace()->userlandClasses();
 
@@ -60,7 +61,24 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
 
                 $object = $className::createBy();
             } else {
-                $object = Class_::of($constantNameSymbol, $this->context);
+                $object = $constantNameSymbol;
+                if ($current === null) {
+                    $object = Class_::of($constantNameSymbol, $this->context);
+                } else {
+                    $reflectionClass = new \ReflectionClass($current);
+                    $constant = $reflectionClass
+                        ->getConstant(
+                            $constantNameSymbol
+                                ->valueOf(),
+                        );
+
+                    if ($constant !== false) {
+                        $object = $current::createBy($constant);
+                    } else {
+                        // TODO lookup class correctly
+                        $object = Class_::of($constantNameSymbol, $this->context);
+                    }
+                }
             }
 
             $heapSpace = $classes->get($constantNameSymbol->valueOf());
@@ -79,8 +97,12 @@ class BuiltinOptGetconstantPath implements OperationProcessorInterface
             $object->setRuntimeContext($this->context)
                 ->setUserlandHeapSpace($object->userlandHeapSpace());
 
-            $this->context->vmStack()->push(new Operand($object));
+            $current = $object;
         }
+
+        assert($current !== null);
+
+        $this->context->vmStack()->push(new Operand($current));
 
         return ProcessedStatus::SUCCESS;
     }

@@ -23,7 +23,9 @@ class TrueClass extends Object_ implements RubyClassInterface, Symbolize
 
     public static function createBy(): self
     {
-        return new self();
+        static $cache;
+
+        return $cache ??= new self();
     }
 
     #[BindAliasAs('to_s')]

@@ -31,7 +31,7 @@ class BuiltinGetglobal implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $operand = $this->getOperandAsID();
+        $operand = $this->operandAsID();
 
         $value = $this->context
             ->kernel()

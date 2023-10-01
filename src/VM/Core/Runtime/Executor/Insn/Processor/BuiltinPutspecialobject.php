@@ -35,7 +35,7 @@ class BuiltinPutspecialobject implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $symbol = $this->getOperandAsNumber();
+        $symbol = $this->operandAsNumber();
 
         $type = VMSpecialObjectType::of($symbol->valueOf());
 

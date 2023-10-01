@@ -32,15 +32,15 @@ class BuiltinGetinstancevariable implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $instanceVar = $this->getOperandAsID();
+        $instanceVar = $this->operandAsID();
 
         // this is instance variable index
-        $ivIndex = $this->getOperandAsNumber()->valueOf();
+        $ivIndex = $this->operandAsNumber()->valueOf();
 
         /**
          * @var RubyClassImplementationInterface $targetObject
          */
-        $targetObject = $this->getStackAsRubyClass();
+        $targetObject = $this->stackAsRubyClass();
 
         $this->context->vmStack()->push(
             new Operand(

@@ -36,17 +36,17 @@ class BuiltinNewrange implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $flags = $this->getOperandAsNumber();
+        $flags = $this->operandAsNumber();
 
         /**
          * @var NumberSymbol $high
          */
-        $high = $this->getStackAsNumber();
+        $high = $this->stackAsNumber();
 
         /**
          * @var NumberSymbol $low
          */
-        $low = $this->getStackAsNumber();
+        $low = $this->stackAsNumber();
 
         if (!$high instanceof Symbolize || !$low instanceof Symbolize) {
             throw new OperationProcessorException(

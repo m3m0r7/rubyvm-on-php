@@ -4,49 +4,36 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Essential\Symbol;
 
+use RubyVM\VM\Exception\SymbolUnsupportedException;
+
 /**
  * @implements \ArrayAccess<int, NumberSymbol>
- * @implements \IteratorAggregate<int, SymbolInterface>
+ * @implements \Iterator<int, SymbolInterface>
  */
-class RangeSymbol implements SymbolInterface, \ArrayAccess, \Countable, \IteratorAggregate, \Stringable
+class RangeSymbol implements SymbolInterface, \ArrayAccess, \Countable, \Stringable, \Iterator
 {
-    /**
-     * @var array<int, NumberSymbol>
-     */
-    private array $array;
+    private int $pointer = 0;
+
+    private int $pointerKey = 0;
+
+    private int $behindPos = 0;
 
     public function __construct(
-        private readonly NumberSymbol $begin,
-        private readonly NumberSymbol $end,
+        private readonly NumberSymbol|NilSymbol $begin,
+        private readonly NumberSymbol|NilSymbol $end,
         private readonly bool $excludeEnd,
-        private readonly int $steps = 1,
     ) {
-        if ($this->begin->valueOf() > $this->end->valueOf()) {
-            $this->array = [];
-
-            return;
-        }
-
-        $array = [];
-        foreach (range(
-            $this->begin->valueOf(),
-            $this->end->valueOf() - ($this->excludeEnd ? 1 : 0),
-            $this->steps,
-        ) as $i) {
-            $array[] = new NumberSymbol($i);
-        }
-
-        $this->array = $array;
+        $this->pointer = $this->begin->valueOf() ?? 0;
+        $this->behindPos = $this->begin->valueOf() ?? 0;
     }
 
     public function count(): int
     {
-        return count($this->array);
-    }
+        if ($this->isInfinity()) {
+            throw new SymbolUnsupportedException('The range symbol cannot count items because end of value is an infinity');
+        }
 
-    public function getIterator(): \Traversable
-    {
-        return new \ArrayIterator($this->array);
+        return $this->end->valueOf() ?? 0;
     }
 
     /**
@@ -54,31 +41,97 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
      */
     public function valueOf(): array
     {
-        return $this->array;
+        return [];
     }
 
     public function __toString(): string
     {
-        return "{$this->begin->valueOf()}" . ($this->excludeEnd ? '...' : '..') . "{$this->end->valueOf()}";
+        $dots = ($this->excludeEnd ? '...' : '..');
+
+        if ($this->begin instanceof NilSymbol) {
+            return $dots . "{$this->end->valueOf()}";
+        }
+
+        if ($this->end instanceof NilSymbol) {
+            return "{$this->begin->valueOf()}" . $dots;
+        }
+
+        return "{$this->begin->valueOf()}" . $dots . "{$this->end->valueOf()}";
     }
 
     public function offsetExists(mixed $offset): bool
     {
-        return isset($this->array[$offset]);
+        return $this->shouldBeExists($offset - $this->behindPos);
     }
 
     public function offsetGet(mixed $offset): mixed
     {
-        return $this->array[$offset];
+        if ($this->shouldBeExists($offset - $this->behindPos)) {
+            return new NumberSymbol(
+                $offset - $this->behindPos,
+            );
+        }
+
+        return null;
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        $this->array[(int) $offset] = $value;
+        throw new SymbolUnsupportedException('The range symbol cannot appending new value');
     }
 
     public function offsetUnset(mixed $offset): void
     {
-        unset($this->array[$offset]);
+        throw new SymbolUnsupportedException('The range symbol cannot unset a value');
+    }
+
+    private function shouldBeExists(int $value): bool
+    {
+        if ($this->isInfinity() || $this->isNegativeInfinity()) {
+            return true;
+        }
+
+        if (!$this->excludeEnd && $value <= $this->count()) {
+            return true;
+        }
+
+        return $this->excludeEnd && $value < $this->count();
+    }
+
+    public function current(): mixed
+    {
+        return new NumberSymbol($this->pointer);
+    }
+
+    public function next(): void
+    {
+        ++$this->pointer;
+        ++$this->pointerKey;
+    }
+
+    public function key(): mixed
+    {
+        return $this->pointerKey;
+    }
+
+    public function valid(): bool
+    {
+        return $this->shouldBeExists($this->pointer);
+    }
+
+    public function rewind(): void
+    {
+        $this->pointer = $this->begin->valueOf() ?? 0;
+        $this->pointerKey = 0;
+    }
+
+    public function isInfinity(): bool
+    {
+        return $this->end instanceof NilSymbol;
+    }
+
+    public function isNegativeInfinity(): bool
+    {
+        return $this->begin instanceof NilSymbol;
     }
 }

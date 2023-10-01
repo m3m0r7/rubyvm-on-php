@@ -18,10 +18,10 @@ trait OperatorCalculatable
 
     private function processArithmetic(string $expectedOperator): ProcessedStatus
     {
-        $recv = $this->getStackAsRubyClass();
-        $obj = $this->getStackAsRubyClass();
+        $recv = $this->stackAsRubyClass();
+        $obj = $this->stackAsRubyClass();
 
-        $callDataOperand = $this->getOperandAsCallInfo();
+        $callDataOperand = $this->operandAsCallInfo();
 
         $operator = $callDataOperand
             ->callData()

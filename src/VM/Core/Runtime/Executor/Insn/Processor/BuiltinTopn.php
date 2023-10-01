@@ -31,7 +31,7 @@ class BuiltinTopn implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $n = $this->getOperandAsNumber();
+        $n = $this->operandAsNumber();
         $stacks = [];
 
         // Get to specified value

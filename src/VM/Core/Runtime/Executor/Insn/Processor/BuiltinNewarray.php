@@ -33,10 +33,10 @@ class BuiltinNewarray implements OperationProcessorInterface
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
         $entries = [];
-        $num = $this->getOperandAsNumber();
+        $num = $this->operandAsNumber();
 
         for ($i = $num->valueOf() - 1; $i >= 0; --$i) {
-            $entries[$i] = $this->getStackAsEntity();
+            $entries[$i] = $this->stackAsRubyClass();
         }
 
         $this->context->vmStack()->push(

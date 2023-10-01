@@ -30,8 +30,8 @@ class BuiltinSetglobal implements OperationProcessorInterface
 
     public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
     {
-        $operand = $this->getOperandAsID();
-        $value = $this->getStackAsEntity();
+        $operand = $this->operandAsID();
+        $value = $this->stackAsRubyClass();
 
         $this->context
             ->kernel()

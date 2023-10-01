@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\RubyVM\Version\Ruby3_2\Call\BasicObject\Kernel\Object_\Enumerable;
+namespace Tests\RubyVM\Version\RubyVM\Call\BasicObject\Kernel\Object_\Enumerable;
 
 use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
 use RubyVM\VM\Core\YARV\RubyVersion;
@@ -44,6 +44,25 @@ class RangeTest extends TestApplication
         2
         3
         4
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
+
+    public function testInfinityRange(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            puts 1.. === Float::INFINITY
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<'_'
+        true
 
         _, $rubyVMManager->stdOut->readAll());
     }
