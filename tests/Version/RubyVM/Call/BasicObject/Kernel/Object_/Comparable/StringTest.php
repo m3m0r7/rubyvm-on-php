@@ -35,6 +35,7 @@ class StringTest extends TestApplication
 
         _, $rubyVMManager->stdOut->readAll());
     }
+
     public function testInclude(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(

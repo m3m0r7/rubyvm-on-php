@@ -12,7 +12,8 @@ use RubyVM\VM\Exception\SymbolUnsupportedException;
  */
 class RangeSymbol implements SymbolInterface, \ArrayAccess, \Countable, \Stringable, \Iterator
 {
-    private ?int $pointer = null;
+    private int $pointer = 0;
+
     private int $pointerKey = 0;
 
     private int $behindPos = 0;
@@ -22,16 +23,17 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, \Countable, \Stringa
         private readonly NumberSymbol|NilSymbol $end,
         private readonly bool $excludeEnd,
     ) {
-        $this->pointer = $this->begin->valueOf();
-        $this->behindPos = $this->begin->valueOf();
+        $this->pointer = $this->begin->valueOf() ?? 0;
+        $this->behindPos = $this->begin->valueOf() ?? 0;
     }
 
     public function count(): int
     {
-        if ($this->end instanceof NilSymbol) {
-            return PHP_INT_MAX;
+        if ($this->isInfinity()) {
+            throw new SymbolUnsupportedException('The range symbol cannot count items because end of value is an infinity');
         }
-        return $this->end->valueOf();
+
+        return $this->end->valueOf() ?? 0;
     }
 
     /**
@@ -59,16 +61,17 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, \Countable, \Stringa
 
     public function offsetExists(mixed $offset): bool
     {
-        return $this->shouldBeExists((int) $offset - $this->behindPos);
+        return $this->shouldBeExists($offset - $this->behindPos);
     }
 
     public function offsetGet(mixed $offset): mixed
     {
-        if ($this->shouldBeExists((int) $offset - $this->behindPos)) {
+        if ($this->shouldBeExists($offset - $this->behindPos)) {
             return new NumberSymbol(
-                (int) $offset - $this->behindPos,
+                $offset - $this->behindPos,
             );
         }
+
         return null;
     }
 
@@ -84,16 +87,15 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, \Countable, \Stringa
 
     private function shouldBeExists(int $value): bool
     {
-        if (!$this->end instanceof NumberSymbol) {
+        if ($this->isInfinity() || $this->isNegativeInfinity()) {
             return true;
         }
+
         if (!$this->excludeEnd && $value <= $this->count()) {
             return true;
         }
-        if ($this->excludeEnd && $value < $this->count()) {
-            return true;
-        }
-        return false;
+
+        return $this->excludeEnd && $value < $this->count();
     }
 
     public function current(): mixed
@@ -103,8 +105,8 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, \Countable, \Stringa
 
     public function next(): void
     {
-        $this->pointer++;
-        $this->pointerKey++;
+        ++$this->pointer;
+        ++$this->pointerKey;
     }
 
     public function key(): mixed
@@ -119,7 +121,17 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, \Countable, \Stringa
 
     public function rewind(): void
     {
-        $this->pointer = $this->begin->valueOf();
+        $this->pointer = $this->begin->valueOf() ?? 0;
         $this->pointerKey = 0;
+    }
+
+    public function isInfinity(): bool
+    {
+        return $this->end instanceof NilSymbol;
+    }
+
+    public function isNegativeInfinity(): bool
+    {
+        return $this->begin instanceof NilSymbol;
     }
 }

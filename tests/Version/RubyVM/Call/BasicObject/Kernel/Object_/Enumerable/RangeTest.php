@@ -47,4 +47,23 @@ class RangeTest extends TestApplication
 
         _, $rubyVMManager->stdOut->readAll());
     }
+
+    public function testInfinityRange(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            puts 1.. === Float::INFINITY
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<'_'
+        true
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
 }

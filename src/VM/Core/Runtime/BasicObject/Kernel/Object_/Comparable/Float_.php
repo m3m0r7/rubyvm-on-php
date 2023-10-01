@@ -16,6 +16,8 @@ class Float_ extends Comparable implements RubyClassInterface, Symbolize
 {
     use Symbolizable;
 
+    final public const INFINITY = INF;
+
     public function __construct(FloatSymbol $symbol)
     {
         $this->symbol = $symbol;
