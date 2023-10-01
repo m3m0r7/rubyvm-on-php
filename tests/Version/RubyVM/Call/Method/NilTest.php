@@ -15,7 +15,7 @@ use Tests\RubyVM\Helper\TestApplication;
  */
 class NilTest extends TestApplication
 {
-    public function testObjectIsNil()
+    public function testObjectIsNil(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< '_'
@@ -34,7 +34,7 @@ class NilTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame(<<<_
+        $this->assertSame(<<<'_'
         true
         true
         false

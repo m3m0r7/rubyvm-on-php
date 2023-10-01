@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
@@ -12,7 +13,6 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinOptNilP implements OperationProcessorInterface
 {
@@ -42,21 +42,19 @@ class BuiltinOptNilP implements OperationProcessorInterface
             ->object;
 
         /**
-         * @var RubyClassInterface|ExecutedResult $result
+         * @var RubyClassInterface|null $result
          */
         $result = $class
             ->setRuntimeContext($this->context)
             ->{$methodName}($callInfo);
 
-        if ($result instanceof ExecutedResult && $result->threw) {
-            throw $result->threw;
+        if ($result === null) {
+            $result = NilClass::createBy();
         }
 
         $this->context->vmStack()->push(
             new Operand(
-                $result instanceof RubyClassInterface
-                    ? $result
-                    : $result->returnValue,
+                $result,
             ),
         );
 

@@ -24,6 +24,7 @@ class FalseClass extends Object_ implements RubyClassInterface, Symbolize
     public static function createBy(): self
     {
         static $cache;
+
         return $cache ??= new self();
     }
 

@@ -10,7 +10,6 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 
 abstract class Object_ extends Kernel
 {
-
     #[BindAliasAs('nil?')]
     public function isNil(CallInfoInterface $callInfo): TrueClass|FalseClass
     {
