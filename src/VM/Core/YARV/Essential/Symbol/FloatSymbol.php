@@ -18,7 +18,7 @@ class FloatSymbol implements SymbolInterface, \Stringable
     public function __toString(): string
     {
         if ($this->number === INF) {
-            return INF . '';
+            return (string) INF;
         }
 
         $hasFraction = str_contains((string) $this->number, '.');
