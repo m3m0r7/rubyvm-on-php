@@ -185,6 +185,30 @@ class Integer_ extends Comparable implements RubyClassInterface, Symbolize
             : FalseClass::createBy();
     }
 
+    #[BindAliasAs('even?')]
+    public function isEven(CallInfoInterface $callInfo): TrueClass|FalseClass
+    {
+        return ($this->valueOf() & 1) === 0
+            ? TrueClass::createBy()
+            : FalseClass::createBy();
+    }
+
+    #[BindAliasAs('odd?')]
+    public function isOdd(CallInfoInterface $callInfo): TrueClass|FalseClass
+    {
+        return ($this->valueOf() & 1) === 1
+            ? TrueClass::createBy()
+            : FalseClass::createBy();
+    }
+
+    #[BindAliasAs('zero?')]
+    public function isZero(CallInfoInterface $callInfo): TrueClass|FalseClass
+    {
+        return $this->valueOf() === 0
+            ? TrueClass::createBy()
+            : FalseClass::createBy();
+    }
+
     public static function createBy(mixed $value = 0): self
     {
         return new self(new NumberSymbol($value));

@@ -26,6 +26,7 @@ class NilClass extends Object_ implements RubyClassInterface
     public static function createBy(mixed $value = null): self
     {
         static $cache;
+
         return $cache ??= new self(new NilSymbol());
     }
 }

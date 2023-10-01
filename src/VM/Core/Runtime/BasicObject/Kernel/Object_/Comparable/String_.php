@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable;
 
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\FalseClass;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\TrueClass;
 use RubyVM\VM\Core\Runtime\BasicObject\Symbolizable;
 use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
@@ -37,5 +39,13 @@ class String_ extends Comparable implements RubyClassInterface, Symbolize
         return String_::createBy(
             $this->valueOf() . $object->valueOf(),
         );
+    }
+
+    #[BindAliasAs('empty?')]
+    public function isEmpty(CallInfoInterface $callInfo): TrueClass|FalseClass
+    {
+        return $this->valueOf() === ''
+            ? TrueClass::createBy()
+            : FalseClass::createBy();
     }
 }
