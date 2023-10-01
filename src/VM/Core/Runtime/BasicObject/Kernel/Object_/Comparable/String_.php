@@ -48,4 +48,12 @@ class String_ extends Comparable implements RubyClassInterface, Symbolize
             ? TrueClass::createBy()
             : FalseClass::createBy();
     }
+
+    #[BindAliasAs('include?')]
+    public function isIncluding(CallInfoInterface $callInfo, String_ $string): TrueClass|FalseClass
+    {
+        return str_contains($this->valueOf(), $string->valueOf())
+            ? TrueClass::createBy()
+            : FalseClass::createBy();
+    }
 }
