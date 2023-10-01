@@ -6,6 +6,8 @@ namespace RubyVM\VM\Core\Runtime;
 
 use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Runtime\Essential\MainInterface;
+use RubyVM\VM\Core\Runtime\Executor\Debugger\DebuggerInterface;
+use RubyVM\VM\Core\Runtime\Executor\Debugger\DefaultExecutorDebugger;
 use RubyVM\VM\Core\Runtime\Executor\Operation\DefaultOperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
 use RubyVM\VM\Stream\BinaryStreamReaderInterface;
@@ -38,6 +40,7 @@ class Option implements OptionInterface
         private ?StreamHandlerInterface $stdOut = null,
         private ?StreamHandlerInterface $stdIn = null,
         private ?StreamHandlerInterface $stdErr = null,
+        private ?DebuggerInterface $debugger = null,
         private ?OperationProcessorEntries $operationProcessorEntries = null,
     ) {}
 
@@ -69,5 +72,10 @@ class Option implements OptionInterface
     public function operationProcessorEntries(): OperationProcessorEntries
     {
         return $this->operationProcessorEntries ??= new DefaultOperationProcessorEntries();
+    }
+
+    public function debugger(): DebuggerInterface
+    {
+        return $this->debugger ??= new DefaultExecutorDebugger();
     }
 }

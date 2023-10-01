@@ -7,7 +7,7 @@ namespace RubyVM\VM\Core\Runtime\Executor\Context;
 use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\Executor\Debugger\ExecutorDebugger;
+use RubyVM\VM\Core\Runtime\Executor\Debugger\DefaultExecutorDebugger;
 use RubyVM\VM\Core\Runtime\Executor\EnvironmentTable;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\OptionInterface;
@@ -63,9 +63,9 @@ class NullContext implements ContextInterface
         );
     }
 
-    public function debugger(): ExecutorDebugger
+    public function debugger(): DefaultExecutorDebugger
     {
-        return new ExecutorDebugger();
+        return new DefaultExecutorDebugger();
     }
 
     public function createSnapshot(): ContextInterface

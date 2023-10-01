@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\RubyVM\Version\Ruby3_2;
+namespace Tests\RubyVM\Version\Ruby3_2\GenericSyntax\Class;
 
 use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
 use RubyVM\VM\Core\YARV\RubyVersion;
@@ -13,19 +13,25 @@ use Tests\RubyVM\Helper\TestApplication;
  *
  * @coversNothing
  */
-class BlockSyntaxTest extends TestApplication
+class DefineStaticMethodTest extends TestApplication
 {
-    public function testCallBlock(): void
+    public function testStaticClass(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< '_'
-            def block_def
-              yield "Hello World", "!"
+            class Cat
+              class << self
+                def name1
+                  "ERU"
+                end
+                def name2
+                  "GURI"
+                end
+              end
             end
 
-            block_def do | text1, text2 |
-              puts text1 + text2
-            end
+            puts Cat.name1
+            puts Cat.name2
             _,
         );
 
@@ -34,27 +40,35 @@ class BlockSyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame(<<<'_'
-        Hello World!
+        $this->assertSame(<<< '_'
+        ERU
+        GURI
 
         _, $rubyVMManager->stdOut->readAll());
     }
 
-    public function testCallDuplicatedBlock(): void
+    public function testStaticClassItsImplementingDuplicatedSingletonClass(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< '_'
-            def block_def
-              yield "Hello World", "!"
+            class Cat1
+              class << self
+                def name
+                  "ERU"
+                end
+              end
             end
 
-            block_def do | text1, text2 |
-              puts text1 + text2
+            class Cat2
+              class << self
+                def name
+                  "GURI"
+                end
+              end
             end
 
-            block_def do | text1, text2 |
-              puts text1 + text2
-            end
+            puts Cat1.name
+            puts Cat2.name
             _,
         );
 
@@ -63,9 +77,9 @@ class BlockSyntaxTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame(<<<'_'
-        Hello World!
-        Hello World!
+        $this->assertSame(<<< '_'
+        ERU
+        GURI
 
         _, $rubyVMManager->stdOut->readAll());
     }

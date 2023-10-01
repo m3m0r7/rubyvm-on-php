@@ -7,12 +7,12 @@ namespace Tests\RubyVM\Helper;
 use RubyVM\VM\Core\Runtime\RubyVM;
 use RubyVM\VM\Stream\StreamHandlerInterface;
 
-class RubyVMManager
+readonly class RubyVMManager
 {
     public function __construct(
-        public readonly RubyVM $rubyVM,
-        public readonly StreamHandlerInterface $stdOut,
-        public readonly StreamHandlerInterface $stdIn,
-        public readonly StreamHandlerInterface $stdErr,
+        public RubyVM $rubyVM,
+        public StreamHandlerInterface $stdOut,
+        public StreamHandlerInterface $stdIn,
+        public StreamHandlerInterface $stdErr,
     ) {}
 }

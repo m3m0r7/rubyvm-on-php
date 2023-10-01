@@ -7,4 +7,6 @@ namespace RubyVM\VM\Core\YARV\Criterion\InstructionSequence;
 interface InstructionSequenceProcessorInterface
 {
     public function process(): InstructionSequenceBodyInterface;
+
+    public function path(): string;
 }

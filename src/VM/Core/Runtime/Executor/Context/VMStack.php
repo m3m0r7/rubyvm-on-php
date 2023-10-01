@@ -8,7 +8,7 @@ use RubyVM\VM\Core\Runtime\Executor\Debugger\DebugFormat;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Exception\VMStackException;
 
-class VMStack implements \Countable
+class VMStack implements \Countable, \Stringable
 {
     use DebugFormat;
 
@@ -67,5 +67,12 @@ class VMStack implements \Countable
         );
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return self::getEntriesAsString(
+            $this->items ?? [],
+        );
     }
 }

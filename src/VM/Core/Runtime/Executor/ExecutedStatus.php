@@ -13,4 +13,6 @@ enum ExecutedStatus
     case UNKNOWN;
 
     case THREW_EXCEPTION;
+
+    case EXIT;
 }

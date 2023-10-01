@@ -93,7 +93,11 @@ trait ProvideBasicClassMethods
         }
 
         if ($lookedUpCatchEntry === null) {
-            throw new Raise("{$class->valueOf()}: {$string->valueOf()}");
+            throw new Raise(
+                $this->context(),
+                $class->valueOf(),
+                $string->valueOf(),
+            );
         }
 
         $instructionSequence = $lookedUpCatchEntry
@@ -104,7 +108,6 @@ trait ProvideBasicClassMethods
             rubyClass: $this->context()->self(),
             instructionSequence: $instructionSequence,
             option: $this->context()->option(),
-            debugger: $this->context()->debugger(),
             parentContext: $this->context()->parentContext(),
         );
 
