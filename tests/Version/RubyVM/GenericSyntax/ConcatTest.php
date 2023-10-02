@@ -46,4 +46,21 @@ class ConcatTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("HelloWorld65535\n", $rubyVMManager->stdOut->readAll());
     }
+
+    public function testConcatArray(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            v = [4, 5, 6]
+            puts [*[1, 2, 3], *v].inspect
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame("[1, 2, 3, 4, 5, 6]\n", $rubyVMManager->stdOut->readAll());
+    }
 }
