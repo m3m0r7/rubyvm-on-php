@@ -64,6 +64,28 @@ class ConcatTest extends TestApplication
         $this->assertSame("[1, 2, 3, 4, 5, 6]\n", $rubyVMManager->stdOut->readAll());
     }
 
+    public function testSplatArrayWithVariables(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            var1 = [1, 2, 3]
+            var2 = [4, 5, 6]
+
+            puts [*var1, *var2].inspect
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame(<<<'_'
+        [1, 2, 3, 4, 5, 6]
+
+        _, $rubyVMManager->stdOut->readAll());
+    }
+
     public function testSplatArrayInMethod(): void
     {
         $rubyVMManager = $this->createRubyVMFromCode(
@@ -85,7 +107,7 @@ class ConcatTest extends TestApplication
         $this->assertSame(<<<'_'
         [1, 4, 5, 6]
         [1, 2, 3, 4, 5, 6]
-        
+
         _, $rubyVMManager->stdOut->readAll());
     }
 }
