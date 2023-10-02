@@ -85,6 +85,7 @@ class ConcatTest extends TestApplication
         $this->assertSame(<<<'_'
         [1, 4, 5, 6]
         [1, 2, 3, 4, 5, 6]
+        
         _, $rubyVMManager->stdOut->readAll());
     }
 }
