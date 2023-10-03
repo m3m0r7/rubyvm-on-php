@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\RubyVM\Version\RubyVM\Call\Method;
 
-use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
 use RubyVM\VM\Core\YARV\RubyVersion;
 use RubyVM\VM\Exception\ExitException;
 use Tests\RubyVM\Helper\TestApplication;
@@ -18,6 +17,7 @@ class ExitTest extends TestApplication
 {
     public function testExit(): void
     {
+        $this->expectException(ExitException::class);
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< '_'
             exit
@@ -28,8 +28,6 @@ class ExitTest extends TestApplication
             ->rubyVM
             ->disassemble(RubyVersion::VERSION_3_2);
 
-        $result = $executor->execute();
-        $this->assertSame(ExecutedStatus::THREW_EXCEPTION, $result->executedStatus);
-        $this->assertInstanceOf(ExitException::class, $result->threw);
+        $executor->execute();
     }
 }
