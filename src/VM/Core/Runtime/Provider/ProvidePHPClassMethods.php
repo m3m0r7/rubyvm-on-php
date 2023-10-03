@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Provider;
 
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
 use RubyVM\VM\Exception\RuntimeException;
 
 trait ProvidePHPClassMethods
 {
-    public function phpinfo(): void
+    public function phpinfo(): NilClass
     {
         ob_start();
         phpinfo(INFO_ALL);
@@ -18,5 +19,7 @@ trait ProvidePHPClassMethods
         }
 
         $this->context()->IOContext()->stdOut->write($info);
+
+        return NilClass::createBy();
     }
 }

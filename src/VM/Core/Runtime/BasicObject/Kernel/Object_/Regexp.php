@@ -8,12 +8,11 @@ use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
 use RubyVM\VM\Core\Runtime\BasicObject\Symbolizable;
-use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
+use RubyVM\VM\Core\Runtime\BasicObject\SymbolizeInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\RegexpSymbol;
 
-class Regexp extends Object_ implements RubyClassInterface, Symbolize
+class Regexp extends Object_ implements RubyClassInterface, SymbolizeInterface
 {
     use Symbolizable;
 
@@ -37,7 +36,7 @@ class Regexp extends Object_ implements RubyClassInterface, Symbolize
      * @see https://docs.ruby-lang.org/ja/latest/class/Regexp.html#I_--3D--7E
      */
     #[BindAliasAs('=~')]
-    public function equalsTilde(CallInfoInterface $callInfo, String_|NilClass $source): Integer_|NilClass
+    public function equalsTilde(String_|NilClass $source): Integer_|NilClass
     {
         if ($source instanceof NilClass) {
             return NilClass::createBy();

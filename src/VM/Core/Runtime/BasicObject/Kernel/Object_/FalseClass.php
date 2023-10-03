@@ -7,12 +7,12 @@ namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_;
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
 use RubyVM\VM\Core\Runtime\BasicObject\Symbolizable;
-use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
+use RubyVM\VM\Core\Runtime\BasicObject\SymbolizeInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\BooleanSymbol;
 
 #[BindAliasAs('FalseClass')]
-class FalseClass extends Object_ implements RubyClassInterface, Symbolize
+class FalseClass extends Object_ implements RubyClassInterface, SymbolizeInterface
 {
     use Symbolizable;
 

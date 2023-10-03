@@ -7,14 +7,13 @@ namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;
 
 class Lambda extends Object_ implements RubyClassInterface
 {
     public function __construct(private readonly InstructionSequenceInterface $instructionSequence) {}
 
-    public function call(CallInfoInterface $callInfo, RubyClassInterface ...$arguments): RubyClassInterface|null
+    public function call(RubyClassInterface ...$arguments): RubyClassInterface|null
     {
         $executor = new Executor(
             kernel: $this->context()->kernel(),

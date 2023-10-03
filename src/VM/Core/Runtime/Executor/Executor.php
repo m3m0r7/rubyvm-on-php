@@ -25,6 +25,7 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterfa
 use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\ExecutorFailedException;
 use RubyVM\VM\Exception\ExecutorUnknownException;
+use RubyVM\VM\Exception\ExitException;
 use RubyVM\VM\Exception\Raise;
 use RubyVM\VM\Exception\RubyVMException;
 
@@ -127,6 +128,9 @@ class Executor implements ExecutorInterface
                 returnValue: null,
                 threw: $e,
             );
+        } catch (ExitException $e) {
+            // Bubbling to main context
+            throw $e;
         } catch (RubyVMException $e) {
             return new ExecutedResult(
                 executor: $this,

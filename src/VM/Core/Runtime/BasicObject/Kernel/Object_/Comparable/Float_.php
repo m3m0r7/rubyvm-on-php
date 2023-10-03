@@ -6,13 +6,12 @@ namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable;
 
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\Runtime\BasicObject\Symbolizable;
-use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
+use RubyVM\VM\Core\Runtime\BasicObject\SymbolizeInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
 
 #[BindAliasAs('Float')]
-class Float_ extends Comparable implements RubyClassInterface, Symbolize
+class Float_ extends Comparable implements RubyClassInterface, SymbolizeInterface
 {
     use Symbolizable;
 
@@ -29,7 +28,7 @@ class Float_ extends Comparable implements RubyClassInterface, Symbolize
     }
 
     #[BindAliasAs('+')]
-    public function plus(CallInfoInterface $callInfo, RubyClassInterface $object): Float_
+    public function plus(RubyClassInterface $object): Float_
     {
         return Float_::createBy(
             $this->valueOf() + $object->valueOf(),
@@ -37,7 +36,7 @@ class Float_ extends Comparable implements RubyClassInterface, Symbolize
     }
 
     #[BindAliasAs('-')]
-    public function minus(CallInfoInterface $callInfo, RubyClassInterface $object): Float_
+    public function minus(RubyClassInterface $object): Float_
     {
         return Float_::createBy(
             $this->valueOf() - $object->valueOf(),
@@ -45,7 +44,7 @@ class Float_ extends Comparable implements RubyClassInterface, Symbolize
     }
 
     #[BindAliasAs('*')]
-    public function multiply(CallInfoInterface $callInfo, RubyClassInterface $object): Float_
+    public function multiply(RubyClassInterface $object): Float_
     {
         return Float_::createBy(
             $this->valueOf() * $object->valueOf(),
@@ -53,7 +52,7 @@ class Float_ extends Comparable implements RubyClassInterface, Symbolize
     }
 
     #[BindAliasAs('/')]
-    public function divide(CallInfoInterface $callInfo, RubyClassInterface $object): Float_
+    public function divide(RubyClassInterface $object): Float_
     {
         return Float_::createBy(
             $this->valueOf() / $object->valueOf(),
