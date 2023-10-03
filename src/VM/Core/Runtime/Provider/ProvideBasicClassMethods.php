@@ -12,14 +12,26 @@ use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
+use RubyVM\VM\Core\Runtime\Executor\SimpleCallInfo;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CatchInterface;
+use RubyVM\VM\Exception\ExitException;
 use RubyVM\VM\Exception\Raise;
 
 trait ProvideBasicClassMethods
 {
+    public function p(CallInfoInterface $callInfo, RubyClassInterface $object): RubyClassInterface
+    {
+        return $this->puts(
+            new SimpleCallInfo($this, 'puts'),
+            $object->inspect(
+                new SimpleCallInfo($object, 'inspect'),
+            ),
+        );
+    }
+
     public function puts(CallInfoInterface $callInfo, RubyClassInterface $object): RubyClassInterface
     {
         $string = '';
@@ -49,10 +61,10 @@ trait ProvideBasicClassMethods
 
     public function exit(CallInfoInterface $callInfo, int $code = 0): never
     {
-        exit($code);
+        throw new ExitException($code);
     }
 
-    public function inspect(): RubyClassInterface
+    public function inspect(CallInfoInterface $callInfo): RubyClassInterface
     {
         if ($this instanceof String_) {
             return String_::createBy(
