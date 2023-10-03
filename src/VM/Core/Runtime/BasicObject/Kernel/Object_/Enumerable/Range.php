@@ -17,7 +17,6 @@ use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\LocalTableHelper;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\RangeSymbol;
 
 class Range extends Enumerable implements RubyClassInterface, SymbolizeInterface
@@ -29,7 +28,7 @@ class Range extends Enumerable implements RubyClassInterface, SymbolizeInterface
         $this->symbol = $symbol;
     }
 
-    public function each(CallInfoInterface $callInfo, ContextInterface $context): RubyClassInterface
+    public function each(ContextInterface $context): RubyClassInterface
     {
         assert($this->symbol instanceof \Traversable);
 
@@ -118,7 +117,7 @@ class Range extends Enumerable implements RubyClassInterface, SymbolizeInterface
     }
 
     #[BindAliasAs('===')]
-    public function compareStrictEquals(CallInfoInterface $callInfo, RubyClassInterface $object): TrueClass|FalseClass
+    public function compareStrictEquals(RubyClassInterface $object): TrueClass|FalseClass
     {
         assert($this->symbol instanceof RangeSymbol);
 

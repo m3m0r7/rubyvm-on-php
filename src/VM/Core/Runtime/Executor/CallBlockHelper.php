@@ -20,6 +20,18 @@ use RubyVM\VM\Exception\OperationProcessorException;
 
 trait CallBlockHelper
 {
+    public function send(string $name, CallInfoInterface $callInfo, RubyClassInterface|ContextInterface ...$arguments): ExecutedResult|RubyClassInterface
+    {
+        if (method_exists($this, $name)) {
+            return $this->{$name}(...$arguments);
+        }
+
+        return $this->{$name}(
+            $callInfo,
+            ...$arguments,
+        );
+    }
+
     private function callSimpleMethod(ContextInterface $context, CallInfoInterface $callInfo, RubyClassInterface|ContextInterface ...$arguments): ExecutedResult
     {
         // Validate first value is context?
@@ -150,7 +162,8 @@ trait CallBlockHelper
         $result = $blockObject
             ->setRuntimeContext($executor->context())
             ->setUserlandHeapSpace($executor->context()->self()->userlandHeapSpace())
-            ->{(string) $callInfo->callData()->mid()->object}(
+            ->send(
+                (string) $callInfo->callData()->mid()->object,
                 $callInfo,
                 $executor->context(),
                 ...self::alignArguments(
@@ -174,10 +187,11 @@ trait CallBlockHelper
     /**
      * @param (ContextInterface|RubyClassInterface)[] ...$arguments
      *
-     * @return (array<ContextInterface|RubyClassInterface>[]|ContextInterface|RubyClassInterface)[]
+     * @return (ContextInterface|RubyClassInterface)[]
      */
     private static function alignArguments(?CallInfoInterface $callInfo, ContextInterface $context, RubyClassInterface|ContextInterface|array ...$arguments): array
     {
+        // @phpstan-ignore-next-line
         return self::applyAlignmentArgumentsByKeywords(
             $callInfo,
             $context,

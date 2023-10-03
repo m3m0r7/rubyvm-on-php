@@ -13,7 +13,6 @@ use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\ArraySymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Exception\RuntimeException;
@@ -42,7 +41,7 @@ class Array_ extends Enumerable implements RubyClassInterface, SymbolizeInterfac
         return $this;
     }
 
-    public function each(CallInfoInterface $callInfo, ContextInterface $context): RubyClassInterface
+    public function each(ContextInterface $context): RubyClassInterface
     {
         $symbol = $this->symbol;
 
@@ -95,7 +94,7 @@ class Array_ extends Enumerable implements RubyClassInterface, SymbolizeInterfac
         return NilClass::createBy();
     }
 
-    public function push(CallInfoInterface $callInfo, RubyClassInterface $object): self
+    public function push(RubyClassInterface $object): self
     {
         // @phpstan-ignore-next-line
         $this->symbol[] = $object;
@@ -149,7 +148,7 @@ class Array_ extends Enumerable implements RubyClassInterface, SymbolizeInterfac
     }
 
     #[BindAliasAs('+')]
-    public function plus(CallInfoInterface $callInfo, RubyClassInterface $object): Array_
+    public function plus(RubyClassInterface $object): Array_
     {
         return Array_::createBy(
             [...$this->valueOf(), ...$object->valueOf()],

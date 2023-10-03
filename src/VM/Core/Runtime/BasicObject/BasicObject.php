@@ -11,6 +11,7 @@ use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Operation\SpecialMethodCallerEntries;
+use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Criterion\ShouldBeRubyClass;
 use RubyVM\VM\Exception\NotFoundInstanceMethod;
 use RubyVM\VM\Exception\OperationProcessorException;
@@ -50,6 +51,10 @@ abstract class BasicObject implements RubyClassInterface
             $result = $this->callExtendedMethod($name, $arguments);
         } catch (NotFoundInstanceMethod $e) {
             if (method_exists($this, $name)) {
+                if (isset($arguments[0]) && $arguments[0] instanceof CallInfoInterface) {
+                    array_shift($arguments);
+                }
+
                 $result = $this->{$name}(...$arguments);
             } elseif (isset(SpecialMethodCallerEntries::map()[$name])) {
                 // Do not throw the name is a special method in the entries

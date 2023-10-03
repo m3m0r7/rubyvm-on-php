@@ -48,7 +48,7 @@ trait ProvideExtendedMethodCall
                     }
 
                     // Re-call by looked-up name
-                    return $this->{$method->getName()}(...$arguments);
+                    return $this->__call($method->getName(), $arguments);
                 }
             }
         }

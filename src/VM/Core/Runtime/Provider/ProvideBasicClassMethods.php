@@ -12,27 +12,20 @@ use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
-use RubyVM\VM\Core\Runtime\Executor\SimpleCallInfo;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CatchInterface;
 use RubyVM\VM\Exception\ExitException;
 use RubyVM\VM\Exception\Raise;
 
 trait ProvideBasicClassMethods
 {
-    public function p(CallInfoInterface $callInfo, RubyClassInterface $object): RubyClassInterface
+    public function p(RubyClassInterface $object): RubyClassInterface
     {
-        return $this->puts(
-            new SimpleCallInfo($this, 'puts'),
-            $object->inspect(
-                new SimpleCallInfo($object, 'inspect'),
-            ),
-        );
+        return $this->puts($object->inspect());
     }
 
-    public function puts(CallInfoInterface $callInfo, RubyClassInterface $object): RubyClassInterface
+    public function puts(RubyClassInterface $object): RubyClassInterface
     {
         $string = '';
 
@@ -59,12 +52,12 @@ trait ProvideBasicClassMethods
         return NilClass::createBy();
     }
 
-    public function exit(CallInfoInterface $callInfo, int $code = 0): never
+    public function exit(int $code = 0): never
     {
         throw new ExitException($code);
     }
 
-    public function inspect(CallInfoInterface $callInfo): RubyClassInterface
+    public function inspect(): RubyClassInterface
     {
         if ($this instanceof String_) {
             return String_::createBy(
@@ -75,14 +68,14 @@ trait ProvideBasicClassMethods
         return String_::createBy((string) $this);
     }
 
-    public function lambda(CallInfoInterface $callInfo, ContextInterface $context): RubyClassInterface
+    public function lambda(ContextInterface $context): RubyClassInterface
     {
         return (new Lambda($context->instructionSequence()))
             ->setRuntimeContext($this->context())
             ->setUserlandHeapSpace(new UserlandHeapSpace());
     }
 
-    public function raise(CallInfoInterface $callInfo, RubyClassInterface $string, RubyClassInterface $class): RubyClassInterface
+    public function raise(RubyClassInterface $string, RubyClassInterface $class): RubyClassInterface
     {
         assert($class instanceof Exception);
 

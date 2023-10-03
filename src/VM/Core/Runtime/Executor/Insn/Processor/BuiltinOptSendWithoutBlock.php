@@ -102,8 +102,11 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
              * @var null|ExecutedResult|RubyClassInterface $result
              */
             $result = $targetClass
-                ->{(string) $symbol}(
+                ->send(
+                    (string) $symbol,
                     $callInfo,
+
+                    // @phpstan-ignore-next-line
                     ...$this->translateForArguments(...$arguments),
                 );
         }
