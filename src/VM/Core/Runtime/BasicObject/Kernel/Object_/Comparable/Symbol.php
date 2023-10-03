@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable;
 
 use RubyVM\VM\Core\Runtime\BasicObject\Symbolizable;
-use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
+use RubyVM\VM\Core\Runtime\BasicObject\SymbolizeInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolSymbol;
 
-class Symbol extends Comparable implements RubyClassInterface, Symbolize
+class Symbol extends Comparable implements RubyClassInterface, SymbolizeInterface
 {
     use Symbolizable;
 

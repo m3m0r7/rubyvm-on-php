@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Range;
-use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
+use RubyVM\VM\Core\Runtime\BasicObject\SymbolizeInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -48,7 +48,7 @@ class BuiltinNewrange implements OperationProcessorInterface
          */
         $low = $this->stackAsNumber();
 
-        if (!$high instanceof Symbolize || !$low instanceof Symbolize) {
+        if (!$high instanceof SymbolizeInterface || !$low instanceof SymbolizeInterface) {
             throw new OperationProcessorException(
                 'The passed value cannot symbolize',
             );

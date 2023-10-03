@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_;
 
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
-use RubyVM\VM\Core\Runtime\BasicObject\Symbolize;
+use RubyVM\VM\Core\Runtime\BasicObject\SymbolizeInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;
 use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
@@ -39,7 +39,7 @@ abstract class Exception extends Object_ implements RubyClassInterface
             return '';
         }
 
-        assert($this->message instanceof Symbolize);
+        assert($this->message instanceof SymbolizeInterface);
 
         return (string) $this
             ->message
