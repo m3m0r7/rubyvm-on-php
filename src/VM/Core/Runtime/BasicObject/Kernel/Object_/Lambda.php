@@ -31,12 +31,13 @@ class Lambda extends Object_ implements RubyClassInterface
             ->localTableSize();
 
         $argumentSize = count($arguments);
+        $pos = $localTableSize - $argumentSize;
         for ($i = 0; $i < $argumentSize; ++$i) {
             $executor
                 ->context()
                 ->environmentTable()
                 ->set(
-                    Option::VM_ENV_DATA_SIZE + $i,
+                    Option::VM_ENV_DATA_SIZE + $pos + $i,
                     $arguments[$i],
                 );
         }
