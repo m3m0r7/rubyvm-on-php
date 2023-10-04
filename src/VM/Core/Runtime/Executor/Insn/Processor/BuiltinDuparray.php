@@ -32,7 +32,7 @@ class BuiltinDuparray implements OperationProcessorInterface
 
     public function after(): void {}
 
-    public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
+    public function process(): ProcessedStatus
     {
         $this->context->vmStack()->push(new Operand(
             $this->operandAsArray()

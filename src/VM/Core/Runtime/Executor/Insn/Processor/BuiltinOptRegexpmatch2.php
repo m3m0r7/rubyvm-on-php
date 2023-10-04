@@ -32,7 +32,7 @@ class BuiltinOptRegexpmatch2 implements OperationProcessorInterface
     /**
      * @see https://docs.ruby-lang.org/ja/latest/class/Regexp.html#I_--3D--7E
      */
-    public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
+    public function process(): ProcessedStatus
     {
         $callInfo = $this->operandAsCallInfo();
 

@@ -44,7 +44,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
 
     public function after(): void {}
 
-    public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
+    public function process(): ProcessedStatus
     {
         $callInfo = $this->operandAsCallInfo();
 
@@ -58,7 +58,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
 
         $arguments = [];
         for ($i = 0; $i < $callInfo->callData()->argumentsCount(); ++$i) {
-            $arguments[] = $operand = $this->context->vmStack()->pop();
+            $arguments[] = $this->context->vmStack()->pop();
         }
 
         $this->validateType(

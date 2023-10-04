@@ -31,7 +31,7 @@ class BuiltinOptAref implements OperationProcessorInterface
 
     public function after(): void {}
 
-    public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
+    public function process(): ProcessedStatus
     {
         // No used (This operand is only array always; which calls [] in the ruby and refs array symbol)
         $this->operand();

@@ -33,7 +33,7 @@ class BuiltinCheckmatch implements OperationProcessorInterface
 
     public function after(): void {}
 
-    public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
+    public function process(): ProcessedStatus
     {
         // 1 ... WHEN
         // 2 ... CASE

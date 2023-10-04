@@ -10,6 +10,7 @@ use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
+use RubyVM\VM\Core\Runtime\Executor\Context\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\VMCallFlagBit;
 use RubyVM\VM\Core\YARV\Criterion\Entry\Variable;
@@ -39,6 +40,7 @@ trait CallBlockHelper
         if (isset($arguments[0]) && $arguments[0] instanceof ContextInterface) {
             $calleeContexts = [array_shift($arguments)];
         }
+        $hasCalleeContext = $calleeContexts !== [];
 
         $isSameClass = $this instanceof RubyClassInterface
             && $context->self() instanceof Class_
@@ -69,9 +71,14 @@ trait CallBlockHelper
 
         $size = $iseqBodyData->objectParam()->size();
 
-        $comparedArgumentsSizeByLocalSize = min($size, count($arguments));
+        $comparedArgumentsSizeByLocalSize = min($size, count($arguments)) + ($hasCalleeContext ? 1 : 0);
 
         $startArguments = (Option::VM_ENV_DATA_SIZE + $localTableSize) - $comparedArgumentsSizeByLocalSize;
+
+        $arguments = [
+            ...$calleeContexts,
+            ...$arguments,
+        ];
 
         // NOTE: this var means to required parameter (non optional parameter)
         $paramLead = $iseqBodyData->objectParam()->leadNum();
@@ -114,7 +121,7 @@ trait CallBlockHelper
         }
 
         $result = $executor
-            ->execute(...$calleeContexts);
+            ->execute();
 
         if ($result->threw instanceof \Throwable) {
             throw $result->threw;
@@ -229,12 +236,6 @@ trait CallBlockHelper
                         $argument,
                     )
                 );
-
-                continue;
-            }
-
-            if ($argument instanceof ContextInterface) {
-                $newArguments[] = NilClass::createBy();
 
                 continue;
             }

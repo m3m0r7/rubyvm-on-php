@@ -6,6 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Criterion\Entry\AbstractEntries;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\DebugFormat;
 use RubyVM\VM\Exception\LocalTableException;
 
@@ -20,7 +21,7 @@ class EnvironmentTable extends AbstractEntries implements \Stringable
 
     public function verify(mixed $value): bool
     {
-        return $value instanceof RubyClassInterface;
+        return $value instanceof RubyClassInterface || $value instanceof ContextInterface;
     }
 
     public function get(mixed $index): mixed

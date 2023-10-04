@@ -30,7 +30,7 @@ class BuiltinSplatarray implements OperationProcessorInterface
 
     public function after(): void {}
 
-    public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
+    public function process(): ProcessedStatus
     {
         $flag = $this->operandAsRubyClass();
 

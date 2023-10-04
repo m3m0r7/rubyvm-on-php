@@ -13,7 +13,7 @@ interface ExecutorInterface
 {
     public static function createEntryPoint(KernelInterface $kernel, Option $option): ExecutorInterface;
 
-    public function execute(ContextInterface|RubyClassInterface ...$arguments): ExecutedResult;
+    public function execute(): ExecutedResult;
 
     public function context(): ContextInterface;
 

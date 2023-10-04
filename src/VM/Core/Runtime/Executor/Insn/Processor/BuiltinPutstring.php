@@ -28,7 +28,7 @@ class BuiltinPutstring implements OperationProcessorInterface
 
     public function after(): void {}
 
-    public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
+    public function process(): ProcessedStatus
     {
         $newPos = $this->context->programCounter()->increase();
         $this->context
