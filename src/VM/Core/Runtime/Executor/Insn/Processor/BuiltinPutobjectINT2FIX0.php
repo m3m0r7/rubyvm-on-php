@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
-use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;

@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Lambda;
-use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
-use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
-use RubyVM\VM\Core\Runtime\Executor\CallBlockHelper;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\LocalTable;
@@ -15,9 +12,6 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
-use RubyVM\VM\Exception\OperationProcessorException;
 
 class BuiltinGetblockparamproxy implements OperationProcessorInterface
 {

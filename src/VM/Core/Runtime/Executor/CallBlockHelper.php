@@ -10,7 +10,6 @@ use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
-use RubyVM\VM\Core\Runtime\Executor\Context\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\VMCallFlagBit;
 use RubyVM\VM\Core\YARV\Criterion\Entry\Variable;
@@ -40,6 +39,7 @@ trait CallBlockHelper
         if (isset($arguments[0]) && $arguments[0] instanceof ContextInterface) {
             $calleeContexts = [array_shift($arguments)];
         }
+
         $hasCalleeContext = $calleeContexts !== [];
 
         $isSameClass = $this instanceof RubyClassInterface

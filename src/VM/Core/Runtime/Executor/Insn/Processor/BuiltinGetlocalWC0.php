@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
-use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\LocalTable;
@@ -36,7 +35,6 @@ class BuiltinGetlocalWC0 implements OperationProcessorInterface
     public function process(): ProcessedStatus
     {
         $slotIndex = $this->operandAsNumber()->valueOf();
-
 
         $this->context->vmStack()->push(new Operand($this->getLocalTableToStack($slotIndex, Option::RSV_TABLE_INDEX_0)));
 

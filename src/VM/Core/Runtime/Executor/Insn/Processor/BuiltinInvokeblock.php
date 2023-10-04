@@ -44,6 +44,8 @@ class BuiltinInvokeblock implements OperationProcessorInterface
             0,
         );
 
+        assert($processorContext instanceof ContextInterface);
+
         $operand = $this->operandAsCallInfo();
         $arguments = [];
 
