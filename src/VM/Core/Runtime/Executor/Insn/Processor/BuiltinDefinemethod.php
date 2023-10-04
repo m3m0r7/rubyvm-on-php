@@ -6,7 +6,6 @@ namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Symbol;
 use RubyVM\VM\Core\Runtime\ClassCreator;
-use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
@@ -36,7 +35,7 @@ class BuiltinDefinemethod implements OperationProcessorInterface
 
     public function after(): void {}
 
-    public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
+    public function process(): ProcessedStatus
     {
         $methodName = ClassCreator::createClassBySymbol(
             $this->operandAsID()

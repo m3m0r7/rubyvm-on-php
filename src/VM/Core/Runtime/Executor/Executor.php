@@ -104,10 +104,10 @@ class Executor implements ExecutorInterface
         );
     }
 
-    public function execute(ContextInterface|RubyClassInterface ...$arguments): ExecutedResult
+    public function execute(): ExecutedResult
     {
         try {
-            $result = $this->_execute(...$arguments);
+            $result = $this->_execute();
 
             return new ExecutedResult(
                 executor: $this,
@@ -245,7 +245,7 @@ class Executor implements ExecutorInterface
                     $snapshotContext,
                 );
 
-            $status = $processor->process(...$arguments);
+            $status = $processor->process();
 
             $this->option->logger()->info(
                 sprintf(

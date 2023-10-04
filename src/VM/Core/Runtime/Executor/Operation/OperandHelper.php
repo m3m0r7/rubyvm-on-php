@@ -13,6 +13,7 @@ use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Offset;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Regexp;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Validatable;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
@@ -162,7 +163,7 @@ trait OperandHelper
         return $operand;
     }
 
-    private function operandAsAny(string $className): CallInfoInterface|RubyClassInterface|ID|ExecutedResult
+    private function operandAsAny(string $className): CallInfoInterface|RubyClassInterface|ID|ExecutedResult|ContextInterface
     {
         $operand = $this->operand();
 
@@ -352,7 +353,7 @@ trait OperandHelper
         return $operand;
     }
 
-    private function stackAsAny(string $className): CallInfoInterface|RubyClassInterface|ID|ExecutedResult
+    private function stackAsAny(string $className): CallInfoInterface|RubyClassInterface|ID|ExecutedResult|ContextInterface
     {
         $operand = $this->getStack();
 

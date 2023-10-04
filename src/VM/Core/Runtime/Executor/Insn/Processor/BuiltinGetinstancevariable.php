@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\Essential\RubyClassImplementationInterface;
-use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
@@ -30,7 +29,7 @@ class BuiltinGetinstancevariable implements OperationProcessorInterface
 
     public function after(): void {}
 
-    public function process(ContextInterface|RubyClassInterface ...$arguments): ProcessedStatus
+    public function process(): ProcessedStatus
     {
         $instanceVar = $this->operandAsID();
 

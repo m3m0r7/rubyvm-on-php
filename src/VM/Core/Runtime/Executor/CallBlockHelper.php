@@ -40,6 +40,8 @@ trait CallBlockHelper
             $calleeContexts = [array_shift($arguments)];
         }
 
+        $hasCalleeContext = $calleeContexts !== [];
+
         $isSameClass = $this instanceof RubyClassInterface
             && $context->self() instanceof Class_
             && $this->className() === $context->self()->valueOf();
@@ -69,9 +71,14 @@ trait CallBlockHelper
 
         $size = $iseqBodyData->objectParam()->size();
 
-        $comparedArgumentsSizeByLocalSize = min($size, count($arguments));
+        $comparedArgumentsSizeByLocalSize = min($size, count($arguments)) + ($hasCalleeContext ? 1 : 0);
 
         $startArguments = (Option::VM_ENV_DATA_SIZE + $localTableSize) - $comparedArgumentsSizeByLocalSize;
+
+        $arguments = [
+            ...$calleeContexts,
+            ...$arguments,
+        ];
 
         // NOTE: this var means to required parameter (non optional parameter)
         $paramLead = $iseqBodyData->objectParam()->leadNum();
@@ -114,7 +121,7 @@ trait CallBlockHelper
         }
 
         $result = $executor
-            ->execute(...$calleeContexts);
+            ->execute();
 
         if ($result->threw instanceof \Throwable) {
             throw $result->threw;
@@ -229,12 +236,6 @@ trait CallBlockHelper
                         $argument,
                     )
                 );
-
-                continue;
-            }
-
-            if ($argument instanceof ContextInterface) {
-                $newArguments[] = NilClass::createBy();
 
                 continue;
             }
