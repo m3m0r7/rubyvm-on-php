@@ -10,7 +10,6 @@ use RubyVM\VM\Core\Runtime\Executor\LocalTable;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\Option;
 
 class BuiltinSetlocalWC1 implements OperationProcessorInterface
 {
@@ -34,7 +33,7 @@ class BuiltinSetlocalWC1 implements OperationProcessorInterface
     public function process(): ProcessedStatus
     {
         $slotIndex = $this->operandAsNumber()->valueOf();
-        $this->setLocalTableFromStack($slotIndex, Option::RSV_TABLE_INDEX_1);
+        $this->setLocalTableFromStack($slotIndex, 1);
 
         return ProcessedStatus::SUCCESS;
     }

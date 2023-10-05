@@ -11,7 +11,6 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
-use RubyVM\VM\Core\Runtime\Option;
 
 class BuiltinGetlocalWC1 implements OperationProcessorInterface
 {
@@ -35,7 +34,7 @@ class BuiltinGetlocalWC1 implements OperationProcessorInterface
     public function process(): ProcessedStatus
     {
         $slotIndex = $this->operandAsNumber()->valueOf();
-        $this->context->vmStack()->push(new Operand($this->getLocalTableToStack($slotIndex, Option::RSV_TABLE_INDEX_1)));
+        $this->context->vmStack()->push(new Operand($this->getLocalTableToStack($slotIndex, 1)));
 
         return ProcessedStatus::SUCCESS;
     }

@@ -24,9 +24,11 @@ class Option implements OptionInterface
 
     final public const RUBY_ENCINDEX_BUILTIN_MAX = 12;
 
-    final public const RSV_TABLE_INDEX_0 = 0;
+    final public const VM_ENV_DATA_INDEX_FLAGS = 2;
 
-    final public const RSV_TABLE_INDEX_1 = 1;
+    final public const VM_ENV_DATA_INDEX_SPECVAL = 1;
+
+    final public const VM_ENV_DATA_INDEX_ME_CREF = 0;
 
     final public const VM_ENV_DATA_SIZE = 3;
 

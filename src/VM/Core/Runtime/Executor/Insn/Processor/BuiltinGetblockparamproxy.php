@@ -39,7 +39,7 @@ class BuiltinGetblockparamproxy implements OperationProcessorInterface
         $level = $this->operandAsNumber()->valueOf();
 
         $context = $this->getLocalTableToStack(
-            Option::VM_ENV_DATA_SIZE - 1,
+            Option::VM_ENV_DATA_INDEX_SPECVAL,
             $level,
         );
 
