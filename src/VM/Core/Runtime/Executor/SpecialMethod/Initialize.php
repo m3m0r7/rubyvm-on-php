@@ -17,11 +17,21 @@ class Initialize implements SpecialMethodInterface
         $result = $class;
 
         if ($class->hasMethod('initialize')) {
-            // @phpstan-ignore-next-line
-            $class->initialize(...$arguments);
+            $class
+                ->send(
+                    'initialize',
+                    $callInfo,
+                    $block,
+                    ...$arguments,
+                );
         } elseif ($class->hasMethod('new')) {
-            // @phpstan-ignore-next-line
-            $result = $class->new(...$arguments);
+            $result = $class
+                ->send(
+                    'new',
+                    $callInfo,
+                    $block,
+                    ...$arguments,
+                );
         }
 
         $context->vmStack()->push(

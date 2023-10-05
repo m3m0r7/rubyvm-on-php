@@ -55,7 +55,7 @@ class BuiltinGetblockparamproxy implements OperationProcessorInterface
         assert($context instanceof ContextInterface);
 
         $this->context->vmStack()->push(new Operand(
-            new Proc($context->instructionSequence()),
+            new Proc($context),
         ));
 
         return ProcessedStatus::SUCCESS;

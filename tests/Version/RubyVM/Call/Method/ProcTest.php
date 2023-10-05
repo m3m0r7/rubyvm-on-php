@@ -13,7 +13,7 @@ use Tests\RubyVM\Helper\TestApplication;
  *
  * @coversNothing
  */
-class LambdaTest extends TestApplication
+class ProcTest extends TestApplication
 {
     public function testProc(): void
     {
@@ -71,5 +71,39 @@ class LambdaTest extends TestApplication
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("Hello World!\n", $rubyVMManager->stdOut->readAll());
+    }
+
+    public function testProcWithNewChainedCall(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            p Proc.new{ "Hello World!" }.call
+
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame("\"Hello World!\"\n", $rubyVMManager->stdOut->readAll());
+    }
+
+    public function testProcWithNewNestedNew(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            p Proc.new{ Proc.new{ "Hello World!" }.call }.call
+
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame("\"Hello World!\"\n", $rubyVMManager->stdOut->readAll());
     }
 }
