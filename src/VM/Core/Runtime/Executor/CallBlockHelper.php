@@ -68,18 +68,17 @@ trait CallBlockHelper
             parentContext: $calleeContext ?? $context,
         ));
 
-        $environmentTable = $calleeContext?->environmentTable() ?? $context->environmentTable();
-
         $executor->context()
             ->renewEnvironmentTable();
 
-        if ($environmentTable->has(Option::VM_ENV_DATA_SIZE - 1)) {
+        if ($calleeContext?->environmentTable()?->has(Option::VM_ENV_DATA_INDEX_SPECVAL)) {
             $executor->context()
                 ->environmentTable()
                 ->set(
-                    Option::VM_ENV_DATA_SIZE - 1,
-                    $environmentTable
-                        ->get(Option::VM_ENV_DATA_SIZE - 1),
+                    Option::VM_ENV_DATA_INDEX_SPECVAL,
+                    $calleeContext
+                        ->environmentTable()
+                        ->get(Option::VM_ENV_DATA_INDEX_SPECVAL),
                 );
         }
 
@@ -187,7 +186,7 @@ trait CallBlockHelper
         $executor->context()
             ->environmentTable()
             ->set(
-                Option::VM_ENV_DATA_SIZE - 1,
+                Option::VM_ENV_DATA_INDEX_SPECVAL,
                 $executor->context(),
             );
 

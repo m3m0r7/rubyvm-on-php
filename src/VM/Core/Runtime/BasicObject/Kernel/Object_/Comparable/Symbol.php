@@ -27,4 +27,9 @@ class Symbol extends Comparable implements RubyClassInterface, SymbolizeInterfac
     {
         return new self(new SymbolSymbol($value));
     }
+
+    public function inspect(): RubyClassInterface
+    {
+        return String_::createBy((string) $this);
+    }
 }

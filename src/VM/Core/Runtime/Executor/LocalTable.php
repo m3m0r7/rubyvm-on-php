@@ -13,7 +13,7 @@ trait LocalTable
     use Validatable;
     use OperandHelper;
 
-    public function hasLocalTable(int $slotIndex, int $level): bool
+    public function hasLocalTable(int $slotIndex, int $level = 0): bool
     {
         return $this
             ->targetContextByLevel($level)
@@ -31,7 +31,7 @@ trait LocalTable
             );
     }
 
-    public function getLocalTableToStack(int $slotIndex, int $level): ContextInterface|RubyClassInterface
+    public function localTable(int $slotIndex, int $level = 0): ContextInterface|RubyClassInterface
     {
         return $this
             ->targetContextByLevel($level)
@@ -49,7 +49,7 @@ trait LocalTable
             );
     }
 
-    public function setLocalTableFromStack(int $slotIndex, int $level, bool $forcibly = false): void
+    public function setLocalTableFromStack(int $slotIndex, int $level = 0, bool $forcibly = false): void
     {
         $operand = $this->stackAsObject();
 

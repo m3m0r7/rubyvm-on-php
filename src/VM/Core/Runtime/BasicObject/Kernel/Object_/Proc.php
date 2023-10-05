@@ -9,7 +9,7 @@ use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;
 
-class Lambda extends Object_ implements RubyClassInterface
+class Proc extends Object_ implements RubyClassInterface
 {
     public function __construct(private readonly InstructionSequenceInterface $instructionSequence) {}
 

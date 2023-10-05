@@ -36,7 +36,7 @@ class BuiltinGetlocal implements OperationProcessorInterface
         $slotIndex = $this->operandAsNumber()->valueOf();
         $level = $this->operandAsNumber()->valueOf();
 
-        $this->context->vmStack()->push(new Operand($this->getLocalTableToStack($slotIndex, $level)));
+        $this->context->vmStack()->push(new Operand($this->localTable($slotIndex, $level)));
 
         return ProcessedStatus::SUCCESS;
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
-use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Lambda;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Proc;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\LocalTable;
@@ -35,11 +35,11 @@ class BuiltinGetblockparamproxy implements OperationProcessorInterface
 
     public function process(): ProcessedStatus
     {
-        $slotIndex = $this->operandAsNumber()->valueOf();
+        $this->operandAsNumber()->valueOf();
         $level = $this->operandAsNumber()->valueOf();
 
-        $context = $this->getLocalTableToStack(
-            Option::VM_ENV_DATA_SIZE - 1,
+        $context = $this->localTable(
+            Option::VM_ENV_DATA_INDEX_SPECVAL,
             $level,
         );
 
@@ -53,7 +53,7 @@ class BuiltinGetblockparamproxy implements OperationProcessorInterface
         assert($context instanceof ContextInterface);
 
         $this->context->vmStack()->push(new Operand(
-            new Lambda($context->instructionSequence()),
+            new Proc($context->instructionSequence()),
         ));
 
         return ProcessedStatus::SUCCESS;

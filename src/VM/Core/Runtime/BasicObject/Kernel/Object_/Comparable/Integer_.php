@@ -212,4 +212,9 @@ class Integer_ extends Comparable implements RubyClassInterface, SymbolizeInterf
     {
         return new self(new NumberSymbol($value));
     }
+
+    public function inspect(): RubyClassInterface
+    {
+        return String_::createBy((string) $this);
+    }
 }

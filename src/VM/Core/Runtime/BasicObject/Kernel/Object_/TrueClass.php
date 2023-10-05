@@ -43,4 +43,9 @@ class TrueClass extends Object_ implements RubyClassInterface, SymbolizeInterfac
     {
         return (string) $this->symbol;
     }
+
+    public function inspect(): RubyClassInterface
+    {
+        return String_::createBy((string) $this);
+    }
 }

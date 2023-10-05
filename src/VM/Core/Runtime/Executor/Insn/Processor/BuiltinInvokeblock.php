@@ -40,9 +40,8 @@ class BuiltinInvokeblock implements OperationProcessorInterface
     {
         // This is an operation processor context including instruction sequence context
         $processorContext = $this
-            ->getLocalTableToStack(
-                Option::VM_ENV_DATA_SIZE - 1,
-                0,
+            ->localTable(
+                Option::VM_ENV_DATA_INDEX_SPECVAL,
             );
 
         assert($processorContext instanceof ContextInterface);
