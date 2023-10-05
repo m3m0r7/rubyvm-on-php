@@ -23,6 +23,9 @@ class Lambda extends Object_ implements RubyClassInterface
             parentContext: $this->context(),
         );
 
+        $executor->context()
+            ->renewEnvironmentTable();
+
         $localTableSize = $this
             ->instructionSequence
             ->body()

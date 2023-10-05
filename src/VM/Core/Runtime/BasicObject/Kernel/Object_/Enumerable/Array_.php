@@ -6,6 +6,7 @@ namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
+use RubyVM\VM\Core\Runtime\Attribute\WithContext;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
 use RubyVM\VM\Core\Runtime\BasicObject\Symbolizable;
 use RubyVM\VM\Core\Runtime\BasicObject\SymbolizeInterface;
@@ -41,6 +42,7 @@ class Array_ extends Enumerable implements RubyClassInterface, SymbolizeInterfac
         return $this;
     }
 
+    #[WithContext]
     public function each(ContextInterface $context): RubyClassInterface
     {
         $symbol = $this->symbol;

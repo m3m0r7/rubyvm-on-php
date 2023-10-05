@@ -19,12 +19,12 @@ class BlockTest extends TestApplication
     {
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< '_'
-            def test( &block )
+            def test(&block)
               block.call
             end
 
             test do
-              puts "Hello World!"
+              puts "1st Hello World!"
             end
 
             test do
@@ -39,6 +39,33 @@ class BlockTest extends TestApplication
             ->disassemble(RubyVersion::VERSION_3_2);
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $this->assertSame("Hello World!\n2nd Hello World!\n", $rubyVMManager->stdOut->readAll());
+        $this->assertSame("1st Hello World!\n2nd Hello World!\n", $rubyVMManager->stdOut->readAll());
+    }
+
+    public function testBlockWithVariables(): void
+    {
+        $rubyVMManager = $this->createRubyVMFromCode(
+            <<< '_'
+            def test(&block)
+              block.call("Hello", "World!")
+            end
+
+            test do | var1, var2 |
+              puts "1st " + var1 + " " + var2
+            end
+
+            test do | var1, var2 |
+              puts "2nd " + var1 + " " + var2
+            end
+
+            _,
+        );
+
+        $executor = $rubyVMManager
+            ->rubyVM
+            ->disassemble(RubyVersion::VERSION_3_2);
+
+        $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
+        $this->assertSame("1st Hello World!\n2nd Hello World!\n", $rubyVMManager->stdOut->readAll());
     }
 }

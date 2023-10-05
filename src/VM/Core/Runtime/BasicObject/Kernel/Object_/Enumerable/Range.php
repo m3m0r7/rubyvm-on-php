@@ -6,6 +6,7 @@ namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable;
 
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
+use RubyVM\VM\Core\Runtime\Attribute\WithContext;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\FalseClass;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
@@ -28,6 +29,7 @@ class Range extends Enumerable implements RubyClassInterface, SymbolizeInterface
         $this->symbol = $symbol;
     }
 
+    #[WithContext]
     public function each(ContextInterface $context): RubyClassInterface
     {
         assert($this->symbol instanceof \Traversable);

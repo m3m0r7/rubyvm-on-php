@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Provider;
 
+use RubyVM\VM\Core\Runtime\Attribute\WithContext;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Enumerable;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Exception;
@@ -52,9 +54,13 @@ trait ProvideBasicClassMethods
         return NilClass::createBy();
     }
 
-    public function exit(int $code = 0): never
+    public function exit(RubyClassInterface $code = null): never
     {
-        throw new ExitException($code);
+        if ($code instanceof Integer_) {
+            throw new ExitException($code->valueOf());
+        }
+
+        throw new ExitException(0);
     }
 
     public function inspect(): RubyClassInterface
@@ -68,6 +74,7 @@ trait ProvideBasicClassMethods
         return String_::createBy((string) $this);
     }
 
+    #[WithContext]
     public function lambda(ContextInterface $context): RubyClassInterface
     {
         return (new Lambda($context->instructionSequence()))

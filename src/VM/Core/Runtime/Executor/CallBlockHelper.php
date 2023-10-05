@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor;
 
+use RubyVM\VM\Core\Runtime\Attribute\WithContext;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Class_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
-use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Option;
@@ -23,6 +23,15 @@ trait CallBlockHelper
     public function send(string $name, CallInfoInterface $callInfo, RubyClassInterface|ContextInterface ...$arguments): ExecutedResult|RubyClassInterface
     {
         if (method_exists($this, $name)) {
+            $reflection = new \ReflectionClass($this);
+            $method = $reflection->getMethod($name);
+
+            $hasWithContextAttr = $method->getAttributes(WithContext::class) !== [];
+
+            if (!$hasWithContextAttr && (isset($arguments[0]) && $arguments[0] instanceof ContextInterface)) {
+                array_shift($arguments);
+            }
+
             return $this->{$name}(...$arguments);
         }
 
@@ -40,7 +49,7 @@ trait CallBlockHelper
             $calleeContexts = [array_shift($arguments)];
         }
 
-        $hasCalleeContext = $calleeContexts !== [];
+        $calleeContextAdditional = $calleeContexts !== [] ? count($calleeContexts) : 0;
 
         $isSameClass = $this instanceof RubyClassInterface
             && $context->self() instanceof Class_
@@ -71,7 +80,7 @@ trait CallBlockHelper
 
         $size = $iseqBodyData->objectParam()->size();
 
-        $comparedArgumentsSizeByLocalSize = min($size, count($arguments)) + ($hasCalleeContext ? 1 : 0);
+        $comparedArgumentsSizeByLocalSize = min($size, count($arguments)) + $calleeContextAdditional;
 
         $startArguments = (Option::VM_ENV_DATA_SIZE + $localTableSize) - $comparedArgumentsSizeByLocalSize;
 
@@ -222,19 +231,7 @@ trait CallBlockHelper
         foreach ($arguments as $argument) {
             if (is_array($argument)) {
                 $newArguments[] = Array_::createBy(
-                    array_map(
-                        // Extract symbol
-                        // Do not expected coming here an array but PHP Stan will show an error
-                        // @phpstan-ignore-next-line
-                        static function (RubyClassInterface|ContextInterface $rubyClass) {
-                            if ($rubyClass instanceof ContextInterface) {
-                                return NilClass::createBy();
-                            }
-
-                            return $rubyClass;
-                        },
-                        $argument,
-                    )
+                    $argument,
                 );
 
                 continue;

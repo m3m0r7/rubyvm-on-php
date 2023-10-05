@@ -12,7 +12,7 @@ interface RubyClassImplementationInterface
 {
     public function puts(RubyClassInterface $object): RubyClassInterface;
 
-    public function exit(int $code = 0): never;
+    public function exit(RubyClassInterface $code = null): never;
 
     public function inspect(): RubyClassInterface;
 
