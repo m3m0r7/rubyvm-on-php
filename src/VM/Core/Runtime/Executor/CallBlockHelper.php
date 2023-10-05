@@ -26,9 +26,9 @@ trait CallBlockHelper
             $reflection = new \ReflectionClass($this);
             $method = $reflection->getMethod($name);
 
-            $withBlock = $method->getAttributes(WithContext::class);
+            $hasWithContextAttr = $method->getAttributes(WithContext::class) !== [];
 
-            if ($withBlock === [] && (isset($arguments[0]) && $arguments[0] instanceof ContextInterface)) {
+            if (!$hasWithContextAttr && (isset($arguments[0]) && $arguments[0] instanceof ContextInterface)) {
                 array_shift($arguments);
             }
 
