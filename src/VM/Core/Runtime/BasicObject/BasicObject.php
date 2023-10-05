@@ -22,8 +22,6 @@ abstract class BasicObject implements RubyClassInterface
         __call as private callExtendedMethod;
     }
 
-    public function inspectedClassInfo(): void {}
-
     public function className(): string
     {
         $classNames = explode('\\', static::class);
