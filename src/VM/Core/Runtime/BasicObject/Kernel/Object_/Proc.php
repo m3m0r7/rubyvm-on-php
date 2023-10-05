@@ -20,14 +20,16 @@ class Proc extends Object_ implements RubyClassInterface
     public function new(?ContextInterface $procContext): RubyClassInterface
     {
         $this->procContext = $procContext;
+
         return $this;
     }
 
     public function call(RubyClassInterface ...$arguments): RubyClassInterface|null
     {
-        if ($this->procContext === null) {
+        if (!$this->procContext instanceof \RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface) {
             return NilClass::createBy();
         }
+
         $executor = new Executor(
             kernel: $this->context()->kernel(),
             rubyClass: $this->context()->self(),
