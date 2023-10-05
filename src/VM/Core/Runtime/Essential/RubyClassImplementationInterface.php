@@ -6,6 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Essential;
 
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
+use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 
 interface RubyClassImplementationInterface
@@ -22,5 +23,5 @@ interface RubyClassImplementationInterface
 
     public function raise(RubyClassInterface $string, RubyClassInterface $class): RubyClassInterface;
 
-    public function send(string $name, CallInfoInterface $callInfo, RubyClassInterface|ContextInterface ...$arguments): ExecutedResult|RubyClassInterface;
+    public function send(string $name, CallInfoInterface $callInfo, ?ExecutorInterface $block, RubyClassInterface ...$arguments): ExecutedResult|RubyClassInterface;
 }

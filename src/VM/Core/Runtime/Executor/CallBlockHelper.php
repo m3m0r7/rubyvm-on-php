@@ -6,21 +6,18 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Runtime\Attribute\WithContext;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Class_;
-use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Option;
 use RubyVM\VM\Core\Runtime\VMCallFlagBit;
 use RubyVM\VM\Core\YARV\Criterion\Entry\Variable;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\AuxLoader;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 trait CallBlockHelper
 {
-    public function send(string $name, CallInfoInterface $callInfo, RubyClassInterface|ContextInterface ...$arguments): ExecutedResult|RubyClassInterface
+    public function send(string $name, CallInfoInterface $callInfo, ?ExecutorInterface $block, RubyClassInterface ...$arguments): ExecutedResult|RubyClassInterface
     {
         if (method_exists($this, $name)) {
             $reflection = new \ReflectionClass($this);
@@ -28,8 +25,12 @@ trait CallBlockHelper
 
             $hasWithContextAttr = $method->getAttributes(WithContext::class) !== [];
 
-            if (!$hasWithContextAttr && (isset($arguments[0]) && $arguments[0] instanceof ContextInterface)) {
-                array_shift($arguments);
+            if ($hasWithContextAttr) {
+                $arguments = [
+                    // Append block context
+                    $block?->context(),
+                    ...$arguments,
+                ];
             }
 
             return $this->{$name}(...$arguments);
@@ -37,21 +38,16 @@ trait CallBlockHelper
 
         return $this->{$name}(
             $callInfo,
+            $block,
             ...$arguments,
         );
     }
 
-    private function callSimpleMethod(ContextInterface $context, CallInfoInterface $callInfo, RubyClassInterface|ContextInterface ...$arguments): ExecutedResult
+    private function callSimpleMethod(ContextInterface $context, CallInfoInterface $callInfo, ?ExecutorInterface $block, RubyClassInterface ...$arguments): ExecutedResult
     {
-        // Validate first value is context?
-        $calleeContext = null;
-        if (isset($arguments[0]) && $arguments[0] instanceof ContextInterface) {
-            $calleeContext = array_shift($arguments);
+        if (($callInfo->callData()->flag() & (0x01 << VMCallFlagBit::VM_CALL_ARGS_BLOCKARG->value)) !== 0) {
+            throw new OperationProcessorException('The callBlockWithArguments is not implemented yet');
         }
-
-        assert($calleeContext === null || $calleeContext instanceof ContextInterface);
-
-        $hasCalleeContext = $calleeContext instanceof \RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 
         $isSameClass = $this instanceof RubyClassInterface
             && $context->self() instanceof Class_
@@ -65,20 +61,18 @@ trait CallBlockHelper
                 : $context->self(),
             instructionSequence: $context->instructionSequence(),
             option: $context->option(),
-            parentContext: $calleeContext ?? $context,
+            parentContext: $context,
         ));
 
         $executor->context()
             ->renewEnvironmentTable();
 
-        if ($calleeContext?->environmentTable()?->has(Option::VM_ENV_DATA_INDEX_SPECVAL)) {
+        if ($block instanceof \RubyVM\VM\Core\Runtime\Executor\ExecutorInterface) {
             $executor->context()
                 ->environmentTable()
                 ->set(
                     Option::VM_ENV_DATA_INDEX_SPECVAL,
-                    $calleeContext
-                        ->environmentTable()
-                        ->get(Option::VM_ENV_DATA_INDEX_SPECVAL),
+                    $block->context(),
                 );
         }
 
@@ -142,74 +136,6 @@ trait CallBlockHelper
 
         if ($result->threw instanceof \Throwable) {
             throw $result->threw;
-        }
-
-        return $result;
-    }
-
-    private function callBlockWithArguments(CallInfoInterface $callInfo, Integer_ $blockIseqIndex, RubyClassInterface $blockObject, bool $isSuper, RubyClassInterface|ContextInterface ...$arguments): ?RubyClassInterface
-    {
-        // @phpstan-ignore-next-line
-        if ($this->context === null) {
-            throw new OperationProcessorException('The runtime context is not injected - did you forget to call setRuntimeContext before?');
-        }
-
-        if (($callInfo->callData()->flag() & (0x01 << VMCallFlagBit::VM_CALL_ARGS_BLOCKARG->value)) !== 0) {
-            throw new OperationProcessorException('The callBlockWithArguments is not implemented yet');
-        }
-
-        if ($blockIseqIndex->valueOf() === 0) {
-            // TODO: implement a super call
-            // see: https://github.com/ruby/ruby/blob/ruby_3_2/vm_args.c#L888
-
-            throw new OperationProcessorException('The callBlockWithArguments is not implemented yet');
-        }
-
-        $instructionSequence = $this->context
-            ->kernel()
-            ->loadInstructionSequence(new Aux(
-                loader: new AuxLoader(
-                    index: $blockIseqIndex->valueOf(),
-                ),
-            ));
-
-        $instructionSequence->load();
-
-        $executor = (new Executor(
-            kernel: $this->context->kernel(),
-            rubyClass: $this->context->self(),
-            instructionSequence: $instructionSequence,
-            option: $this->context->option(),
-            parentContext: $this->context,
-        ));
-
-        $executor->context()
-            ->environmentTable()
-            ->set(
-                Option::VM_ENV_DATA_INDEX_SPECVAL,
-                $executor->context(),
-            );
-
-        $result = $blockObject
-            ->setRuntimeContext($executor->context())
-            ->setUserlandHeapSpace($executor->context()->self()->userlandHeapSpace())
-            ->send(
-                (string) $callInfo->callData()->mid()->object,
-                $callInfo,
-                $executor->context(),
-                ...self::alignArguments(
-                    $callInfo,
-                    $executor->context(),
-                    ...$arguments
-                ),
-            );
-
-        if ($result instanceof ExecutedResult) {
-            if ($result->threw instanceof \Throwable) {
-                throw $result->threw;
-            }
-
-            return $result->returnValue;
         }
 
         return $result;

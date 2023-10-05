@@ -43,7 +43,7 @@ abstract class BasicObject implements RubyClassInterface
     }
 
     /**
-     * @param (ContextInterface|RubyClassInterface)[] $arguments
+     * @param (null|ContextInterface|RubyClassInterface)[] $arguments
      */
     public function __call(string $name, array $arguments): ExecutedResult|RubyClassInterface|null
     {
@@ -51,7 +51,13 @@ abstract class BasicObject implements RubyClassInterface
             $result = $this->callExtendedMethod($name, $arguments);
         } catch (NotFoundInstanceMethod $e) {
             if (method_exists($this, $name)) {
+                // Ignore call info
                 if (isset($arguments[0]) && $arguments[0] instanceof CallInfoInterface) {
+                    array_shift($arguments);
+                }
+
+                // Ignore block section
+                if (array_key_exists(0, $arguments) && $arguments[0] === null) {
                     array_shift($arguments);
                 }
 

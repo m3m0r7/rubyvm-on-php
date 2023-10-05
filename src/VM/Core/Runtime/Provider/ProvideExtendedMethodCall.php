@@ -83,10 +83,8 @@ trait ProvideExtendedMethodCall
         return $this
             ->callSimpleMethod(
                 $context,
-
                 // @phpstan-ignore-next-line
-                $arguments[0],
-                ...array_slice($arguments, 1),
+                ...$arguments,
             );
     }
 }
