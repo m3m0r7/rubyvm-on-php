@@ -6,12 +6,13 @@ namespace RubyVM\VM\Core\Runtime\Executor\SpecialMethod;
 
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
+use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 
 class Initialize implements SpecialMethodInterface
 {
-    public function process(RubyClassInterface $class, ContextInterface $context, CallInfoInterface $callInfo, mixed ...$arguments): mixed
+    public function process(RubyClassInterface $class, ContextInterface $context, CallInfoInterface $callInfo, ?ExecutorInterface $block, mixed ...$arguments): mixed
     {
         $result = $class;
 

@@ -43,7 +43,9 @@ class BuiltinGetblockparamproxy implements OperationProcessorInterface
             $level,
         );
 
-        foreach ($this->targetContextByLevel($level + 1)->environmentTable() as $index => $value) {
+        assert($context instanceof ContextInterface);
+
+        foreach ($context->environmentTable() as $index => $value) {
             $this
                 ->context
                 ->environmentTable()

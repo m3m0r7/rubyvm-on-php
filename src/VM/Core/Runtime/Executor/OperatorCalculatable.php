@@ -36,7 +36,7 @@ trait OperatorCalculatable
 
             $value = $obj
                 ->setRuntimeContext($this->context)
-                ->{$expectedOperator}($callDataOperand, $recv);
+                ->{$expectedOperator}($callDataOperand, null, $recv);
         }
 
         if ($value === null) {

@@ -33,6 +33,8 @@ readonly class ContextAccessor implements ContextAccessorInterface
                 $name,
                 $arguments,
             ),
+        // Block section
+        null,
         ...$arguments,
         );
         if ($executedResult->threw instanceof \Throwable) {
