@@ -82,12 +82,11 @@ trait LocalTable
         $targetEnvironmentTableOnContext = $this->context;
 
         for ($i = 0; $i < $level; ++$i) {
-            $targetEnvironmentTableOnContext = $this
-                ->context
+            $targetEnvironmentTableOnContext = $targetEnvironmentTableOnContext
                 ->parentContext();
-        }
 
-        assert($targetEnvironmentTableOnContext instanceof ContextInterface);
+            assert($targetEnvironmentTableOnContext instanceof ContextInterface);
+        }
 
         return $targetEnvironmentTableOnContext;
     }
