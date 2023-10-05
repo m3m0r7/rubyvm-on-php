@@ -44,12 +44,14 @@ trait CallBlockHelper
     private function callSimpleMethod(ContextInterface $context, CallInfoInterface $callInfo, RubyClassInterface|ContextInterface ...$arguments): ExecutedResult
     {
         // Validate first value is context?
-        $calleeContexts = [];
+        $calleeContext = null;
         if (isset($arguments[0]) && $arguments[0] instanceof ContextInterface) {
-            $calleeContexts = [array_shift($arguments)];
+            $calleeContext = array_shift($arguments);
         }
 
-        $calleeContextAdditional = $calleeContexts !== [] ? count($calleeContexts) : 0;
+        assert($calleeContext === null || $calleeContext instanceof ContextInterface);
+
+        $hasCalleeContext = $calleeContext instanceof \RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 
         $isSameClass = $this instanceof RubyClassInterface
             && $context->self() instanceof Class_
@@ -63,11 +65,23 @@ trait CallBlockHelper
                 : $context->self(),
             instructionSequence: $context->instructionSequence(),
             option: $context->option(),
-            parentContext: $context,
+            parentContext: $calleeContext ?? $context,
         ));
+
+        $environmentTable = $calleeContext?->environmentTable() ?? $context->environmentTable();
 
         $executor->context()
             ->renewEnvironmentTable();
+
+        if ($environmentTable->has(Option::VM_ENV_DATA_SIZE - 1)) {
+            $executor->context()
+                ->environmentTable()
+                ->set(
+                    Option::VM_ENV_DATA_SIZE - 1,
+                    $environmentTable
+                        ->get(Option::VM_ENV_DATA_SIZE - 1),
+                );
+        }
 
         $iseqBodyData = $executor
             ->context()
@@ -80,14 +94,9 @@ trait CallBlockHelper
 
         $size = $iseqBodyData->objectParam()->size();
 
-        $comparedArgumentsSizeByLocalSize = min($size, count($arguments)) + $calleeContextAdditional;
+        $comparedArgumentsSizeByLocalSize = min($size, count($arguments));
 
         $startArguments = (Option::VM_ENV_DATA_SIZE + $localTableSize) - $comparedArgumentsSizeByLocalSize;
-
-        $arguments = [
-            ...$calleeContexts,
-            ...$arguments,
-        ];
 
         // NOTE: this var means to required parameter (non optional parameter)
         $paramLead = $iseqBodyData->objectParam()->leadNum();
@@ -174,6 +183,13 @@ trait CallBlockHelper
             option: $this->context->option(),
             parentContext: $this->context,
         ));
+
+        $executor->context()
+            ->environmentTable()
+            ->set(
+                Option::VM_ENV_DATA_SIZE - 1,
+                $executor->context(),
+            );
 
         $result = $blockObject
             ->setRuntimeContext($executor->context())
