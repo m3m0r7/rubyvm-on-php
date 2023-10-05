@@ -13,9 +13,28 @@ trait LocalTable
     use Validatable;
     use OperandHelper;
 
+    public function hasLocalTable(int $slotIndex, int $level): bool
+    {
+        return $this
+            ->targetContextByLevel($level)
+            ->environmentTable()
+            ->has(
+                LocalTableHelper::computeLocalTableIndex(
+                    $this->context
+                        ->instructionSequence()
+                        ->body()
+                        ->info()
+                        ->localTableSize(),
+                    $slotIndex,
+                    $level,
+                ),
+            );
+    }
+
     public function getLocalTableToStack(int $slotIndex, int $level): ContextInterface|RubyClassInterface
     {
-        return $this->context
+        return $this
+            ->targetContextByLevel($level)
             ->environmentTable()
             ->get(
                 LocalTableHelper::computeLocalTableIndex(
@@ -30,22 +49,46 @@ trait LocalTable
             );
     }
 
-    public function setLocalTableFromStack(int $slotIndex, int $level): void
+    public function setLocalTableFromStack(int $slotIndex, int $level, bool $forcibly = false): void
     {
         $operand = $this->stackAsObject();
 
-        $this->context->environmentTable()
+        $index = LocalTableHelper::computeLocalTableIndex(
+            $this->context
+                ->instructionSequence()
+                ->body()
+                ->info()
+                ->localTableSize(),
+            $slotIndex,
+            $level,
+        );
+
+        if ($forcibly) {
+            $this->targetContextByLevel($level)
+                ->environmentTable()
+                ->setLead($index, false);
+        }
+
+        $this->targetContextByLevel($level)
+            ->environmentTable()
             ->set(
-                LocalTableHelper::computeLocalTableIndex(
-                    $this->context
-                        ->instructionSequence()
-                        ->body()
-                        ->info()
-                        ->localTableSize(),
-                    $slotIndex,
-                    $level,
-                ),
+                $index,
                 $operand,
             );
+    }
+
+    private function targetContextByLevel(int $level = 0): ContextInterface
+    {
+        $targetEnvironmentTableOnContext = $this->context;
+
+        for ($i = 0; $i < $level; ++$i) {
+            $targetEnvironmentTableOnContext = $this
+                ->context
+                ->parentContext();
+        }
+
+        assert($targetEnvironmentTableOnContext instanceof ContextInterface);
+
+        return $targetEnvironmentTableOnContext;
     }
 }
