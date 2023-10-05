@@ -17,7 +17,6 @@ class Initialize implements SpecialMethodInterface
         $result = $class;
 
         if ($class->hasMethod('initialize')) {
-            // @phpstan-ignore-next-line
             $class
                 ->send(
                     'initialize',
@@ -26,7 +25,6 @@ class Initialize implements SpecialMethodInterface
                     ...$arguments,
                 );
         } elseif ($class->hasMethod('new')) {
-            // @phpstan-ignore-next-line
             $result = $class
                 ->send(
                     'new',
