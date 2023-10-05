@@ -120,7 +120,7 @@ trait ProvideBasicClassMethods
             rubyClass: $this->context()->self(),
             instructionSequence: $instructionSequence,
             option: $this->context()->option(),
-            parentContext: $this->context()->parentContext(),
+            parentContext: $this->context(),
         );
 
         $executor->context()

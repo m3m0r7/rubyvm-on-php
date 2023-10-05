@@ -12,6 +12,7 @@ use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
+use RubyVM\VM\Exception\LocalTableException;
 
 class BuiltinGetblockparamproxy implements OperationProcessorInterface
 {
@@ -39,6 +40,14 @@ class BuiltinGetblockparamproxy implements OperationProcessorInterface
 
         $context = $this->getLocalTableToStack($slotIndex, $level);
         assert($context instanceof ContextInterface);
+
+        if ($this->hasLocalTable($slotIndex, $level + 1)) {
+            $context->vmStack()->push(
+                new Operand($this->getLocalTableToStack($slotIndex, $level + 1))
+            );
+
+            $this->setLocalTableFromStack($slotIndex, $level, true);
+        }
 
         $this->context->vmStack()->push(new Operand(
             new Lambda($context->instructionSequence()),
