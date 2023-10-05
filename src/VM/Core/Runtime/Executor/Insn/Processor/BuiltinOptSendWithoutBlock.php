@@ -66,7 +66,7 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
             ...$arguments,
         );
 
-        $targetClass = $targetObjectOrClass = $this->getStack()
+        $targetClass = $this->getStack()
             ->operand;
 
         if (!$targetClass instanceof RubyClassInterface) {
