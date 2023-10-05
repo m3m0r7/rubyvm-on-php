@@ -43,4 +43,9 @@ class FalseClass extends Object_ implements RubyClassInterface, SymbolizeInterfa
     {
         return (string) $this->symbol;
     }
+
+    public function inspect(): RubyClassInterface
+    {
+        return String_::createBy((string) $this);
+    }
 }

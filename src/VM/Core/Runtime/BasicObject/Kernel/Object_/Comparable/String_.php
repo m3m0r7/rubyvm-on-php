@@ -55,4 +55,12 @@ class String_ extends Comparable implements RubyClassInterface, SymbolizeInterfa
             ? TrueClass::createBy()
             : FalseClass::createBy();
     }
+
+    public function inspect(): RubyClassInterface
+    {
+        return String_::createBy(sprintf(
+            '"%s"',
+            (string) $this,
+        ));
+    }
 }

@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Provider;
 
 use RubyVM\VM\Core\Runtime\Attribute\WithContext;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Comparable;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Enumerable;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Exception;
-use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Lambda;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Proc;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
@@ -40,8 +41,10 @@ trait ProvideBasicClassMethods
         } elseif ($object instanceof NilClass) {
             // When an argument is a nil symbol, then displays a break only
             $string = "\n";
-        } else {
+        } elseif ($object instanceof Comparable) {
             $string = (string) $object;
+        } else {
+            $string = (string) $object->setRuntimeContext($this->context())->inspect();
         }
 
         if (!str_ends_with($string, "\n")) {
@@ -65,19 +68,27 @@ trait ProvideBasicClassMethods
 
     public function inspect(): RubyClassInterface
     {
-        if ($this instanceof String_) {
-            return String_::createBy(
-                '"' . ((string) $this) . '"'
-            );
-        }
-
-        return String_::createBy((string) $this);
+        return String_::createBy(
+            sprintf(
+                '#<%s:0x%s %s:%d>',
+                $this->className(),
+                spl_object_hash($this),
+                $this->context
+                    ? $this->context()
+                        ->instructionSequence()
+                        ->body()
+                        ->info()
+                        ->path()
+                    : 'unknown',
+                -1
+            )
+        );
     }
 
     #[WithContext]
     public function lambda(ContextInterface $context): RubyClassInterface
     {
-        return (new Lambda($context->instructionSequence()))
+        return (new Proc($context->instructionSequence()))
             ->setRuntimeContext($this->context())
             ->setUserlandHeapSpace(new UserlandHeapSpace());
     }

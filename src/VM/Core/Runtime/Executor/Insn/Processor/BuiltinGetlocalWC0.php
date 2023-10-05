@@ -35,7 +35,7 @@ class BuiltinGetlocalWC0 implements OperationProcessorInterface
     {
         $slotIndex = $this->operandAsNumber()->valueOf();
 
-        $this->context->vmStack()->push(new Operand($this->getLocalTableToStack($slotIndex)));
+        $this->context->vmStack()->push(new Operand($this->localTable($slotIndex)));
 
         return ProcessedStatus::SUCCESS;
     }

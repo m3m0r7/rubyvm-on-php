@@ -424,7 +424,7 @@ enum Insn: int
             Insn::SEND => 2,
             Insn::DEFINECLASS => 3,
             Insn::SETLOCAL, Insn::GETLOCAL => 2,
-            Insn::OPT_CASE_DISPATCH, Insn::GETBLOCKPARAMPROXY => 2,
+            Insn::OPT_CASE_DISPATCH, Insn::GETBLOCKPARAMPROXY, Insn::GETBLOCKPARAM => 2,
             default => 1,
         };
     }

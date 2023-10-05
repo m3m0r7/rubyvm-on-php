@@ -58,4 +58,9 @@ class Float_ extends Comparable implements RubyClassInterface, SymbolizeInterfac
             $this->valueOf() / $object->valueOf(),
         );
     }
+
+    public function inspect(): RubyClassInterface
+    {
+        return String_::createBy((string) $this);
+    }
 }

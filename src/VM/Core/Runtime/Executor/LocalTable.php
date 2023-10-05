@@ -31,7 +31,7 @@ trait LocalTable
             );
     }
 
-    public function getLocalTableToStack(int $slotIndex, int $level = 0): ContextInterface|RubyClassInterface
+    public function localTable(int $slotIndex, int $level = 0): ContextInterface|RubyClassInterface
     {
         return $this
             ->targetContextByLevel($level)

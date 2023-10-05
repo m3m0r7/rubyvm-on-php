@@ -8,6 +8,7 @@ use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\Runtime\Attribute\WithContext;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\FalseClass;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\TrueClass;
@@ -130,5 +131,10 @@ class Range extends Enumerable implements RubyClassInterface, SymbolizeInterface
         return $this->valueOf() === $object->valueOf()
             ? TrueClass::createBy()
             : FalseClass::createBy();
+    }
+
+    public function inspect(): RubyClassInterface
+    {
+        return String_::createBy((string) $this);
     }
 }

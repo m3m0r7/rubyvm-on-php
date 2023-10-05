@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable;
 
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
-use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 
 class Hash extends Enumerable implements RubyClassInterface
 {
     /**
-     * @param array<SymbolInterface> $hash
+     * @param array<RubyClassInterface> $hash
      */
     public function __construct(protected array $hash = []) {}
 
@@ -52,5 +52,24 @@ class Hash extends Enumerable implements RubyClassInterface
     public function count(): int
     {
         return count($this->hash);
+    }
+
+    public function inspect(): RubyClassInterface
+    {
+        return String_::createBy(sprintf(
+            '{%s}',
+            implode(
+                ', ',
+                array_map(
+                    static fn (string $key, RubyClassInterface $value) => sprintf(
+                        ':%s=>%s',
+                        $key,
+                        $value->inspect(),
+                    ),
+                    array_keys($this->hash),
+                    array_values($this->hash),
+                )
+            ),
+        ));
     }
 }
