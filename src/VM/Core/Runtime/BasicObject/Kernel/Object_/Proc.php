@@ -4,21 +4,34 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_;
 
+use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
+use RubyVM\VM\Core\Runtime\Attribute\WithContext;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
+use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceInterface;
 
+#[BindAliasAs('Proc')]
 class Proc extends Object_ implements RubyClassInterface
 {
-    public function __construct(private readonly InstructionSequenceInterface $instructionSequence) {}
+    public function __construct(private ?ContextInterface $procContext) {}
+
+    #[WithContext]
+    public function new(?ContextInterface $procContext): RubyClassInterface
+    {
+        $this->procContext = $procContext;
+        return $this;
+    }
 
     public function call(RubyClassInterface ...$arguments): RubyClassInterface|null
     {
+        if ($this->procContext === null) {
+            return NilClass::createBy();
+        }
         $executor = new Executor(
             kernel: $this->context()->kernel(),
             rubyClass: $this->context()->self(),
-            instructionSequence: $this->instructionSequence,
+            instructionSequence: $this->procContext->instructionSequence(),
             option: $this->context()->option(),
             parentContext: $this->context(),
         );
@@ -27,7 +40,8 @@ class Proc extends Object_ implements RubyClassInterface
             ->renewEnvironmentTable();
 
         $localTableSize = $this
-            ->instructionSequence
+            ->procContext
+            ->instructionSequence()
             ->body()
             ->info()
             ->localTableSize();

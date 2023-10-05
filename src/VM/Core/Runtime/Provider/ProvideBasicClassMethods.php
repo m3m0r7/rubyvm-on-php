@@ -88,7 +88,7 @@ trait ProvideBasicClassMethods
     #[WithContext]
     public function lambda(ContextInterface $context): RubyClassInterface
     {
-        return (new Proc($context->instructionSequence()))
+        return (new Proc($context))
             ->setRuntimeContext($this->context())
             ->setUserlandHeapSpace(new UserlandHeapSpace());
     }
