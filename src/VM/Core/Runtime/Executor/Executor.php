@@ -41,6 +41,9 @@ class Executor implements ExecutorInterface
         private readonly ?ContextInterface $parentContext = null,
     ) {
         $this->context = $this->createContext($this->parentContext);
+        if (!$this->rubyClass->hasRuntimeContext()) {
+            $this->rubyClass->setRuntimeContext($this->context);
+        }
     }
 
     public function context(): ContextInterface

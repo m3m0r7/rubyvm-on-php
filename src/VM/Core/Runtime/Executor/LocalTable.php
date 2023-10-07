@@ -7,6 +7,8 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
+use RubyVM\VM\Core\Runtime\Option;
+use RubyVM\VM\Core\YARV\Criterion\Entry\Variable;
 
 trait LocalTable
 {
@@ -69,12 +71,29 @@ trait LocalTable
                 ->setLead($index, false);
         }
 
+        $localTableSize = $this->context
+            ->instructionSequence()
+            ->body()
+            ->info()
+            ->localTableSize();
+
+        $variables = $this->context
+            ->instructionSequence()
+            ->body()
+            ->info()
+            ->variables();
+
+        $zeroStartedSlotIndex = $localTableSize - ($slotIndex - Option::VM_ENV_DATA_SIZE) - 1;
+        $targetVariable = $variables[$zeroStartedSlotIndex];
+
+        assert($targetVariable instanceof Variable);
+
         $this->targetContextByLevel($level)
             ->environmentTable()
             ->set(
                 $index,
                 $operand,
-            );
+            )->bindName($slotIndex, (string) $targetVariable->id->object);
     }
 
     private function targetContextByLevel(int $level = 0): ContextInterface

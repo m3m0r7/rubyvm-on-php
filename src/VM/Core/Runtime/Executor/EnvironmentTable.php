@@ -19,6 +19,11 @@ class EnvironmentTable extends AbstractEntries implements \Stringable
      */
     protected array $leads = [];
 
+    /**
+     * @var array<int, string>
+     */
+    protected array $boundNames = [];
+
     public function verify(mixed $value): bool
     {
         return $value instanceof RubyClassInterface || $value instanceof ContextInterface;
@@ -54,6 +59,13 @@ class EnvironmentTable extends AbstractEntries implements \Stringable
         return $this;
     }
 
+    public function bindName(int $index, string $name): self
+    {
+        $this->boundNames[$index] = $name;
+
+        return $this;
+    }
+
     public function setWithLead(mixed $index, mixed $value, bool $isLead = false): self
     {
         return $this
@@ -81,5 +93,17 @@ class EnvironmentTable extends AbstractEntries implements \Stringable
         return self::getEntriesAsString(
             $this->items ?? [],
         );
+    }
+
+    public function findBy(string $varName): RubyClassInterface|null
+    {
+        $pos = array_search($varName, $this->boundNames, true);
+        if ($pos === false) {
+            return null;
+        }
+
+        return $this->has($pos)
+            ? $this[$pos]
+            : null;
     }
 }

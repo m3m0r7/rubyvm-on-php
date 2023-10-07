@@ -27,6 +27,11 @@ trait ShouldBeRubyClass
         return $this;
     }
 
+    public function hasRuntimeContext(): bool
+    {
+        return $this->context !== null;
+    }
+
     public function context(): ContextInterface
     {
         // @phpstan-ignore-next-line

@@ -12,6 +12,8 @@ use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
 
 interface RubyClassInterface extends RubyClassImplementationInterface, \Stringable
 {
+    public function hasRuntimeContext(): bool;
+
     public function setRuntimeContext(?ContextInterface $context): RubyClassInterface;
 
     public function context(): ContextInterface;
