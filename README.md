@@ -21,6 +21,19 @@ _Notice: I tested Ruby version 3.2 only_
 
 - PHP 8.2+
 
+## Currently status
+
+- Implemented general syntax (define local variables, global variables, classes, methods, booleans, hashes, arrays and so on)
+- Implemented arithmetics (`+`, `-`, `*`, `/`), bit calculating (`|`, `&`, `<<`, `>>`), some operator (`**`, `%`) and available overwrite it
+- Implemented the block syntax (`[].each do | var | ... end`) and non block syntax (`[].push`)
+- Implemented keyword arguments when calling a method (`keyword_argument(a: "Hello", c: "!", b: "World")`)
+- Implemented variadic arguments when using an array and calling a method (`[*var1, *var2]`, `keyword_argument(a, b, *c)`)
+- Implemented partially ruby methods (`to_s`, `to_i`, `[].push`, `foobar.nil?`)
+- Implemented case-when syntax
+- Implemented regexp syntax (`p /Hello/ =~ "Hello World"`)
+- Implemented raise/rescue
+- and anymore (see the tests' directory)
+
 ## Quick start
 
 1. Install via composer as following
