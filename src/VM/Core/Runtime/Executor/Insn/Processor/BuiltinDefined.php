@@ -33,17 +33,11 @@ class BuiltinDefined implements OperationProcessorInterface
     public function process(): ProcessedStatus
     {
         $opType = $this->operandAsNumber();
-        $obj = $this->operandAsRubyClass();
+        $name = (string) $this->operandAsRubyClass();
         $pushval = $this->operandAsRubyClass();
 
         // NOTE: We are no needed a stacked val
         $this->stackAsRubyClass();
-
-        $name = (string) $this
-            ->context
-            ->kernel()
-            ->findId($obj->valueOf())
-            ->object;
 
         $result = NilClass::createBy();
 

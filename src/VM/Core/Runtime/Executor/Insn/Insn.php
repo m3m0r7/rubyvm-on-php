@@ -413,19 +413,4 @@ enum Insn: int
     case TRACE_PUTOBJECT_INT2FIX_0_ = 200;
 
     case TRACE_PUTOBJECT_INT2FIX_1_ = 201;
-
-    public function operandSize(): int
-    {
-        // TODO: Mapping INSNs operand size
-        return match ($this) {
-            Insn::DEFINEMETHOD,
-            Insn::SETINSTANCEVARIABLE,
-            Insn::GETINSTANCEVARIABLE,
-            Insn::SEND => 2,
-            Insn::DEFINECLASS, Insn::DEFINED => 3,
-            Insn::SETLOCAL, Insn::GETLOCAL => 2,
-            Insn::OPT_CASE_DISPATCH, Insn::GETBLOCKPARAMPROXY, Insn::GETBLOCKPARAM => 2,
-            default => 1,
-        };
-    }
 }

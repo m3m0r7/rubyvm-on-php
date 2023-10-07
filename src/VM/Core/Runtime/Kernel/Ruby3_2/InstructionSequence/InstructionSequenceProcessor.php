@@ -35,7 +35,6 @@ use RubyVM\VM\Core\YARV\Criterion\Offset\Offset as OffsetCriterion;
 use RubyVM\VM\Core\YARV\Essential\ID;
 use RubyVM\VM\Core\YARV\Essential\Symbol\OffsetSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
-use RubyVM\VM\Exception\ExecutorExeption;
 use RubyVM\VM\Exception\InstructionSequenceProcessorException;
 
 class InstructionSequenceProcessor implements InstructionSequenceProcessorInterface
@@ -266,7 +265,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         $reader = $this->kernel->stream()->duplication();
 
         $entries = new OperationEntries();
-        $operationMap = implode('', $this->insnOperations());
+        $operationMap = implode('', $this->insnOperationsOperands());
         $callInfoEntryIndex = 0;
         $reader->pos($bytecodeOffset);
 
@@ -278,9 +277,13 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                 )
             );
 
-            $types = $operationMap[$this->insnOperationOffsets()[$insnValue]] ?? null;
-            if ($types === null) {
-                throw new ExecutorExeption(sprintf('Unknown INSN type: 0x%02x', $insn->name));
+            // NOTE: Here is getting operand types for currently opcode
+            $offset = $this->insnOperationOperandsOffsets()[$insnValue];
+            $types = '';
+
+            // Read to null byte
+            for ($i = $offset; $i < strlen($operationMap) && $operationMap[$i] !== "\0"; ++$i) {
+                $types .= $operationMap[$i];
             }
 
             ++$codeIndex;
@@ -317,44 +320,22 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
                         ),
 
                         InsnType::TS_IC => new Operand(
-                            $this->processInlineCache(
+                            operand: $this->processInlineCache(
                                 $reader->smallValue()
                             )
                         ),
-                        InsnType::TS_ID => new Operand(
-                            $this->kernel->findId(
-                                $reader->smallValue(),
-                            ),
-                        ),
-
-                        InsnType::TS_CDHASH => new Operand(
-                            $this->kernel->findId(
+                        InsnType::TS_ID, InsnType::TS_CDHASH => new Operand(
+                            operand: $this->kernel->findId(
                                 $reader->smallValue(),
                             ),
                         ),
 
                         // Not implemented yet
-                        InsnType::TS_VARIABLE,
-                        InsnType::TS_IVC,
-                        InsnType::TS_ISE,
-                        InsnType::TS_ISEQ,
-                        InsnType::TS_FUNCPTR,
-                        InsnType::TS_BUILTIN,
-                        InsnType::TS_ICVARC => throw new ExecutorExeption(sprintf('The OperandType#%s is not supported', $operandType->name)),
+                        default => new Operand(
+                            operand: Integer_::createBy($reader->smallValue()),
+                        ),
                     },
                 );
-            }
-
-            // NOTE: In this statement, change next operand to be instruction sequence number.
-            // however originally RubyVM is not needed here because it is implemented by using only integer types but RubyVM on PHP is written in the OOP.
-            // So RubyVM on PHP needs explicitly changing operand.
-            for ($i = 0; $i < ($insn->operandSize() - 1); ++$i) {
-                $entries->append(
-                    new Operand(
-                        operand: Integer_::createBy($reader->smallValue()),
-                    )
-                );
-                ++$codeIndex;
             }
         }
 
@@ -507,7 +488,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
     /**
      * @return string[]
      */
-    private function insnOperations(): array
+    private function insnOperationsOperands(): array
     {
         return [
             '',     "\0", 'LN',   "\0", 'LN',   "\0", 'LN',   "\0", 'LN',   "\0",
@@ -557,7 +538,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
     /**
      * @return int[]
      */
-    private function insnOperationOffsets(): array
+    private function insnOperationOperandsOffsets(): array
     {
         return [
             0,   1,   4,   7,  10,  13,  16,  19,  21,  24,  27,  30,
