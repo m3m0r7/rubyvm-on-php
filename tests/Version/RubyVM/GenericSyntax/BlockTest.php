@@ -36,7 +36,7 @@ class BlockTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("1st Hello World!\n2nd Hello World!\n", $rubyVMManager->stdOut->readAll());
@@ -63,7 +63,7 @@ class BlockTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("1st Hello World!\n2nd Hello World!\n", $rubyVMManager->stdOut->readAll());
@@ -92,7 +92,7 @@ class BlockTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("1st Hello World! with outside\n2nd Hello World! with outside\n", $rubyVMManager->stdOut->readAll());
@@ -124,7 +124,7 @@ class BlockTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("1st Hello World! with outside ! :)\n2nd Hello World! with outside ! :)\n", $rubyVMManager->stdOut->readAll());

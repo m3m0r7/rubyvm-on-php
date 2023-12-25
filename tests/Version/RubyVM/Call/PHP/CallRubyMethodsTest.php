@@ -27,7 +27,7 @@ class CallRubyMethodsTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $executed = $executor->execute();
         $this->assertSame(ExecutedStatus::SUCCESS, $executed->executedStatus);
@@ -64,7 +64,7 @@ class CallRubyMethodsTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $executed = $executor->execute();
         $this->assertSame(ExecutedStatus::SUCCESS, $executed->executedStatus);

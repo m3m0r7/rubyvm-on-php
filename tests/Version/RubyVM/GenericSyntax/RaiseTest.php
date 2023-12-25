@@ -26,7 +26,7 @@ class RaiseTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $result = $executor->execute();
         $this->assertSame(ExecutedStatus::EXIT, $result->executedStatus);

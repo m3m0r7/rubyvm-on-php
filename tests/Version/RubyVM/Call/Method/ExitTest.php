@@ -26,7 +26,7 @@ class ExitTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $executor->execute();
     }
