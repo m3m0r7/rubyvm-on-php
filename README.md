@@ -2,11 +2,11 @@
 
 
 The RubyVM on PHP is implementation RubyVM written in PHP 100%.
-Completely documentation not exists how to implement RubyVM and I was referred [Ruby source code](https://github.com/ruby/ruby) when contributing this project.
+Completely documentation not exists how to implement RubyVM, and I was referred [Ruby source code](https://github.com/ruby/ruby) when contributing this project.
 
 _Notice: This project is very ultra super hyper maximum experimental implementation_
 
-_Notice: I tested Ruby version 3.2 only_
+_Notice: I tested Ruby version 3.2 and 3.3 only_
 
 ### See also
 - https://github.com/ruby/ruby/blob/master/compile.c

@@ -4,6 +4,9 @@ on: [push]
 jobs:
   lint:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby-version: ['3.2', '3.3.0-rc1']
     steps:
       - uses: actions/checkout@v3
       - name: Setup PHP
@@ -11,9 +14,9 @@ jobs:
         with:
           php-version: '8.2'
       - name: Setup Ruby
-        uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+        uses: ruby/setup-ruby@v1.162.0
         with:
-          ruby-version: '3.2'
+          ruby-version: ${{ matrix.ruby-version }}
       - name: composer cache
         uses: actions/cache@v3
         with:
@@ -32,6 +35,9 @@ jobs:
           ./composer.phar lint:fix
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby-version: ['3.2', '3.3.0-rc1']
     steps:
       - uses: actions/checkout@v3
       - name: Setup PHP
@@ -39,9 +45,9 @@ jobs:
         with:
           php-version: '8.2'
       - name: Setup Ruby
-        uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+        uses: ruby/setup-ruby@v1.162.0
         with:
-          ruby-version: '3.2'
+          ruby-version: ${{ matrix.ruby-version }}
       - name: composer cache
         uses: actions/cache@v3
         with:

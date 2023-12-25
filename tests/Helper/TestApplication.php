@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\RubyVM\Helper;
 
 use PHPUnit\Framework\TestCase;
+use RubyVM\VM\Core\YARV\RubyVersion;
 use RubyVM\VM\Stream\StreamHandler;
 
 /**
@@ -21,6 +22,8 @@ class TestApplication extends TestCase
             throw new \RuntimeException('tmpfile did not created');
         }
 
+        [$major, $minor, $patch] = sscanf(exec("{$binaryPath} -v"), 'ruby %d.%d.%d');
+
         fwrite($handle, $code);
         $uri = stream_get_meta_data($handle)['uri'];
 
@@ -32,8 +35,8 @@ class TestApplication extends TestCase
         fwrite(
             $compilerHandle,
             <<<_
-        puts RubyVM::InstructionSequence.compile_file("{$uri}").to_binary("{$extraData}")
-        _
+            puts RubyVM::InstructionSequence.compile_file("{$uri}").to_binary("{$extraData}")
+            _
         );
         $compilerRubyUri = stream_get_meta_data($compilerHandle)['uri'];
 
@@ -56,6 +59,10 @@ class TestApplication extends TestCase
                 stdIn: $stdIn,
                 stdErr: $stdErr,
             ),
+        );
+
+        $rubyVM->setDefaultVersion(
+            RubyVersion::from("{$major}.{$minor}"),
         );
 
         return new RubyVMManager(

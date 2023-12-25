@@ -15,7 +15,8 @@ use RubyVM\VM\Exception\RubyVMException;
 
 class RubyVM implements RubyVMInterface
 {
-    final public const DEFAULT_VERSION = RubyVersion::VERSION_3_2;
+    final public const DEFAULT_VERSION = RubyVersion::VERSION_3_3;
+    protected RubyVersion $specifiedDefaultVersion = self::DEFAULT_VERSION;
 
     /**
      * @var array<string, Runtime>
@@ -28,6 +29,11 @@ class RubyVM implements RubyVMInterface
         $this->register(
             rubyVersion: RubyVersion::VERSION_3_2,
             kernelClass: \RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Kernel::class,
+        );
+
+        $this->register(
+            rubyVersion: RubyVersion::VERSION_3_3,
+            kernelClass: \RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\Kernel::class,
         );
     }
 
@@ -64,7 +70,7 @@ class RubyVM implements RubyVMInterface
             'Start to disassemble instruction sequences',
         );
 
-        $runtime = $this->runtime($useVersion ?? static::DEFAULT_VERSION);
+        $runtime = $this->runtime($useVersion ?? $this->specifiedDefaultVersion);
 
         $kernel = $runtime->kernel()->setup();
 
@@ -111,6 +117,12 @@ class RubyVM implements RubyVMInterface
         );
 
         return $runtime;
+    }
+
+    public function setDefaultVersion(RubyVersion $rubyVersion): self
+    {
+        $this->specifiedDefaultVersion = $rubyVersion;
+        return $this;
     }
 
     public function option(): Option
