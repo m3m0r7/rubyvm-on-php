@@ -15,9 +15,9 @@ use RubyVM\VM\Stream\StreamHandler;
  */
 class TestApplication extends TestCase
 {
-    protected int $major = -1;
-    protected int $minor = -1;
-    protected int $patch = -1;
+    protected ?int $major = null;
+    protected ?int $minor = null;
+    protected ?int $patch = null;
 
     protected function createRubyVMFromCode(string $code, string $extraData = '', string $binaryPath = 'ruby'): RubyVMManager
     {
@@ -26,13 +26,17 @@ class TestApplication extends TestCase
             throw new \RuntimeException('tmpfile did not created');
         }
 
-        if ($this->major === -1) {
+        if ($this->major === null) {
             $version = sscanf(exec("{$binaryPath} -v") ?: 'ruby 3.2.0', 'ruby %d.%d.%d');
             if (!is_array($version)) {
                 throw new \RuntimeException('The version is incorrect6');
             }
 
             [$this->major, $this->minor, $this->patch] = $version;
+
+            $this->major ??= 3;
+            $this->minor ??= 2;
+            $this->patch ??= 0;
         }
 
         fwrite($handle, $code);
