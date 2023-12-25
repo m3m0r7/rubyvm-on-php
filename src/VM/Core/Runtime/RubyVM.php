@@ -27,13 +27,13 @@ class RubyVM implements RubyVMInterface
     {
         // Register default kernels
         $this->register(
-            rubyVersion: RubyVersion::VERSION_3_2,
-            kernelClass: \RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Kernel::class,
+            rubyVersion: RubyVersion::VERSION_3_3,
+            kernelClass: \RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\Kernel::class,
         );
 
         $this->register(
-            rubyVersion: RubyVersion::VERSION_3_3,
-            kernelClass: \RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\Kernel::class,
+            rubyVersion: RubyVersion::VERSION_3_2,
+            kernelClass: \RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Kernel::class,
         );
     }
 
