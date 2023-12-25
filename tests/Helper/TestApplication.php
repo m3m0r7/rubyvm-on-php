@@ -26,7 +26,7 @@ class TestApplication extends TestCase
             throw new \RuntimeException('tmpfile did not created');
         }
 
-        if ($this->major !== -1) {
+        if ($this->major === -1) {
             $version = sscanf(exec("{$binaryPath} -v") ?: 'ruby 3.2.0', 'ruby %d.%d.%d');
             if (!is_array($version)) {
                 throw new \RuntimeException('The version is incorrect6');
