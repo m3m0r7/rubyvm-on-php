@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Operation\Processor;
 
 use RubyVM\VM\Core\Criterion\Entry\AbstractEntries;
-use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Executor\Insn\InsnInterface;
 use RubyVM\VM\Exception\OperationProcessorException;
 
 class OperationProcessorEntries extends AbstractEntries
@@ -17,12 +17,12 @@ class OperationProcessorEntries extends AbstractEntries
 
     public function verifyOffset(mixed $key): bool
     {
-        return $key instanceof Insn;
+        return $key instanceof InsnInterface;
     }
 
     public function get(mixed $index): OperationProcessorInterface
     {
-        if (!$index instanceof Insn) {
+        if (!$index instanceof InsnInterface) {
             throw new OperationProcessorException('The passed index is not instantiated by an Insn enum - you should to specify parameter with instantiated by Insn enum');
         }
 

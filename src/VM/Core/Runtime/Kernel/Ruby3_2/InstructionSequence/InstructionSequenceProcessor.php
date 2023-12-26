@@ -8,7 +8,6 @@ use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Offset;
 use RubyVM\VM\Core\Runtime\ClassCreator;
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
-use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Insn\InsnType;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operation;

@@ -252,11 +252,13 @@ $ ./vendor/bin/phpunit tests/
 
 1) Build your ruby environment from source code with `-DIBF_ISEQ_DEBUG` flag
 
+See: https://docs.ruby-lang.org/en/master/contributing/building_ruby_md.html
+
 ```
 $ git clone git@github.com:ruby/ruby.git
 $ mkdir build && cd build
 $ ../configure cppflags="-DIBF_ISEQ_DEBUG=1"
-$ make -j16
+$ make -j$(nproc)
 ```
 
 2) When you built ruby environment, you will got `vm.inc` file which is wrote how to execute each INSN commands

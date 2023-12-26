@@ -14,7 +14,7 @@ use RubyVM\VM\Core\Runtime\Executor\Context\NullContext;
 use RubyVM\VM\Core\Runtime\Executor\Context\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Executor\Context\ProgramCounter;
 use RubyVM\VM\Core\Runtime\Executor\Context\VMStack;
-use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Executor\Insn\InsnInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operation;
 use RubyVM\VM\Core\Runtime\Main;
 use RubyVM\VM\Core\Runtime\Option;
@@ -199,7 +199,7 @@ class Executor implements ExecutorInterface
             );
 
             $processor = $this
-                ->option
+                ->kernel
                 ->operationProcessorEntries()
                 ->get($operator->insn);
 

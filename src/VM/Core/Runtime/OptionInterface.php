@@ -21,7 +21,5 @@ interface OptionInterface
 
     public function stdErr(): StreamHandlerInterface;
 
-    public function operationProcessorEntries(): OperationProcessorEntries;
-
     public function debugger(): DebuggerInterface;
 }

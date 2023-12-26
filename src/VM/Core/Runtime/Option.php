@@ -8,7 +8,6 @@ use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Runtime\Essential\MainInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\DebuggerInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\DefaultExecutorDebugger;
-use RubyVM\VM\Core\Runtime\Executor\Operation\DefaultOperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
 use RubyVM\VM\Stream\BinaryStreamReaderInterface;
 use RubyVM\VM\Stream\StreamHandler;
@@ -43,7 +42,6 @@ class Option implements OptionInterface
         private ?StreamHandlerInterface $stdIn = null,
         private ?StreamHandlerInterface $stdErr = null,
         private ?DebuggerInterface $debugger = null,
-        private ?OperationProcessorEntries $operationProcessorEntries = null,
     ) {}
 
     public function entryPointIndex(): int
@@ -69,11 +67,6 @@ class Option implements OptionInterface
     public function stdErr(): StreamHandlerInterface
     {
         return $this->stdErr ??= new StreamHandler(STDERR);
-    }
-
-    public function operationProcessorEntries(): OperationProcessorEntries
-    {
-        return $this->operationProcessorEntries ??= new DefaultOperationProcessorEntries();
     }
 
     public function debugger(): DebuggerInterface

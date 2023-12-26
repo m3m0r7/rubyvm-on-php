@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime\Executor\Insn\Processor;
 
 use RubyVM\VM\Core\Runtime\Executor\ArgumentTransformable;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
-use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Executor\Insn\InsnInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
 use RubyVM\VM\Core\Runtime\Executor\ProcessedStatus;
@@ -20,11 +20,11 @@ class BuiltinOptSendWithoutBlock implements OperationProcessorInterface
     use ArgumentTransformable;
     use Sender;
 
-    private Insn $insn;
+    private InsnInterface $insn;
 
     private ContextInterface $context;
 
-    public function prepare(Insn $insn, ContextInterface $context): void
+    public function prepare(InsnInterface $insn, ContextInterface $context): void
     {
         $this->insn = $insn;
         $this->context = $context;

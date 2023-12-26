@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Executor\Operation;
+namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\InstructionSequence;
 
-use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinAdjuststack;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinAnytostring;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinBranchif;
@@ -207,9 +206,9 @@ use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinTraceSwap;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinTraceThrow;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinTraceTopn;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinTraceToregexp;
-use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries as BaseOperationProcessorEntries;
 
-class DefaultOperationProcessorEntries extends OperationProcessorEntries
+class OperationProcessorEntries extends BaseOperationProcessorEntries
 {
     public function __construct(array $items = [])
     {
@@ -270,8 +269,6 @@ class DefaultOperationProcessorEntries extends OperationProcessorEntries
         $this->set(Insn::OPT_STR_FREEZE, new BuiltinOptStrFreeze());
         $this->set(Insn::OPT_NIL_P, new BuiltinOptNilP());
         $this->set(Insn::OPT_STR_UMINUS, new BuiltinOptStrUminus());
-        $this->set(Insn::OPT_NEWARRAY_MAX, new BuiltinOptNewarrayMax());
-        $this->set(Insn::OPT_NEWARRAY_MIN, new BuiltinOptNewarrayMin());
         $this->set(Insn::INVOKESUPER, new BuiltinInvokesuper());
         $this->set(Insn::INVOKEBLOCK, new BuiltinInvokeblock());
         $this->set(Insn::LEAVE, new BuiltinLeave());
@@ -371,8 +368,6 @@ class DefaultOperationProcessorEntries extends OperationProcessorEntries
         $this->set(Insn::TRACE_OPT_STR_FREEZE, new BuiltinTraceOptStrFreeze());
         $this->set(Insn::TRACE_OPT_NIL_P, new BuiltinTraceOptNilP());
         $this->set(Insn::TRACE_OPT_STR_UMINUS, new BuiltinTraceOptStrUminus());
-        $this->set(Insn::TRACE_OPT_NEWARRAY_MAX, new BuiltinTraceOptNewarrayMax());
-        $this->set(Insn::TRACE_OPT_NEWARRAY_MIN, new BuiltinTraceOptNewarrayMin());
         $this->set(Insn::TRACE_INVOKESUPER, new BuiltinTraceInvokesuper());
         $this->set(Insn::TRACE_INVOKEBLOCK, new BuiltinTraceInvokeblock());
         $this->set(Insn::TRACE_LEAVE, new BuiltinTraceLeave());

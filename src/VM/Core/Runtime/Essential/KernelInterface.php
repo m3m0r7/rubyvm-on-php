@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Essential;
 
+use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offsets;
@@ -45,4 +46,6 @@ interface KernelInterface
     public function instructionSequenceListOffset(): int;
 
     public function instructionSequenceList(): Offsets;
+
+    public function operationProcessorEntries(): OperationProcessorEntries;
 }

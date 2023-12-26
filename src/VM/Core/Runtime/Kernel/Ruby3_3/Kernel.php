@@ -20,6 +20,7 @@ namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_3;
 
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyVMInterface;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\HeapSpace\DefaultInstanceHeapSpace;
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\InstructionSequence\InstructionSequenceProcessor;
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\Loader\ArraySymbolLoader;
@@ -74,7 +75,7 @@ class Kernel implements KernelInterface
 
     public readonly int $endian;
 
-    public readonly int $short;
+    public readonly int $wordSize;
 
     public readonly Offsets $instructionSequenceList;
 
@@ -130,7 +131,7 @@ class Kernel implements KernelInterface
         $this->globalObjectListOffset = $this->stream()->readAsUnsignedLong();
         $this->endian = $this->stream()->readAsShort();
         $this->wordSize = $this->stream()->readAsShort();
-        $this->rubyPlatform = $this->stream()->readAsString();
+        $this->rubyPlatform = 'unknown-unknown';
 
         $this->vm->option()->logger->info(
             sprintf('Loaded an instruction sequence header (%d bytes)', $this->stream()->pos() - $pos),
@@ -385,5 +386,11 @@ class Kernel implements KernelInterface
     public function instructionSequenceList(): Offsets
     {
         return $this->instructionSequenceList;
+    }
+
+    public function operationProcessorEntries(): OperationProcessorEntries
+    {
+        static $entries;
+        return $entries ??= new \RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\InstructionSequence\OperationProcessorEntries();
     }
 }
