@@ -41,7 +41,7 @@ class String_ extends Comparable implements RubyClassInterface, SymbolizeInterfa
     }
 
     #[BindAliasAs('empty?')]
-    public function isEmpty(): TrueClass|FalseClass
+    public function isEmpty(): FalseClass|TrueClass
     {
         return $this->valueOf() === ''
             ? TrueClass::createBy()
@@ -49,7 +49,7 @@ class String_ extends Comparable implements RubyClassInterface, SymbolizeInterfa
     }
 
     #[BindAliasAs('include?')]
-    public function isIncluding(String_ $string): TrueClass|FalseClass
+    public function isIncluding(String_ $string): FalseClass|TrueClass
     {
         return str_contains((string) $this->valueOf(), (string) $string->valueOf())
             ? TrueClass::createBy()

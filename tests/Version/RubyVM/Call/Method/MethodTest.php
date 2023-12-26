@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\RubyVM\Version\RubyVM\Call\Method;
 
 use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
-use RubyVM\VM\Core\YARV\RubyVersion;
 use Tests\RubyVM\Helper\TestApplication;
 
 /**
@@ -25,7 +24,7 @@ class MethodTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("HelloWorld!\n", $rubyVMManager->stdOut->readAll());
@@ -41,7 +40,7 @@ class MethodTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $version = PHP_VERSION;
@@ -62,7 +61,7 @@ class MethodTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("7\n", $rubyVMManager->stdOut->readAll());
@@ -78,7 +77,7 @@ class MethodTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("32\n", $rubyVMManager->stdOut->readAll());
@@ -94,7 +93,7 @@ class MethodTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("1\n", $rubyVMManager->stdOut->readAll());

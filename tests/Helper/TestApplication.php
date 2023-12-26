@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\RubyVM\Helper;
 
 use PHPUnit\Framework\TestCase;
+use RubyVM\VM\Core\YARV\RubyVersion;
 use RubyVM\VM\Stream\StreamHandler;
 
 /**
@@ -14,11 +15,30 @@ use RubyVM\VM\Stream\StreamHandler;
  */
 class TestApplication extends TestCase
 {
+    protected ?int $major = null;
+
+    protected ?int $minor = null;
+
+    protected ?int $patch = null;
+
     protected function createRubyVMFromCode(string $code, string $extraData = '', string $binaryPath = 'ruby'): RubyVMManager
     {
         $handle = tmpfile();
         if ($handle === false) {
             throw new \RuntimeException('tmpfile did not created');
+        }
+
+        if ($this->major === null) {
+            $version = sscanf(exec("{$binaryPath} -v") ?: 'ruby 3.2.0', 'ruby %d.%d.%d');
+            if (!is_array($version)) {
+                throw new \RuntimeException('The version is incorrect6');
+            }
+
+            [$this->major, $this->minor, $this->patch] = $version;
+
+            $this->major ??= 3;
+            $this->minor ??= 2;
+            $this->patch ??= 0;
         }
 
         fwrite($handle, $code);
@@ -32,8 +52,8 @@ class TestApplication extends TestCase
         fwrite(
             $compilerHandle,
             <<<_
-        puts RubyVM::InstructionSequence.compile_file("{$uri}").to_binary("{$extraData}")
-        _
+            puts RubyVM::InstructionSequence.compile_file("{$uri}").to_binary("{$extraData}")
+            _
         );
         $compilerRubyUri = stream_get_meta_data($compilerHandle)['uri'];
 
@@ -56,6 +76,10 @@ class TestApplication extends TestCase
                 stdIn: $stdIn,
                 stdErr: $stdErr,
             ),
+        );
+
+        $rubyVM->setDefaultVersion(
+            RubyVersion::from("{$this->major}.{$this->minor}"),
         );
 
         return new RubyVMManager(

@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Executor\Operation;
+namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\InstructionSequence;
 
-use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinAdjuststack;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinAnytostring;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinBranchif;
@@ -207,9 +206,9 @@ use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinTraceSwap;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinTraceThrow;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinTraceTopn;
 use RubyVM\VM\Core\Runtime\Executor\Insn\Processor\BuiltinTraceToregexp;
-use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries as BaseOperationProcessorEntries;
 
-class DefaultOperationProcessorEntries extends OperationProcessorEntries
+class OperationProcessorEntries extends BaseOperationProcessorEntries
 {
     public function __construct(array $items = [])
     {

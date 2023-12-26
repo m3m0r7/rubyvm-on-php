@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Executor\Debugger;
 
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
-use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Executor\Insn\InsnInterface;
 
 class StepByStepDebugger extends DefaultExecutorDebugger implements DebuggerInterface
 {
-    private function processBreakPoint(Insn $insn, ContextInterface $prevContext, ContextInterface $nextContext): void
+    private function processBreakPoint(InsnInterface $insn, ContextInterface $prevContext, ContextInterface $nextContext): void
     {
         $this->showExecutedOperations();
 
         printf(
             "Current INSN: %s(0x%02x)\n",
-            strtolower($insn->name),
-            $insn->value,
+            strtolower($insn->name()),
+            $insn->value(),
         );
         printf(
             "Previous Stacks: %s#%d\n",
@@ -61,7 +61,7 @@ class StepByStepDebugger extends DefaultExecutorDebugger implements DebuggerInte
         $this->context = $context->createSnapshot();
     }
 
-    public function process(Insn $insn, ContextInterface $context): void
+    public function process(InsnInterface $insn, ContextInterface $context): void
     {
         $this->processBreakPoint(
             $insn,

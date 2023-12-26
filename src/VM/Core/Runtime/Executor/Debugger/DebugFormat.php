@@ -28,7 +28,7 @@ trait DebugFormat
             if ($item instanceof RubyClassInterface) {
                 $string .= "({$item})";
             } elseif ($item instanceof Operation) {
-                $string .= "({$item->insn->name})";
+                $string .= "({$item->insn->name()})";
             } elseif ($item instanceof Operand && $item->operand instanceof RubyClassInterface) {
                 $string = ClassHelper::nameBy($item->operand);
 

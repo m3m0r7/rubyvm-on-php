@@ -50,7 +50,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         );
     }
 
-    public function readAsLongLong(): int|float
+    public function readAsLongLong(): float|int
     {
         $value = $this->readAsUnsignedLongLong();
 
@@ -148,7 +148,7 @@ class BinaryStreamReader implements BinaryStreamReaderInterface
         return $this->streamHandler->read($bytes);
     }
 
-    private function readWithEndian(string $littleEndian, string $bigEndian, SizeOf $bytes): int|float
+    private function readWithEndian(string $littleEndian, string $bigEndian, SizeOf $bytes): float|int
     {
         $read = unpack(
             Endian::LITTLE_ENDIAN === $this->endian

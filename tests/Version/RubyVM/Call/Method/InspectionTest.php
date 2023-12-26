@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\RubyVM\Version\RubyVM\Call\Method;
 
 use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
-use RubyVM\VM\Core\YARV\RubyVersion;
 use Tests\RubyVM\Helper\TestApplication;
 
 /**
@@ -25,7 +24,7 @@ class InspectionTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("[5, 4, 3, 2, 1]\n", $rubyVMManager->stdOut->readAll());
@@ -41,7 +40,7 @@ class InspectionTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("\"Hello World!\"\n", $rubyVMManager->stdOut->readAll());
@@ -57,7 +56,7 @@ class InspectionTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("1234\n", $rubyVMManager->stdOut->readAll());
@@ -73,7 +72,7 @@ class InspectionTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("1.5\n", $rubyVMManager->stdOut->readAll());
@@ -90,7 +89,7 @@ class InspectionTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("true\nfalse\n", $rubyVMManager->stdOut->readAll());
@@ -106,7 +105,7 @@ class InspectionTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("nil\n", $rubyVMManager->stdOut->readAll());
@@ -123,7 +122,7 @@ class InspectionTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame("1..5\n1...5\n", $rubyVMManager->stdOut->readAll());

@@ -32,7 +32,7 @@ class Array_ extends Enumerable implements RubyClassInterface, SymbolizeInterfac
     /**
      * @param RubyClassInterface|SymbolInterface[] $values
      */
-    public function new(RubyClassInterface|array $values = null): self
+    public function new(array|RubyClassInterface $values = null): self
     {
         $this->symbol = new ArraySymbol(
             $values instanceof RubyClassInterface

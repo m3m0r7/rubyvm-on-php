@@ -8,7 +8,7 @@ use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\FalseClass;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\TrueClass;
 use RubyVM\VM\Core\Runtime\CheckMatchType;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
-use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Executor\Insn\InsnInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
@@ -18,11 +18,11 @@ use RubyVM\VM\Exception\OperationProcessorException;
 class BuiltinCheckmatch implements OperationProcessorInterface
 {
     use OperandHelper;
-    private Insn $insn;
+    private InsnInterface $insn;
 
     private ContextInterface $context;
 
-    public function prepare(Insn $insn, ContextInterface $context): void
+    public function prepare(InsnInterface $insn, ContextInterface $context): void
     {
         $this->insn = $insn;
         $this->context = $context;
@@ -41,7 +41,7 @@ class BuiltinCheckmatch implements OperationProcessorInterface
 
         // TODO: We will implement other types
         if ($type->valueOf() !== CheckMatchType::RESCUE->value) {
-            throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor with %d type is not implemented yet', strtolower($this->insn->name), $this->insn->value, $type->valueOf()));
+            throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor with %d type is not implemented yet', strtolower($this->insn->name()), $this->insn->value(), $type->valueOf()));
         }
 
         $compareBy = $this->stackAsRubyClass();

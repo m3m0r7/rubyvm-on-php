@@ -95,7 +95,7 @@ class EnvironmentTable extends AbstractEntries implements \Stringable
         );
     }
 
-    public function findBy(string $varName): RubyClassInterface|null
+    public function findBy(string $varName): null|RubyClassInterface
     {
         $pos = array_search($varName, $this->boundNames, true);
         if ($pos === false) {

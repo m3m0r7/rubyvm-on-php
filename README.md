@@ -2,11 +2,11 @@
 
 
 The RubyVM on PHP is implementation RubyVM written in PHP 100%.
-Completely documentation not exists how to implement RubyVM and I was referred [Ruby source code](https://github.com/ruby/ruby) when contributing this project.
+Completely documentation not exists how to implement RubyVM, and I was referred [Ruby source code](https://github.com/ruby/ruby) when contributing this project.
 
 _Notice: This project is very ultra super hyper maximum experimental implementation_
 
-_Notice: I tested Ruby version 3.2 only_
+_Notice: I tested Ruby version 3.2 and 3.3 only_
 
 ### See also
 - https://github.com/ruby/ruby/blob/master/compile.c
@@ -252,11 +252,13 @@ $ ./vendor/bin/phpunit tests/
 
 1) Build your ruby environment from source code with `-DIBF_ISEQ_DEBUG` flag
 
+See: https://docs.ruby-lang.org/en/master/contributing/building_ruby_md.html
+
 ```
 $ git clone git@github.com:ruby/ruby.git
 $ mkdir build && cd build
 $ ../configure cppflags="-DIBF_ISEQ_DEBUG=1"
-$ make -j16
+$ make -j$(nproc)
 ```
 
 2) When you built ruby environment, you will got `vm.inc` file which is wrote how to execute each INSN commands

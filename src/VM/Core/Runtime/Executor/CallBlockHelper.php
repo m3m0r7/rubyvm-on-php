@@ -146,7 +146,7 @@ trait CallBlockHelper
      *
      * @return (ContextInterface|RubyClassInterface)[]
      */
-    private static function alignArguments(?CallInfoInterface $callInfo, ContextInterface $context, RubyClassInterface|ContextInterface|array ...$arguments): array
+    private static function alignArguments(?CallInfoInterface $callInfo, ContextInterface $context, array|ContextInterface|RubyClassInterface ...$arguments): array
     {
         // @phpstan-ignore-next-line
         return self::applyAlignmentArgumentsByKeywords(
@@ -166,7 +166,7 @@ trait CallBlockHelper
      *
      * @return (array<ContextInterface|RubyClassInterface>[]|ContextInterface|RubyClassInterface)[]
      */
-    private static function applySplatExpression(ContextInterface $context, RubyClassInterface|ContextInterface|array ...$arguments): array
+    private static function applySplatExpression(ContextInterface $context, array|ContextInterface|RubyClassInterface ...$arguments): array
     {
         $newArguments = [];
         foreach ($arguments as $argument) {
@@ -189,7 +189,7 @@ trait CallBlockHelper
      *
      * @return (array<ContextInterface|RubyClassInterface>[]|ContextInterface|RubyClassInterface)[]
      */
-    private static function applyAlignmentArgumentsByKeywords(?CallInfoInterface $callInfo, ContextInterface $context, RubyClassInterface|ContextInterface|array ...$arguments): array
+    private static function applyAlignmentArgumentsByKeywords(?CallInfoInterface $callInfo, ContextInterface $context, array|ContextInterface|RubyClassInterface ...$arguments): array
     {
         if (!$callInfo instanceof \RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface) {
             return $arguments;

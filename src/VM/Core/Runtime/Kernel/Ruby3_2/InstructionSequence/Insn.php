@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Executor\Insn;
+namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\InstructionSequence;
 
 use RubyVM\VM\Core\Helper\EnumIntValueFindable;
+use RubyVM\VM\Core\Runtime\Executor\Insn\InsnInterface;
 
-enum Insn: int
+enum Insn: int implements InsnInterface
 {
     use EnumIntValueFindable;
 
@@ -413,4 +414,14 @@ enum Insn: int
     case TRACE_PUTOBJECT_INT2FIX_0_ = 200;
 
     case TRACE_PUTOBJECT_INT2FIX_1_ = 201;
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function value(): int
+    {
+        return $this->value;
+    }
 }

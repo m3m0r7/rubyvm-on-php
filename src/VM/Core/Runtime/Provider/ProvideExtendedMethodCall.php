@@ -22,7 +22,7 @@ trait ProvideExtendedMethodCall
     /**
      * @param (ContextInterface|RubyClassInterface)[] $arguments
      */
-    public function __call(string $name, array $arguments): ExecutedResult|RubyClassInterface|null
+    public function __call(string $name, array $arguments): null|ExecutedResult|RubyClassInterface
     {
         // @phpstan-ignore-next-line
         if ($this->context === null) {

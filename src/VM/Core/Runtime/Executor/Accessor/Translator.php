@@ -57,7 +57,7 @@ readonly class Translator
     /**
      * @param (RubyClassInterface|SymbolInterface)[]|RubyClassInterface|SymbolInterface $objectOrClass
      */
-    public static function RubyToPHP(RubyClassInterface|SymbolInterface|array $objectOrClass): mixed
+    public static function RubyToPHP(array|RubyClassInterface|SymbolInterface $objectOrClass): mixed
     {
         if (is_array($objectOrClass)) {
             return array_map(

@@ -18,7 +18,7 @@ interface BinaryStreamReaderInterface
 
     public function readAsLong(): int;
 
-    public function readAsLongLong(): int|float;
+    public function readAsLongLong(): float|int;
 
     public function readAsDouble(): float;
 
@@ -30,7 +30,7 @@ interface BinaryStreamReaderInterface
 
     public function readAsUnsignedLong(): int;
 
-    public function readAsUnsignedLongLong(): int|float;
+    public function readAsUnsignedLongLong(): float|int;
 
     public function readAsUnsignedShort(): int;
 

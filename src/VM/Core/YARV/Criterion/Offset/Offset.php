@@ -27,7 +27,7 @@ class Offset
      *
      * @param int|SizeOf|SizeOf[] $size
      */
-    public function align(SizeOf|array|int $size): Offset
+    public function align(array|int|SizeOf $size): Offset
     {
         if (is_array($size)) {
             return $this->align(Align::alignOf($size));

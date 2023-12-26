@@ -13,5 +13,5 @@ interface StructureInterface
      */
     public static function structure(): array;
 
-    public function __get(string $name): int|string|float;
+    public function __get(string $name): float|int|string;
 }

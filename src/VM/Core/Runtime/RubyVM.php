@@ -15,7 +15,9 @@ use RubyVM\VM\Exception\RubyVMException;
 
 class RubyVM implements RubyVMInterface
 {
-    final public const DEFAULT_VERSION = RubyVersion::VERSION_3_2;
+    final public const DEFAULT_VERSION = RubyVersion::VERSION_3_3;
+
+    protected RubyVersion $specifiedDefaultVersion = self::DEFAULT_VERSION;
 
     /**
      * @var array<string, Runtime>
@@ -26,8 +28,13 @@ class RubyVM implements RubyVMInterface
     {
         // Register default kernels
         $this->register(
+            rubyVersion: RubyVersion::VERSION_3_3,
+            kernelClass: Kernel\Ruby3_3\Kernel::class,
+        );
+
+        $this->register(
             rubyVersion: RubyVersion::VERSION_3_2,
-            kernelClass: \RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Kernel::class,
+            kernelClass: Kernel\Ruby3_2\Kernel::class,
         );
     }
 
@@ -64,7 +71,7 @@ class RubyVM implements RubyVMInterface
             'Start to disassemble instruction sequences',
         );
 
-        $runtime = $this->runtime($useVersion ?? static::DEFAULT_VERSION);
+        $runtime = $this->runtime($useVersion ?? $this->specifiedDefaultVersion);
 
         $kernel = $runtime->kernel()->setup();
 
@@ -95,12 +102,7 @@ class RubyVM implements RubyVMInterface
     {
         $selectedVersion = null;
 
-        // @var Runtime|null $kernel
-        if (!$useVersion instanceof \RubyVM\VM\Core\YARV\RubyVersion) {
-            $runtime = $this->registeredRuntimes[$selectedVersion = array_key_first($this->registeredRuntimes)] ?? null;
-        } else {
-            $runtime = $this->registeredRuntimes[$selectedVersion = $useVersion->value] ?? null;
-        }
+        $runtime = $this->registeredRuntimes[$selectedVersion = $useVersion?->value ?? $this->specifiedDefaultVersion->value] ?? null;
 
         if (!$runtime instanceof \RubyVM\VM\Core\Runtime\Runtime) {
             throw new RubyVMException('The RubyVM is not registered a kernel - You should call RubyVM::register method before calling the disassemble method');
@@ -111,6 +113,13 @@ class RubyVM implements RubyVMInterface
         );
 
         return $runtime;
+    }
+
+    public function setDefaultVersion(RubyVersion $rubyVersion): self
+    {
+        $this->specifiedDefaultVersion = $rubyVersion;
+
+        return $this;
     }
 
     public function option(): Option

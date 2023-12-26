@@ -24,7 +24,7 @@ class Proc extends Object_ implements RubyClassInterface
         return $this;
     }
 
-    public function call(RubyClassInterface ...$arguments): RubyClassInterface|null
+    public function call(RubyClassInterface ...$arguments): null|RubyClassInterface
     {
         if (!$this->procContext instanceof \RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface) {
             return NilClass::createBy();

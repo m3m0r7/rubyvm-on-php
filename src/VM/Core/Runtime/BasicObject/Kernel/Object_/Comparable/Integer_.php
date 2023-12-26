@@ -59,7 +59,7 @@ class Integer_ extends Comparable implements RubyClassInterface, SymbolizeInterf
     }
 
     #[BindAliasAs('===')]
-    public function compareStrictEquals(RubyClassInterface $object): TrueClass|FalseClass
+    public function compareStrictEquals(RubyClassInterface $object): FalseClass|TrueClass
     {
         return $this->valueOf() === $object->valueOf()
             ? TrueClass::createBy()
@@ -145,7 +145,7 @@ class Integer_ extends Comparable implements RubyClassInterface, SymbolizeInterf
     }
 
     #[BindAliasAs('==')]
-    public function equals(RubyClassInterface $object): TrueClass|FalseClass
+    public function equals(RubyClassInterface $object): FalseClass|TrueClass
     {
         return $this->valueOf() == $object->valueOf()
             ? TrueClass::createBy()
@@ -153,7 +153,7 @@ class Integer_ extends Comparable implements RubyClassInterface, SymbolizeInterf
     }
 
     #[BindAliasAs('<=')]
-    public function equalsOrLessThan(RubyClassInterface $object): TrueClass|FalseClass
+    public function equalsOrLessThan(RubyClassInterface $object): FalseClass|TrueClass
     {
         return $this->valueOf() <= $object->valueOf()
             ? TrueClass::createBy()
@@ -161,7 +161,7 @@ class Integer_ extends Comparable implements RubyClassInterface, SymbolizeInterf
     }
 
     #[BindAliasAs('>=')]
-    public function equalsOrGreaterThan(RubyClassInterface $object): TrueClass|FalseClass
+    public function equalsOrGreaterThan(RubyClassInterface $object): FalseClass|TrueClass
     {
         return $this->valueOf() >= $object->valueOf()
             ? TrueClass::createBy()
@@ -169,7 +169,7 @@ class Integer_ extends Comparable implements RubyClassInterface, SymbolizeInterf
     }
 
     #[BindAliasAs('<')]
-    public function lessThan(RubyClassInterface $object): TrueClass|FalseClass
+    public function lessThan(RubyClassInterface $object): FalseClass|TrueClass
     {
         return $this->valueOf() < $object->valueOf()
             ? TrueClass::createBy()
@@ -177,7 +177,7 @@ class Integer_ extends Comparable implements RubyClassInterface, SymbolizeInterf
     }
 
     #[BindAliasAs('>')]
-    public function greaterThan(RubyClassInterface $object): TrueClass|FalseClass
+    public function greaterThan(RubyClassInterface $object): FalseClass|TrueClass
     {
         return $this->valueOf() > $object->valueOf()
             ? TrueClass::createBy()
@@ -185,7 +185,7 @@ class Integer_ extends Comparable implements RubyClassInterface, SymbolizeInterf
     }
 
     #[BindAliasAs('even?')]
-    public function isEven(): TrueClass|FalseClass
+    public function isEven(): FalseClass|TrueClass
     {
         return ($this->valueOf() & 1) === 0
             ? TrueClass::createBy()
@@ -193,7 +193,7 @@ class Integer_ extends Comparable implements RubyClassInterface, SymbolizeInterf
     }
 
     #[BindAliasAs('odd?')]
-    public function isOdd(): TrueClass|FalseClass
+    public function isOdd(): FalseClass|TrueClass
     {
         return ($this->valueOf() & 1) === 1
             ? TrueClass::createBy()
@@ -201,7 +201,7 @@ class Integer_ extends Comparable implements RubyClassInterface, SymbolizeInterf
     }
 
     #[BindAliasAs('zero?')]
-    public function isZero(): TrueClass|FalseClass
+    public function isZero(): FalseClass|TrueClass
     {
         return $this->valueOf() === 0
             ? TrueClass::createBy()

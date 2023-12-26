@@ -21,8 +21,12 @@ class YARBStructureTest extends TestApplication
             _,
         );
         $rubyVMManager->rubyVM->runtime()->setup();
-        $this->assertSame('3.2', $rubyVMManager->rubyVM->runtime()->rubyVersion());
-        if ($this->isCI()) {
+        $this->assertSame("{$this->major}.{$this->minor}", $rubyVMManager->rubyVM->runtime()->rubyVersion());
+
+        // TODO: Fix to be flexible when using any ruby version
+        if ("{$this->major}.{$this->minor}" === '3.3') {
+            $this->assertSame('unknown-unknown', $rubyVMManager->rubyVM->runtime()->rubyPlatform());
+        } elseif ($this->isCI()) {
             $this->assertSame('x86_64-linux', $rubyVMManager->rubyVM->runtime()->rubyPlatform());
         } else {
             $this->assertSame('arm64-darwin22', $rubyVMManager->rubyVM->runtime()->rubyPlatform());

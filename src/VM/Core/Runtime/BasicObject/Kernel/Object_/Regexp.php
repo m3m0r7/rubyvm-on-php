@@ -36,7 +36,7 @@ class Regexp extends Object_ implements RubyClassInterface, SymbolizeInterface
      * @see https://docs.ruby-lang.org/ja/latest/class/Regexp.html#I_--3D--7E
      */
     #[BindAliasAs('=~')]
-    public function equalsTilde(String_|NilClass $source): Integer_|NilClass
+    public function equalsTilde(NilClass|String_ $source): Integer_|NilClass
     {
         if ($source instanceof NilClass) {
             return NilClass::createBy();

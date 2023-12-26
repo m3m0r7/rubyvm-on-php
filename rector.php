@@ -31,7 +31,6 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(\Rector\Strict\Rector\Ternary\BooleanInTernaryOperatorRuleFixerRector::class);
     $rectorConfig->rule(\Rector\Strict\Rector\Empty_\DisallowedEmptyRuleFixerRector::class);
     $rectorConfig->rule(\Rector\Strict\Rector\Ternary\DisallowedShortTernaryRuleFixerRector::class);
-    $rectorConfig->rule(\Rector\CodingStyle\Rector\Switch_\BinarySwitchToIfElseRector::class);
     $rectorConfig->rule(\Rector\CodingStyle\Rector\FuncCall\CallUserFuncArrayToVariadicRector::class);
     $rectorConfig->rule(\Rector\CodingStyle\Rector\FuncCall\CallUserFuncToMethodCallRector::class);
     $rectorConfig->rule(\Rector\CodingStyle\Rector\FuncCall\ConsistentImplodeRector::class);

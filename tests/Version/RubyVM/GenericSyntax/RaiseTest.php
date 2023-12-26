@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\RubyVM\Version\RubyVM\GenericSyntax;
 
 use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
-use RubyVM\VM\Core\YARV\RubyVersion;
 use RubyVM\VM\Exception\Raise;
 use Tests\RubyVM\Helper\TestApplication;
 
@@ -26,7 +25,7 @@ class RaiseTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $result = $executor->execute();
         $this->assertSame(ExecutedStatus::EXIT, $result->executedStatus);

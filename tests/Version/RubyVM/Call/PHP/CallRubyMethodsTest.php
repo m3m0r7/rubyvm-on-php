@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\RubyVM\Version\RubyVM\Call\PHP;
 
 use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
-use RubyVM\VM\Core\YARV\RubyVersion;
 use Tests\RubyVM\Helper\TestApplication;
 
 /**
@@ -27,7 +26,7 @@ class CallRubyMethodsTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $executed = $executor->execute();
         $this->assertSame(ExecutedStatus::SUCCESS, $executed->executedStatus);
@@ -64,7 +63,7 @@ class CallRubyMethodsTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $executed = $executor->execute();
         $this->assertSame(ExecutedStatus::SUCCESS, $executed->executedStatus);

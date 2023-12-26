@@ -45,7 +45,7 @@ abstract class BasicObject implements RubyClassInterface
     /**
      * @param (null|ContextInterface|RubyClassInterface)[] $arguments
      */
-    public function __call(string $name, array $arguments): ExecutedResult|RubyClassInterface|null
+    public function __call(string $name, array $arguments): null|ExecutedResult|RubyClassInterface
     {
         try {
             $result = $this->callExtendedMethod($name, $arguments);

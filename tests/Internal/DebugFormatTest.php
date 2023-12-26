@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\RubyVM\Version\RubyVM\Internal;
+namespace Tests\RubyVM\Internal;
 
 use RubyVM\VM\Core\Criterion\Entry\AbstractEntries;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\DebugFormat;
-use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operation;
+use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\InstructionSequence\Insn as Ruby3_2_Insn;
+use RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\InstructionSequence\Insn as Ruby3_3_Insn;
 use Tests\RubyVM\Helper\TestApplication;
 
 /**
@@ -32,7 +33,10 @@ class DebugFormatTest extends TestApplication
             }
         };
 
-        $class[] = new Operation(Insn::SEND);
+        $class[] = new Operation(match ("{$this->major}.{$this->minor}") {
+            '3.3' => Ruby3_3_Insn::SEND,
+            default => Ruby3_2_Insn::SEND,
+        });
         $class[] = new Operand(Integer_::createBy(0));
         $class[] = new Operand(Integer_::createBy(65535));
         $class[] = new Operand(Integer_::createBy(-128));

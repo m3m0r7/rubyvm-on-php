@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * $$$$$$$\            $$\                 $$\    $$\ $$\      $$\                                 $$$$$$$\  $$\   $$\ $$$$$$$\
  * $$  __$$\           $$ |                $$ |   $$ |$$$\    $$$ |                                $$  __$$\ $$ |  $$ |$$  __$$\
  * $$ |  $$ |$$\   $$\ $$$$$$$\  $$\   $$\ $$ |   $$ |$$$$\  $$$$ |       $$$$$$\  $$$$$$$\        $$ |  $$ |$$ |  $$ |$$ |  $$ |
@@ -11,7 +10,7 @@
  * \__|  \__| \______/ \_______/  \____$$ |    \_/    \__|     \__|       \______/ \__|  \__|      \__|      \__|  \__|\__|
  *                               $$\   $$ |
  *                               \$$$$$$  |
- *                                \______/
+ *                                \______/.
  */
 
 declare(strict_types=1);
@@ -20,6 +19,7 @@ namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_2;
 
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyVMInterface;
+use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\HeapSpace\DefaultInstanceHeapSpace;
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Loader\ArraySymbolLoader;
@@ -223,7 +223,7 @@ class Kernel implements KernelInterface
     public function findObject(int $index): SymbolInterface
     {
         if (!isset($this->globalObjectList[$index])) {
-            throw new RubyVMException(sprintf('Cannot resolve to refer index#%d in the global object list', $index));
+            throw new RubyVMException(sprintf('Cannot resolve to refer index#%din the global object list', $index));
         }
 
         $this->vm->option()->logger->info(
@@ -379,5 +379,12 @@ class Kernel implements KernelInterface
     public function instructionSequenceList(): Offsets
     {
         return $this->instructionSequenceList;
+    }
+
+    public function operationProcessorEntries(): OperationProcessorEntries
+    {
+        static $entries;
+
+        return $entries ??= new \RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\InstructionSequence\OperationProcessorEntries();
     }
 }

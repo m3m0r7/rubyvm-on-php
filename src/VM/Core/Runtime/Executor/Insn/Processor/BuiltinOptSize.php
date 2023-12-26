@@ -8,7 +8,7 @@ use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
-use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Executor\Insn\InsnInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
 use RubyVM\VM\Core\Runtime\Executor\Operation\OperandHelper;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorInterface;
@@ -18,11 +18,11 @@ use RubyVM\VM\Exception\OperationProcessorException;
 class BuiltinOptSize implements OperationProcessorInterface
 {
     use OperandHelper;
-    private Insn $insn;
+    private InsnInterface $insn;
 
     private ContextInterface $context;
 
-    public function prepare(Insn $insn, ContextInterface $context): void
+    public function prepare(InsnInterface $insn, ContextInterface $context): void
     {
         $this->insn = $insn;
         $this->context = $context;
@@ -51,6 +51,6 @@ class BuiltinOptSize implements OperationProcessorInterface
             return ProcessedStatus::SUCCESS;
         }
 
-        throw new OperationProcessorException(sprintf('The %s is not compatible type %s', strtolower($this->insn->name), ClassHelper::nameBy($recv)));
+        throw new OperationProcessorException(sprintf('The %s is not compatible type %s', strtolower($this->insn->name()), ClassHelper::nameBy($recv)));
     }
 }

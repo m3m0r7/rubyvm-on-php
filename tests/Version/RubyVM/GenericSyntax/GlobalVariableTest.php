@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\RubyVM\Version\RubyVM\GenericSyntax;
 
 use RubyVM\VM\Core\Runtime\Executor\ExecutedStatus;
-use RubyVM\VM\Core\YARV\RubyVersion;
 use Tests\RubyVM\Helper\TestApplication;
 
 /**
@@ -27,7 +26,7 @@ class GlobalVariableTest extends TestApplication
 
         $executor = $rubyVMManager
             ->rubyVM
-            ->disassemble(RubyVersion::VERSION_3_2);
+            ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame(<<<'_'

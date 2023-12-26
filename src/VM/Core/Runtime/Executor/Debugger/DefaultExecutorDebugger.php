@@ -7,8 +7,10 @@ namespace RubyVM\VM\Core\Runtime\Executor\Debugger;
 use RubyVM\VM\Core\Helper\ClassHelper;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
-use RubyVM\VM\Core\Runtime\Executor\Insn\Insn;
+use RubyVM\VM\Core\Runtime\Executor\Insn\InsnInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
+use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\InstructionSequence\Insn as Ruby3_2_Insn;
+use RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\InstructionSequence\Insn as Ruby3_3_Insn;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Exception\RubyVMException;
 use Symfony\Component\Console\Helper\Table;
@@ -20,7 +22,7 @@ class DefaultExecutorDebugger implements DebuggerInterface
     use DebugFormat;
 
     /**
-     * @var array<array{Insn, ContextInterface, int, null|string}>
+     * @var array<array{InsnInterface, ContextInterface, int, null|string}>
      */
     protected array $snapshots = [];
 
@@ -38,7 +40,7 @@ class DefaultExecutorDebugger implements DebuggerInterface
         return [];
     }
 
-    public function append(Insn $insn, ContextInterface $context): void
+    public function append(InsnInterface $insn, ContextInterface $context): void
     {
         $this->snapshots[] = [
             $insn,
@@ -78,7 +80,7 @@ class DefaultExecutorDebugger implements DebuggerInterface
         $table->setColumnMaxWidth(4, 60);
 
         /**
-         * @var Insn             $insn
+         * @var InsnInterface    $insn
          * @var ContextInterface $context
          * @var int              $memoryUsage
          */
@@ -94,8 +96,8 @@ class DefaultExecutorDebugger implements DebuggerInterface
                 implode(' -> ', $context->traces()),
                 sprintf(
                     '[0x%02x] %s %s',
-                    $insn->value,
-                    strtolower($insn->name),
+                    $insn->value(),
+                    strtolower((string) $insn->name()),
                     $insnDetails ? "({$insnDetails})" : '',
                 ),
                 (string) $context->vmStack(),
@@ -106,19 +108,28 @@ class DefaultExecutorDebugger implements DebuggerInterface
         $table->render();
     }
 
-    private function makeDetails(Insn $insn, ContextInterface $context): ?string
+    private function makeDetails(InsnInterface $insn, ContextInterface $context): ?string
     {
         $context = $context->createSnapshot();
 
+        // TODO: Rewrite here to depending on running kernel, but here is hard coded.
         return match ($insn) {
-            Insn::SEND,
-            Insn::OPT_SEND_WITHOUT_BLOCK => $this->debugCallMethod($context),
-            Insn::GETLOCAL,
-            Insn::GETLOCAL_WC_0,
-            Insn::GETLOCAL_WC_1,
-            Insn::SETLOCAL,
-            Insn::SETLOCAL_WC_0,
-            Insn::SETLOCAL_WC_1 => $this->debugLocalVariable($context),
+            Ruby3_2_Insn::SEND,
+            Ruby3_2_Insn::OPT_SEND_WITHOUT_BLOCK,
+            Ruby3_3_Insn::SEND,
+            Ruby3_3_Insn::OPT_SEND_WITHOUT_BLOCK => $this->debugCallMethod($context),
+            Ruby3_2_Insn::GETLOCAL,
+            Ruby3_2_Insn::GETLOCAL_WC_0,
+            Ruby3_2_Insn::GETLOCAL_WC_1,
+            Ruby3_2_Insn::SETLOCAL,
+            Ruby3_2_Insn::SETLOCAL_WC_0,
+            Ruby3_2_Insn::SETLOCAL_WC_1,
+            Ruby3_3_Insn::GETLOCAL,
+            Ruby3_3_Insn::GETLOCAL_WC_0,
+            Ruby3_3_Insn::GETLOCAL_WC_1,
+            Ruby3_3_Insn::SETLOCAL,
+            Ruby3_3_Insn::SETLOCAL_WC_0,
+            Ruby3_3_Insn::SETLOCAL_WC_1 => $this->debugLocalVariable($context),
             default => null,
         };
     }
@@ -190,5 +201,5 @@ class DefaultExecutorDebugger implements DebuggerInterface
 
     public function leave(ExecutedResult $result): void {}
 
-    public function process(Insn $insn, ContextInterface $context): void {}
+    public function process(InsnInterface $insn, ContextInterface $context): void {}
 }

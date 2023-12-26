@@ -38,7 +38,7 @@ abstract class AbstractStructure implements StructureInterface
         }
     }
 
-    public function __get(string $name): int|float|string
+    public function __get(string $name): float|int|string
     {
         return $this->structureProperties[$name];
     }
