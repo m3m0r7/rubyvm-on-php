@@ -80,7 +80,7 @@ class DefaultExecutorDebugger implements DebuggerInterface
         $table->setColumnMaxWidth(4, 60);
 
         /**
-         * @var Insn             $insn
+         * @var InsnInterface    $insn
          * @var ContextInterface $context
          * @var int              $memoryUsage
          */

@@ -291,7 +291,7 @@ class Executor implements ExecutorInterface
                 'Illegal finish an executor',
             );
 
-            throw new ExecutorExeption(sprintf('The executor did not finish - maybe did not call the `%s` (0x%02x)', strtolower((string) Insn::LEAVE->name), Insn::LEAVE->value));
+            throw new ExecutorExeption('The executor did not finish - maybe did not call the `leave` opcode');
         }
 
         if (count($operations) !== $this->context->programCounter()->pos()) {
