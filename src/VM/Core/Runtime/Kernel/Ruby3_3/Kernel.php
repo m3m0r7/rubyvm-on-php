@@ -72,6 +72,10 @@ class Kernel implements KernelInterface
 
     public readonly int $globalObjectListOffset;
 
+    public readonly int $endian;
+
+    public readonly int $short;
+
     public readonly Offsets $instructionSequenceList;
 
     public readonly Offsets $globalObjectList;
@@ -124,6 +128,8 @@ class Kernel implements KernelInterface
         $this->globalObjectListSize = $this->stream()->readAsUnsignedLong();
         $this->instructionSequenceListOffset = $this->stream()->readAsUnsignedLong();
         $this->globalObjectListOffset = $this->stream()->readAsUnsignedLong();
+        $this->endian = $this->stream()->readAsShort();
+        $this->wordSize = $this->stream()->readAsShort();
         $this->rubyPlatform = $this->stream()->readAsString();
 
         $this->vm->option()->logger->info(
