@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\RubyVM\Version\RubyVM\Call\Method;
 
-use RubyVM\VM\Core\YARV\RubyVersion;
 use RubyVM\VM\Exception\ExitException;
 use Tests\RubyVM\Helper\TestApplication;
 

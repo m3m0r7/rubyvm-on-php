@@ -97,7 +97,7 @@ class DefaultExecutorDebugger implements DebuggerInterface
                 sprintf(
                     '[0x%02x] %s %s',
                     $insn->value,
-                    strtolower($insn->name),
+                    strtolower((string) $insn->name),
                     $insnDetails ? "({$insnDetails})" : '',
                 ),
                 (string) $context->vmStack(),

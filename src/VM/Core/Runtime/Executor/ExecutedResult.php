@@ -13,7 +13,7 @@ readonly class ExecutedResult
     public function __construct(
         public ExecutorInterface $executor,
         public ExecutedStatus $executedStatus,
-        public RubyClassInterface|null $returnValue = null,
+        public null|RubyClassInterface $returnValue = null,
         public ?\Throwable $threw = null,
     ) {}
 

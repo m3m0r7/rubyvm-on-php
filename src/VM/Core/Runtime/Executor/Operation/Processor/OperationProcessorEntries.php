@@ -28,7 +28,7 @@ class OperationProcessorEntries extends AbstractEntries
 
         $processor = parent::get($index);
         if (!$processor instanceof OperationProcessorInterface) {
-            throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor is not registered', strtolower($index->name), $index->value));
+            throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor is not registered', strtolower((string) $index->name), $index->value));
         }
 
         return $processor;

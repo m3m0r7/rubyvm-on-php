@@ -14,7 +14,6 @@ use RubyVM\VM\Core\Runtime\Executor\Context\NullContext;
 use RubyVM\VM\Core\Runtime\Executor\Context\OperationProcessorContext;
 use RubyVM\VM\Core\Runtime\Executor\Context\ProgramCounter;
 use RubyVM\VM\Core\Runtime\Executor\Context\VMStack;
-use RubyVM\VM\Core\Runtime\Executor\Insn\InsnInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operation;
 use RubyVM\VM\Core\Runtime\Main;
 use RubyVM\VM\Core\Runtime\Option;
@@ -192,7 +191,7 @@ class Executor implements ExecutorInterface
             $this->option->logger()->info(
                 sprintf(
                     'Start to process an INSN `%s` (0x%02x) (ProgramCounter: %d)',
-                    strtolower($operator->insn->name),
+                    strtolower((string) $operator->insn->name),
                     $operator->insn->value,
                     $this->context->programCounter()->pos(),
                 ),
@@ -206,7 +205,7 @@ class Executor implements ExecutorInterface
             $this->option->logger()->info(
                 sprintf(
                     'Start to prepare an INSN `%s` (0x%02x) (ProgramCounter: %d)',
-                    strtolower($operator->insn->name),
+                    strtolower((string) $operator->insn->name),
                     $operator->insn->value,
                     $this->context->programCounter()->pos(),
                 ),
@@ -223,7 +222,7 @@ class Executor implements ExecutorInterface
             $this->option->logger()->info(
                 sprintf(
                     'Start to process a before method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
-                    strtolower($operator->insn->name),
+                    strtolower((string) $operator->insn->name),
                     $operator->insn->value,
                     $this->context->programCounter()->pos(),
                 ),
@@ -234,7 +233,7 @@ class Executor implements ExecutorInterface
             $this->option->logger()->info(
                 sprintf(
                     'Start to process a main routine method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
-                    strtolower($operator->insn->name),
+                    strtolower((string) $operator->insn->name),
                     $operator->insn->value,
                     $this->context->programCounter()->pos(),
                 ),
@@ -253,7 +252,7 @@ class Executor implements ExecutorInterface
             $this->option->logger()->info(
                 sprintf(
                     'Start to process a post method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
-                    strtolower($operator->insn->name),
+                    strtolower((string) $operator->insn->name),
                     $operator->insn->value,
                     $this->context->programCounter()->pos(),
                 ),
@@ -292,7 +291,7 @@ class Executor implements ExecutorInterface
                 'Illegal finish an executor',
             );
 
-            throw new ExecutorExeption(sprintf('The executor did not finish - maybe did not call the `%s` (0x%02x)', strtolower(Insn::LEAVE->name), Insn::LEAVE->value));
+            throw new ExecutorExeption(sprintf('The executor did not finish - maybe did not call the `%s` (0x%02x)', strtolower((string) Insn::LEAVE->name), Insn::LEAVE->value));
         }
 
         if (count($operations) !== $this->context->programCounter()->pos()) {

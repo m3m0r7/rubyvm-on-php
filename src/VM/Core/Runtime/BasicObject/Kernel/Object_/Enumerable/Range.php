@@ -120,7 +120,7 @@ class Range extends Enumerable implements RubyClassInterface, SymbolizeInterface
     }
 
     #[BindAliasAs('===')]
-    public function compareStrictEquals(RubyClassInterface $object): TrueClass|FalseClass
+    public function compareStrictEquals(RubyClassInterface $object): FalseClass|TrueClass
     {
         assert($this->symbol instanceof RangeSymbol);
 

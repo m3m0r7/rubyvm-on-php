@@ -107,12 +107,12 @@ abstract class AbstractEntries implements EntriesInterface
         return new \ArrayIterator($this->items);
     }
 
-    protected function filterKeyName(mixed $index): string|int|null
+    protected function filterKeyName(mixed $index): null|int|string
     {
         return $this->enumToName($index);
     }
 
-    private function enumToName(mixed $index): string|int
+    private function enumToName(mixed $index): int|string
     {
         if (is_object($index) && enum_exists($index::class, false)) {
             // @phpstan-ignore-next-line

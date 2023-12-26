@@ -8,7 +8,7 @@ class RegexpSymbol implements SymbolInterface, \Stringable
 {
     public function __construct(
         private readonly StringSymbol $source,
-        private readonly int|null $option,
+        private readonly null|int $option,
     ) {}
 
     public function valueOf(): StringSymbol
@@ -21,7 +21,7 @@ class RegexpSymbol implements SymbolInterface, \Stringable
         return (string) $this->source;
     }
 
-    public function option(): int|null
+    public function option(): null|int
     {
         return $this->option;
     }

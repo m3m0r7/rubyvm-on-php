@@ -16,7 +16,9 @@ use RubyVM\VM\Stream\StreamHandler;
 class TestApplication extends TestCase
 {
     protected ?int $major = null;
+
     protected ?int $minor = null;
+
     protected ?int $patch = null;
 
     protected function createRubyVMFromCode(string $code, string $extraData = '', string $binaryPath = 'ruby'): RubyVMManager

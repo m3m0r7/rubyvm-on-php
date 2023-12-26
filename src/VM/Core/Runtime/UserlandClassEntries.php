@@ -37,7 +37,7 @@ final class UserlandClassEntries extends AbstractEntries
         return $this;
     }
 
-    public function aliasNameBy(string $name): string|null
+    public function aliasNameBy(string $name): null|string
     {
         return $this->aliases->get($name);
     }

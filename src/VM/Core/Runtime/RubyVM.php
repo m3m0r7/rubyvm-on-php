@@ -16,6 +16,7 @@ use RubyVM\VM\Exception\RubyVMException;
 class RubyVM implements RubyVMInterface
 {
     final public const DEFAULT_VERSION = RubyVersion::VERSION_3_3;
+
     protected RubyVersion $specifiedDefaultVersion = self::DEFAULT_VERSION;
 
     /**
@@ -28,12 +29,12 @@ class RubyVM implements RubyVMInterface
         // Register default kernels
         $this->register(
             rubyVersion: RubyVersion::VERSION_3_3,
-            kernelClass: \RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\Kernel::class,
+            kernelClass: Kernel\Ruby3_3\Kernel::class,
         );
 
         $this->register(
             rubyVersion: RubyVersion::VERSION_3_2,
-            kernelClass: \RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\Kernel::class,
+            kernelClass: Kernel\Ruby3_2\Kernel::class,
         );
     }
 
@@ -117,6 +118,7 @@ class RubyVM implements RubyVMInterface
     public function setDefaultVersion(RubyVersion $rubyVersion): self
     {
         $this->specifiedDefaultVersion = $rubyVersion;
+
         return $this;
     }
 

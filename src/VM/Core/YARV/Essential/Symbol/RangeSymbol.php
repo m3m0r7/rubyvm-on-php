@@ -19,8 +19,8 @@ class RangeSymbol implements SymbolInterface, \ArrayAccess, \Countable, \Stringa
     private int $behindPos = 0;
 
     public function __construct(
-        private readonly NumberSymbol|NilSymbol $begin,
-        private readonly NumberSymbol|NilSymbol $end,
+        private readonly NilSymbol|NumberSymbol $begin,
+        private readonly NilSymbol|NumberSymbol $end,
         private readonly bool $excludeEnd,
     ) {
         $this->pointer = $this->begin->valueOf() ?? 0;

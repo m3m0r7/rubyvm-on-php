@@ -34,7 +34,7 @@ class DebugFormatTest extends TestApplication
         };
 
         $class[] = new Operation(match ("{$this->major}.{$this->minor}") {
-            "3.3" => Ruby3_3_Insn::SEND,
+            '3.3' => Ruby3_3_Insn::SEND,
             default => Ruby3_2_Insn::SEND,
         });
         $class[] = new Operand(Integer_::createBy(0));

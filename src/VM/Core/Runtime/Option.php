@@ -8,7 +8,6 @@ use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Runtime\Essential\MainInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\DebuggerInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\DefaultExecutorDebugger;
-use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
 use RubyVM\VM\Stream\BinaryStreamReaderInterface;
 use RubyVM\VM\Stream\StreamHandler;
 use RubyVM\VM\Stream\StreamHandlerInterface;

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * $$$$$$$\            $$\                 $$\    $$\ $$\      $$\                                 $$$$$$$\  $$\   $$\ $$$$$$$\
  * $$  __$$\           $$ |                $$ |   $$ |$$$\    $$$ |                                $$  __$$\ $$ |  $$ |$$  __$$\
  * $$ |  $$ |$$\   $$\ $$$$$$$\  $$\   $$\ $$ |   $$ |$$$$\  $$$$ |       $$$$$$\  $$$$$$$\        $$ |  $$ |$$ |  $$ |$$ |  $$ |
@@ -11,7 +10,7 @@
  * \__|  \__| \______/ \_______/  \____$$ |    \_/    \__|     \__|       \______/ \__|  \__|      \__|      \__|  \__|\__|
  *                               $$\   $$ |
  *                               \$$$$$$  |
- *                                \______/
+ *                                \______/.
  */
 
 declare(strict_types=1);
@@ -391,6 +390,7 @@ class Kernel implements KernelInterface
     public function operationProcessorEntries(): OperationProcessorEntries
     {
         static $entries;
+
         return $entries ??= new \RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\InstructionSequence\OperationProcessorEntries();
     }
 }

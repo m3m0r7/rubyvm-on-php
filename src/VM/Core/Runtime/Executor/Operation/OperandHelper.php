@@ -163,7 +163,7 @@ trait OperandHelper
         return $operand;
     }
 
-    private function operandAsAny(string $className): CallInfoInterface|RubyClassInterface|ID|ExecutedResult|ContextInterface
+    private function operandAsAny(string $className): CallInfoInterface|ContextInterface|ExecutedResult|ID|RubyClassInterface
     {
         $operand = $this->operand();
 
@@ -248,7 +248,7 @@ trait OperandHelper
         return $entity;
     }
 
-    private function stackAsStringOrNil(): String_|NilClass
+    private function stackAsStringOrNil(): NilClass|String_
     {
         $entity = $this->stackAsRubyClass();
 
@@ -353,7 +353,7 @@ trait OperandHelper
         return $operand;
     }
 
-    private function stackAsAny(string $className): CallInfoInterface|RubyClassInterface|ID|ExecutedResult|ContextInterface
+    private function stackAsAny(string $className): CallInfoInterface|ContextInterface|ExecutedResult|ID|RubyClassInterface
     {
         $operand = $this->getStack();
 

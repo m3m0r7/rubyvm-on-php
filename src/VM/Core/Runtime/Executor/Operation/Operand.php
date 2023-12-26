@@ -13,7 +13,7 @@ use RubyVM\VM\Core\YARV\Essential\ID;
 class Operand
 {
     public function __construct(
-        public CallInfoInterface|RubyClassInterface|ID|ExecutedResult|ContextInterface $operand
+        public CallInfoInterface|ContextInterface|ExecutedResult|ID|RubyClassInterface $operand
     ) {}
 
     public function __clone()
