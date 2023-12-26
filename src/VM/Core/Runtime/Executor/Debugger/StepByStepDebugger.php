@@ -15,8 +15,8 @@ class StepByStepDebugger extends DefaultExecutorDebugger implements DebuggerInte
 
         printf(
             "Current INSN: %s(0x%02x)\n",
-            strtolower((string) $insn->name),
-            $insn->value,
+            strtolower($insn->name()),
+            $insn->value(),
         );
         printf(
             "Previous Stacks: %s#%d\n",

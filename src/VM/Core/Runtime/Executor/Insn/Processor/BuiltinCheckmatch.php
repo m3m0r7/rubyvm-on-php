@@ -41,7 +41,7 @@ class BuiltinCheckmatch implements OperationProcessorInterface
 
         // TODO: We will implement other types
         if ($type->valueOf() !== CheckMatchType::RESCUE->value) {
-            throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor with %d type is not implemented yet', strtolower((string) $this->insn->name), $this->insn->value, $type->valueOf()));
+            throw new OperationProcessorException(sprintf('The `%s` (opcode: 0x%02x) processor with %d type is not implemented yet', strtolower($this->insn->name()), $this->insn->value(), $type->valueOf()));
         }
 
         $compareBy = $this->stackAsRubyClass();

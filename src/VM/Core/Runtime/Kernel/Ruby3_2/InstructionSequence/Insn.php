@@ -414,4 +414,14 @@ enum Insn: int implements InsnInterface
     case TRACE_PUTOBJECT_INT2FIX_0_ = 200;
 
     case TRACE_PUTOBJECT_INT2FIX_1_ = 201;
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function value(): int
+    {
+        return $this->value;
+    }
 }

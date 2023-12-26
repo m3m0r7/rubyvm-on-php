@@ -51,6 +51,6 @@ class BuiltinOptSize implements OperationProcessorInterface
             return ProcessedStatus::SUCCESS;
         }
 
-        throw new OperationProcessorException(sprintf('The %s is not compatible type %s', strtolower((string) $this->insn->name), ClassHelper::nameBy($recv)));
+        throw new OperationProcessorException(sprintf('The %s is not compatible type %s', strtolower($this->insn->name()), ClassHelper::nameBy($recv)));
     }
 }

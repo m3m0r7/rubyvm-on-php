@@ -191,8 +191,8 @@ class Executor implements ExecutorInterface
             $this->option->logger()->info(
                 sprintf(
                     'Start to process an INSN `%s` (0x%02x) (ProgramCounter: %d)',
-                    strtolower((string) $operator->insn->name),
-                    $operator->insn->value,
+                    strtolower($operator->insn->name()),
+                    $operator->insn->value(),
                     $this->context->programCounter()->pos(),
                 ),
             );
@@ -205,8 +205,8 @@ class Executor implements ExecutorInterface
             $this->option->logger()->info(
                 sprintf(
                     'Start to prepare an INSN `%s` (0x%02x) (ProgramCounter: %d)',
-                    strtolower((string) $operator->insn->name),
-                    $operator->insn->value,
+                    strtolower($operator->insn->name()),
+                    $operator->insn->value(),
                     $this->context->programCounter()->pos(),
                 ),
             );
@@ -222,8 +222,8 @@ class Executor implements ExecutorInterface
             $this->option->logger()->info(
                 sprintf(
                     'Start to process a before method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
-                    strtolower((string) $operator->insn->name),
-                    $operator->insn->value,
+                    strtolower($operator->insn->name()),
+                    $operator->insn->value(),
                     $this->context->programCounter()->pos(),
                 ),
             );
@@ -233,8 +233,8 @@ class Executor implements ExecutorInterface
             $this->option->logger()->info(
                 sprintf(
                     'Start to process a main routine method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
-                    strtolower((string) $operator->insn->name),
-                    $operator->insn->value,
+                    strtolower($operator->insn->name()),
+                    $operator->insn->value(),
                     $this->context->programCounter()->pos(),
                 ),
             );
@@ -252,8 +252,8 @@ class Executor implements ExecutorInterface
             $this->option->logger()->info(
                 sprintf(
                     'Start to process a post method an INSN `%s` (0x%02x) (ProgramCounter: %d)',
-                    strtolower((string) $operator->insn->name),
-                    $operator->insn->value,
+                    strtolower($operator->insn->name()),
+                    $operator->insn->value(),
                     $this->context->programCounter()->pos(),
                 ),
             );
@@ -282,7 +282,7 @@ class Executor implements ExecutorInterface
                     ? ExecutorFailedException::class
                     : ExecutorUnknownException::class;
 
-                throw new $throwClass(sprintf('The `%s` (opcode: 0x%02x) processor returns %s (%d) status code', $operator->insn->name, $operator->insn->value, $status->name, $status->value));
+                throw new $throwClass(sprintf('The `%s` (opcode: 0x%02x) processor returns %s (%d) status code', $operator->insn->name(), $operator->insn->value(), $status->name, $status->value));
             }
         }
 

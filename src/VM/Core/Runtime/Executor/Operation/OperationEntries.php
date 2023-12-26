@@ -24,8 +24,8 @@ class OperationEntries extends AbstractEntries implements \Stringable
             $result[] = ClassHelper::nameBy($item) . '<' . match ($item::class) {
                 Operation::class => sprintf(
                     '%s<0x%02x>',
-                    strtolower((string) $item->insn->name),
-                    $item->insn->value
+                    strtolower($item->insn->name()),
+                    $item->insn->value()
                 ),
                 Operand::class => ClassHelper::nameBy($item->operand),
                 default => 'none',
