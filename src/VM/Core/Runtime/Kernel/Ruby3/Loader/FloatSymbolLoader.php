@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\Loader;
+namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3\Loader;
 
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;

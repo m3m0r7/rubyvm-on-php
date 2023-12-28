@@ -8,7 +8,7 @@ interface RuntimeInterface
 {
     public function rubyVersion(): string;
 
-    public function rubyPlatform(): string;
+    public function rubyPlatform(): ?string;
 
     public function extraData(): string;
 

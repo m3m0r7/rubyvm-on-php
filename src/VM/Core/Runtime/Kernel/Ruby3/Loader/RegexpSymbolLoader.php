@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\Loader;
+namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3\Loader;
 
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
-use RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\Internal\Arithmetic;
 use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
-use RubyVM\VM\Core\YARV\Essential\Symbol\NumberSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\RegexpSymbol;
+use RubyVM\VM\Core\YARV\Essential\Symbol\StringSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolLoaderInterface;
 
-class FixedNumberSymbolLoader implements SymbolLoaderInterface
+class RegexpSymbolLoader implements SymbolLoaderInterface
 {
     public function __construct(
         protected readonly KernelInterface $kernel,
@@ -23,10 +23,14 @@ class FixedNumberSymbolLoader implements SymbolLoaderInterface
         $reader = $this->kernel->stream()->duplication();
         $reader->pos($this->offset->offset);
 
-        $value = $reader->smallValue();
+        $option = $reader->readAsByte();
+        $sourceString = $this->kernel->findObject($reader->smallValue());
 
-        return new NumberSymbol(
-            Arithmetic::fix2int($value),
+        assert($sourceString instanceof StringSymbol);
+
+        return new RegexpSymbol(
+            $sourceString,
+            $option,
         );
     }
 }

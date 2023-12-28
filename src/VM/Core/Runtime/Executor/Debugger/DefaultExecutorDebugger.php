@@ -9,8 +9,6 @@ use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
 use RubyVM\VM\Core\Runtime\Executor\ExecutedResult;
 use RubyVM\VM\Core\Runtime\Executor\Insn\InsnInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Operand;
-use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\InstructionSequence\Insn as Ruby3_2_Insn;
-use RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\InstructionSequence\Insn as Ruby3_3_Insn;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\CallInfoInterface;
 use RubyVM\VM\Exception\RubyVMException;
 use Symfony\Component\Console\Helper\Table;
@@ -112,24 +110,15 @@ class DefaultExecutorDebugger implements DebuggerInterface
     {
         $context = $context->createSnapshot();
 
-        // TODO: Rewrite here to depending on running kernel, but here is hard coded.
         return match ($insn) {
-            Ruby3_2_Insn::SEND,
-            Ruby3_2_Insn::OPT_SEND_WITHOUT_BLOCK,
-            Ruby3_3_Insn::SEND,
-            Ruby3_3_Insn::OPT_SEND_WITHOUT_BLOCK => $this->debugCallMethod($context),
-            Ruby3_2_Insn::GETLOCAL,
-            Ruby3_2_Insn::GETLOCAL_WC_0,
-            Ruby3_2_Insn::GETLOCAL_WC_1,
-            Ruby3_2_Insn::SETLOCAL,
-            Ruby3_2_Insn::SETLOCAL_WC_0,
-            Ruby3_2_Insn::SETLOCAL_WC_1,
-            Ruby3_3_Insn::GETLOCAL,
-            Ruby3_3_Insn::GETLOCAL_WC_0,
-            Ruby3_3_Insn::GETLOCAL_WC_1,
-            Ruby3_3_Insn::SETLOCAL,
-            Ruby3_3_Insn::SETLOCAL_WC_0,
-            Ruby3_3_Insn::SETLOCAL_WC_1 => $this->debugLocalVariable($context),
+            $insn::find('SEND'),
+            $insn::find('OPT_SEND_WITHOUT_BLOCK') => $this->debugCallMethod($context),
+            $insn::find('GETLOCAL'),
+            $insn::find('GETLOCAL_WC_0'),
+            $insn::find('GETLOCAL_WC_1'),
+            $insn::find('SETLOCAL'),
+            $insn::find('SETLOCAL_WC_0'),
+            $insn::find('SETLOCAL_WC_1') => $this->debugLocalVariable($context),
             default => null,
         };
     }

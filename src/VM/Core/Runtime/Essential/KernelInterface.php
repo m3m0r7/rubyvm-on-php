@@ -33,17 +33,27 @@ interface KernelInterface
 
     public function extraData(): string;
 
-    public function rubyPlatform(): string;
+    public function rubyPlatform(): ?string;
 
     public function minorVersion(): int;
 
     public function majorVersion(): int;
 
+    public function size(): int;
+
+    public function extraSize(): int;
+
     public function userlandHeapSpace(): UserlandHeapSpaceInterface;
+
+    public function magic(): string;
 
     public function instructionSequenceListSize(): int;
 
     public function instructionSequenceListOffset(): int;
+
+    public function globalObjectListSize(): int;
+
+    public function globalObjectListOffset(): int;
 
     public function instructionSequenceList(): Offsets;
 

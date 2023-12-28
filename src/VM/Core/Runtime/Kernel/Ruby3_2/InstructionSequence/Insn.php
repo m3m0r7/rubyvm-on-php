@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\InstructionSequence;
 
 use RubyVM\VM\Core\Helper\EnumIntValueFindable;
+use RubyVM\VM\Core\Helper\EnumNameFindable;
 use RubyVM\VM\Core\Runtime\Executor\Insn\InsnInterface;
 
 enum Insn: int implements InsnInterface
 {
     use EnumIntValueFindable;
+    use EnumNameFindable;
 
     case NOP = 0;
 
