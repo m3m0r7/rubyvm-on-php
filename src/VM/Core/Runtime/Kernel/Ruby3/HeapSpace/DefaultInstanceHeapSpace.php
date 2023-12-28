@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\HeapSpace;
+namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3\HeapSpace;
 
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
 use RubyVM\VM\Core\Runtime\UserlandHeapSpace;

@@ -26,7 +26,7 @@ class Runtime implements RuntimeInterface
         );
     }
 
-    public function rubyPlatform(): string
+    public function rubyPlatform(): ?string
     {
         return $this->kernel->rubyPlatform();
     }

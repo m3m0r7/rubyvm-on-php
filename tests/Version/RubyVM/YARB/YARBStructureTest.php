@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\RubyVM\Version\RubyVM\YARB;
 
+use RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\Kernel as Ruby3_3_Kernel;
+use RubyVM\VM\Stream\Endian;
 use Tests\RubyVM\Helper\TestApplication;
 
 /**
@@ -25,7 +27,14 @@ class YARBStructureTest extends TestApplication
 
         // TODO: Fix to be flexible when using any ruby version
         if ("{$this->major}.{$this->minor}" === '3.3') {
-            $this->assertSame('unknown-unknown', $rubyVMManager->rubyVM->runtime()->rubyPlatform());
+            $this->assertSame(null, $rubyVMManager->rubyVM->runtime()->rubyPlatform());
+
+            /**
+             * @var Ruby3_3_Kernel $kernel
+             */
+            $kernel = $rubyVMManager->rubyVM->runtime()->kernel();
+            $this->assertSame(Endian::LITTLE_ENDIAN, $kernel->endian());
+            $this->assertSame(0, $kernel->wordSize());
         } elseif ($this->isCI()) {
             $this->assertSame('x86_64-linux', $rubyVMManager->rubyVM->runtime()->rubyPlatform());
         } else {

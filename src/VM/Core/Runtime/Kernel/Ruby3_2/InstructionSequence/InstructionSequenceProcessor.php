@@ -44,7 +44,7 @@ class InstructionSequenceProcessor implements InstructionSequenceProcessorInterf
         private readonly KernelInterface $kernel,
         private readonly Aux $aux,
     ) {
-        if (isset($this->kernel->instructionSequenceList[$this->aux->loader->index])) {
+        if (isset($this->kernel->instructionSequenceList()[$this->aux->loader->index])) {
             return;
         }
 
