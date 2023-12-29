@@ -133,6 +133,12 @@ abstract class Kernel implements KernelInterface
         $this->magic = $this->stream()->read(4);
         $this->majorVersion = $this->stream()->readAsUnsignedLong();
         $this->minorVersion = $this->stream()->readAsUnsignedLong();
+        $this->size = $this->stream()->readAsUnsignedLong();
+        $this->extraSize = $this->stream()->readAsUnsignedLong();
+        $this->instructionSequenceListSize = $this->stream()->readAsUnsignedLong();
+        $this->globalObjectListSize = $this->stream()->readAsUnsignedLong();
+        $this->instructionSequenceListOffset = $this->stream()->readAsUnsignedLong();
+        $this->globalObjectListOffset = $this->stream()->readAsUnsignedLong();
 
         return $this;
     }

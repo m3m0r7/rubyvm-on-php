@@ -33,12 +33,6 @@ class Kernel extends BaseKernel implements KernelInterface
     {
         parent::setupHeaders();
 
-        $this->size = $this->stream()->readAsUnsignedLong();
-        $this->extraSize = $this->stream()->readAsUnsignedLong();
-        $this->instructionSequenceListSize = $this->stream()->readAsUnsignedLong();
-        $this->globalObjectListSize = $this->stream()->readAsUnsignedLong();
-        $this->instructionSequenceListOffset = $this->stream()->readAsUnsignedLong();
-        $this->globalObjectListOffset = $this->stream()->readAsUnsignedLong();
         $this->rubyPlatform = $this->stream()->readAsString();
 
         return $this;
