@@ -32,7 +32,7 @@ class ArraySymbol implements SymbolInterface, \ArrayAccess, \Countable, \Iterato
         return sprintf(
             '[%s]',
             implode(', ', array_map(
-                static fn ($value) => (string) $value,
+                static fn ($value) => (string) $value->inspect(),
                 $this->array,
             ))
         );

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable;
 
 use RubyVM\VM\Core\Runtime\Attribute\BindAliasAs;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\FalseClass;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\TrueClass;
 use RubyVM\VM\Core\Runtime\BasicObject\Symbolizable;
@@ -30,6 +31,17 @@ class String_ extends Comparable implements RubyClassInterface, SymbolizeInterfa
     public static function createBy(mixed $value = ''): self
     {
         return new self(new StringSymbol($value));
+    }
+
+    public function chars(): Array_
+    {
+        $array = [];
+        $string = (string) $this->symbol;
+        for ($i = 0; $i < strlen($string); ++$i) {
+            $array[] = String_::createBy($string[$i]);
+        }
+
+        return Array_::createBy($array);
     }
 
     #[BindAliasAs('+')]

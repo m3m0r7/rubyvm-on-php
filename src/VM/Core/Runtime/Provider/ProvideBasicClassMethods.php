@@ -9,6 +9,7 @@ use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Comparable;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Enumerable;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Hash;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Exception;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\NilClass;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Proc;
@@ -30,13 +31,57 @@ trait ProvideBasicClassMethods
 
     public function puts(RubyClassInterface $object): RubyClassInterface
     {
+        $string = $this->_print($object);
+
+        $this
+            ->context()
+            ->IOContext()
+            ->stdOut
+            ->write(
+                $string . (str_ends_with((string) $string, "\n") ? '' : "\n"),
+            );
+
+        // The puts returns (nil)
+        return NilClass::createBy();
+    }
+
+    public function print(RubyClassInterface $object): RubyClassInterface
+    {
+        $output = '';
+
+        if ($object instanceof Enumerable) {
+            $output = (string) $object->inspect();
+        } elseif ($object instanceof NilClass) {
+            $output = '';
+        } else {
+            $output = (string) $object;
+        }
+
+        $this
+            ->context()
+            ->IOContext()
+            ->stdOut
+            ->write(
+                $output,
+            );
+
+        // The puts returns (nil)
+        return NilClass::createBy();
+    }
+
+    private function _print(RubyClassInterface $object): string
+    {
         $string = '';
 
         if ($object instanceof Exception) {
-            $string .= (string) $object;
+            $string = (string) $object;
         } elseif ($object instanceof Enumerable) {
-            foreach ($object as $number) {
-                $string .= "{$number}\n";
+            if ($object instanceof Hash) {
+                $string = (string) $object->inspect();
+            } else {
+                foreach ($object as $number) {
+                    $string .= "{$number}\n";
+                }
             }
         } elseif ($object instanceof NilClass) {
             // When an argument is a nil symbol, then displays a break only
@@ -47,14 +92,7 @@ trait ProvideBasicClassMethods
             $string = (string) $object->setRuntimeContext($this->context())->inspect();
         }
 
-        if (!str_ends_with($string, "\n")) {
-            $string .= "\n";
-        }
-
-        $this->context()->IOContext()->stdOut->write($string);
-
-        // The puts returns (nil)
-        return NilClass::createBy();
+        return $string;
     }
 
     public function exit(RubyClassInterface $code = null): never
