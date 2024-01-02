@@ -48,6 +48,11 @@ class Option implements OptionInterface
         return static::DEFAULT_ENTRYPOINT_AUX_INDEX;
     }
 
+    public function reader(): BinaryStreamReaderInterface
+    {
+        return $this->reader;
+    }
+
     public function logger(): LoggerInterface
     {
         return $this->logger;

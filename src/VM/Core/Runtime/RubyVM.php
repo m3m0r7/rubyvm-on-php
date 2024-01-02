@@ -58,7 +58,7 @@ class RubyVM implements RubyVMInterface
             $verifier,
         );
 
-        $this->option->logger->info(
+        $this->option->logger()->info(
             sprintf('Registered Ruby version %s kernel', $rubyVersion->value)
         );
 
@@ -67,7 +67,7 @@ class RubyVM implements RubyVMInterface
 
     public function disassemble(RubyVersion $useVersion = null): ExecutorInterface
     {
-        $this->option->logger->info(
+        $this->option->logger()->info(
             'Start to disassemble instruction sequences',
         );
 
@@ -75,11 +75,11 @@ class RubyVM implements RubyVMInterface
 
         $kernel = $runtime->kernel()->setup();
 
-        $this->option->logger->info(
+        $this->option->logger()->info(
             'Complete to disassemble instruction sequences',
         );
 
-        $this->option->logger->info(
+        $this->option->logger()->info(
             'Check to verify process for an instruction sequence structure',
         );
 
@@ -88,7 +88,7 @@ class RubyVM implements RubyVMInterface
             ->verifier
             ->done();
 
-        $this->option->logger->info(
+        $this->option->logger()->info(
             'Complete to verify process',
         );
 
@@ -108,7 +108,7 @@ class RubyVM implements RubyVMInterface
             throw new RubyVMException('The RubyVM is not registered a kernel - You should call RubyVM::register method before calling the disassemble method');
         }
 
-        $this->option->logger->info(
+        $this->option->logger()->info(
             sprintf('Selected Ruby %s version kernel', $selectedVersion),
         );
 
@@ -122,7 +122,7 @@ class RubyVM implements RubyVMInterface
         return $this;
     }
 
-    public function option(): Option
+    public function option(): OptionInterface
     {
         return $this->option;
     }

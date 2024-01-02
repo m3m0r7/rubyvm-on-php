@@ -106,14 +106,14 @@ abstract class Kernel implements KernelInterface
      */
     public function setup(): KernelInterface
     {
-        $this->vm->option()->logger->info(
+        $this->vm->option()->logger()->info(
             'Load an instruction sequence header',
         );
         $pos = $this->stream()->pos();
 
         $this->setupHeaders();
 
-        $this->vm->option()->logger->info(
+        $this->vm->option()->logger()->info(
             sprintf('Loaded an instruction sequence header (%d bytes)', $this->stream()->pos() - $pos),
         );
 
@@ -153,7 +153,7 @@ abstract class Kernel implements KernelInterface
         $reader = $this->stream()->duplication();
         $reader->pos($this->instructionSequenceListOffset);
 
-        $this->vm->option()->logger->info(
+        $this->vm->option()->logger()->info(
             sprintf('Setup an instruction sequence list (offset: %d)', $this->instructionSequenceListOffset),
         );
 
@@ -167,7 +167,7 @@ abstract class Kernel implements KernelInterface
                 );
         }
 
-        $this->vm->option()->logger->info(
+        $this->vm->option()->logger()->info(
             sprintf('Loaded an instruction sequence list (size: %d)', $reader->pos() - $this->instructionSequenceListOffset),
         );
 
@@ -184,7 +184,7 @@ abstract class Kernel implements KernelInterface
         $reader = $this->stream()->duplication();
         $reader->pos($this->globalObjectListOffset);
 
-        $this->vm->option()->logger->info(
+        $this->vm->option()->logger()->info(
             sprintf('Setup a global object list (offset: %d)', $this->globalObjectListOffset),
         );
 
@@ -196,7 +196,7 @@ abstract class Kernel implements KernelInterface
             );
         }
 
-        $this->vm->option()->logger->info(
+        $this->vm->option()->logger()->info(
             sprintf('Loaded global object list (size: %d)', $reader->pos() - $this->globalObjectListOffset),
         );
 
@@ -205,12 +205,12 @@ abstract class Kernel implements KernelInterface
 
     public function stream(): RubyVMBinaryStreamReaderInterface
     {
-        return $this->stream ??= new RubyVMBinaryStreamReader($this->vm->option()->reader);
+        return $this->stream ??= new RubyVMBinaryStreamReader($this->vm->option()->reader());
     }
 
     public function findId(int $index): ID
     {
-        $this->vm->option()->logger->info(
+        $this->vm->option()->logger()->info(
             sprintf('Start to find object by ID (index: %d)', $index),
         );
 
@@ -223,21 +223,21 @@ abstract class Kernel implements KernelInterface
             throw new RubyVMException(sprintf('Cannot resolve to refer index#%d in the global object list', $index));
         }
 
-        $this->vm->option()->logger->info(
+        $this->vm->option()->logger()->info(
             sprintf('Start to find object (index: %d)', $index),
         );
 
         if (isset($this->globalObjectTable[$index])) {
             $symbol = $this->globalObjectTable[$index];
 
-            $this->vm->option()->logger->debug(
+            $this->vm->option()->logger()->debug(
                 sprintf('Use cached object (index: %d)', $index),
             );
 
             return $symbol;
         }
 
-        $this->vm->option()->logger->debug(
+        $this->vm->option()->logger()->debug(
             sprintf('Start to register new object (index: %d)', $index),
         );
 
@@ -257,7 +257,7 @@ abstract class Kernel implements KernelInterface
             internal: (bool) ($byte >> 7) & 0x01,
         );
 
-        $this->vm->option()->logger->info(
+        $this->vm->option()->logger()->info(
             sprintf(
                 'Loaded an object (index: %d, type: %s, special_const: %d, frozen: %d, internal: %d)',
                 $index,

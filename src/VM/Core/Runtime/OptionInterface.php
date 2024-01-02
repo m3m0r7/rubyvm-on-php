@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\Runtime;
 
 use Psr\Log\LoggerInterface;
+use RubyVM\Stream\BinaryStreamReaderInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\DebuggerInterface;
 use RubyVM\Stream\StreamHandlerInterface;
 
@@ -21,4 +22,6 @@ interface OptionInterface
     public function stdErr(): StreamHandlerInterface;
 
     public function debugger(): DebuggerInterface;
+
+    public function reader(): BinaryStreamReaderInterface;
 }

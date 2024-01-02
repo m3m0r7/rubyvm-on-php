@@ -15,7 +15,7 @@ class RubyParser implements RubyParserInterface
     protected RubyVersion $specifiedDefaultVersion = self::DEFAULT_VERSION;
 
     /**
-     * @var array<string, Runtime>
+     * @var array<string, never>
      */
     protected array $registeredRuntimes = [];
 
