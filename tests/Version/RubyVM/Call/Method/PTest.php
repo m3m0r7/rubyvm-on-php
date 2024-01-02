@@ -19,6 +19,7 @@ class PTest extends TestApplication
         $rubyVMManager = $this->createRubyVMFromCode(
             <<< '_'
             p "Hello World!"
+            p "Hello World!".chars
             p [1, 2, 3, 4, 5, 6]
             p true
             p false
@@ -34,11 +35,12 @@ class PTest extends TestApplication
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
         $this->assertSame(<<<'_'
         "Hello World!"
+        ["H", "e", "l", "l", "o", " ", "W", "o", "r", "l", "d", "!"]
         [1, 2, 3, 4, 5, 6]
         true
         false
         nil
-        {:key2=>"World!", :key1=>"Hello!"}
+        {:key1=>"Hello!", :key2=>"World!"}
 
         _, $rubyVMManager->stdOut->readAll());
     }

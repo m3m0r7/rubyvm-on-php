@@ -56,6 +56,12 @@ class Hash extends Enumerable implements RubyClassInterface
 
     public function inspect(): RubyClassInterface
     {
+        $keys = array_keys($this->hash);
+        $values = array_values($this->hash);
+
+        uksort($keys, static fn (int $a, $b) => $b <=> $a);
+        uksort($values, static fn (int $a, $b) => $b <=> $a);
+
         return String_::createBy(sprintf(
             '{%s}',
             implode(
@@ -66,8 +72,8 @@ class Hash extends Enumerable implements RubyClassInterface
                         $key,
                         $value->inspect(),
                     ),
-                    array_keys($this->hash),
-                    array_values($this->hash),
+                    $keys,
+                    $values,
                 )
             ),
         ));

@@ -44,7 +44,7 @@ class BuiltinSplatarray implements OperationProcessorInterface
         } else {
             $this->context->vmStack()->push(
                 new Operand(
-                    Array_::createBy([$array->valueOf()]),
+                    Array_::createBy([$array]),
                 ),
             );
         }
