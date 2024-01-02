@@ -6,6 +6,8 @@ namespace RubyVM\VM\Core\Runtime\Executor;
 
 use RubyVM\VM\Core\Runtime\Attribute\WithContext;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Class_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\Integer_;
+use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Comparable\String_;
 use RubyVM\VM\Core\Runtime\BasicObject\Kernel\Object_\Enumerable\Array_;
 use RubyVM\VM\Core\Runtime\Essential\RubyClassInterface;
 use RubyVM\VM\Core\Runtime\Executor\Context\ContextInterface;
@@ -33,7 +35,17 @@ trait CallBlockHelper
                 ];
             }
 
-            return $this->{$name}(...$arguments);
+            $result = $this->{$name}(...$arguments);
+
+            if (is_int($result)) {
+                return Integer_::createBy($result);
+            }
+
+            if (is_string($result)) {
+                return String_::createBy($result);
+            }
+
+            return $result;
         }
 
         return $this->{$name}(
