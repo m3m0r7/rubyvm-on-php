@@ -19,6 +19,9 @@ class Dir extends Enumerable implements RubyClassInterface, SymbolizeInterface
     use Symbolizable;
     protected ?\ArrayIterator $iterator = null;
 
+    /**
+     * @var \DirectoryIterator[]
+     */
     protected array $files = [];
 
     protected string $directory;
@@ -26,8 +29,10 @@ class Dir extends Enumerable implements RubyClassInterface, SymbolizeInterface
     public function __construct(protected SymbolInterface $symbol)
     {
         $this->directory = (string) $this->symbol;
-        $this->files = iterator_to_array(
-            new \DirectoryIterator($this->symbol->valueOf()),
+        $this->files = array_values(
+            iterator_to_array(
+                new \DirectoryIterator($this->symbol->valueOf()),
+            )
         );
     }
 
@@ -38,7 +43,7 @@ class Dir extends Enumerable implements RubyClassInterface, SymbolizeInterface
 
     public function getIterator(): \ArrayIterator
     {
-        return $this->iterator ??= new \ArrayIterator($this->directory);
+        return $this->iterator ??= new \ArrayIterator($this->files);
     }
 
     public function offsetExists(mixed $offset): bool

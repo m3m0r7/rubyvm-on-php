@@ -44,7 +44,7 @@ class DirTest extends TestApplication
             ->disassemble();
 
         $this->assertSame(ExecutedStatus::SUCCESS, $executor->execute()->executedStatus);
-        $count = count(iterator_to_array(new \DirectoryIterator(getcwd())));
+        $count = count(iterator_to_array(new \DirectoryIterator(getcwd() ?: './')));
         $this->assertSame("{$count}\n", $rubyVMManager->stdOut->readAll());
     }
 }
