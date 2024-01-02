@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Criterion\Structure;
 
-use RubyVM\VM\Stream\SizeOf;
+use RubyVM\Stream\SizeOf;
 
 /**
  * @property int $classIndex

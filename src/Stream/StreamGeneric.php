@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Stream;
+namespace RubyVM\Stream;
 
 use RubyVM\VM\Exception\FileStreamHandlerException;
 

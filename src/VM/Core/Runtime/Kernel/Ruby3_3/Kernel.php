@@ -25,7 +25,7 @@ use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceProcess
 use RubyVM\VM\Core\YARV\RubyVersion;
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3\Kernel as BaseKernel;
 use RubyVM\VM\Exception\UnknownEndianException;
-use RubyVM\VM\Stream\Endian;
+use RubyVM\Stream\Endian;
 
 class Kernel extends BaseKernel implements KernelInterface
 {

@@ -6,7 +6,7 @@ namespace Tests\RubyVM\Helper;
 
 use PHPUnit\Framework\TestCase;
 use RubyVM\VM\Core\YARV\RubyVersion;
-use RubyVM\VM\Stream\StreamHandler;
+use RubyVM\Stream\StreamHandler;
 
 /**
  * @internal
@@ -66,8 +66,8 @@ class TestApplication extends TestCase
 
         $rubyVM = new \RubyVM\VM\Core\Runtime\RubyVM(
             new \RubyVM\VM\Core\Runtime\Option(
-                reader: new \RubyVM\VM\Stream\BinaryStreamReader(
-                    streamHandler: new \RubyVM\VM\Stream\StringStreamHandler(
+                reader: new \RubyVM\Stream\BinaryStreamReader(
+                    streamHandler: new \RubyVM\Stream\StringStreamHandler(
                         $binary,
                     ),
                 ),

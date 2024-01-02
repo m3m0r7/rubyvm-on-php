@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\RubyVM\Helper;
 
 use RubyVM\VM\Core\Runtime\RubyVM;
-use RubyVM\VM\Stream\StreamHandlerInterface;
+use RubyVM\Stream\StreamHandlerInterface;
 
 readonly class RubyVMManager
 {

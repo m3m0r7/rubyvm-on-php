@@ -47,8 +47,8 @@ use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolLoaderInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolType;
 use RubyVM\VM\Exception\ResolverException;
 use RubyVM\VM\Exception\RubyVMException;
-use RubyVM\VM\Stream\RubyVMBinaryStreamReader;
-use RubyVM\VM\Stream\RubyVMBinaryStreamReaderInterface;
+use RubyVM\Stream\RubyVMBinaryStreamReader;
+use RubyVM\Stream\RubyVMBinaryStreamReaderInterface;
 
 abstract class Kernel implements KernelInterface
 {

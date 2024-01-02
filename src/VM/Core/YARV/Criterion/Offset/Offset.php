@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace RubyVM\VM\Core\YARV\Criterion\Offset;
 
 use RubyVM\VM\Exception\VerificationException;
-use RubyVM\VM\Stream\Align;
-use RubyVM\VM\Stream\SizeOf;
+use RubyVM\Stream\Align;
+use RubyVM\Stream\SizeOf;
 
 class Offset
 {

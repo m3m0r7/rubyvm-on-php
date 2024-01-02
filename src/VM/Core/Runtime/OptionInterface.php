@@ -6,7 +6,7 @@ namespace RubyVM\VM\Core\Runtime;
 
 use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\DebuggerInterface;
-use RubyVM\VM\Stream\StreamHandlerInterface;
+use RubyVM\Stream\StreamHandlerInterface;
 
 interface OptionInterface
 {

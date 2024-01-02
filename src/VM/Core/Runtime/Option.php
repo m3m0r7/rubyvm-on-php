@@ -8,9 +8,9 @@ use Psr\Log\LoggerInterface;
 use RubyVM\VM\Core\Runtime\Essential\MainInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\DebuggerInterface;
 use RubyVM\VM\Core\Runtime\Executor\Debugger\DefaultExecutorDebugger;
-use RubyVM\VM\Stream\BinaryStreamReaderInterface;
-use RubyVM\VM\Stream\StreamHandler;
-use RubyVM\VM\Stream\StreamHandlerInterface;
+use RubyVM\Stream\BinaryStreamReaderInterface;
+use RubyVM\Stream\StreamHandler;
+use RubyVM\Stream\StreamHandlerInterface;
 
 class Option implements OptionInterface
 {
