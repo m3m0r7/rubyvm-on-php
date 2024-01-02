@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RubyVM\VM\Core\YARV;
+namespace RubyVM;
 
 enum RubyVersion: string
 {

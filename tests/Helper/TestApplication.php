@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\RubyVM\Helper;
 
 use PHPUnit\Framework\TestCase;
-use RubyVM\VM\Core\YARV\RubyVersion;
+use RubyVM\RubyVersion;
 use RubyVM\Stream\StreamHandler;
 
 /**
