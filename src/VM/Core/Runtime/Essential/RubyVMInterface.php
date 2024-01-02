@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Essential;
 
+use RubyVM\RubyVersion;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\Option;
-use RubyVM\VM\Core\YARV\RubyVersion;
 
 interface RubyVMInterface
 {

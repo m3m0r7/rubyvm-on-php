@@ -80,7 +80,7 @@ $executor = $rubyVM->disassemble();
 
 // You can choose to run ruby version if you needed
 // $executor = $rubyVM->disassemble(
-//    useVersion: \RubyVM\VM\Core\YARV\RubyVersion::VERSION_3_2,
+//    useVersion: \RubyVM\RubyVersion::VERSION_3_2,
 // );
 
 // Execute disassembled instruction sequence

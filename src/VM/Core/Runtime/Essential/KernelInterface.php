@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Essential;
 
+use RubyVM\RubyVersion;
+use RubyVM\Stream\RubyVMBinaryStreamReaderInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequence;
@@ -11,8 +13,6 @@ use RubyVM\VM\Core\YARV\Criterion\Offset\Offsets;
 use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
 use RubyVM\VM\Core\YARV\Essential\ID;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
-use RubyVM\VM\Core\YARV\RubyVersion;
-use RubyVM\Stream\RubyVMBinaryStreamReaderInterface;
 
 interface KernelInterface
 {

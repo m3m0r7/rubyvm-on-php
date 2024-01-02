@@ -17,13 +17,13 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Kernel\Ruby3_2;
 
+use RubyVM\RubyVersion;
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Executor\Operation\Processor\OperationProcessorEntries;
+use RubyVM\VM\Core\Runtime\Kernel\Ruby3\Kernel as BaseKernel;
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3_2\InstructionSequence\InstructionSequenceProcessor;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\Aux\Aux;
 use RubyVM\VM\Core\YARV\Criterion\InstructionSequence\InstructionSequenceProcessorInterface;
-use RubyVM\VM\Core\YARV\RubyVersion;
-use RubyVM\VM\Core\Runtime\Kernel\Ruby3\Kernel as BaseKernel;
 
 class Kernel extends BaseKernel implements KernelInterface
 {

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime;
 
+use RubyVM\RubyVersion;
 use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Essential\RubyVMInterface;
 use RubyVM\VM\Core\Runtime\Executor\Executor;
 use RubyVM\VM\Core\Runtime\Executor\ExecutorInterface;
 use RubyVM\VM\Core\Runtime\Verification\VerificationHeaderInterface;
 use RubyVM\VM\Core\Runtime\Verification\Verifier;
-use RubyVM\VM\Core\YARV\RubyVersion;
 use RubyVM\VM\Exception\RubyVMException;
 
 class RubyVM implements RubyVMInterface
@@ -24,7 +24,7 @@ class RubyVM implements RubyVMInterface
      */
     protected array $registeredRuntimes = [];
 
-    public function __construct(public readonly Option $option)
+    public function __construct(public readonly OptionInterface $option)
     {
         // Register default kernels
         $this->register(
