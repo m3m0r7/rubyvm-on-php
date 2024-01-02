@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\RubyVM\Version\RubyVM\YARB;
 
 use RubyVM\VM\Core\Runtime\Kernel\Ruby3_3\Kernel as Ruby3_3_Kernel;
-use RubyVM\VM\Stream\Endian;
+use RubyVM\Stream\Endian;
 use Tests\RubyVM\Helper\TestApplication;
 
 /**

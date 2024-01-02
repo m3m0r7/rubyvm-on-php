@@ -9,7 +9,7 @@ use RubyVM\VM\Core\YARV\Criterion\Offset\Offset;
 use RubyVM\VM\Core\YARV\Essential\Symbol\FloatSymbol;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolLoaderInterface;
-use RubyVM\VM\Stream\SizeOf;
+use RubyVM\Stream\SizeOf;
 
 class FloatSymbolLoader implements SymbolLoaderInterface
 {

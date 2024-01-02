@@ -63,8 +63,8 @@ require __DIR__ . '/vendor/autoload.php';
 // Instantiate RubyVM class
 $rubyVM = new \RubyVM\VM\Core\Runtime\RubyVM(
     new \RubyVM\VM\Core\Runtime\Option(
-        reader: new \RubyVM\VM\Stream\BinaryStreamReader(
-            streamHandler: new \RubyVM\VM\Stream\FileStreamHandler(
+        reader: new \RubyVM\Stream\BinaryStreamReader(
+            streamHandler: new \RubyVM\Stream\FileStreamHandler(
                 // Specify to want you to load YARV file
                 __DIR__ . '/HelloWorld.yarv',
             ),
@@ -115,8 +115,8 @@ require __DIR__ . '/vendor/autoload.php';
 // Instantiate RubyVM class
 $rubyVM = new \RubyVM\VM\Core\Runtime\RubyVM(
     new \RubyVM\VM\Core\Runtime\Option(
-        reader: new \RubyVM\VM\Stream\BinaryStreamReader(
-            streamHandler: new \RubyVM\VM\Stream\FileStreamHandler(
+        reader: new \RubyVM\Stream\BinaryStreamReader(
+            streamHandler: new \RubyVM\Stream\FileStreamHandler(
                 // Specify to want you to load YARV file
                 __DIR__ . '/test.yarv',
             ),

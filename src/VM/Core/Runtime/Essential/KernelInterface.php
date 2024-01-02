@@ -12,7 +12,7 @@ use RubyVM\VM\Core\YARV\Criterion\UserlandHeapSpaceInterface;
 use RubyVM\VM\Core\YARV\Essential\ID;
 use RubyVM\VM\Core\YARV\Essential\Symbol\SymbolInterface;
 use RubyVM\VM\Core\YARV\RubyVersion;
-use RubyVM\VM\Stream\RubyVMBinaryStreamReaderInterface;
+use RubyVM\Stream\RubyVMBinaryStreamReaderInterface;
 
 interface KernelInterface
 {

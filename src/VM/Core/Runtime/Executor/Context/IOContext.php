@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\Runtime\Executor\Context;
 
-use RubyVM\VM\Stream\StreamHandlerInterface;
+use RubyVM\Stream\StreamHandlerInterface;
 
 class IOContext
 {

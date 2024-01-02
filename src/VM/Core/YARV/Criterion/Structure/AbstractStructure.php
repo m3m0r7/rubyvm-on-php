@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace RubyVM\VM\Core\YARV\Criterion\Structure;
 
-use RubyVM\VM\Stream\BinaryStreamReaderInterface;
-use RubyVM\VM\Stream\SizeOf;
+use RubyVM\Stream\BinaryStreamReaderInterface;
+use RubyVM\Stream\SizeOf;
 
 abstract class AbstractStructure implements StructureInterface
 {

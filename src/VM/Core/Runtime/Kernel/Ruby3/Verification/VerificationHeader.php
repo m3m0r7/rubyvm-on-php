@@ -8,7 +8,7 @@ use RubyVM\VM\Core\Runtime\Essential\KernelInterface;
 use RubyVM\VM\Core\Runtime\Verification\VerificationHeaderInterface;
 use RubyVM\VM\Core\Runtime\Verification\VerificationInterface;
 use RubyVM\VM\Exception\VerificationException;
-use RubyVM\VM\Stream\SizeOf;
+use RubyVM\Stream\SizeOf;
 
 class VerificationHeader implements VerificationInterface
 {
